@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="ReimuBros" package="RSG.Game" version="1.5.0" company="RSGmaker" />
+	<app file="ReimuBros" main="Main" path="Export" preloader="Preloader"/>
+	
+	<source path="Source" />
+	<haxeflag name="-D network-sandbox" />
+	<haxelib name="openfl" />
+	<assets path="Assets" rename="assets" exclude="*.mp3" unless="flash" />
+	<assets path="Assets" rename="assets" exclude="*.ogg" if="flash" />
+	<icon path="Assets/openfl.svg" />
+	<window width="800" height="600" fps="30" hardware="true" vsync="true"/>
+	
+</project>
