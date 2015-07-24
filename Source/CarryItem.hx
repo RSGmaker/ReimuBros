@@ -28,7 +28,6 @@ class CarryItem extends EntityItem
 	}
 	override public function Collect(player:Player) 
 	{
-		//super.Collect(player);
 		collectable = false;
 		holder = player;
 		centering = (player.width / 2) - (width / 2);
@@ -68,8 +67,6 @@ class CarryItem extends EntityItem
 			collectable = false;
 			if (holder.alive && game.entities.indexOf(holder) >= 0 && (/*holder.type != "Enemy" || */(!holder.killed)))
 			{
-				//if ((holder.ground == null || !(holder.Vspeed > -10 && holder.Vspeed < 0)) || (!Dropable))
-				//if (!(holder.ground != null && (holder.Vspeed > -10 && holder.Vspeed < 0)) || (!Dropable))
 				if (!(holder.ground != null && (holder.ground.bonked>0)) || (!Dropable))
 				{
 					x = holder.x + OffsetX+centering;

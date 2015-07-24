@@ -66,8 +66,6 @@ class CharacterSelect extends Sprite
 	public var travel:Float;
 	public var Vspeed:Float;
 	public var Hspeed:Float;
-	//public var points:Array<Sprite>;
-	//public var obstacles:Array<Sprite>;
 	public var entities:Array<MiniEntity>;
 	public var warningtext:TextField;
 	public var pointcounter:TextField;
@@ -104,8 +102,6 @@ class CharacterSelect extends Sprite
 		newscore = false;
 	}
 	public function start() {
-		//points = new Array<Sprite>();
-		//obstacles = new Array<Sprite>();
 		
 		GUI = new Sprite();
 		entities = new Array<MiniEntity>();
@@ -120,8 +116,6 @@ class CharacterSelect extends Sprite
 		pointcounter = new TextField();
 		pointcounter.width = 280;
 		pointcounter.height = 30;
-		//Nameinput.width = Nameinput.height = 200;
-		//Nameinput.x = Nameinput.y = 50;
 		var tmp = new TextFormat();
 		tmp.font = "Arial";
 		tmp.size = 22;
@@ -147,8 +141,6 @@ class CharacterSelect extends Sprite
 		highestpointcounter = new TextField();
 		highestpointcounter.width = 280;
 		highestpointcounter.height = 30;
-		//Nameinput.width = Nameinput.height = 200;
-		//Nameinput.x = Nameinput.y = 50;
 		
 		highestpointcounter.x = 340;
 		highestpointcounter.y = 12;
@@ -165,7 +157,6 @@ class CharacterSelect extends Sprite
 					minigamestarted = true;
 					startminigamebutton.visible = false;
 					highestpointcounter.visible = true;
-					//warningtext.visible = false;
 				 } 
 				);
 		addChild(startminigamebutton);
@@ -173,8 +164,6 @@ class CharacterSelect extends Sprite
 		
 		char = new Sprite();
 		charpreview = new Bitmap();
-		//charpreview.x = 440;
-		//charpreview.y = 300;
 		char.x = 440;
 		char.y = 300;
 		charpreview.scaleX = 1.5;
@@ -207,11 +196,8 @@ class CharacterSelect extends Sprite
 					if (following)
 					{
 						currentpage = ButtonsPage.length - 1;
-						//NextButton.visible = false;
-						//PrevButton.visible = false;
 						GUI.visible = false;
 						pointcounter.visible = true;
-						//selectedcharacter.visible = false;
 						minigamestarted = false;
 						startminigamebutton.visible = true;
 						highestpointcounter.visible = false;
@@ -220,19 +206,15 @@ class CharacterSelect extends Sprite
 					else
 					{
 						currentpage = 0;
-						//NextButton.visible = true;
-						//PrevButton.visible = true;
 						pointcounter.visible = false;
 						GUI.visible = true;
 						minigamestarted = false;
 						startminigamebutton.visible = false;
 						highestpointcounter.visible = false;
 						warningtext.visible = false;
-						//selectedcharacter.visible = true;
 					}
 					refreshbuttons();
 					}
-					//char.buttonMode = false;
 				 } 
 				);
 		char.addChild(charpreview);
@@ -251,28 +233,14 @@ class CharacterSelect extends Sprite
 		selectedcharacter.x = 10;
 		selectedcharacter.y = 2;
 		selectedcharacter.text = "";
-		//selectedcharacter.width = 800;
 		selectedcharacter.width = 250-selectedcharacter.x;
 		selectedcharacter.mouseEnabled = false;
 		GUI.addChild(selectedcharacter);
 		makebuttons();
-		/*var i = 0;
-		while (i < ButtonsPage.length)
-		{
-			var j = 0;
-			while (j < ButtonsPage.length)
-			{
-				var B = ButtonsPage[j];
-				
-				j++;
-			}
-			i++;
-		}*/
 		refreshbuttons();
 		selectedcharacter.setTextFormat(tmp);
 		
 		SoundManager.PlayMusic("characterselect");
-		//if (ButtonsPage.length > 1)
 		if (ButtonsPage.length > 1 && ButtonsPage[1].length>0)
 		{
 		
@@ -281,8 +249,6 @@ class CharacterSelect extends Sprite
 		NextButton.x = 384;
 		NextButton.y = 530;
 		NextButton.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-					//status = "TitleScreen";
-					//ExitButton.x -= 10;
 					if (!following)
 					{
 					currentpage++;
@@ -301,8 +267,6 @@ class CharacterSelect extends Sprite
 		PrevButton.x = 244;
 		PrevButton.y = 530;
 		PrevButton.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-					//status = "TitleScreen";
-					//ExitButton.x -= 10;
 					if (!following)
 					{
 					currentpage--;
@@ -341,7 +305,6 @@ class CharacterSelect extends Sprite
 					B.x = 554;
 					B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 					status = "PlayGame";
-					//StartButton.x -= 10;
 					Room = "public1";});
 					
 					B = AddButton("Room#2");
@@ -350,7 +313,6 @@ class CharacterSelect extends Sprite
 					B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 						Room = "public2";
 					status = "PlayGame";
-					//StartButton.x -= 10;
 					 } );
 					
 					B = AddButton("Room#3");
@@ -359,7 +321,6 @@ class CharacterSelect extends Sprite
 					B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 						Room = "public3";
 					status = "PlayGame";
-					//StartButton.x -= 10;
 					});
 					CustomRoom = new TextField();
 					CustomRoom.width = 200;
@@ -396,16 +357,11 @@ class CharacterSelect extends Sprite
 		Nameinput = new TextField();
 		Nameinput.width = 280;
 		Nameinput.height = 30;
-		//Nameinput.width = Nameinput.height = 200;
-		//Nameinput.x = Nameinput.y = 50;
 		tmp = new TextFormat();
 		tmp.font = "Arial";
 		tmp.size = 22;
-		//tmp.color = 0xFFFFFF;
-		//Nameinput.x = 180;
 		Nameinput.x = 250;
 		Nameinput.y = 25;
-		//Nameinput.width = (442 - (Nameinput.x));
 		Nameinput.width = (512 - (Nameinput.x));
 		if (playername == null || playername == "")
 		{
@@ -416,21 +372,14 @@ class CharacterSelect extends Sprite
 		Nameinput.background = true;
 		Nameinput.setTextFormat(tmp);
 		Nameinput.wordWrap = true;
-		Nameinput.type = TextFieldType.INPUT;//flash.text.TextFieldType.INPUT;
+		Nameinput.type = TextFieldType.INPUT;
 		Nameinput.borderColor = 0x0000FF;
 		Nameinput.backgroundColor = 0xFFFFFF;
-		//Nameinput.needsSoftKeyboard = true;
-		//Nameinput.addEventListener( TouchEvent.TOUCH_BEGIN, function( ev ) { requestSoftKeyboard(); } );
 		GUI.addChild(Nameinput);
-		//stage.addEventListener (KeyboardEvent.KEY_DOWN, stage_onKeyDown);
-		//stage.addEventListener (TouchEvent.TOUCH_BEGIN,);
-		//stage.addEventListener( TouchEvent.TOUCH_BEGIN, function( ev ) { /*if (!touched)*/{Lib.current.stage.displayState = openfl.display.StageDisplayState.FULL_SCREEN;}MSE = true; touched = true; } );
 	}
 	private function stage_onKeyDown (event:KeyboardEvent):Void {
-		//TF.text = "test"+event.toString();
 		var A = Nameinput.getTextFormat();
 		if (event.keyCode == Keyboard.BACKSPACE) {
-				//TF.text = "space!";
 				Nameinput.text = Nameinput.text.substr(0, Nameinput.text.length - 1);
 		}
 		else
@@ -443,7 +392,6 @@ class CharacterSelect extends Sprite
 	private function refreshbuttons()
 	{
 		var i = 0;
-		//Buttons = new Array<Sprite>();
 		
 		while (i < Buttons.length)
 		{
@@ -473,7 +421,6 @@ class CharacterSelect extends Sprite
 			var SS = S.charAt(0).toUpperCase() + S.substr(1);
 			var O:Dynamic = (B.getChildByName("selectedshape"));
 			var V:Dynamic = (B.getChildByName("selectedshape2"));
-			//visible = true;
 			var SC = selectedcharacter.getTextFormat();
 			if (S == selected)
 			{
@@ -492,7 +439,6 @@ class CharacterSelect extends Sprite
 				}
 				else
 				{
-					//II = Player.hiddencharacters.indexOf(S);
 					II = -1;
 					if (II >= 0)
 					{
@@ -516,16 +462,9 @@ class CharacterSelect extends Sprite
 					V.visible = false;
 				}
 			}
-			//B.x += X;
-			//B.y += Y;
-			//Buttons[i] = B;
-			//X += B.width + S;
 			this_onEnterFrame();
 			i += 1;
 		}
-		/*charpreview.bitmapData = AL.GetAnimation(selected)[0];
-		charpreview.x = 495 - (charpreview.width / 2);
-		charpreview.y = 500 - charpreview.height;*/
 	}
 	public function this_onEnterFrame ():Void {
 		if (Lselected != selected)
@@ -554,9 +493,7 @@ class CharacterSelect extends Sprite
 		else
 		{
 			char.buttonMode = Vspeed == 0;
-			//var PX = char.x - (charpreview.width / 2);
 			var PX = char.x + (charpreview.width / 2);
-			//if (mouseX < PX)
 			if (Hspeed<0)
 		{
 			charpreview.bitmapData = AL.GetAnimation(selected+"F")[0];
@@ -569,8 +506,6 @@ class CharacterSelect extends Sprite
 		if (timer < 0 && minigamestarted)
 		{
 			var T:Float = 60;
-			//var P = 5;
-			//var P:Float = 4;
 			
 			var P:Float = 3;
 			while (P < points)
@@ -578,39 +513,10 @@ class CharacterSelect extends Sprite
 				P *= 1.35;
 				T *= 0.95;
 			}
-			/*if (points > 10)
-			{
-				T = 55;
-			}
-			if (points > 20)
-			{
-				T -= 50;
-			}
-			if (points > 50)
-			{
-				T -= 5;
-			}
-			if (points > 100)
-			{
-				T -= 5;
-			}
-			if (points > 200)
-			{
-				T -= 5;
-			}*/
 			timer = Math.ceil(T);
-			//timer = 60;
-			/*var S = new Sprite();
-			var B = new Bitmap(AL.GetAnimation("Point")[0]);
-			S.addChild(B);
-			S.x = 800;
-			S.y = 460;
-			addChild(S);*/
-			//points[points.length] = S;
 			var X = -1.0;
 			var Y = -1.0;
 			var R = Math.random();
-			//R = 0.76;
 			if (R < 0.25)
 			{
 				X = -1;
@@ -651,9 +557,7 @@ class CharacterSelect extends Sprite
 		while (i < entities.length)
 		{
 			var E = entities[i];
-			//E.x -= gamespeed;
 			E.update();
-			//if (E.x < -E.width)
 			var ok = !E.alive;
 			if (!ok)
 			{
@@ -663,7 +567,6 @@ class CharacterSelect extends Sprite
 					
 					if (E.dangerous)
 					{
-						//points = 0;
 						if (newscore)
 						{
 							Main._this.savedata.data.minigamehighscore = points;
@@ -696,7 +599,6 @@ class CharacterSelect extends Sprite
 			i++;
 			
 		}
-		//gamespeed = 2 + (points * 0.017);
 		gamespeed = 2 + (points * 0.02);
 		var tmp = new TextFormat();
 		tmp.font = "Arial";
@@ -732,7 +634,6 @@ class CharacterSelect extends Sprite
 				}
 				else
 				{
-					//PX += spd;
 					Hspeed += 0.7;
 					if (Hspeed > spd)
 					{
@@ -749,7 +650,6 @@ class CharacterSelect extends Sprite
 				}
 				else
 				{
-					//PX -= spd;
 					Hspeed -= 0.7;
 					if (Hspeed < -spd)
 					{
@@ -764,7 +664,6 @@ class CharacterSelect extends Sprite
 				travel += Math.abs(OPX - PX);
 				if (travel > 10 && Vspeed==0)
 				{
-					//travel -= 5;
 					travel = 0;
 					Vspeed = -2.5;
 					if (minigamestarted)
@@ -793,7 +692,6 @@ class CharacterSelect extends Sprite
 		var tf:Dynamic = (Buttons[i].getChildByName("textField"));
 		return tf.text.toLowerCase();
 		#end
-		//var SS = S.charAt(0).toUpperCase() + S.substr(1);
 	}
 	private function makebuttons()
 	{
@@ -805,13 +703,9 @@ class CharacterSelect extends Sprite
 		var ST = 20;
 		ST = 0;
 		Buttons = new Array<Sprite>();
-		//Main._this.savedata.data.unlock = null;
 		var O = Main._this.savedata.data.unlock;
-		//ButtonsPage
 		var k = 0;
 		var page = new Array<Sprite>();
-		//var PC = Player.characters.copy();
-		//PC = PC.concat(Player.hiddencharacters);
 		var PC = Player.charorder;
 		while (i < PC.length)
 		{
@@ -832,20 +726,10 @@ class CharacterSelect extends Sprite
 				{
 					if (O[Player.characters.indexOf(PC[i])])
 					{
-						//B = AddCharacterButton(PC[i], O[Player.characters.indexOf(PC[i])]);
 						B = AddCharacterButton(PC[i], true);
 						ok = true;
 					}
 				}
-				/*else if (Player.hiddencharacters.indexOf(PC[i]) >= 0)
-				{
-					if (Main._this.savedata.data.hidden[Player.hiddencharacters.indexOf(PC[i])])
-					{
-						//B = AddCharacterButton(PC[i], Main._this.savedata.data.hidden[Player.hiddencharacters.indexOf(PC[i])]);
-						B = AddCharacterButton(PC[i], true);
-						ok = true;
-					}
-				}*/
 				else
 				{
 					B = null;
@@ -863,7 +747,6 @@ class CharacterSelect extends Sprite
 				if (ok)
 				{
 				page[page.length] = B;
-				//var B = AddCharacterButton(Player.characters[i],true);
 				B.x += X;
 				B.y += Y;
 				B.visible = ButtonsPage.length == 1;
@@ -881,9 +764,7 @@ class CharacterSelect extends Sprite
 		k = 0;
 		}
 		ButtonsPage[ButtonsPage.length] = new Array<Sprite>();
-		//O = Main._this.savedata.data.hidden;
 		i = 0;
-		//X = 500;
 		Y = 76;
 		Y -= 76 + S + ST;
 	}
@@ -897,13 +778,10 @@ class CharacterSelect extends Sprite
 		var ST = 20;
 		ST = 0;
 		Buttons = new Array<Sprite>();
-		//Main._this.savedata.data.unlock = null;
 		var O = Main._this.savedata.data.unlock;
-		//ButtonsPage
 		var k = 0;
 		var page = new Array<Sprite>();
 		var PC = Player.characters.copy();
-		//PC = PC.concat(Player.hiddencharacters);
 		while (i < PC.length)
 		{
 			X = 0;
@@ -943,7 +821,6 @@ class CharacterSelect extends Sprite
 				if (ok)
 				{
 				page[page.length] = B;
-				//var B = AddCharacterButton(Player.characters[i],true);
 				B.x += X;
 				B.y += Y;
 				B.visible = ButtonsPage.length == 1;
@@ -961,9 +838,7 @@ class CharacterSelect extends Sprite
 		k = 0;
 		}
 		ButtonsPage[ButtonsPage.length] = new Array<Sprite>();
-		//O = Main._this.savedata.data.hidden;
 		i = 0;
-		//X = 500;
 		Y = 76;
 		Y -= 76 + S + ST;
 	}
@@ -989,9 +864,6 @@ class CharacterSelect extends Sprite
 		textField.height = textField.textHeight+SZ2;
 		
 		var rectangleShape:Shape = new Shape();
-		//rectangleShape.width = textField.textWidth + 8;
-		//rectangleShape.height = textField.textHeight + 8;
-		//rectangleShape.graphics.beginFill(0xFF0000);
 		rectangleShape.graphics.beginFill(0x00AA33);
 		rectangleShape.graphics.drawRect(0, 0, textField.textWidth + SZ3, textField.textHeight + SZ3);
 		rectangleShape.graphics.endFill();
@@ -1008,10 +880,6 @@ class CharacterSelect extends Sprite
 		buttonSprite.x -= (textField.width / 2);
 		buttonSprite.width = textField.width;
 		buttonSprite.height = textField.height;
-		//buttonSprite.x -= Math.ceil(textField.getBounds(this).width);
-		//buttonSprite.y -= Math.ceil(textField.textHeight + SZ3);
-		//var tf:Dynamic = (buttonSprite.getChildByName("textField"));
-		//tf.text = "button sprite text";
 		buttonSprite.buttonMode = true;
 		return buttonSprite;
 	}
@@ -1029,7 +897,6 @@ class CharacterSelect extends Sprite
 		var WH = W / 2;
 		
 		textField.y = W;
-		//textField.textColor = 0xFFFFFF;
 		if (unlocked)
 		{
 		textField.text = text.charAt(0).toUpperCase() + text.substr(1);
@@ -1101,7 +968,6 @@ class CharacterSelect extends Sprite
 		rectangleShape2.graphics.drawRect(SZ, SZ, W - SZ2, W - SZ2);
 		rectangleShape2.graphics.endFill();
 		rectangleShape2.visible = false;
-		//rectangleShape2.alpha = 0.7;
 		
 		var rectangleShape3:Shape = new Shape();
 		rectangleShape3.name = "selectedshape2";
@@ -1112,7 +978,6 @@ class CharacterSelect extends Sprite
 		rectangleShape3.graphics.drawRect(SZ, SZ, W - SZ2, W - SZ2);
 		rectangleShape3.graphics.endFill();
 		rectangleShape3.visible = false;
-		//rectangleShape3.alpha = 0.7;
 		textField.visible = false;
 		buttonSprite.addChild(textField);
 		buttonSprite.addChild(rectangleShape);
@@ -1162,8 +1027,6 @@ class CharacterSelect extends Sprite
 							D.buttonMode = false;
 						}
 					}
-					/*var O:Dynamic = (D.getChildByName("selectedshape"));
-					O.visible = true;*/
 					refreshbuttons();
 				 } 
 				);

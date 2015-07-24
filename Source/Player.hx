@@ -88,7 +88,7 @@ class Player extends Entity
 	
 	//faster speed but slightly reduced responsiveness and more floaty
 	public static inline var SuperSpeed = 0;
-	//start out with a myon and can carry a second one but loses 2 lives on death.
+	//start out with a myon and can carry a second one.
 	public static inline var DoubleMyon = 1;
 	//walk on ice with no penalty
 	public static inline var IceAffinity = 2;
