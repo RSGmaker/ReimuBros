@@ -176,8 +176,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Sprites/chiyuri0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/cirno0.png", __ASSET__assets_sprites_cirno0_png);
 		type.set ("assets/Sprites/cirno0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/CSBack0.png", __ASSET__assets_sprites_csback0_png);
+		type.set ("assets/Sprites/CSBack0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/CSBG0.png", __ASSET__assets_sprites_csbg0_png);
 		type.set ("assets/Sprites/CSBG0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/CSFront0.png", __ASSET__assets_sprites_csfront0_png);
+		type.set ("assets/Sprites/CSFront0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/daiyousei0.png", __ASSET__assets_sprites_daiyousei0_png);
 		type.set ("assets/Sprites/daiyousei0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/darkness0.png", __ASSET__assets_sprites_darkness0_png);
@@ -963,7 +967,15 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/CSBack0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "assets/Sprites/CSBG0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/CSFront0.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -2365,6 +2377,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
@@ -2560,8 +2574,14 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("assets/Sprites/cirno0.png", __ASSET__assets_sprites_cirno0_png);
 		type.set ("assets/Sprites/cirno0.png", AssetType.IMAGE);
 		
+		className.set ("assets/Sprites/CSBack0.png", __ASSET__assets_sprites_csback0_png);
+		type.set ("assets/Sprites/CSBack0.png", AssetType.IMAGE);
+		
 		className.set ("assets/Sprites/CSBG0.png", __ASSET__assets_sprites_csbg0_png);
 		type.set ("assets/Sprites/CSBG0.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/CSFront0.png", __ASSET__assets_sprites_csfront0_png);
+		type.set ("assets/Sprites/CSFront0.png", AssetType.IMAGE);
 		
 		className.set ("assets/Sprites/daiyousei0.png", __ASSET__assets_sprites_daiyousei0_png);
 		type.set ("assets/Sprites/daiyousei0.png", AssetType.IMAGE);
@@ -4108,7 +4128,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_chen0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_chiyuri0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_cirno0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_csback0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_csbg0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_csfront0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_daiyousei0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_darkness0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_diosakuya0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -4707,6 +4729,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
 #else
 
 
@@ -4777,7 +4801,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("Assets/Sprites/chen0.png") #if display private #end class __ASSET__assets_sprites_chen0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/chiyuri0.png") #if display private #end class __ASSET__assets_sprites_chiyuri0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/cirno0.png") #if display private #end class __ASSET__assets_sprites_cirno0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/CSBack0.png") #if display private #end class __ASSET__assets_sprites_csback0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/CSBG0.png") #if display private #end class __ASSET__assets_sprites_csbg0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/CSFront0.png") #if display private #end class __ASSET__assets_sprites_csfront0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/daiyousei0.png") #if display private #end class __ASSET__assets_sprites_daiyousei0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/darkness0.png") #if display private #end class __ASSET__assets_sprites_darkness0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/diosakuya0.png") #if display private #end class __ASSET__assets_sprites_diosakuya0_png extends lime.graphics.Image {}
