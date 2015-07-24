@@ -36,7 +36,6 @@ class Enemy extends Entity
 		super(ani);
 		type = "Enemy";
 		killable = false;
-		//charname = "???";
 		charname = ani;
 		flipped = -1;
 		touchable = true;
@@ -53,10 +52,6 @@ class Enemy extends Entity
 	}
 	public function getdangerlevel():Int
 	{
-		/*if (enraged)
-		{
-			return 2 + rank;
-		}*/
 		return rank;
 	}
 	//damage this enemy, function should return if the enemy should die now.
@@ -115,8 +110,6 @@ class Enemy extends Entity
 		{
 			C = C + "flipped";
 		}
-		//if (enraged)
-		//enraged = false;
 		var enr = visuallyEnraged || enraged;
 		if (rank == game.rank+1)
 		{
@@ -134,8 +127,6 @@ class Enemy extends Entity
 		{
 			C = C + "E";
 		}
-		/*if (flipped < 1)
-		{*/
 		if (Ldir > 0)
 		{
 			ChangeAnimation(C);
@@ -144,18 +135,6 @@ class Enemy extends Entity
 		{
 			ChangeAnimation(C+"F");
 		}
-		/*}
-		else
-		{
-			if (Ldir > 0)
-			{
-				ChangeAnimation(game.AL.GetAnimation(C+"flipped"));
-			}
-			if (Ldir < 0)
-			{
-				ChangeAnimation(game.AL.GetAnimation(C+"flippedF"));
-			}
-		}*/
 	}
 	
 }

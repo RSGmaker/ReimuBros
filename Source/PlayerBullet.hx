@@ -24,7 +24,6 @@ class PlayerBullet extends Entity
 	}
 	public override function update()
 	{
-		//rotateentity(rotation + 15);
 		if (!started)
 		{
 			if (game.RoundType == GameView.TypeofRound.Table)
@@ -39,11 +38,10 @@ class PlayerBullet extends Entity
 		animate();
 		x += Hspeed;
 		y += Vspeed;
-		if (allowwrap/* && (y<400 || wrapdrain)*/)
+		if (allowwrap)
 		{
 			if (x < -width)
 		{
-			//wrapped = true;
 			x += 800 + width;
 			if (wrapdrain)
 			{
@@ -52,7 +50,6 @@ class PlayerBullet extends Entity
 		}
 		if (x > 800+width)
 		{
-			//wrapped = true;
 			x -= 800 + width + width;
 			if (wrapdrain)
 			{
@@ -74,20 +71,14 @@ class PlayerBullet extends Entity
 		filterArr[0] = AB;
 		filters = filterArr;
 		}
-		//alive = true;
 		var ok = true;
-		//if ((x < -32 && gravX<=0) || (y < -32 && gravY<=0) || (x>832 && gravX>=0) || (y>832 && gravY>=0))
 		if ((x < -256 && gravX<=0) || (y < -256 && gravY<=0) || (x>1056 && gravX>=0) || (y>1056 && gravY>=0))
 		{
 			alive = false;
 			killed = true;
 		}
 		
-		//var player = game.CollisionDetectPointPlayer(x + 24, y + 24);
-		
-		//var enemy = game.CollisionDetectPointEnemy(x + 24, y + 24);
 		var enemy = game.CollisionDetectTouchEnemy(this);
-		//var danger = game.CollisionDetectPointDangerous(x + 24, y + 24);
 		var danger = game.CollisionDetectTouchDangerous(this);
 		var block = null;
 		if (bounces && Vspeed > 0)
@@ -104,7 +95,6 @@ class PlayerBullet extends Entity
 			{
 				if (enemy != null && !enemy.killed)
 				{
-					//game.SendEvent("Kill", enemy.UID);
 					game.SendEvent("Attack", enemy.UID);
 					HP--;
 				}
@@ -112,9 +102,7 @@ class PlayerBullet extends Entity
 				if (danger != null && danger.type=="Enemy" && (DD.charname == "Cirno" || DD.charname=="Iku"))
 				{
 					game.SendEvent("Kill", danger.UID);
-					//game.SendEvent("Attack", danger.UID);
 					HP--;
-					//game.SendEvent("Kill", danger);
 				}
 			}
 			if (HP <= 0)

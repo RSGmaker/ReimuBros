@@ -17,7 +17,6 @@ class MiniBombItem extends EntityItem
 	{
 		alive = false;
 		
-		//player.score += 200;
 		if (game.powblock.HP > 3)
 		{
 			player.score+= 500;
@@ -26,13 +25,10 @@ class MiniBombItem extends EntityItem
 		{
 			game.powblock.HP++;
 		}
-		//player.score += (game.powblock.HP * 500);
-		//game.powblock.HP = 4;
 		if (game.Hoster)
 		{
 			game.SendStatus();
 		}
-		//if (player == game.myplayer)
 		{
 			SoundManager.Play("collectcoin");
 		}

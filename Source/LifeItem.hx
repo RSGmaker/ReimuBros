@@ -15,7 +15,6 @@ class LifeItem extends EntityItem
 	{
 		alive = false;
 		player.lives++;
-		//SoundManager.Play("collectcoin");
 		if (player == game.myplayer)
 		{
 			SoundManager.Play("extend");

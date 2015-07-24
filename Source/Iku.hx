@@ -25,9 +25,7 @@ class Iku extends Enemy
 	
 	public function new() 
 	{
-		//super(main, "RedFairy");
 		super("Iku");
-		//this.charname = "RedFairy";
 		accel = 0.5;
 		deccel = 0.1;
 		mxspd = 4;
@@ -38,7 +36,6 @@ class Iku extends Enemy
 		reward = false;
 		pointvalue = 150;
 		mxtimer = 90;
-		//countdown = 90;
 		respawn = false;
 		rename = "iku";
 		needtokill = false;
@@ -48,13 +45,10 @@ class Iku extends Enemy
 	
 	public override function enrage()
 	{
-		//accel = 0.7;
-		//mxspd = 6;
 		enraged = false;
 	}
 	public override function update()
 	{
-		//y += 1;
 		if (!killed)
 		{
 			rename = "iku";
@@ -63,18 +57,12 @@ class Iku extends Enemy
 			rng = new MersenneTwister();
 			var seed:UInt = Math.floor(UID * 100000);
 			timer = (60) + rng.twist(seed, 1, 30 * 30)[0];
-			/*if (game.RoundType == GameView.TypeofRound.FireCirno || rng.twist(rng.seed, 1, 100)[0] > 90)
-			{
-				flaming = true;
-				rename = "firecirno";
-				mxtimer = 120;
-			}*/
 			mxtimer = 150;
 			countdown = mxtimer;
 		}
 		if (timer <= 0)
 		{
-			if (ground != null /*((!ground.icy && !flaming) || (!ground.dangerous && flaming && y<500))*/ && x>0 && x<780 && y<500)
+			if (ground != null && x>0 && x<780 && y<500)
 			{
 				selfdestruct = true;
 			}
@@ -91,11 +79,9 @@ class Iku extends Enemy
 		{
 			rename = "ikuikudance";
 			countdown -= 1;
-			//enraged = !enraged;
 			visuallyEnraged = !visuallyEnraged;
 			if (countdown < 31)
 			{
-				//rename = "ikuikudance";
 				if (countdown % 5 == 0)
 				{
 					Ldir *= -1;
@@ -103,17 +89,14 @@ class Iku extends Enemy
 			}
 			if (countdown <= 0)
 			{
-				//SoundManager.Play("fireballspawn");
-			if (game.Hoster && ground != null && y<500 /*&& ((!ground.icy && !flaming) || (!ground.dangerous && flaming && y<500))*/)
+			if (game.Hoster && ground != null && y<500 )
 			{
 				var D:Dynamic = { };
-				//D.UID = UID;
 				D.x = (800-219)*Math.random();
 				game.SendEvent("LightningStrike", D);
 				timer = (60) + rng.twist(rng.seed, 1, 30 * 30)[0];
 				selfdestruct = false;
 				countdown = mxtimer;
-				//game.SendEvent("Cirnobomb", D);
 			}
 			}
 			Hspeed = 0;
@@ -121,7 +104,6 @@ class Iku extends Enemy
 		else
 		{
 			countdown = mxtimer;
-			//enraged = false;
 			visuallyEnraged = false;
 		}
 		if (!killed)
@@ -157,32 +139,25 @@ class Iku extends Enemy
 		
 		if (ground != null)
 		{
-			//if (ground.bonked > -1000 && game.Hoster && game.myplayer == ground.bonkedby)
 			if (ground.bonked > -1000 && Vspeed>=0)
 			{
-				//if (game.ismyplayer(ground.bonkedby) && game.Hoster)
 				if (game.myplayer == ground.bonkedby)
 				{
-				//Vspeed = -4;
-				//flipped = 30 * 10;
 				var D:Dynamic = { };
 				D.UID = UID;
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
 				D.Vspeed = -10;
-				//game.SendEvent("Bump", this.UID);
 				game.SendEvent("Bump", D);
 				}
 			}
 			else
 			{
-				//if ((controller[1]) && Vspeed == 0)
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
 					Vspeed = -4;
-					//Vspeed = -13;
 				}
 			}
 			
@@ -220,12 +195,10 @@ class Iku extends Enemy
 	}
 	public override function bump()
 	{
-		//alive = false;
 		killed = true;
 		if (ground != null && ground.bonkedby != null && ground.bonkedby.type=="Player")
 		{
 			var D:Dynamic = ground.bonkedby;
-			//D.score += pointvalue;
 			killedby = D;
 		}
 	}

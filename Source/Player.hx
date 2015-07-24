@@ -193,14 +193,11 @@ class Player extends Entity
 		type = "Player";
 		this.charname = charname;
 		flags = new FlagManager(1);
-		//baseflags = new FlagManager(1);
 		maxcooldown = 300;
 		cooldown = 0;
 		useotherhitbox = true;
 		warncooldown = false;
 		jumpspd = base_jumpspd;
-		//feetposition = height;
-		//flags.set(SpawnZombieFairies, true);
 		switch (charname)
 		{
 			case "aya":
@@ -220,7 +217,6 @@ class Player extends Entity
 				warncooldown = true;
 				maxcooldown = 3600+1000;
 			case "yukari":
-				//flags.set(Warping, true);
 				flags.set(GapManipulator, true);
 			case "seija":
 				flags.set(FlipResistance, true);
@@ -259,7 +255,6 @@ class Player extends Entity
 			case "reimu":
 				flags.set(YinYangOrbs, true);
 				warncooldown = true;
-				///maxcooldown = 430;
 				maxcooldown = 380;
 			case "meiling":
 				flags.set(DashAttack, true);
@@ -268,7 +263,6 @@ class Player extends Entity
 			case "sakuya":
 				flags.set(ZaWarudo, true);
 				warncooldown = true;
-				//maxcooldown = 4200;
 				maxcooldown = 3600;
 			case "raiko":
 				flags.set(KaPow, true);
@@ -289,7 +283,6 @@ class Player extends Entity
 			case "marisa":
 				flags.set(StarBulletY, true);
 				warncooldown = true;
-				//maxcooldown = 720;
 				maxcooldown = 660;
 			case "rumia":
 				flags.set(EnemyEater, true);
@@ -302,7 +295,6 @@ class Player extends Entity
 			case "nue":
 				flags.set(FriendlyUFO, true);
 			case "wriggle":
-				//flags.set(JumpMan, true);
 				flags.set(LightDashAttack, true);
 				warncooldown = true;
 				maxcooldown = 180;
@@ -326,55 +318,30 @@ class Player extends Entity
 		{
 			cooldown = maxcooldown;
 		}
-		//if (flags.getactiveflags().length == 0)
 		if (flags.isempty())
 		{
 			flags.set(Floating, true);
 		}
 		flags.set(SpawnZombieFairies, true);
-		//zombiefairychance += 0.5;
-		/*if (charname == "raiko")
-		{
-			flags.set(Drums, true);
-		}*/
 		if (game.tournament)
 		{
 			//dissallow abilites in tourneys
 			flags.clearall();
 		}
 		this.controller = controller;
-		//accel = 0.5;
-		//accel = 0.6;
 		deccel = base_deccel;
-		//deccel = 0.5;
 		accel = base_accel;
-		//accel = 0.7+deccel;
-		//Haccel = accel * 0.25;
 		Haccel = accel * 0.35;
 		Hdeccel = deccel * 0.35;
-		//deccel = 0.1;
 		
 		mxspd = base_mxspd;
 		fallaccel = base_fallaccel;
-		//mxspd = 7;
-		//fallaccel = 1.0;
-		//if (charname == "aya")
 		if (flags.get(SuperSpeed))
 		{
 			deccel -= 0.1;
 			fallaccel -= 0.1;
 			//accel += 0.1;
 			mxspd += 2;
-		}
-		/*if (flags.get(EnemyEater))
-		{
-			deccel += 0.05;
-			accel += 0.1;
-			mxspd += 1;
-		}*/
-		if (flags.get(Floating))
-		{
-			//headbounce = false;
 		}
 		
 		killed = false;
@@ -383,23 +350,15 @@ class Player extends Entity
 		score = 0;
 		steps = 0;
 		invincibility = 0;
-		//fallaccel = 0.8;
 		
 		playername = "";
-		//nameplate = new TextField();
 		nameplate = new Sprite();
 		nameplatetext = new TextField();
 		cooldownbar = new Shape();
 		cooldownbar.y = 5;
-		/*cooldownbar.width = 100;
-		cooldownbar.height = 16;
-		cooldownbar.x = 0;
-		cooldownbar.y = 0;*/
 		nameplate.addChild(nameplatetext);
 		nameplate.addChild(cooldownbar);
 		
-		//var  AA = new flash.filters.BevelFilter(5, 1, 0x000000, 1, 0xAAAAAA, 0.5, 5, 5, 0.5, 100);
-		//var AA = new flash.filters.BevelFilter(4, 45, 0xFFFFFF, 1, 0xCC0000, 1, 10, 10, 2, 3);
 		var AA = new flash.filters.DropShadowFilter();
 		AA.alpha = 1;
 		AA.distance = 3;
@@ -409,25 +368,6 @@ class Player extends Entity
 		filterArr[0] = AA;
 		nameplate.filters = filterArr;
 		
-		/*var bevel = new flash.filters.BevelFilter(); 
-		bevel.distance = 6; 
-		//bevel.angle = 45; 
-		bevel.angle = 90; 
-		bevel.highlightColor = 0xFFFFFF; 
-		bevel.highlightAlpha = 0.2; 
-		bevel.shadowColor = 0x888888; 
-		bevel.shadowAlpha = 0.2; 
-		bevel.blurX = 3; 
-		bevel.blurY = 3; 
-		bevel.strength = 2; 
-		//bevel.quality = BitmapFilterQuality.HIGH; 
-		//bevel.type = BitmapFilterType.INNER; 
-		bevel.knockout = false; 
-		filterArr = new Array();
-		filterArr[0] = bevel;
-		
-		cooldownbar.filters = filterArr;*/
-		//if (game.myplayer == null)
 		{
 			var AB = new flash.filters.GlowFilter();
 			AB.blurX = 20;
@@ -447,8 +387,6 @@ class Player extends Entity
 		filters = filterArr;
 		}
 		
-		//nameplate.blendMode = openfl.display.BlendMode.INVERT;
-		//nameplate.text = "\nTesting\nsgopvb;v";
 		nameplate.x = 100;
 		nameplate.y = 100;
 		format = new TextFormat();
@@ -456,14 +394,12 @@ class Player extends Entity
 		format.size = 16;
 		format.color = 0xFFFFFF;
 		nameplatetext.mouseEnabled = false;
-		//format.align = flash.text.TextFormatAlign.CENTER;
 		nameplatetext.setTextFormat(format);
 		game.addChild(nameplate);
 		frame = game.frame;
 		playing = -1;
 		started = false;
 		ignoreice = false;
-		//if (charname == "cirno" || charname == "letty")
 		if (flags.get(IceAffinity))
 		{
 			ignoreice = true;
@@ -472,16 +408,6 @@ class Player extends Entity
 		Ofallaccel = fallaccel;
 		fallaccel2 = fallaccel / 16;
 		
-		//if (game.myplayer != null)
-		/*if (flags.get(CanHide))
-		{
-			alpha = 0.2;
-			scaleX = 2;
-		}*/
-		//nameplate = new TextField();
-		//nameplate.y = 100;
-		//this.addChild(nameplate);
-		//addChild(nameplate);
 		baseflags = flags.clone();
 	}
 	
@@ -522,7 +448,6 @@ class Player extends Entity
 			{
 				if ((controller[0]) && Vspeed > -0 && Vspeed < 2.0)
 				{
-					//fallaccel = Ofallaccel / 16;
 					fallaccel = fallaccel2;
 				}
 				else
@@ -597,7 +522,6 @@ class Player extends Entity
 						maxcooldown = 1800;
 						cooldown = maxcooldown;
 					charname = "keine";
-					//game.SendEvent("ChangeAppearance", "keine");
 					accel -= 0.3;
 					deccel -= 0.1;
 					mxspd -= 5;
@@ -625,7 +549,7 @@ class Player extends Entity
 						Hspeed = Ldir * mxspd;
 					}
 				}
-				else if (controller[1]/* && this == game.myplayer*/)
+				else if (controller[1])
 				{
 					if (flags.get(Earthquake) && ground!=null && this == game.myplayer)
 					{
@@ -662,9 +586,7 @@ class Player extends Entity
 						superpower = true;
 						maxcooldown = 360;
 						cooldown = maxcooldown;
-						//cooldown = 360;
 						charname = "exkeine";
-						//game.SendEvent("ChangeAppearance", "exkeine");
 						accel += 0.3;
 						deccel += 0.1;
 						mxspd += 5;
@@ -683,11 +605,9 @@ class Player extends Entity
 						var D:Dynamic = { };
 						D.x = x;
 						D.y = y + 10;
-						//D.UID = UID;
 						D.type = "yinyangorb";
 						D.scale = 0.4;
 						D.dir = Ldir;
-						//D.Vspeed = -6;
 						D.Vspeed = 2;
 						D.HP = 6;
 						if (Ldir >= 0)
@@ -710,11 +630,9 @@ class Player extends Entity
 						var D:Dynamic = { };
 						D.x = x;
 						D.y = y + 30;
-						//D.UID = UID;
 						D.type = "EChen";
 						D.scale = 0.8;
 						D.dir = Ldir;
-						//D.Vspeed = -6;
 						D.Vspeed = 0;
 						if (Ldir >= 0)
 						{
@@ -735,11 +653,9 @@ class Player extends Entity
 						var D:Dynamic = { };
 						D.x = x;
 						D.y = y + 0;
-						//D.UID = UID;
 						D.type = "starbulletg";
 						D.scale = 1;
 						D.dir = Ldir;
-						//D.Vspeed = -6;
 						D.Vspeed = Vspeed;
 						if (Ldir >= 0)
 						{
@@ -761,12 +677,9 @@ class Player extends Entity
 						var D:Dynamic = { };
 						D.x = x;
 						D.y = y + 30;
-						//D.UID = UID;
 						D.type = "starbullety";
-						//D.scale = 1;
 						D.scale = 0.8;
 						D.dir = Ldir;
-						//D.Vspeed = -6;
 						D.Vspeed = 0;
 						if (Ldir >= 0)
 						{
@@ -786,30 +699,13 @@ class Player extends Entity
 						{
 							D.Vspeed += 1;
 							D.Hspeed -= D.dir;
-							//D.Vspeed *= 1.25;
-							//D.Hspeed *= 0.85;
-							//D.Vspeed *= 1.5;
-							//D.Hspeed *= 0.7;
 							game.SendEvent("PlayerDanmaku", D);
 							D.Vspeed *= -1;
 							game.SendEvent("PlayerDanmaku", D);
 							D.Vspeed *= -1;
 							i++;
 						}
-						/*
-						D.Vspeed = 4;
-						D.Hspeed *= 0.7;
-						game.SendEvent("PlayerDanmaku", D);
-						D.Vspeed = -4;
-						game.SendEvent("PlayerDanmaku", D);
-						
-						D.Vspeed = 7;
-						D.Hspeed *= 0.7;
-						game.SendEvent("PlayerDanmaku", D);
-						D.Vspeed = -7;
-						game.SendEvent("PlayerDanmaku", D);*/
 					}
-					//StarBullet
 					if (flags.get(ZaWarudo) && this == game.myplayer)
 					{
 						cooldown = maxcooldown;
@@ -822,7 +718,6 @@ class Player extends Entity
 						var D:Dynamic = { };
 						game.SendKillAll();
 						game.SendEvent("CharWorld", D);
-						//game.SendEvent("Mokoubomb", D);
 					}
 					if (flags.get(WorldFreezer) && this == game.myplayer)
 					{
@@ -830,7 +725,6 @@ class Player extends Entity
 						var D:Dynamic = { };
 						game.SendKillAll();
 						game.SendEvent("FreezeWorld", D);
-						//game.SendEvent("Mokoubomb", D);
 					}
 					if (flags.get(KaPow) && this == game.myplayer)
 					{
@@ -840,27 +734,14 @@ class Player extends Entity
 					}
 				}
 			}
-			//if (wrapped && charname == "yukari")
 			if (wrapped && flags.get(Warping))
 			{
-				/*if (y > 480)
-				{
-					y -= 480;
-				}*/
 				if (y < 160)
 				{
 					y += 480;
 				}
 			}
 			deccel = DCL;
-			/*if (ground != null && ground.icy)
-			{
-				deccel = 0.025;
-			}
-			else
-			{
-				deccel = 0.1;
-			}*/
 			if (!catchingup)
 			{
 			if (invincibility > 0)
@@ -881,7 +762,6 @@ class Player extends Entity
 		{
 			if (ground != null && ground.icy  && !ignoreice)
 			{
-				//Hspeed += accel * 0.25;
 				Hspeed += Haccel;
 			}
 			else
@@ -897,7 +777,6 @@ class Player extends Entity
 		{
 			if (ground != null && ground.icy  && !ignoreice)
 			{
-				//Hspeed -= accel * 0.25;
 				Hspeed -= Haccel;
 			}
 			else
@@ -918,10 +797,7 @@ class Player extends Entity
 		if (steps > 35)
 		{
 			steps -= 35;
-			//var S = "step" + Math.ceil(Math.random()*3);
 			var S;
-			//= Math.ceil(Math.random() * 3);
-			//if (flags.get(Drums))
 			if (game.GameFlags.get(Main.Drumstep))
 			{
 				S = "drum" + Math.floor(Math.random()*5);
@@ -933,7 +809,6 @@ class Player extends Entity
 			SoundManager.Play(S);
 			if (this.rotation != 0)
 			{
-				//this.rotationZ = 0;
 			}
 			else
 			{
@@ -970,8 +845,6 @@ class Player extends Entity
 			{
 				if ((controller[0]) && Vspeed == 0)
 				{
-					//Vspeed = -17;
-					//Vspeed = -19;
 					Vspeed = jumpspd;
 				}
 			}
@@ -989,7 +862,6 @@ class Player extends Entity
 		}
 		if (headbonk != null && this == game.myplayer && headbonk.bonked==-1000 && (game.RoundType != GameView.TypeofRound.Table || headbonk.type != "Block"))
 			{
-				//game.SendEvent("Headbonk", game.entities.indexOf(headbonk));
 				
 				game.SendEvent("Headbonk", headbonk.UID);
 				if (flags.get(HeavyBonk))
@@ -1014,12 +886,9 @@ class Player extends Entity
 						invincibility = 15;
 					}
 				}
-				//y = headbonk.y - feetposition;
 			}
 		if (this == game.myplayer)
-		{// + (Math.floor(width) >> 1)
-			//CollisionDetectPointDangerous
-			//var W = (Math.round(width) >> 1);
+		{
 			var W = middle;
 			var H = (Math.round(feetposition) >> 2);
 			var danger = null;
@@ -1034,20 +903,7 @@ class Player extends Entity
 				danger = game.CollisionDetectTouchDangerous(this);
 				enemy = game.CollisionDetectTouchEnemy(this);
 			}
-			/*
-		var danger = game.CollisionDetectPointDangerous(x + W, y + (feetposition - H));
-		var enemy = game.CollisionDetectPointEnemy(x + W, y + (feetposition - H));//game.CollisionDetectTouchEnemy(this);//game.CollisionDetectPointEnemy(x, y + 60);
-		
-
-		*/
 		var eItem = game.CollisionDetectPointItem(x + W, y + (feetposition - H));//game.CollisionDetectTouchItem(this);//game.CollisionDetectPointItem(x, y + 60);
-		/*if (flags.get(Ambush) && headbonk != null && this == game.myplayer && headbonk.bonked==-1000 && (game.RoundType != GameView.TypeofRound.Table || headbonk.type != "Block"))
-			{
-				//game.SendEvent("Headbonk", game.entities.indexOf(headbonk));
-				//game.SendEvent("Headbonk", headbonk.UID);
-				Vspeed = 0;
-				y = headbonk.y - feetposition;
-			}*/
 		if (eItem != null && eItem.collectable)
 		{
 			if (!(flags.get(CanHide) && cooldown <= 0))
@@ -1057,11 +913,6 @@ class Player extends Entity
 		}
 		if (danger != null && lives>=0 && game.myplayer == this)
 		{
-			/*if (enemy.killable)
-			{
-				game.SendEvent("Kill", enemy.UID);
-			}
-			else*/
 			if (!((enemy == danger && enemy.charname == "Mystia" && flags.get(EatMystia)) || superpower || (flags.get(JumpMan) && y<enemy.y && Vspeed>0)))
 			{
 				if (invincibility<=0)
@@ -1077,10 +928,6 @@ class Player extends Entity
 					if (danger != null && danger.type == "Enemy" && (DD.charname == "Cirno" || DD.charname == "Iku"))
 					{
 						game.SendEvent("Kill", danger.UID);
-						/*if (flags.get(EnemyEater))
-						{
-							cooldown = maxcooldown;
-						}*/
 					}
 				}
 			}
@@ -1090,10 +937,6 @@ class Player extends Entity
 			if (enemy.killable)
 			{
 				game.SendEvent("Kill", enemy.UID);
-				/*if (flags.get(EnemyEater))
-				{
-					cooldown = maxcooldown;
-				}*/
 				if (enemy.charname == "RedFairy" && flags.get(SpawnZombieFairies) && Math.random()<zombiefairychance)
 				{
 					var i = 0;
@@ -1113,13 +956,11 @@ class Player extends Entity
 				}
 				if (count < 2)
 				{
-					//collectable = true;
 					var D:Dynamic = { };
 					D.UID = UID;
 					D.type = zombiefairytype;
 					D.scale = zombiefairyscale;
 					game.SendEvent("AttachZombieFairy", D);
-					//game.SendEvent("AttachZombieFairy", UID);
 				}
 				}
 			}
@@ -1128,19 +969,8 @@ class Player extends Entity
 				if ((enemy.charname == "Mystia" && flags.get(EatMystia)) || superpower || (flags.get(JumpMan) && y<enemy.y && Vspeed>0))
 				{
 					game.SendEvent("Kill", enemy.UID);
-					/*if (flags.get(EnemyEater))
-					{
-						cooldown = maxcooldown;
-					}*/
 				}
 			}
-			/*else
-			{
-				if (enemy.dangerous && invincibility<=0)
-				{
-					game.SendEvent("PlayerDeath", null);
-				}
-			}*/
 		}
 		}
 		if (ground != null)
@@ -1168,30 +998,19 @@ class Player extends Entity
 			y += Vspeed;
 			if (y > 600 && this == game.myplayer)
 			{
-				//TO DO: respawn and whatever
 				var D:Dynamic = { };
 				D.x = 400;
 				D.y = 0;
 				D.lives = lives - 1;
-				//if (charname == "youmu")
-				/*if (flags.get(Player.DoubleMyon))
-				{
-					D.lives--;
-				}*/
 				game.SendEvent("PlayerRespawn", D);
 			}
 			}
 		}
-		//if (visible && game.frame-frame > 600)
-		//if (game.frame-frame > 600)
 		if (game.myplayer != this)
 		{
-		//if (game.frame-frame > 60)
 		if (game.frame-frame > 600)
 		{
 			//hide inactive players
-			//visible = false;
-			//blendMode = flash.display.BlendMode.OVERLAY;
 			alpha = 0.5;
 			
 			blendMode = flash.display.BlendMode.SCREEN;
@@ -1200,7 +1019,6 @@ class Player extends Entity
 		{
 			alpha = 1;
 			blendMode = flash.display.BlendMode.NORMAL;
-			//blendMode = flash.display.BlendMode.LIGHTEN;
 		}
 		
 		}
@@ -1221,12 +1039,10 @@ class Player extends Entity
 			{
 				if (warncooldown && cooldown <= 0)
 				{
-					//cooldownbar.visible = false;
 					nameplatetext.text = cooldowntext;
 				}
 				else if (warncooldown)
 				{
-					//cooldownbar.alpha = 0.7;
 					cooldownbar.alpha = 1;
 					cooldownbar.visible = true;
 					cooldownbar.graphics.clear();
@@ -1234,24 +1050,18 @@ class Player extends Entity
 					var G = cooldownbar.graphics;
 					
 					G.beginFill(0, 0.4);
-					//cooldownbar.graphics.drawRect(0, 0, 50, 9);
 					G.drawRoundRect(0, 0, 50, 9,5);
 					G.endFill();
 					
-					//nameplatetext.text = "whatwhat?";
 					var prct = (maxcooldown - cooldown + 0.001) / maxcooldown;
-					//nameplatetext.text = "what:"+prct+"?";
 					var C = Math.round(prct * 255);
 					var CD = 255 - C;
 					var col:UInt = (CD) + (C << 8) + (CD << 16);
 					G.beginFill(col, 1);
-					//cooldownbar.graphics.beginFill(0xFF0000);
-					//cooldownbar.graphics.drawRect(0, 0, 50 * prct, 9);
 					G.drawRoundRect(0, 0, 50 * prct, 9,5);
 					G.endFill();
 					//var col2:UInt = (128 +(CD >> 1)) + ((128 +(C >> 1)) << 8) + ((128 +(CD >> 1)) << 16);
 					////var col2:UInt = (192 +(CD >> 2)) + ((192 +(C >> 2)) << 8) + ((192 +(CD >> 2)) << 16);
-					//col2 = 0xffffff;
 					
 					
 					var fillType:flash.display.GradientType = flash.display.GradientType.LINEAR;
@@ -1259,50 +1069,26 @@ class Player extends Entity
 					var alphas = [0.12, 0.4];
 					var ratios = [0x00, 0xFF];
 					var matr:flash.geom.Matrix = new flash.geom.Matrix();
-					//matr.createGradientBox(50, 9, Math.PI/2, 0, -4.5);
 					matr.createGradientBox(50, 9, 1.57079632679, 0, -4.5);
 					var spreadMethod:flash.display.SpreadMethod = flash.display.SpreadMethod.REFLECT;
 					G.beginGradientFill(fillType, colors, alphas, ratios, matr, spreadMethod);  
 	 
-					//cooldownbar.graphics.beginGradientFill(flash.display.GradientType.LINEAR, [col, col2, col], [1, 1, 1], [0x00, 0xFF],new flash.geom.Matrix(),flash.display.SpreadMethod.REFLECT);
 					G.drawRoundRect(0, 0, 50 * prct, 9,5);
-					//cooldownbar.graphics.drawRect(0, 0, 50 * prct, 9);
 					G.endFill();
 					
-					//cooldownbar.graphics.beginFill(0x
-					//cooldownbar.graphics.beginFill(0x
-					//nameplatetext.text = "what?";
 					nameplatetext.text = "            ";
 				}
 			}
-			/*if (warncooldown && cooldown == 0 && this == game.myplayer)
-			{
-				nameplatetext.text = cooldowntext;
-			}
-			else if (!(playername != "" && game.online))
-			{
-				nameplatetext.text = "";
-				nameplate.visible = false;
-			}*/
-			//nameplate.blendMode = flash.display.BlendMode.
 			nameplatetext.setTextFormat(format);
 			var B = getBounds(game);
 			nameplate.x = B.left - (Math.floor(nameplatetext.textWidth) >> 1) + (Math.floor(B.width) >> 1);
 			nameplate.y = B.top - 20;
-			//game.stage.removeChild(nameplate);
-			//game.stage.addChild(nameplate);
-			//nameplate.z = -100;
-			//nameplate.x = x;
-			//nameplate.y = y;
-			//nameplate.y = y + height + 10;
-			//nameplate.x = x;
-			//nameplate.y = y + 100;
 		}
 		else
 		{
 			nameplate.visible = false;
 		}
-		if (/*controller[5]*/true)
+		if (true)
 		{
 			var interact = game.CollisionDetectTouchInteractable(this);
 			if (interact != null)
@@ -1338,9 +1124,7 @@ class Player extends Entity
 		{
 			Ldir = -1;
 		}
-		//flags = baseflags.clone();
 		flags.copy(baseflags);
 		allmyons = new Array<MyonItem>();
 	}
-	//public static inline var PI2 = 1.57079632679;
 }

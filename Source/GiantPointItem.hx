@@ -17,7 +17,6 @@ class GiantPointItem extends EntityItem
 	{
 		alive = false;
 		player.score += 3000;
-		//if (player == GameView._this.myplayer)
 		{
 			SoundManager.Play("collectcoin");
 		}

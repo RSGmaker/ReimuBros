@@ -12,9 +12,7 @@ class Nazrin extends Enemy
 	public var mxspd:Float;
 	public function new() 
 	{
-		//super(main, "RedFairy");
 		super("nazrin");
-		//this.charname = "RedFairy";
 		accel = 0.4;
 		deccel = 0.1;
 		mxspd = 5;
@@ -24,7 +22,6 @@ class Nazrin extends Enemy
 		pointvalue = 700;
 		needtokill = false;
 		reward = false;
-		//respawn = false;
 	}
 	public override function increaserank()
 	{
@@ -34,29 +31,12 @@ class Nazrin extends Enemy
 	}
 	override public function update():Void 
 	{
-		//super.update();
 		this.scaleX = 0.6;
 		this.scaleY = 0.6;
 		
 	if (!started)
 		{
-			/*var i = 0;
-			while (i < rank)
-			{
-				accel += 0.1;
-				mxspd += 0.5;
-				pointvalue += 50;
-				i++;
-			}*/
 			started = true;
-		}
-		/*accel = 0.5;
-		deccel = 0.1;
-		mxspd = 4;*/
-		if (enraged)
-		{
-			//accel += 0.2;
-			//mxspd += 2;
 		}
 		if (!killed)
 		{
@@ -109,7 +89,6 @@ class Nazrin extends Enemy
 						Vspeed = -15;
 					}
 				}
-				//Vspeed = -16;
 			}
 		}
 		updphysics();
@@ -117,37 +96,29 @@ class Nazrin extends Enemy
 		
 		if (ground != null)
 		{
-			//if (ground.bonked > -1000 && game.Hoster && game.myplayer == ground.bonkedby)
 			if (ground.bonked > -1000 && Vspeed>=0)
 			{
-				//if (game.ismyplayer(ground.bonkedby) && game.Hoster)
 				if (game.myplayer == ground.bonkedby)
 				{
-				//Vspeed = -4;
-				//flipped = 30 * 10;
 				var D:Dynamic = { };
 				D.UID = UID;
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
 				D.Vspeed = -10;
-				//game.SendEvent("Bump", this.UID);
 				game.SendEvent("Bump", D);
 				}
 			}
 			else
 			{
-				//if ((controller[1]) && Vspeed == 0)
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
 					Vspeed = -4;
-					//Vspeed = -13;
 				}
 			}
 			
 		}
-			//if (y > 408 && wrapped)
 			if (y < 200 && wrapped)
 			{
 				alive = false;
@@ -168,7 +139,6 @@ class Nazrin extends Enemy
 	
 	public override function bump()
 	{
-		//Vspeed = -4;
 		if (flipped < 1)
 		{
 			if (enraged)

@@ -12,29 +12,19 @@ class UFO extends Enemy
 	public var ascend:Bool;
 	public var iter:Int;
 	public var rng:MersenneTwister;
-	//public var MAT:Matrix;
 	public var rot:Float;
 	public var rename:String;
 	public var ufotype:String;
 	public var fuel:Int;
-	//public static var HB = new Rectangle(7, 7, 14, 14);
 	public static var HB = new Rectangle(9, 9, 10, 10);
 	public var reducetime:Int;
 	public function new() 
 	{
-		//super(main, "RedFairy");
 		super("UFO");
-		//this.charname = "RedFairy";
-		//accel = 0.5;
-		//chen doesnt use hspeed or vspeed system
 		deccel = 100;
-		//mxspd = 4;
 		Ldir = 1;
 		flipped = -1;
 		fallaccel = 0;
-		
-		//this will prevent chen from going into the spawnlist
-		//killed = true;
 		
 		ascend = true;
 		rng = null;
@@ -46,13 +36,6 @@ class UFO extends Enemy
 		respawn = false;
 		rename = "";
 		
-		//hitbox = new Rectangle(width / 4, height / 4, width / 2, height / 2);
-		//MAT = this.transform.matrix.clone();
-		//MAT = this.transform.matrix.clone();
-		//MAT.translate(new Point(-13, -26));
-		//MAT.translate( -13, -26);
-		//MAT.tx = -13;
-		//MAT.ty = -26;
 		hitbox = HB;
 		needtokill = false;
 	}
@@ -60,8 +43,6 @@ class UFO extends Enemy
 	public override function enrage()
 	{
 		trace("enraged UFO??? wut?");
-		//accel = 0.7;
-		//mxspd = 6;
 	}
 	public override function update()
 	{
@@ -73,12 +54,10 @@ class UFO extends Enemy
 			var R = rng.twist(seed, 1, 10)[0];
 			if (R > 6)
 			{
-				//ChangeAnimation(game.AL.GetAnimation("Ran"));
 				ufotype = "Red";
 			}
 			else if (R < 3)
 			{
-				//ChangeAnimation(game.AL.GetAnimation("Ran"));
 				ufotype = "Green";
 			}
 			else
@@ -88,10 +67,8 @@ class UFO extends Enemy
 			iter = 30 + rng.twist(0, 1, 240)[0];
 			fuel = 90 + rng.twist(0, 1, 900 + (rank * 150))[0];
 			reducetime = rank * 30;
-			//hitbox = new Rectangle(width / 4, height / 4, width / 2, height / 2);
 		}
 		rename = ufotype + "ufo";
-		//rot += 0.25;
 		animate();
 		killed = false;
 		dangerous = true;
@@ -112,17 +89,11 @@ class UFO extends Enemy
 		}
 		else
 		{
-			/*if (game.RoundType == GameView.TypeofRound.Nue)
-			{
-				iter = 15 + rng.twist(null, 1, 210)[0];
-			}
-			else*/
 			{
 				iter = 30 + rng.twist(0, 1, 270-reducetime)[0];
 			}
 			if (game.Hoster)
 			{
-				//trace("Imma' Firing mah lazor!");
 				var D:Dynamic = { };
 				D.UID = UID;
 				game.SendEvent("UFOStrike", D);
@@ -150,26 +121,8 @@ class UFO extends Enemy
 				killed = true;
 			}
 		}
-		/*x += (4 * Ldir);
-		if (ascend)
-		{
-			y -= 2;
-		}
-		else
-		{
-			y += 2;
-		}
-		iter -= 1;
-		if (iter <= 0)
-		{
-			iter = 30;
-			ascend = !ascend;
-		}*/
-		
-		//if (!killed)
 		{
 			
-		//updphysics();
 		updateanimation(rename);
 		
 		if (ground != null)
@@ -196,7 +149,6 @@ class UFO extends Enemy
 				alive = false;
 				visible = false;
 			}
-		//killable = flipped > 0;
 	}
 	}
 	public override function bump()

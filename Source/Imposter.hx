@@ -11,8 +11,6 @@ class Imposter extends Enemy
 	
 	public var mxspd:Float;
 	
-	//public var controller:Array<Bool>;
-	
 	public var rng:MersenneTwister;
 	public var rename:String;
 	public var frames:Int;
@@ -23,21 +21,15 @@ class Imposter extends Enemy
 	
 	
 	public var timer:Int;
-	//public var rng:MersenneTwister;
-	//whether or not platform is suitable for freezing
 	//countdown to platform freeze
 	public var countdown:Int;
 	public var mxcountdown:Int;
 	public var mxtimer:Int;
-	//public var myMyon:MyonItem;
-	//public var HP = 1;
 	public var maxHP = 0;
 	
 	public function new() 
 	{
-		//super(main, "RedFairy");
 		super("Imposter");
-		//this.charname = "RedFairy";
 		accel = 0.5;
 		deccel = 0.1;
 		mxspd = 5;
@@ -51,17 +43,10 @@ class Imposter extends Enemy
 		alternate = false;
 		pointvalue = 500;
 		mxcountdown = 35;
-		//mxtimer = 15;
 		countdown = mxcountdown;
 		mxtimer = 300;
-		//myMyon = null;
 	}
 	
-	/*public override function enrage()
-	{
-		//accel = 0.7;
-		//mxspd = 6;
-	}*/
 	public override function increaserank()
 	{
 			accel += 0.1;
@@ -87,61 +72,13 @@ class Imposter extends Enemy
 	{
 		if (rng == null)
 		{
-			//mxtimer -= rank * 5;
 			rng = new MersenneTwister();
 			var seed:UInt = Math.floor(UID * 100000);
 			rng.seed = seed;
 			timer = 60 + mxcountdown + (rng.twist(rng.seed, 1, mxtimer)[0]);
-			/*if (game.RoundType == GameView.TypeofRound.Cirno || game.RoundType == GameView.TypeofRound.Nue || game.RoundType == GameView.TypeofRound.Yukari || game.RoundType == GameView.TypeofRound.Seija || game.RoundType == GameView.TypeofRound.Rumia)
-			{
-				hidden = true;
-				if (game.RoundType == GameView.TypeofRound.Cirno)
-				{
-					rename = "cirno";
-					unlock = 4;
-				}
-				if (game.RoundType == GameView.TypeofRound.Nue)
-				{
-					rename = "nue";
-					unlock = 5;
-				}
-				if (game.RoundType == GameView.TypeofRound.Seija)
-				{
-					rename = "seija";
-					unlock = 2;
-				}
-				if (game.RoundType == GameView.TypeofRound.Rumia)
-				{
-					rename = "rumia";
-					unlock = 3;
-				}
-				if (game.RoundType == GameView.TypeofRound.Yukari)
-				{
-					var A = rng.twist(rng.seed, 1, 3)[0];
-					if (A == 0)
-					{
-						rename = "yukari";
-						unlock = 1;
-					}
-					if (A == 1)
-					{
-						rename = "ran";
-						unlock = 7;
-					}
-					if (A == 2)
-					{
-						rename = "chen";
-						unlock = 6;
-					}
-				}
-				have = Main._this.savedata.data.hidden[unlock];
-			}
-			else*/
 			{
 				var tmp = game.GetImposterList();
 				unlock = rng.twist(rng.seed, 1, tmp.length)[0];
-			//unlock = rng.twist(rng.seed, 1, Player.characters.length)[0];
-			//unlock = Player.characters.indexOf("orin");
 			rename = tmp[unlock];
 			unlock = Player.characters.indexOf(rename);
 			if (rng.twist(rng.seed, 1, 100)[0] < 30)
@@ -165,12 +102,10 @@ class Imposter extends Enemy
 					D.UID = UID;
 				if (rename == "orin" || rng.twist(rng.seed, 1, 100)[0] > 94)
 				{
-					//game.SendEvent("AttachZombieFairy", UID);
 					game.SendEvent("AttachZombieFairy", D);
 				}
 				else
 				{
-					//game.SendEvent("AttachMyon", UID);
 					game.SendEvent("AttachMyon", D);
 				}
 				
@@ -211,7 +146,6 @@ class Imposter extends Enemy
 						D.gravX = 0;
 						D.gravY = 0;
 						D.image = "bullet";
-						//var degradian = Math.atan2(y, x) - Math.atan2(P.y, P.x);
 						var degradian = Math.atan2((P.y + (30))-y, P.x-x);
 						D.Hspeed = Math.cos(degradian) * 6;
 						D.Vspeed = Math.sin(degradian) * 6;
@@ -219,8 +153,6 @@ class Imposter extends Enemy
 					}
 				}
 				 }
-				//timer = 90 + (rng.twist(rng.seed, 1, 300)[0]);
-				//game.Hoster
 			}
 		}
 		else
@@ -232,7 +164,6 @@ class Imposter extends Enemy
 		visuallyEnraged = false;
 		if (active && frames & 1 < 1)
 		{
-			//S = S + "E";
 			if (enraged)
 			{
 				S = S + "S";
@@ -245,7 +176,6 @@ class Imposter extends Enemy
 		}
 		else if (frames & 1 > 0 && !have)
 		{
-			//enraged = !enraged;
 			S = S + "U";
 		}
 		else if (have)
@@ -254,7 +184,6 @@ class Imposter extends Enemy
 		}
 		enraged = false;
 		
-		//y += 1;
 		if (!killed)
 		{
 		var dir = Ldir;
@@ -294,24 +223,11 @@ class Imposter extends Enemy
 		var F = flipped;
 		flipped = 0;
 		updphysics();
-		//updateanimation(rename);
 		updateanimation(S);
 		flipped = F;
 		if (flipped > 0)
 		{
 			this.rotation = 90;
-			/*if (Hspeed > 0)
-			{
-				this.rotationZ = 270;
-			}
-			else if (Hspeed<0)
-			{
-				this.rotationZ = 90;
-			}
-			else if (this.rotationZ == 0)
-			{
-				this.rotationZ = 180;
-			}*/
 		}
 		else
 		{
@@ -321,33 +237,26 @@ class Imposter extends Enemy
 		this.scaleY = 0.8;
 		if (ground != null)
 		{
-			//if (ground.bonked > -1000 && game.Hoster && game.myplayer == ground.bonkedby)
 			if (ground.bonked > -1000 && Vspeed>=0)
 			{
-				//if (game.ismyplayer(ground.bonkedby) && game.Hoster)
 				if (game.myplayer == ground.bonkedby)
 				{
-				//Vspeed = -4;
-				//flipped = 30 * 10;
 				var D:Dynamic = { };
 				D.UID = UID;
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
 				D.Vspeed = -10;
-				//game.SendEvent("Bump", this.UID);
 				game.SendEvent("Bump", D);
 				}
 			}
 			else
 			{
-				//if ((controller[1]) && Vspeed == 0)
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
 					Vspeed = -4;
 					HP = 0;
-					//Vspeed = -13;
 				}
 			}
 			
@@ -370,7 +279,6 @@ class Imposter extends Enemy
 	}
 	public override function bump()
 	{
-		//Vspeed = -4;
 		if (HP > 0)
 		{
 			HP--;

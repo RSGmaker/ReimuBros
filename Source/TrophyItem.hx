@@ -46,7 +46,6 @@ class TrophyItem extends CarryItem
 				{
 					game.SendEvent("Destroy", UID);
 				}
-				//alive = false;
 			}
 			else
 			{
@@ -57,15 +56,10 @@ class TrophyItem extends CarryItem
 	}
 	public override function Death() 
 	{
-		//super.Death();
 		if (holder.type == "Player")
 		{
 			var D:Dynamic = holder;
 			D.score += 5000;
-			if (holder == game.myplayer)
-			{
-				//SoundManager.Play("extend");
-			}
 		}
 	}
 }

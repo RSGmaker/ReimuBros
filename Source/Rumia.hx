@@ -12,7 +12,6 @@ class Rumia extends Enemy
 	
 	public var mxspd:Float;
 	public var darkness:Bitmap;
-	//public var started:Bool;
 	public function new() 
 	{
 		super("rumia");
@@ -27,13 +26,7 @@ class Rumia extends Enemy
 		this.scaleX = 0.8;
 		this.scaleY = 0.8;
 		
-		//this.addChild(darkness);
 	}
-	/*public override function enrage()
-	{
-		accel += 0.2;
-		mxspd += 2;
-	}*/
 	public override function increaserank()
 	{
 			accel += 0.1;
@@ -50,17 +43,8 @@ class Rumia extends Enemy
 			darkness.y -= darkness.height / 2;
 			darkness.x += x + width / 2;
 			darkness.y += y + height / 2;
-			//darkness.blendMode = flash.display.BlendMode.MULTIPLY;
-			//darkness.blendMode = flash.display.BlendMode.INVERT;
 			game.addChild(darkness);
 			started = true;
-			/*var i = 0;
-			while (i < rank)
-			{
-				accel += 0.1;
-				mxspd += 0.5;
-				i++;
-			}*/
 			
 		}
 		if (darkness != null && enraged)
@@ -75,7 +59,6 @@ class Rumia extends Enemy
 			darkness.y += y + height / 2;
 			}
 		}
-		//y += 1;
 		
 		if (!killed)
 		{
@@ -131,43 +114,28 @@ class Rumia extends Enemy
 		{
 			this.rotation = 0;
 		}
-		/*if (flipped>0)
-		{
-			scaleY = -1;
-		}
-		else
-		{
-			scaleY = 1;
-		}*/
 		
 		if (ground != null)
 		{
-			//if (ground.bonked > -1000 && game.Hoster && game.myplayer == ground.bonkedby)
 			if (ground.bonked > -1000 && Vspeed>=0)
 			{
-				//if (game.ismyplayer(ground.bonkedby) && game.Hoster)
 				if (game.myplayer == ground.bonkedby)
 				{
-				//Vspeed = -4;
-				//flipped = 30 * 10;
 				var D:Dynamic = { };
 				D.UID = UID;
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
 				D.Vspeed = -10;
-				//game.SendEvent("Bump", this.UID);
 				game.SendEvent("Bump", D);
 				}
 			}
 			else
 			{
-				//if ((controller[1]) && Vspeed == 0)
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
 					Vspeed = -4;
-					//Vspeed = -13;
 				}
 			}
 			
@@ -200,7 +168,6 @@ class Rumia extends Enemy
 	}
 	public override function bump()
 	{
-		//Vspeed = -4;
 		if (flipped < 1)
 		{
 			if (enraged)

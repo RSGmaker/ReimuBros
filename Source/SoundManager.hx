@@ -12,7 +12,6 @@ import haxe.Timer;
 class SoundManager
 {
 	private var Dictionary:Map<String,Sound>;
-	//public var channels:Array<SoundChannel>;
 	public var activeaudio:Array<Dynamic>;
 	private var muted:Bool;
 	public var music:SoundChannel;
@@ -21,14 +20,12 @@ class SoundManager
 	private var _song:String;
 	private var _songposition:Float;
 	public var jingle:SoundChannel;
-	//public var thejingle:String;
 	public static var _this:SoundManager;
 	public var nextsong:String;
 	public var playingintro:Bool;
 	
 	public function new() 
 	{
-		//channels = new Array<SoundChannel>();
 		activeaudio = new Array<Dynamic>();
 		Dictionary = new Map<String,Sound>();
 		muted = false;
@@ -39,7 +36,6 @@ class SoundManager
 	}
 	public static function Play(path:String):SoundChannel {
 		return _this._Play(path);
-		//return _this._Play(path);
 	}
 	public function GetSound(path:String):Sound {
 		if (Dictionary.exists(path))
@@ -52,12 +48,9 @@ class SoundManager
 			var S = Assets.getSound("assets/Audio/Mp3/" + path + ".mp3");
 			#else
 			//.mp3 is flash only for some reason
-			//var S = Assets.getSound("assets/Audio/" + path + ".ogg");
 		
 			//although sound wont work using mp3 the timing info still applies
-			//var S = Assets.getSound("assets/Audio/Mp3/" + path + ".mp3");
 			var S = Assets.getSound("assets/Audio/Ogg/" + path + ".OGG");
-			//var S = Assets.getSound("assets/Audio/Ogg/" + path + ".mp3.OGG");
 			#end
 			Dictionary.set(path, S);
 			return S;
@@ -69,18 +62,12 @@ class SoundManager
 	}
 	public function _PlayJingle(path:String):SoundChannel
 	{
-		if (/*thejingle != path || */jingle == null)
+		if (jingle == null)
 		{
 		if (music != null)
 		{
-			/*_songposition = music.position;
-			var S = song;
-			music.stop();
-			music = null;
-			_song = S;*/
 			music.soundTransform = new SoundTransform(0, 0);
 		}
-		//thejingle = path;
 		var S = _Play(path, 0, 0, musicvol);
 		jingle = S;
 		S.addEventListener(Event.SOUND_COMPLETE, jingleend);
@@ -116,7 +103,6 @@ class SoundManager
 				_this._PlayMusic(path);
 				_this.playingintro = false;
 			});
-			//PlayMusic();
 			return A;
 		}
 		else
@@ -146,15 +132,6 @@ class SoundManager
 		}
 	}
 	public function _Play(path:String,position:Float=0.0,Loops:Int=0,volume:Float=-1000):SoundChannel {
-		/*#if flash
-		var S = Assets.getSound("assets/Audio/" + path + ".mp3");
-		#else
-		//.mp3 is flash only for some reason
-		//var S = Assets.getSound("assets/Audio/" + path + ".ogg");
-		
-		//although sound wont work using mp3 the timing info still applies
-		var S = Assets.getSound("assets/Audio/" + path + ".mp3");
-		#end*/
 		var i = 0;
 		var C = 0;
 		while (i < activeaudio.length)
@@ -191,36 +168,19 @@ class SoundManager
 			D.time = Timer.stamp();
 			D.path = path;
 			activeaudio[activeaudio.length] = D;
-			//channels[channels.length] = C;
 			C.addEventListener(Event.SOUND_COMPLETE, ended);
 			return C;
 		}
 		return null;
-	}//jingleend
+	}
 	private function jingleend(event:Event) {
 		var D:Dynamic = event.target;
-		//if (music == null && _song != null)
 		if (music != null && !muted)
 		{
 			music.soundTransform = new SoundTransform(musicvol, 0);
-			//music = null;
-			//_Play(_song, _songposition);
 		}
-		/*var i = 0;
-		while (i < activeaudio.length)
-		{
-			if (activeaudio[i].channel == D)
-			{
-				activeaudio.remove(activeaudio[i]);
-				//i--;
-				i = activeaudio.length;
-			}
-			i++;
-		}*/
 		jingle = null;
-		//thejingle = "";
 		removeactiveaudio(D);
-		//channels.remove(D);
 		if (music == null && nextsong != null)
 		{
 			PlayMusic(nextsong);
@@ -235,7 +195,6 @@ class SoundManager
 			if (activeaudio[i].channel == C)
 			{
 				activeaudio.remove(activeaudio[i]);
-				//i--;
 				return;
 				i = activeaudio.length;
 			}
@@ -250,21 +209,11 @@ class SoundManager
 			_song = null;
 		}
 		removeactiveaudio(D);
-		//channels.remove(D);
 	}
 	public static function StopAll() {
 		return _this._StopAll();
 	}
 	public function _StopAll() {
-		/*while (channels.length > 0)
-		{
-			var C = channels[0];
-			C.stop();
-			if (channels.indexOf(C) > -1)
-			{
-				channels.remove(C);
-			}
-		}*/
 		while (activeaudio.length > 0)
 		{
 			var D = activeaudio[0];
@@ -291,15 +240,6 @@ class SoundManager
 		{
 			volume = 1;
 		}
-		/*while (i < channels.length)
-		{
-			var C = channels[i];
-			if (C != music)
-			{
-				C.soundTransform = new SoundTransform(volume, 0);
-			}
-			i += 1;
-		}*///activeaudio
 		while (i < activeaudio.length)
 		{
 			var D = activeaudio[i];
@@ -330,15 +270,6 @@ class SoundManager
 		{
 			volume = 1;
 		}
-		/*while (i < channels.length)
-		{
-			var C = channels[i];
-			if (C == music)
-			{
-				C.soundTransform = new SoundTransform(volume, 0);
-			}
-			i += 1;
-		}*/
 		while (i < activeaudio.length)
 		{
 			var D = activeaudio[i];
@@ -354,17 +285,9 @@ class SoundManager
 	public function Mute() {
 		var i = 0;
 		muted = true;
-		/*while (i < channels.length)
-		{
-			var C = channels[i];
-			//C.soundTransform.volume = 0;
-			C.soundTransform = new SoundTransform(0, 0);
-			i += 1;
-		}*/
 		while (i < activeaudio.length)
 		{
 			var C = activeaudio[i].channel;
-			//C.soundTransform.volume = 0;
 			C.soundTransform = new SoundTransform(0, 0);
 			i += 1;
 		}
@@ -376,7 +299,6 @@ class SoundManager
 		while (i < activeaudio.length)
 		{
 			var C = activeaudio[i].channel;
-			//C.soundTransform.volume = 1;
 			var V = sndvol;
 			if (C == music)
 			{

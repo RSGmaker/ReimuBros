@@ -10,7 +10,6 @@ class Cirno extends Enemy
 	public var accel:Float;
 	
 	public var mxspd:Float;
-	//public var controller:Array<Bool>;
 	//how long until initiating countdown
 	public var timer:Int;
 	public var rng:MersenneTwister;
@@ -26,9 +25,7 @@ class Cirno extends Enemy
 	
 	public function new() 
 	{
-		//super(main, "RedFairy");
 		super("Cirno");
-		//this.charname = "RedFairy";
 		accel = 0.5;
 		deccel = 0.1;
 		mxspd = 4;
@@ -39,7 +36,6 @@ class Cirno extends Enemy
 		reward = false;
 		pointvalue = 150;
 		mxtimer = 90;
-		//countdown = 90;
 		respawn = false;
 		rename = "ECirno";
 		needtokill = false;
@@ -47,8 +43,6 @@ class Cirno extends Enemy
 	
 	public override function enrage()
 	{
-		//accel = 0.7;
-		//mxspd = 6;
 		enraged = false;
 	}
 	public function targetplatform(D:Dynamic) {
@@ -68,7 +62,6 @@ class Cirno extends Enemy
 	}
 	public override function update()
 	{
-		//y += 1;
 		if (!killed)
 		{
 		if (rng == null)
@@ -81,10 +74,9 @@ class Cirno extends Enemy
 				flaming = true;
 				rename = "firecirno";
 				mxtimer = 120;
-			}//ElectricCirno
+			}
 			else if (game.RoundType == GameView.TypeofRound.ElectricCirno || (game.level>30 && rng.twist(rng.seed, 1, 100)[0] > 97))
 			{
-				//flaming = true;
 				electric = true;
 				flaming = true;
 				rename = "electriccirno";
@@ -94,7 +86,6 @@ class Cirno extends Enemy
 		}
 		if (ground != null && !flaming && !electric)
 		{
-			 //&& (ground.dangerous)
 			 if (ground.type == "Block") 
 			 {
 				var D:Dynamic = ground;
@@ -122,11 +113,9 @@ class Cirno extends Enemy
 		if (selfdestruct)
 		{
 			countdown -= 1;
-			//enraged = !enraged;
 			visuallyEnraged = !visuallyEnraged;
 			if (countdown <= 0)
 			{
-				//SoundManager.Play("fireballspawn");
 			if (game.Hoster && ground != null && ((!ground.icy && !flaming) || (!ground.dangerous && flaming && y<500)))
 			{
 				var D:Dynamic = { };
@@ -134,7 +123,6 @@ class Cirno extends Enemy
 				D.y = ground.y;
 				targetplatform(D);
 				game.SendEvent("Cirnobomb", D);
-				//alive = false;
 			}
 			}
 			Hspeed = 0;
@@ -142,7 +130,6 @@ class Cirno extends Enemy
 		else
 		{
 			countdown = 90;
-			//enraged = false;
 			visuallyEnraged = false;
 		}
 		if (!killed)
@@ -178,32 +165,25 @@ class Cirno extends Enemy
 		
 		if (ground != null)
 		{
-			//if (ground.bonked > -1000 && game.Hoster && game.myplayer == ground.bonkedby)
 			if (ground.bonked > -1000 && Vspeed>=0)
 			{
-				//if (game.ismyplayer(ground.bonkedby) && game.Hoster)
 				if (game.myplayer == ground.bonkedby)
 				{
-				//Vspeed = -4;
-				//flipped = 30 * 10;
 				var D:Dynamic = { };
 				D.UID = UID;
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
 				D.Vspeed = -10;
-				//game.SendEvent("Bump", this.UID);
 				game.SendEvent("Bump", D);
 				}
 			}
 			else
 			{
-				//if ((controller[1]) && Vspeed == 0)
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
 					Vspeed = -4;
-					//Vspeed = -13;
 				}
 			}
 			
@@ -241,12 +221,10 @@ class Cirno extends Enemy
 	}
 	public override function bump()
 	{
-		//alive = false;
 		killed = true;
 		if (ground != null && ground.bonkedby != null && ground.bonkedby.type=="Player")
 		{
 			var D:Dynamic = ground.bonkedby;
-			//D.score += pointvalue;
 			killedby = D;
 		}
 	}

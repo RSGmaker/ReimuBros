@@ -10,7 +10,6 @@ class Nue extends Enemy
 	public var accel:Float;
 	
 	public var mxspd:Float;
-	//public var started:Bool;
 	public var timer:Int;
 	public var rng:MersenneTwister;
 	public var flipping:Bool;
@@ -21,13 +20,10 @@ class Nue extends Enemy
 	public var disguised:Bool;
 	public var frames:Int;
 	public var unlock:Int;
-	//public var have:Bool;
 	public var alternate:Bool;
 	public function new() 
 	{
-		//super(main, "RedFairy");
 		super("Nue");
-		//this.charname = "RedFairy";
 		accel = 0.5;
 		deccel = 0.1;
 		mxspd = 5;
@@ -44,8 +40,6 @@ class Nue extends Enemy
 	
 	public override function enrage()
 	{
-		//accel = 0.7;
-		//mxspd = 6;
 	}
 	public override function update()
 	{
@@ -96,18 +90,15 @@ class Nue extends Enemy
 		{
 		if (frames & 1 > 0 && !have)
 		{
-			//enraged = !enraged;
 			S = S + "U";
 		}
 		if (have)
 		{
-			//enraged = true;
 			S = S + "U";
 		}
 		}
 		enraged = false;
 		
-		//y += 1;
 		if (!killed)
 		{
 		var dir = Ldir;
@@ -139,24 +130,11 @@ class Nue extends Enemy
 		var F = flipped;
 		flipped = 0;
 		updphysics();
-		//updateanimation(rename);
 		updateanimation(S);
 		flipped = F;
 		if (flipped > 0)
 		{
 			this.rotation = 90;
-			/*if (Hspeed > 0)
-			{
-				this.rotationZ = 270;
-			}
-			else if (Hspeed<0)
-			{
-				this.rotationZ = 90;
-			}
-			else if (this.rotationZ == 0)
-			{
-				this.rotationZ = 180;
-			}*/
 		}
 		else
 		{
@@ -165,33 +143,26 @@ class Nue extends Enemy
 		
 		if (ground != null)
 		{
-			//if (ground.bonked > -1000 && game.Hoster && game.myplayer == ground.bonkedby)
 			if (ground.bonked > -1000 && Vspeed>=0)
 			{
-				//if (game.ismyplayer(ground.bonkedby) && game.Hoster)
 				if (game.myplayer == ground.bonkedby)
 				{
-				//Vspeed = -4;
-				//flipped = 30 * 10;
 				var D:Dynamic = { };
 				D.UID = UID;
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed * 0.5;
 				D.Vspeed = -10;
-				//game.SendEvent("Bump", this.UID);
 				game.SendEvent("Bump", D);
 				}
 			}
 			else
 			{
-				//if ((controller[1]) && Vspeed == 0)
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
 					Vspeed = -4;
 					HP = 0;
-					//Vspeed = -13;
 				}
 			}
 			
@@ -214,7 +185,6 @@ class Nue extends Enemy
 	}
 	public override function bump()
 	{
-		//Vspeed = -4;
 		if (disguised)
 		{
 			rename = "nue";

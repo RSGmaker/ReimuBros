@@ -17,9 +17,7 @@ class Mystia extends Enemy
 	public var rename:String;
 	public function new() 
 	{
-		//super(main, "RedFairy");
 		super("Mystia");
-		//this.charname = "Mystia";
 		accel = 0.8;
 		deccel = 0.1;
 		mxspd = 6;
@@ -34,12 +32,6 @@ class Mystia extends Enemy
 		rename = "EMystia";
 	}
 	
-	/*public override function enrage()
-	{
-		accel += 0.3;
-		mxspd += 2;
-		mntime += 29;
-	}*/
 	public override function increaserank()
 	{
 			accel += 0.15;
@@ -51,15 +43,6 @@ class Mystia extends Enemy
 	{
 		if (!started)
 		{
-			/*var i = 0;
-			while (i < rank)
-			{
-				accel += 0.15;
-				mxspd += 1;
-				mntime += 5;
-				pointvalue += 100;
-				i++;
-			}*/
 			started = true;
 		}
 		if (rng == null)
@@ -68,7 +51,6 @@ class Mystia extends Enemy
 			var seed:UInt = Math.floor(UID * 100000);
 			rng.twist(seed, 1, 100000);
 		}
-		//y += 1;
 		if (!killed)
 		{
 		var dir = Ldir;
@@ -86,8 +68,7 @@ class Mystia extends Enemy
 		{
 			dangerous = true;
 		}
-		
-		/**/
+	
 		updphysics();
 		if (ground == null || Vspeed<0)
 		{
@@ -124,7 +105,6 @@ class Mystia extends Enemy
 				frames += 1;
 				if (frames > 90)
 				{
-					//Vspeed = - 8;
 					rng.seed += rng.twist(rng.seed, 1, 800)[0];
 					Vspeed = -4 - ((rng.seed % 800)*0.01);
 				}
@@ -136,32 +116,25 @@ class Mystia extends Enemy
 		
 		if (ground != null)
 		{
-			//if (ground.bonked > -1000 && game.Hoster && game.myplayer == ground.bonkedby)
 			if (ground.bonked > -1000 && Vspeed>=0)
 			{
-				//if (game.ismyplayer(ground.bonkedby) && game.Hoster)
 				if (game.myplayer == ground.bonkedby)
 				{
-				//Vspeed = -4;
-				//flipped = 30 * 10;
 				var D:Dynamic = { };
 				D.UID = UID;
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
 				D.Vspeed = -10;
-				//game.SendEvent("Bump", this.UID);
 				game.SendEvent("Bump", D);
 				}
 			}
 			else
 			{
-				//if ((controller[1]) && Vspeed == 0)
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
 					Vspeed = -4;
-					//Vspeed = -13;
 				}
 			}
 			
@@ -184,7 +157,6 @@ class Mystia extends Enemy
 	}
 	public override function bump()
 	{
-		//Vspeed = -4;
 		if (flipped < 1)
 		{
 			if (enraged)

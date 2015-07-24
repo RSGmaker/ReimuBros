@@ -23,11 +23,6 @@ class Keine extends Enemy
 		ex = false;
 		pointvalue = 300;
 	}
-	/*public override function enrage()
-	{
-		//accel += 0.1;
-		//mxspd += 2;
-	}*/
 	
 	public override function increaserank()
 	{
@@ -37,26 +32,14 @@ class Keine extends Enemy
 	}
 	public override function update()
 	{
-		//var name = charname;
 		if (!started)
 		{
-		/*var i = 0;
-			while (i < rank)
-			{
-				accel += 0.05;
-				mxspd += 1.5;
-				pointvalue += 150;
-				i++;
-			}*/
 			started = true;
 		}
 		var MXS = mxspd;
 		var acl = accel;
 		var dir = Ldir;
-		//charname = "Keine";
 		charname = "Keine";
-		//accel = 0.4;
-		//mxspd = 3;
 		
 		if (ex)
 		{
@@ -64,12 +47,6 @@ class Keine extends Enemy
 			acl += 0.1;
 			charname = charname + "ex";
 		}
-		/*if (enraged)
-		{
-			MXS += 3;
-			acl += 0.1;
-		}*/
-		//y += 1;
 		if (!killed)
 		{
 		
@@ -86,7 +63,6 @@ class Keine extends Enemy
 				flipped = -1;
 				ex = false;
 				powerup();
-				//enraged = true;
 			}
 		}
 		if (Hspeed < MXS && dir==1 && flipped < 1)
@@ -110,32 +86,25 @@ class Keine extends Enemy
 		
 		if (ground != null)
 		{
-			//if (ground.bonked > -1000 && game.Hoster && game.myplayer == ground.bonkedby)
 			if (ground.bonked > -1000 && Vspeed>=0)
 			{
-				//if (game.ismyplayer(ground.bonkedby) && game.Hoster)
 				if (game.myplayer == ground.bonkedby)
 				{
-				//Vspeed = -4;
-				//flipped = 30 * 10;
 				var D:Dynamic = { };
 				D.UID = UID;
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
 				D.Vspeed = -10;
-				//game.SendEvent("Bump", this.UID);
 				game.SendEvent("Bump", D);
 				}
 			}
 			else
 			{
-				//if ((controller[1]) && Vspeed == 0)
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
 					Vspeed = -4;
-					//Vspeed = -13;
 				}
 			}
 			
@@ -159,8 +128,6 @@ class Keine extends Enemy
 	}
 	public override function bump()
 	{
-		//Vspeed = -4;
-		//Hspeed = 0;
 		Hspeed = accel * ( -Ldir);
 		if (flipped < 1)
 		{

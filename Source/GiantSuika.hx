@@ -17,7 +17,6 @@ class GiantSuika extends Entity
 	}
 	public override function update():Void 
 	{
-		//super.update();
 		visible = active;
 		if (!active)
 		{
@@ -66,21 +65,14 @@ class GiantSuika extends Entity
 				var Y = y;
 				rotateentity(rotation + 4);
 				y = Y + 32;
-				//rotation += 5;
-				//if (rotation > 3.14)
 				if (rotation > 90)
 				{
 					active = false;
 					if (game.Hoster)
 					{
 						var D:Dynamic = { };
-							//D.item = "Point";
 							
 							D.type = "GiantPoint";
-							/*if (EE.charname == "Imposter")
-							{
-								D.type = "1up";
-							}*/
 							D.UID = Math.random();
 							if (Math.random() > 0.5)
 							{
@@ -102,9 +94,7 @@ class GiantSuika extends Entity
 	}
 	public function tipover()
 	{
-		//rotation = 1;
 		rotateentity(1);
-		//rotation = 1;
 	}
 	public function activate()
 	{

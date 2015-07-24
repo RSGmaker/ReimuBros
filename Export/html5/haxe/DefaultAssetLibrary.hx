@@ -4,19 +4,24 @@ package;
 import haxe.Timer;
 import haxe.Unserializer;
 import lime.app.Preloader;
+import lime.audio.AudioSource;
 import lime.audio.openal.AL;
 import lime.audio.AudioBuffer;
-import lime.graphics.Font;
 import lime.graphics.Image;
+import lime.system.ThreadPool;
+import lime.text.Font;
 import lime.utils.ByteArray;
 import lime.utils.UInt8Array;
 import lime.Assets;
 
-#if (sys || nodejs)
+#if sys
 import sys.FileSystem;
 #end
 
-#if flash
+#if (js && html5)
+import lime.net.URLLoader;
+import lime.net.URLRequest;
+#elseif flash
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Loader;
@@ -35,6 +40,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 	public var type (default, null) = new Map <String, AssetType> ();
 	
 	private var lastModified:Float;
+	private var threadPool:ThreadPool;
 	private var timer:Timer;
 	
 	
@@ -3393,6 +3399,24 @@ class DefaultAssetLibrary extends AssetLibrary {
 	}
 	
 	
+	private function createThreadPool ():Void {
+		
+		threadPool = new ThreadPool (0, 2);
+		threadPool.doWork.add (function (id, data) {
+			
+			data.result = data.getMethod (id);
+			threadPool.sendComplete (data.handler, data);
+			
+		});
+		threadPool.onComplete.add (function (id, data) {
+			
+			data.handler (data.result);
+			
+		});
+		
+	}
+	
+	
 	public override function exists (id:String, type:String):Bool {
 		
 		var requestedType = type != null ? cast (type, AssetType) : null;
@@ -3408,11 +3432,11 @@ class DefaultAssetLibrary extends AssetLibrary {
 			
 			#if flash
 			
-			if ((assetType == BINARY || assetType == TEXT) && requestedType == BINARY) {
+			if (requestedType == BINARY && (assetType == BINARY || assetType == TEXT || assetType == IMAGE)) {
 				
 				return true;
 				
-			} else if (path.exists (id)) {
+			} else if (requestedType == null || path.exists (id)) {
 				
 				return true;
 				
@@ -3450,9 +3474,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		#else
 		
-		return AudioBuffer.fromFile (path.get (id));
-		//if (className.exists(id)) return cast (Type.createInstance (className.get (id), []), Sound);
-		//else return new Sound (new URLRequest (path.get (id)), null, type.get (id) == MUSIC);
+		if (className.exists(id)) return AudioBuffer.fromBytes (cast (Type.createInstance (className.get (id), []), ByteArray));
+		else return AudioBuffer.fromFile (path.get (id));
 		
 		#end
 		
@@ -3463,12 +3486,37 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		#if flash
 		
+		switch (type.get (id)) {
+			
+			case TEXT, BINARY:
+				
+				return cast (Type.createInstance (className.get (id), []), ByteArray);
+			
+			case IMAGE:
+				
+				var bitmapData = cast (Type.createInstance (className.get (id), []), BitmapData);
+				return bitmapData.getPixels (bitmapData.rect);
+			
+			default:
+				
+				return null;
+			
+		}
+		
 		return cast (Type.createInstance (className.get (id), []), ByteArray);
 		
 		#elseif html5
 		
 		var bytes:ByteArray = null;
-		var data = Preloader.loaders.get (path.get (id)).data;
+		var loader = Preloader.loaders.get (path.get (id));
+		
+		if (loader == null) {
+			
+			return null;
+			
+		}
+		
+		var data = loader.data;
 		
 		if (Std.is (data, String)) {
 			
@@ -3505,33 +3553,34 @@ class DefaultAssetLibrary extends AssetLibrary {
 	}
 	
 	
-	public override function getFont (id:String):Dynamic /*Font*/ {
+	public override function getFont (id:String):Font {
 		
-		// TODO: Complete Lime Font API
+		#if flash
 		
-		#if openfl
-		#if (flash || js)
+		var src = Type.createInstance (className.get (id), []);
 		
-		return cast (Type.createInstance (className.get (id), []), openfl.text.Font);
+		var font = new Font (src.fontName);
+		font.src = src;
+		return font;
+		
+		#elseif html5
+		
+		return cast (Type.createInstance (className.get (id), []), Font);
 		
 		#else
 		
 		if (className.exists (id)) {
 			
 			var fontClass = className.get (id);
-			openfl.text.Font.registerFont (fontClass);
-			return cast (Type.createInstance (fontClass, []), openfl.text.Font);
+			return cast (Type.createInstance (fontClass, []), Font);
 			
 		} else {
 			
-			return new openfl.text.Font (path.get (id));
+			return Font.fromFile (path.get (id));
 			
 		}
 		
 		#end
-		#end
-		
-		return null;
 		
 	}
 	
@@ -3548,7 +3597,16 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		#else
 		
-		return Image.fromFile (path.get (id));
+		if (className.exists (id)) {
+			
+			var fontClass = className.get (id);
+			return cast (Type.createInstance (fontClass, []), Image);
+			
+		} else {
+			
+			return Image.fromFile (path.get (id));
+			
+		}
 		
 		#end
 		
@@ -3605,7 +3663,15 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#if html5
 		
 		var bytes:ByteArray = null;
-		var data = Preloader.loaders.get (path.get (id)).data;
+		var loader = Preloader.loaders.get (path.get (id));
+		
+		if (loader == null) {
+			
+			return null;
+			
+		}
+		
+		var data = loader.data;
 		
 		if (Std.is (data, String)) {
 			
@@ -3656,11 +3722,11 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		#if flash
 		
-		if (requestedType != AssetType.MUSIC && requestedType != AssetType.SOUND) {
+		//if (requestedType != AssetType.MUSIC && requestedType != AssetType.SOUND) {
 			
 			return className.exists (id);
 			
-		}
+		//}
 		
 		#end
 		
@@ -3692,6 +3758,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 	public override function loadAudioBuffer (id:String, handler:AudioBuffer -> Void):Void {
 		
 		#if (flash)
+		
 		if (path.exists (id)) {
 			
 			var soundLoader = new Sound ();
@@ -3702,13 +3769,17 @@ class DefaultAssetLibrary extends AssetLibrary {
 				handler (audioBuffer);
 				
 			});
+			
 			soundLoader.load (new URLRequest (path.get (id)));
 			
 		} else {
+			
 			handler (getAudioBuffer (id));
 			
 		}
+		
 		#else
+		
 		handler (getAudioBuffer (id));
 		
 		#end
@@ -3740,9 +3811,35 @@ class DefaultAssetLibrary extends AssetLibrary {
 			
 		}
 		
+		#elseif html5
+		
+		if (path.exists (id)) {
+			
+			var loader = new URLLoader ();
+			loader.dataFormat = BINARY;
+			loader.onComplete.add (function (_):Void {
+				
+				handler (loader.data);
+				
+			});
+			
+			loader.load (new URLRequest (path.get (id)));
+			
+		} else {
+			
+			handler (getBytes (id));
+			
+		}
+		
 		#else
 		
-		handler (getBytes (id));
+		if (threadPool == null) {
+			
+			createThreadPool ();
+			
+		}
+		
+		threadPool.queue (id, { handler: handler, getMethod: getBytes });
 		
 		#end
 		
@@ -3770,9 +3867,33 @@ class DefaultAssetLibrary extends AssetLibrary {
 			
 		}
 		
+		#elseif html5
+		
+		if (path.exists (id)) {
+			
+			var image = new js.html.Image ();
+			image.onload = function (_):Void {
+				
+				handler (Image.fromImageElement (image));
+				
+			}
+			image.src = path.get (id);
+			
+		} else {
+			
+			handler (getImage (id));
+			
+		}
+		
 		#else
 		
-		handler (getImage (id));
+		if (threadPool == null) {
+			
+			createThreadPool ();
+			
+		}
+		
+		threadPool.queue (id, { handler: handler, getMethod: getImage });
 		
 		#end
 		
@@ -3792,6 +3913,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 			var bytes = ByteArray.readFile ("assets/manifest");
 			#elseif (mac && java)
 			var bytes = ByteArray.readFile ("../Resources/manifest");
+			#elseif ios
+			var bytes = ByteArray.readFile ("assets/manifest");
 			#else
 			var bytes = ByteArray.readFile ("manifest");
 			#end
@@ -3812,7 +3935,11 @@ class DefaultAssetLibrary extends AssetLibrary {
 							
 							if (!className.exists (asset.id)) {
 								
+								#if ios
+								path.set (asset.id, "assets/" + asset.path);
+								#else
 								path.set (asset.id, asset.path);
+								#end
 								type.set (asset.id, cast (asset.type, AssetType));
 								
 							}
@@ -3841,7 +3968,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 	
 	/*public override function loadMusic (id:String, handler:Dynamic -> Void):Void {
 		
-		#if (flash || js)
+		#if (flash || html5)
 		
 		//if (path.exists (id)) {
 			
@@ -3870,25 +3997,26 @@ class DefaultAssetLibrary extends AssetLibrary {
 	
 	public override function loadText (id:String, handler:String -> Void):Void {
 		
-		//#if html5
+		#if html5
 		
-		/*if (path.exists (id)) {
+		if (path.exists (id)) {
 			
 			var loader = new URLLoader ();
-			loader.addEventListener (Event.COMPLETE, function (event:Event) {
+			loader.onComplete.add (function (_):Void {
 				
-				handler (event.currentTarget.data);
+				handler (loader.data);
 				
 			});
+			
 			loader.load (new URLRequest (path.get (id)));
 			
 		} else {
 			
 			handler (getText (id));
 			
-		}*/
+		}
 		
-		//#else
+		#else
 		
 		var callback = function (bytes:ByteArray):Void {
 			
@@ -3906,7 +4034,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		loadBytes (id, callback);
 		
-		//#end
+		#end
 		
 	}
 	
@@ -4249,7 +4377,6 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 #elseif html5
 
-#if openfl
 
 
 
@@ -4579,347 +4706,348 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
-#end
 
 #else
 
-#if openfl
 
-#end
 
 #if (windows || mac || linux)
 
 
-@:sound("Assets/Audio/Ogg/bonk.OGG") class __ASSET__assets_audio_ogg_bonk_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/characterselect.OGG") class __ASSET__assets_audio_ogg_characterselect_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/collectcoin.OGG") class __ASSET__assets_audio_ogg_collectcoin_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/died.OGG") class __ASSET__assets_audio_ogg_died_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/extend.OGG") class __ASSET__assets_audio_ogg_extend_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/finalkill.OGG") class __ASSET__assets_audio_ogg_finalkill_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/fireballspawn.OGG") class __ASSET__assets_audio_ogg_fireballspawn_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/gameover.OGG") class __ASSET__assets_audio_ogg_gameover_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/killenemy.OGG") class __ASSET__assets_audio_ogg_killenemy_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/masterspark.OGG") class __ASSET__assets_audio_ogg_masterspark_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/nextlevel.OGG") class __ASSET__assets_audio_ogg_nextlevel_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/pow.OGG") class __ASSET__assets_audio_ogg_pow_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/respawn.OGG") class __ASSET__assets_audio_ogg_respawn_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/spawncoin.OGG") class __ASSET__assets_audio_ogg_spawncoin_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/startgame.OGG") class __ASSET__assets_audio_ogg_startgame_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/step1.OGG") class __ASSET__assets_audio_ogg_step1_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/step2.OGG") class __ASSET__assets_audio_ogg_step2_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/step3.OGG") class __ASSET__assets_audio_ogg_step3_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/theme1.OGG") class __ASSET__assets_audio_ogg_theme1_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/theme10.OGG") class __ASSET__assets_audio_ogg_theme10_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/theme11.OGG") class __ASSET__assets_audio_ogg_theme11_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/theme12.OGG") class __ASSET__assets_audio_ogg_theme12_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/theme12intro.OGG") class __ASSET__assets_audio_ogg_theme12intro_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/theme2.OGG") class __ASSET__assets_audio_ogg_theme2_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/theme3.OGG") class __ASSET__assets_audio_ogg_theme3_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/theme4.OGG") class __ASSET__assets_audio_ogg_theme4_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/theme5.OGG") class __ASSET__assets_audio_ogg_theme5_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/theme6.OGG") class __ASSET__assets_audio_ogg_theme6_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/theme7.OGG") class __ASSET__assets_audio_ogg_theme7_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/theme8.OGG") class __ASSET__assets_audio_ogg_theme8_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/theme8intro.OGG") class __ASSET__assets_audio_ogg_theme8intro_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/theme9.OGG") class __ASSET__assets_audio_ogg_theme9_ogg extends lime.audio.AudioSource {}
-@:sound("Assets/Audio/Ogg/titlescreen.OGG") class __ASSET__assets_audio_ogg_titlescreen_ogg extends lime.audio.AudioSource {}
-@:bitmap("Assets/bgcolor.png") class __ASSET__assets_bgcolor_png extends lime.graphics.Image {}
-@:bitmap("Assets/black.png") class __ASSET__assets_black_png extends lime.graphics.Image {}
-@:bitmap("Assets/Dpad.png") class __ASSET__assets_dpad_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/1up0.png") class __ASSET__assets_sprites_1up0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/akyu0.png") class __ASSET__assets_sprites_akyu0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/alice0.png") class __ASSET__assets_sprites_alice0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/aliceALT0.png") class __ASSET__assets_sprites_alicealt0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/aya0.png") class __ASSET__assets_sprites_aya0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ayana0.png") class __ASSET__assets_sprites_ayana0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/balloon0.png") class __ASSET__assets_sprites_balloon0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/barrier0.png") class __ASSET__assets_sprites_barrier0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/benben0.png") class __ASSET__assets_sprites_benben0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/BG0.png") class __ASSET__assets_sprites_bg0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/BG1.png") class __ASSET__assets_sprites_bg1_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/BG2.png") class __ASSET__assets_sprites_bg2_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/BG3.png") class __ASSET__assets_sprites_bg3_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/BG4.png") class __ASSET__assets_sprites_bg4_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/BG5.png") class __ASSET__assets_sprites_bg5_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/black0.png") class __ASSET__assets_sprites_black0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/block0.png") class __ASSET__assets_sprites_block0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/BlueFairy0.png") class __ASSET__assets_sprites_bluefairy0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/BlueFairyflipped0.png") class __ASSET__assets_sprites_bluefairyflipped0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/Blueufo0.png") class __ASSET__assets_sprites_blueufo0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/bomb0.png") class __ASSET__assets_sprites_bomb0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/bullet0.png") class __ASSET__assets_sprites_bullet0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/byakuren0.png") class __ASSET__assets_sprites_byakuren0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/charblock0.png") class __ASSET__assets_sprites_charblock0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/chen0.png") class __ASSET__assets_sprites_chen0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/chiyuri0.png") class __ASSET__assets_sprites_chiyuri0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/cirno0.png") class __ASSET__assets_sprites_cirno0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/CSBG0.png") class __ASSET__assets_sprites_csbg0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/daiyousei0.png") class __ASSET__assets_sprites_daiyousei0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/darkness0.png") class __ASSET__assets_sprites_darkness0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/diosakuya0.png") class __ASSET__assets_sprites_diosakuya0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/doremy0.png") class __ASSET__assets_sprites_doremy0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen0.png") class __ASSET__assets_sprites_echen0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen1.png") class __ASSET__assets_sprites_echen1_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen10.png") class __ASSET__assets_sprites_echen10_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen11.png") class __ASSET__assets_sprites_echen11_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen12.png") class __ASSET__assets_sprites_echen12_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen13.png") class __ASSET__assets_sprites_echen13_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen14.png") class __ASSET__assets_sprites_echen14_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen15.png") class __ASSET__assets_sprites_echen15_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen2.png") class __ASSET__assets_sprites_echen2_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen3.png") class __ASSET__assets_sprites_echen3_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen4.png") class __ASSET__assets_sprites_echen4_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen5.png") class __ASSET__assets_sprites_echen5_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen6.png") class __ASSET__assets_sprites_echen6_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen7.png") class __ASSET__assets_sprites_echen7_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen8.png") class __ASSET__assets_sprites_echen8_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EChen9.png") class __ASSET__assets_sprites_echen9_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ECirno0.png") class __ASSET__assets_sprites_ecirno0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/eirin0.png") class __ASSET__assets_sprites_eirin0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EKeine0.png") class __ASSET__assets_sprites_ekeine0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EKeineex0.png") class __ASSET__assets_sprites_ekeineex0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EKeineexflipped0.png") class __ASSET__assets_sprites_ekeineexflipped0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/electriccirno0.png") class __ASSET__assets_sprites_electriccirno0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/elis0.png") class __ASSET__assets_sprites_elis0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ellen0.png") class __ASSET__assets_sprites_ellen0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/elly0.png") class __ASSET__assets_sprites_elly0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EMystia0.png") class __ASSET__assets_sprites_emystia0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EMystia1.png") class __ASSET__assets_sprites_emystia1_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/EMystiaflipped0.png") class __ASSET__assets_sprites_emystiaflipped0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan0.png") class __ASSET__assets_sprites_eran0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan1.png") class __ASSET__assets_sprites_eran1_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan10.png") class __ASSET__assets_sprites_eran10_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan11.png") class __ASSET__assets_sprites_eran11_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan12.png") class __ASSET__assets_sprites_eran12_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan13.png") class __ASSET__assets_sprites_eran13_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan14.png") class __ASSET__assets_sprites_eran14_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan15.png") class __ASSET__assets_sprites_eran15_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan2.png") class __ASSET__assets_sprites_eran2_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan3.png") class __ASSET__assets_sprites_eran3_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan4.png") class __ASSET__assets_sprites_eran4_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan5.png") class __ASSET__assets_sprites_eran5_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan6.png") class __ASSET__assets_sprites_eran6_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan7.png") class __ASSET__assets_sprites_eran7_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan8.png") class __ASSET__assets_sprites_eran8_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ERan9.png") class __ASSET__assets_sprites_eran9_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/evilyuuka0.png") class __ASSET__assets_sprites_evilyuuka0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/exkeine0.png") class __ASSET__assets_sprites_exkeine0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/firecirno0.png") class __ASSET__assets_sprites_firecirno0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/flames0.png") class __ASSET__assets_sprites_flames0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/flames1.png") class __ASSET__assets_sprites_flames1_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/flames2.png") class __ASSET__assets_sprites_flames2_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/flandre0.png") class __ASSET__assets_sprites_flandre0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/futo0.png") class __ASSET__assets_sprites_futo0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/Gap0.png") class __ASSET__assets_sprites_gap0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/gengetsu0.png") class __ASSET__assets_sprites_gengetsu0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/giantcirno0.png") class __ASSET__assets_sprites_giantcirno0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/giantsuika0.png") class __ASSET__assets_sprites_giantsuika0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/Greenufo0.png") class __ASSET__assets_sprites_greenufo0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer0.png") class __ASSET__assets_sprites_hammer0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer1.png") class __ASSET__assets_sprites_hammer1_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer10.png") class __ASSET__assets_sprites_hammer10_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer11.png") class __ASSET__assets_sprites_hammer11_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer12.png") class __ASSET__assets_sprites_hammer12_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer13.png") class __ASSET__assets_sprites_hammer13_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer14.png") class __ASSET__assets_sprites_hammer14_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer15.png") class __ASSET__assets_sprites_hammer15_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer2.png") class __ASSET__assets_sprites_hammer2_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer3.png") class __ASSET__assets_sprites_hammer3_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer4.png") class __ASSET__assets_sprites_hammer4_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer5.png") class __ASSET__assets_sprites_hammer5_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer6.png") class __ASSET__assets_sprites_hammer6_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer7.png") class __ASSET__assets_sprites_hammer7_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer8.png") class __ASSET__assets_sprites_hammer8_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hammer9.png") class __ASSET__assets_sprites_hammer9_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hatate0.png") class __ASSET__assets_sprites_hatate0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/hina0.png") class __ASSET__assets_sprites_hina0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ichirin0.png") class __ASSET__assets_sprites_ichirin0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/icyblock0.png") class __ASSET__assets_sprites_icyblock0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/iku0.png") class __ASSET__assets_sprites_iku0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ikuikudance0.png") class __ASSET__assets_sprites_ikuikudance0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/kagerou0.png") class __ASSET__assets_sprites_kagerou0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/kaguya0.png") class __ASSET__assets_sprites_kaguya0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/kana0.png") class __ASSET__assets_sprites_kana0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/kanako0.png") class __ASSET__assets_sprites_kanako0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/kasen0.png") class __ASSET__assets_sprites_kasen0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/keine0.png") class __ASSET__assets_sprites_keine0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/knife0.png") class __ASSET__assets_sprites_knife0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/knife1.png") class __ASSET__assets_sprites_knife1_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/knife2.png") class __ASSET__assets_sprites_knife2_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/knife3.png") class __ASSET__assets_sprites_knife3_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/knife4.png") class __ASSET__assets_sprites_knife4_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/knife5.png") class __ASSET__assets_sprites_knife5_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/knife6.png") class __ASSET__assets_sprites_knife6_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/knife7.png") class __ASSET__assets_sprites_knife7_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/koakuma0.png") class __ASSET__assets_sprites_koakuma0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/kogasa0.png") class __ASSET__assets_sprites_kogasa0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/kogasaflipped0.png") class __ASSET__assets_sprites_kogasaflipped0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/koishi0.png") class __ASSET__assets_sprites_koishi0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/koishiflipped0.png") class __ASSET__assets_sprites_koishiflipped0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/kokoro0.png") class __ASSET__assets_sprites_kokoro0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/komachi0.png") class __ASSET__assets_sprites_komachi0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/konngara0.png") class __ASSET__assets_sprites_konngara0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/kosuzu0.png") class __ASSET__assets_sprites_kosuzu0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/kotohime0.png") class __ASSET__assets_sprites_kotohime0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/kurumi0.png") class __ASSET__assets_sprites_kurumi0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/kyouko0.png") class __ASSET__assets_sprites_kyouko0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/letty0.png") class __ASSET__assets_sprites_letty0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/lightning0.png") class __ASSET__assets_sprites_lightning0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/lily0.png") class __ASSET__assets_sprites_lily0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/louise0.png") class __ASSET__assets_sprites_louise0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/lunachild0.png") class __ASSET__assets_sprites_lunachild0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/lunasa0.png") class __ASSET__assets_sprites_lunasa0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/lyrica0.png") class __ASSET__assets_sprites_lyrica0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/mai0.png") class __ASSET__assets_sprites_mai0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/makairesident-a0.png") class __ASSET__assets_sprites_makairesident_a0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/makairesident-b0.png") class __ASSET__assets_sprites_makairesident_b0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/mamizou0.png") class __ASSET__assets_sprites_mamizou0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/maribel0.png") class __ASSET__assets_sprites_maribel0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/marisa0.png") class __ASSET__assets_sprites_marisa0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/marisaALT0.png") class __ASSET__assets_sprites_marisaalt0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/matenshi0.png") class __ASSET__assets_sprites_matenshi0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/medicine0.png") class __ASSET__assets_sprites_medicine0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/meiling0.png") class __ASSET__assets_sprites_meiling0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/meilingALT0.png") class __ASSET__assets_sprites_meilingalt0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/meira0.png") class __ASSET__assets_sprites_meira0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/merlin0.png") class __ASSET__assets_sprites_merlin0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/miko0.png") class __ASSET__assets_sprites_miko0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/mima0.png") class __ASSET__assets_sprites_mima0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/mimaALT0.png") class __ASSET__assets_sprites_mimaalt0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/minoriko0.png") class __ASSET__assets_sprites_minoriko0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/mokou0.png") class __ASSET__assets_sprites_mokou0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/momiji0.png") class __ASSET__assets_sprites_momiji0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/mrghosty0.png") class __ASSET__assets_sprites_mrghosty0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/mugetsu0.png") class __ASSET__assets_sprites_mugetsu0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/murasa0.png") class __ASSET__assets_sprites_murasa0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/myon0.png") class __ASSET__assets_sprites_myon0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/mystia0.png") class __ASSET__assets_sprites_mystia0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/mystiaALT0.png") class __ASSET__assets_sprites_mystiaalt0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/nazrin0.png") class __ASSET__assets_sprites_nazrin0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/nazrinflipped0.png") class __ASSET__assets_sprites_nazrinflipped0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/nitori0.png") class __ASSET__assets_sprites_nitori0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/noroiko0.png") class __ASSET__assets_sprites_noroiko0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/nue0.png") class __ASSET__assets_sprites_nue0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/options0.png") class __ASSET__assets_sprites_options0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/orange0.png") class __ASSET__assets_sprites_orange0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/orin0.png") class __ASSET__assets_sprites_orin0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/parsee0.png") class __ASSET__assets_sprites_parsee0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/patchouli0.png") class __ASSET__assets_sprites_patchouli0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/pika0.png") class __ASSET__assets_sprites_pika0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/Point0.png") class __ASSET__assets_sprites_point0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/POW0.png") class __ASSET__assets_sprites_pow0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/POWalt0.png") class __ASSET__assets_sprites_powalt0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/prinny0.png") class __ASSET__assets_sprites_prinny0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/raiko0.png") class __ASSET__assets_sprites_raiko0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ran0.png") class __ASSET__assets_sprites_ran0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/RedFairy0.png") class __ASSET__assets_sprites_redfairy0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/RedFairyflipped0.png") class __ASSET__assets_sprites_redfairyflipped0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/Redufo0.png") class __ASSET__assets_sprites_redufo0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/reimu0.png") class __ASSET__assets_sprites_reimu0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/reimuALT0.png") class __ASSET__assets_sprites_reimualt0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/reimuflipped0.png") class __ASSET__assets_sprites_reimuflipped0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/reisen0.png") class __ASSET__assets_sprites_reisen0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/remilia0.png") class __ASSET__assets_sprites_remilia0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/rengeteki0.png") class __ASSET__assets_sprites_rengeteki0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/renko0.png") class __ASSET__assets_sprites_renko0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/rika0.png") class __ASSET__assets_sprites_rika0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/rikako0.png") class __ASSET__assets_sprites_rikako0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/rin0.png") class __ASSET__assets_sprites_rin0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ringo0.png") class __ASSET__assets_sprites_ringo0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/rumia0.png") class __ASSET__assets_sprites_rumia0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/ruukoto0.png") class __ASSET__assets_sprites_ruukoto0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/sakuya0.png") class __ASSET__assets_sprites_sakuya0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/sakuyaALT0.png") class __ASSET__assets_sprites_sakuyaalt0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/sanae0.png") class __ASSET__assets_sprites_sanae0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/sanaeALT0.png") class __ASSET__assets_sprites_sanaealt0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/sara0.png") class __ASSET__assets_sprites_sara0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/sariel0.png") class __ASSET__assets_sprites_sariel0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/satori0.png") class __ASSET__assets_sprites_satori0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/satoriflipped0.png") class __ASSET__assets_sprites_satoriflipped0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/seiga0.png") class __ASSET__assets_sprites_seiga0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/seija0.png") class __ASSET__assets_sprites_seija0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/seiran0.png") class __ASSET__assets_sprites_seiran0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/sekibanki0.png") class __ASSET__assets_sprites_sekibanki0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/shanghai0.png") class __ASSET__assets_sprites_shanghai0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/shikieiki0.png") class __ASSET__assets_sprites_shikieiki0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/shingyoku0.png") class __ASSET__assets_sprites_shingyoku0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/shingyokuALT0.png") class __ASSET__assets_sprites_shingyokualt0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/shinki0.png") class __ASSET__assets_sprites_shinki0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/shinmyoumaru0.png") class __ASSET__assets_sprites_shinmyoumaru0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/shizuha0.png") class __ASSET__assets_sprites_shizuha0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/shou0.png") class __ASSET__assets_sprites_shou0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/skull0.png") class __ASSET__assets_sprites_skull0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/starbulletg0.png") class __ASSET__assets_sprites_starbulletg0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/starbullety0.png") class __ASSET__assets_sprites_starbullety0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/starsaphire0.png") class __ASSET__assets_sprites_starsaphire0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/suika0.png") class __ASSET__assets_sprites_suika0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/sumireko0.png") class __ASSET__assets_sprites_sumireko0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/sunnymilk0.png") class __ASSET__assets_sprites_sunnymilk0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/suwako0.png") class __ASSET__assets_sprites_suwako0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table0.png") class __ASSET__assets_sprites_table0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table1.png") class __ASSET__assets_sprites_table1_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table10.png") class __ASSET__assets_sprites_table10_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table11.png") class __ASSET__assets_sprites_table11_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table12.png") class __ASSET__assets_sprites_table12_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table13.png") class __ASSET__assets_sprites_table13_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table14.png") class __ASSET__assets_sprites_table14_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table15.png") class __ASSET__assets_sprites_table15_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table2.png") class __ASSET__assets_sprites_table2_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table3.png") class __ASSET__assets_sprites_table3_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table4.png") class __ASSET__assets_sprites_table4_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table5.png") class __ASSET__assets_sprites_table5_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table6.png") class __ASSET__assets_sprites_table6_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table7.png") class __ASSET__assets_sprites_table7_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table8.png") class __ASSET__assets_sprites_table8_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/table9.png") class __ASSET__assets_sprites_table9_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/tenshi0.png") class __ASSET__assets_sprites_tenshi0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/tewi0.png") class __ASSET__assets_sprites_tewi0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/tewiflipped0.png") class __ASSET__assets_sprites_tewiflipped0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/titlescreen0.png") class __ASSET__assets_sprites_titlescreen0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/tojiko0.png") class __ASSET__assets_sprites_tojiko0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/tokiko0.png") class __ASSET__assets_sprites_tokiko0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/toyohime0.png") class __ASSET__assets_sprites_toyohime0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/trophy0.png") class __ASSET__assets_sprites_trophy0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/truck0.png") class __ASSET__assets_sprites_truck0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/udongein0.png") class __ASSET__assets_sprites_udongein0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/udongeinflipped0.png") class __ASSET__assets_sprites_udongeinflipped0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/unused0.png") class __ASSET__assets_sprites_unused0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/unzanfist0.png") class __ASSET__assets_sprites_unzanfist0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/utsuho0.png") class __ASSET__assets_sprites_utsuho0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/wakasagihime0.png") class __ASSET__assets_sprites_wakasagihime0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/wriggle0.png") class __ASSET__assets_sprites_wriggle0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yamame0.png") class __ASSET__assets_sprites_yamame0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yatsuhashi0.png") class __ASSET__assets_sprites_yatsuhashi0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb0.png") class __ASSET__assets_sprites_yinyangorb0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb1.png") class __ASSET__assets_sprites_yinyangorb1_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb10.png") class __ASSET__assets_sprites_yinyangorb10_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb11.png") class __ASSET__assets_sprites_yinyangorb11_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb12.png") class __ASSET__assets_sprites_yinyangorb12_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb13.png") class __ASSET__assets_sprites_yinyangorb13_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb14.png") class __ASSET__assets_sprites_yinyangorb14_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb15.png") class __ASSET__assets_sprites_yinyangorb15_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb2.png") class __ASSET__assets_sprites_yinyangorb2_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb3.png") class __ASSET__assets_sprites_yinyangorb3_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb4.png") class __ASSET__assets_sprites_yinyangorb4_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb5.png") class __ASSET__assets_sprites_yinyangorb5_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb6.png") class __ASSET__assets_sprites_yinyangorb6_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb7.png") class __ASSET__assets_sprites_yinyangorb7_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb8.png") class __ASSET__assets_sprites_yinyangorb8_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yinyangorb9.png") class __ASSET__assets_sprites_yinyangorb9_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yorihime0.png") class __ASSET__assets_sprites_yorihime0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yoshika0.png") class __ASSET__assets_sprites_yoshika0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/youmu0.png") class __ASSET__assets_sprites_youmu0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yukari0.png") class __ASSET__assets_sprites_yukari0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yuki0.png") class __ASSET__assets_sprites_yuki0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yumeko0.png") class __ASSET__assets_sprites_yumeko0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yumemi0.png") class __ASSET__assets_sprites_yumemi0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yuugi0.png") class __ASSET__assets_sprites_yuugi0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yuuka0.png") class __ASSET__assets_sprites_yuuka0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yuukaALT0.png") class __ASSET__assets_sprites_yuukaalt0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/yuyuko0.png") class __ASSET__assets_sprites_yuyuko0_png extends lime.graphics.Image {}
-@:bitmap("Assets/Sprites/zombiefairy0.png") class __ASSET__assets_sprites_zombiefairy0_png extends lime.graphics.Image {}
+@:file("Assets/Audio/Ogg/bonk.OGG") #if display private #end class __ASSET__assets_audio_ogg_bonk_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/characterselect.OGG") #if display private #end class __ASSET__assets_audio_ogg_characterselect_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/collectcoin.OGG") #if display private #end class __ASSET__assets_audio_ogg_collectcoin_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/died.OGG") #if display private #end class __ASSET__assets_audio_ogg_died_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/extend.OGG") #if display private #end class __ASSET__assets_audio_ogg_extend_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/finalkill.OGG") #if display private #end class __ASSET__assets_audio_ogg_finalkill_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/fireballspawn.OGG") #if display private #end class __ASSET__assets_audio_ogg_fireballspawn_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/gameover.OGG") #if display private #end class __ASSET__assets_audio_ogg_gameover_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/killenemy.OGG") #if display private #end class __ASSET__assets_audio_ogg_killenemy_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/masterspark.OGG") #if display private #end class __ASSET__assets_audio_ogg_masterspark_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/nextlevel.OGG") #if display private #end class __ASSET__assets_audio_ogg_nextlevel_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/pow.OGG") #if display private #end class __ASSET__assets_audio_ogg_pow_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/respawn.OGG") #if display private #end class __ASSET__assets_audio_ogg_respawn_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/spawncoin.OGG") #if display private #end class __ASSET__assets_audio_ogg_spawncoin_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/startgame.OGG") #if display private #end class __ASSET__assets_audio_ogg_startgame_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/step1.OGG") #if display private #end class __ASSET__assets_audio_ogg_step1_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/step2.OGG") #if display private #end class __ASSET__assets_audio_ogg_step2_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/step3.OGG") #if display private #end class __ASSET__assets_audio_ogg_step3_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/theme1.OGG") #if display private #end class __ASSET__assets_audio_ogg_theme1_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/theme10.OGG") #if display private #end class __ASSET__assets_audio_ogg_theme10_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/theme11.OGG") #if display private #end class __ASSET__assets_audio_ogg_theme11_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/theme12.OGG") #if display private #end class __ASSET__assets_audio_ogg_theme12_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/theme12intro.OGG") #if display private #end class __ASSET__assets_audio_ogg_theme12intro_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/theme2.OGG") #if display private #end class __ASSET__assets_audio_ogg_theme2_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/theme3.OGG") #if display private #end class __ASSET__assets_audio_ogg_theme3_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/theme4.OGG") #if display private #end class __ASSET__assets_audio_ogg_theme4_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/theme5.OGG") #if display private #end class __ASSET__assets_audio_ogg_theme5_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/theme6.OGG") #if display private #end class __ASSET__assets_audio_ogg_theme6_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/theme7.OGG") #if display private #end class __ASSET__assets_audio_ogg_theme7_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/theme8.OGG") #if display private #end class __ASSET__assets_audio_ogg_theme8_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/theme8intro.OGG") #if display private #end class __ASSET__assets_audio_ogg_theme8intro_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/theme9.OGG") #if display private #end class __ASSET__assets_audio_ogg_theme9_ogg extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Ogg/titlescreen.OGG") #if display private #end class __ASSET__assets_audio_ogg_titlescreen_ogg extends lime.utils.ByteArray {}
+@:image("Assets/bgcolor.png") #if display private #end class __ASSET__assets_bgcolor_png extends lime.graphics.Image {}
+@:image("Assets/black.png") #if display private #end class __ASSET__assets_black_png extends lime.graphics.Image {}
+@:image("Assets/Dpad.png") #if display private #end class __ASSET__assets_dpad_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/1up0.png") #if display private #end class __ASSET__assets_sprites_1up0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/akyu0.png") #if display private #end class __ASSET__assets_sprites_akyu0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/alice0.png") #if display private #end class __ASSET__assets_sprites_alice0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/aliceALT0.png") #if display private #end class __ASSET__assets_sprites_alicealt0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/aya0.png") #if display private #end class __ASSET__assets_sprites_aya0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ayana0.png") #if display private #end class __ASSET__assets_sprites_ayana0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/balloon0.png") #if display private #end class __ASSET__assets_sprites_balloon0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/barrier0.png") #if display private #end class __ASSET__assets_sprites_barrier0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/benben0.png") #if display private #end class __ASSET__assets_sprites_benben0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/BG0.png") #if display private #end class __ASSET__assets_sprites_bg0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/BG1.png") #if display private #end class __ASSET__assets_sprites_bg1_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/BG2.png") #if display private #end class __ASSET__assets_sprites_bg2_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/BG3.png") #if display private #end class __ASSET__assets_sprites_bg3_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/BG4.png") #if display private #end class __ASSET__assets_sprites_bg4_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/BG5.png") #if display private #end class __ASSET__assets_sprites_bg5_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/black0.png") #if display private #end class __ASSET__assets_sprites_black0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/block0.png") #if display private #end class __ASSET__assets_sprites_block0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/BlueFairy0.png") #if display private #end class __ASSET__assets_sprites_bluefairy0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/BlueFairyflipped0.png") #if display private #end class __ASSET__assets_sprites_bluefairyflipped0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/Blueufo0.png") #if display private #end class __ASSET__assets_sprites_blueufo0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/bomb0.png") #if display private #end class __ASSET__assets_sprites_bomb0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/bullet0.png") #if display private #end class __ASSET__assets_sprites_bullet0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/byakuren0.png") #if display private #end class __ASSET__assets_sprites_byakuren0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/charblock0.png") #if display private #end class __ASSET__assets_sprites_charblock0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/chen0.png") #if display private #end class __ASSET__assets_sprites_chen0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/chiyuri0.png") #if display private #end class __ASSET__assets_sprites_chiyuri0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/cirno0.png") #if display private #end class __ASSET__assets_sprites_cirno0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/CSBG0.png") #if display private #end class __ASSET__assets_sprites_csbg0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/daiyousei0.png") #if display private #end class __ASSET__assets_sprites_daiyousei0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/darkness0.png") #if display private #end class __ASSET__assets_sprites_darkness0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/diosakuya0.png") #if display private #end class __ASSET__assets_sprites_diosakuya0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/doremy0.png") #if display private #end class __ASSET__assets_sprites_doremy0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen0.png") #if display private #end class __ASSET__assets_sprites_echen0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen1.png") #if display private #end class __ASSET__assets_sprites_echen1_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen10.png") #if display private #end class __ASSET__assets_sprites_echen10_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen11.png") #if display private #end class __ASSET__assets_sprites_echen11_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen12.png") #if display private #end class __ASSET__assets_sprites_echen12_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen13.png") #if display private #end class __ASSET__assets_sprites_echen13_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen14.png") #if display private #end class __ASSET__assets_sprites_echen14_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen15.png") #if display private #end class __ASSET__assets_sprites_echen15_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen2.png") #if display private #end class __ASSET__assets_sprites_echen2_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen3.png") #if display private #end class __ASSET__assets_sprites_echen3_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen4.png") #if display private #end class __ASSET__assets_sprites_echen4_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen5.png") #if display private #end class __ASSET__assets_sprites_echen5_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen6.png") #if display private #end class __ASSET__assets_sprites_echen6_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen7.png") #if display private #end class __ASSET__assets_sprites_echen7_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen8.png") #if display private #end class __ASSET__assets_sprites_echen8_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EChen9.png") #if display private #end class __ASSET__assets_sprites_echen9_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ECirno0.png") #if display private #end class __ASSET__assets_sprites_ecirno0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/eirin0.png") #if display private #end class __ASSET__assets_sprites_eirin0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EKeine0.png") #if display private #end class __ASSET__assets_sprites_ekeine0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EKeineex0.png") #if display private #end class __ASSET__assets_sprites_ekeineex0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EKeineexflipped0.png") #if display private #end class __ASSET__assets_sprites_ekeineexflipped0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/electriccirno0.png") #if display private #end class __ASSET__assets_sprites_electriccirno0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/elis0.png") #if display private #end class __ASSET__assets_sprites_elis0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ellen0.png") #if display private #end class __ASSET__assets_sprites_ellen0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/elly0.png") #if display private #end class __ASSET__assets_sprites_elly0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EMystia0.png") #if display private #end class __ASSET__assets_sprites_emystia0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EMystia1.png") #if display private #end class __ASSET__assets_sprites_emystia1_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/EMystiaflipped0.png") #if display private #end class __ASSET__assets_sprites_emystiaflipped0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan0.png") #if display private #end class __ASSET__assets_sprites_eran0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan1.png") #if display private #end class __ASSET__assets_sprites_eran1_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan10.png") #if display private #end class __ASSET__assets_sprites_eran10_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan11.png") #if display private #end class __ASSET__assets_sprites_eran11_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan12.png") #if display private #end class __ASSET__assets_sprites_eran12_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan13.png") #if display private #end class __ASSET__assets_sprites_eran13_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan14.png") #if display private #end class __ASSET__assets_sprites_eran14_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan15.png") #if display private #end class __ASSET__assets_sprites_eran15_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan2.png") #if display private #end class __ASSET__assets_sprites_eran2_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan3.png") #if display private #end class __ASSET__assets_sprites_eran3_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan4.png") #if display private #end class __ASSET__assets_sprites_eran4_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan5.png") #if display private #end class __ASSET__assets_sprites_eran5_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan6.png") #if display private #end class __ASSET__assets_sprites_eran6_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan7.png") #if display private #end class __ASSET__assets_sprites_eran7_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan8.png") #if display private #end class __ASSET__assets_sprites_eran8_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ERan9.png") #if display private #end class __ASSET__assets_sprites_eran9_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/evilyuuka0.png") #if display private #end class __ASSET__assets_sprites_evilyuuka0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/exkeine0.png") #if display private #end class __ASSET__assets_sprites_exkeine0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/firecirno0.png") #if display private #end class __ASSET__assets_sprites_firecirno0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/flames0.png") #if display private #end class __ASSET__assets_sprites_flames0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/flames1.png") #if display private #end class __ASSET__assets_sprites_flames1_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/flames2.png") #if display private #end class __ASSET__assets_sprites_flames2_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/flandre0.png") #if display private #end class __ASSET__assets_sprites_flandre0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/futo0.png") #if display private #end class __ASSET__assets_sprites_futo0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/Gap0.png") #if display private #end class __ASSET__assets_sprites_gap0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/gengetsu0.png") #if display private #end class __ASSET__assets_sprites_gengetsu0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/giantcirno0.png") #if display private #end class __ASSET__assets_sprites_giantcirno0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/giantsuika0.png") #if display private #end class __ASSET__assets_sprites_giantsuika0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/Greenufo0.png") #if display private #end class __ASSET__assets_sprites_greenufo0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer0.png") #if display private #end class __ASSET__assets_sprites_hammer0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer1.png") #if display private #end class __ASSET__assets_sprites_hammer1_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer10.png") #if display private #end class __ASSET__assets_sprites_hammer10_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer11.png") #if display private #end class __ASSET__assets_sprites_hammer11_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer12.png") #if display private #end class __ASSET__assets_sprites_hammer12_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer13.png") #if display private #end class __ASSET__assets_sprites_hammer13_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer14.png") #if display private #end class __ASSET__assets_sprites_hammer14_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer15.png") #if display private #end class __ASSET__assets_sprites_hammer15_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer2.png") #if display private #end class __ASSET__assets_sprites_hammer2_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer3.png") #if display private #end class __ASSET__assets_sprites_hammer3_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer4.png") #if display private #end class __ASSET__assets_sprites_hammer4_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer5.png") #if display private #end class __ASSET__assets_sprites_hammer5_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer6.png") #if display private #end class __ASSET__assets_sprites_hammer6_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer7.png") #if display private #end class __ASSET__assets_sprites_hammer7_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer8.png") #if display private #end class __ASSET__assets_sprites_hammer8_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hammer9.png") #if display private #end class __ASSET__assets_sprites_hammer9_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hatate0.png") #if display private #end class __ASSET__assets_sprites_hatate0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/hina0.png") #if display private #end class __ASSET__assets_sprites_hina0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ichirin0.png") #if display private #end class __ASSET__assets_sprites_ichirin0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/icyblock0.png") #if display private #end class __ASSET__assets_sprites_icyblock0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/iku0.png") #if display private #end class __ASSET__assets_sprites_iku0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ikuikudance0.png") #if display private #end class __ASSET__assets_sprites_ikuikudance0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/kagerou0.png") #if display private #end class __ASSET__assets_sprites_kagerou0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/kaguya0.png") #if display private #end class __ASSET__assets_sprites_kaguya0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/kana0.png") #if display private #end class __ASSET__assets_sprites_kana0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/kanako0.png") #if display private #end class __ASSET__assets_sprites_kanako0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/kasen0.png") #if display private #end class __ASSET__assets_sprites_kasen0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/keine0.png") #if display private #end class __ASSET__assets_sprites_keine0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/knife0.png") #if display private #end class __ASSET__assets_sprites_knife0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/knife1.png") #if display private #end class __ASSET__assets_sprites_knife1_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/knife2.png") #if display private #end class __ASSET__assets_sprites_knife2_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/knife3.png") #if display private #end class __ASSET__assets_sprites_knife3_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/knife4.png") #if display private #end class __ASSET__assets_sprites_knife4_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/knife5.png") #if display private #end class __ASSET__assets_sprites_knife5_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/knife6.png") #if display private #end class __ASSET__assets_sprites_knife6_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/knife7.png") #if display private #end class __ASSET__assets_sprites_knife7_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/koakuma0.png") #if display private #end class __ASSET__assets_sprites_koakuma0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/kogasa0.png") #if display private #end class __ASSET__assets_sprites_kogasa0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/kogasaflipped0.png") #if display private #end class __ASSET__assets_sprites_kogasaflipped0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/koishi0.png") #if display private #end class __ASSET__assets_sprites_koishi0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/koishiflipped0.png") #if display private #end class __ASSET__assets_sprites_koishiflipped0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/kokoro0.png") #if display private #end class __ASSET__assets_sprites_kokoro0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/komachi0.png") #if display private #end class __ASSET__assets_sprites_komachi0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/konngara0.png") #if display private #end class __ASSET__assets_sprites_konngara0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/kosuzu0.png") #if display private #end class __ASSET__assets_sprites_kosuzu0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/kotohime0.png") #if display private #end class __ASSET__assets_sprites_kotohime0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/kurumi0.png") #if display private #end class __ASSET__assets_sprites_kurumi0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/kyouko0.png") #if display private #end class __ASSET__assets_sprites_kyouko0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/letty0.png") #if display private #end class __ASSET__assets_sprites_letty0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/lightning0.png") #if display private #end class __ASSET__assets_sprites_lightning0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/lily0.png") #if display private #end class __ASSET__assets_sprites_lily0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/louise0.png") #if display private #end class __ASSET__assets_sprites_louise0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/lunachild0.png") #if display private #end class __ASSET__assets_sprites_lunachild0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/lunasa0.png") #if display private #end class __ASSET__assets_sprites_lunasa0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/lyrica0.png") #if display private #end class __ASSET__assets_sprites_lyrica0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/mai0.png") #if display private #end class __ASSET__assets_sprites_mai0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/makairesident-a0.png") #if display private #end class __ASSET__assets_sprites_makairesident_a0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/makairesident-b0.png") #if display private #end class __ASSET__assets_sprites_makairesident_b0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/mamizou0.png") #if display private #end class __ASSET__assets_sprites_mamizou0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/maribel0.png") #if display private #end class __ASSET__assets_sprites_maribel0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/marisa0.png") #if display private #end class __ASSET__assets_sprites_marisa0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/marisaALT0.png") #if display private #end class __ASSET__assets_sprites_marisaalt0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/matenshi0.png") #if display private #end class __ASSET__assets_sprites_matenshi0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/medicine0.png") #if display private #end class __ASSET__assets_sprites_medicine0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/meiling0.png") #if display private #end class __ASSET__assets_sprites_meiling0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/meilingALT0.png") #if display private #end class __ASSET__assets_sprites_meilingalt0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/meira0.png") #if display private #end class __ASSET__assets_sprites_meira0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/merlin0.png") #if display private #end class __ASSET__assets_sprites_merlin0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/miko0.png") #if display private #end class __ASSET__assets_sprites_miko0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/mima0.png") #if display private #end class __ASSET__assets_sprites_mima0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/mimaALT0.png") #if display private #end class __ASSET__assets_sprites_mimaalt0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/minoriko0.png") #if display private #end class __ASSET__assets_sprites_minoriko0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/mokou0.png") #if display private #end class __ASSET__assets_sprites_mokou0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/momiji0.png") #if display private #end class __ASSET__assets_sprites_momiji0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/mrghosty0.png") #if display private #end class __ASSET__assets_sprites_mrghosty0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/mugetsu0.png") #if display private #end class __ASSET__assets_sprites_mugetsu0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/murasa0.png") #if display private #end class __ASSET__assets_sprites_murasa0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/myon0.png") #if display private #end class __ASSET__assets_sprites_myon0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/mystia0.png") #if display private #end class __ASSET__assets_sprites_mystia0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/mystiaALT0.png") #if display private #end class __ASSET__assets_sprites_mystiaalt0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/nazrin0.png") #if display private #end class __ASSET__assets_sprites_nazrin0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/nazrinflipped0.png") #if display private #end class __ASSET__assets_sprites_nazrinflipped0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/nitori0.png") #if display private #end class __ASSET__assets_sprites_nitori0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/noroiko0.png") #if display private #end class __ASSET__assets_sprites_noroiko0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/nue0.png") #if display private #end class __ASSET__assets_sprites_nue0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/options0.png") #if display private #end class __ASSET__assets_sprites_options0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/orange0.png") #if display private #end class __ASSET__assets_sprites_orange0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/orin0.png") #if display private #end class __ASSET__assets_sprites_orin0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/parsee0.png") #if display private #end class __ASSET__assets_sprites_parsee0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/patchouli0.png") #if display private #end class __ASSET__assets_sprites_patchouli0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/pika0.png") #if display private #end class __ASSET__assets_sprites_pika0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/Point0.png") #if display private #end class __ASSET__assets_sprites_point0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/POW0.png") #if display private #end class __ASSET__assets_sprites_pow0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/POWalt0.png") #if display private #end class __ASSET__assets_sprites_powalt0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/prinny0.png") #if display private #end class __ASSET__assets_sprites_prinny0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/raiko0.png") #if display private #end class __ASSET__assets_sprites_raiko0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ran0.png") #if display private #end class __ASSET__assets_sprites_ran0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/RedFairy0.png") #if display private #end class __ASSET__assets_sprites_redfairy0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/RedFairyflipped0.png") #if display private #end class __ASSET__assets_sprites_redfairyflipped0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/Redufo0.png") #if display private #end class __ASSET__assets_sprites_redufo0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/reimu0.png") #if display private #end class __ASSET__assets_sprites_reimu0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/reimuALT0.png") #if display private #end class __ASSET__assets_sprites_reimualt0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/reimuflipped0.png") #if display private #end class __ASSET__assets_sprites_reimuflipped0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/reisen0.png") #if display private #end class __ASSET__assets_sprites_reisen0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/remilia0.png") #if display private #end class __ASSET__assets_sprites_remilia0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/rengeteki0.png") #if display private #end class __ASSET__assets_sprites_rengeteki0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/renko0.png") #if display private #end class __ASSET__assets_sprites_renko0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/rika0.png") #if display private #end class __ASSET__assets_sprites_rika0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/rikako0.png") #if display private #end class __ASSET__assets_sprites_rikako0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/rin0.png") #if display private #end class __ASSET__assets_sprites_rin0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ringo0.png") #if display private #end class __ASSET__assets_sprites_ringo0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/rumia0.png") #if display private #end class __ASSET__assets_sprites_rumia0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/ruukoto0.png") #if display private #end class __ASSET__assets_sprites_ruukoto0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/sakuya0.png") #if display private #end class __ASSET__assets_sprites_sakuya0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/sakuyaALT0.png") #if display private #end class __ASSET__assets_sprites_sakuyaalt0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/sanae0.png") #if display private #end class __ASSET__assets_sprites_sanae0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/sanaeALT0.png") #if display private #end class __ASSET__assets_sprites_sanaealt0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/sara0.png") #if display private #end class __ASSET__assets_sprites_sara0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/sariel0.png") #if display private #end class __ASSET__assets_sprites_sariel0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/satori0.png") #if display private #end class __ASSET__assets_sprites_satori0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/satoriflipped0.png") #if display private #end class __ASSET__assets_sprites_satoriflipped0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/seiga0.png") #if display private #end class __ASSET__assets_sprites_seiga0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/seija0.png") #if display private #end class __ASSET__assets_sprites_seija0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/seiran0.png") #if display private #end class __ASSET__assets_sprites_seiran0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/sekibanki0.png") #if display private #end class __ASSET__assets_sprites_sekibanki0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/shanghai0.png") #if display private #end class __ASSET__assets_sprites_shanghai0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/shikieiki0.png") #if display private #end class __ASSET__assets_sprites_shikieiki0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/shingyoku0.png") #if display private #end class __ASSET__assets_sprites_shingyoku0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/shingyokuALT0.png") #if display private #end class __ASSET__assets_sprites_shingyokualt0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/shinki0.png") #if display private #end class __ASSET__assets_sprites_shinki0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/shinmyoumaru0.png") #if display private #end class __ASSET__assets_sprites_shinmyoumaru0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/shizuha0.png") #if display private #end class __ASSET__assets_sprites_shizuha0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/shou0.png") #if display private #end class __ASSET__assets_sprites_shou0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/skull0.png") #if display private #end class __ASSET__assets_sprites_skull0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/starbulletg0.png") #if display private #end class __ASSET__assets_sprites_starbulletg0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/starbullety0.png") #if display private #end class __ASSET__assets_sprites_starbullety0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/starsaphire0.png") #if display private #end class __ASSET__assets_sprites_starsaphire0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/suika0.png") #if display private #end class __ASSET__assets_sprites_suika0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/sumireko0.png") #if display private #end class __ASSET__assets_sprites_sumireko0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/sunnymilk0.png") #if display private #end class __ASSET__assets_sprites_sunnymilk0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/suwako0.png") #if display private #end class __ASSET__assets_sprites_suwako0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table0.png") #if display private #end class __ASSET__assets_sprites_table0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table1.png") #if display private #end class __ASSET__assets_sprites_table1_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table10.png") #if display private #end class __ASSET__assets_sprites_table10_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table11.png") #if display private #end class __ASSET__assets_sprites_table11_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table12.png") #if display private #end class __ASSET__assets_sprites_table12_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table13.png") #if display private #end class __ASSET__assets_sprites_table13_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table14.png") #if display private #end class __ASSET__assets_sprites_table14_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table15.png") #if display private #end class __ASSET__assets_sprites_table15_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table2.png") #if display private #end class __ASSET__assets_sprites_table2_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table3.png") #if display private #end class __ASSET__assets_sprites_table3_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table4.png") #if display private #end class __ASSET__assets_sprites_table4_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table5.png") #if display private #end class __ASSET__assets_sprites_table5_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table6.png") #if display private #end class __ASSET__assets_sprites_table6_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table7.png") #if display private #end class __ASSET__assets_sprites_table7_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table8.png") #if display private #end class __ASSET__assets_sprites_table8_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/table9.png") #if display private #end class __ASSET__assets_sprites_table9_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/tenshi0.png") #if display private #end class __ASSET__assets_sprites_tenshi0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/tewi0.png") #if display private #end class __ASSET__assets_sprites_tewi0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/tewiflipped0.png") #if display private #end class __ASSET__assets_sprites_tewiflipped0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/titlescreen0.png") #if display private #end class __ASSET__assets_sprites_titlescreen0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/tojiko0.png") #if display private #end class __ASSET__assets_sprites_tojiko0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/tokiko0.png") #if display private #end class __ASSET__assets_sprites_tokiko0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/toyohime0.png") #if display private #end class __ASSET__assets_sprites_toyohime0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/trophy0.png") #if display private #end class __ASSET__assets_sprites_trophy0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/truck0.png") #if display private #end class __ASSET__assets_sprites_truck0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/udongein0.png") #if display private #end class __ASSET__assets_sprites_udongein0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/udongeinflipped0.png") #if display private #end class __ASSET__assets_sprites_udongeinflipped0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/unused0.png") #if display private #end class __ASSET__assets_sprites_unused0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/unzanfist0.png") #if display private #end class __ASSET__assets_sprites_unzanfist0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/utsuho0.png") #if display private #end class __ASSET__assets_sprites_utsuho0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/wakasagihime0.png") #if display private #end class __ASSET__assets_sprites_wakasagihime0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/wriggle0.png") #if display private #end class __ASSET__assets_sprites_wriggle0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yamame0.png") #if display private #end class __ASSET__assets_sprites_yamame0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yatsuhashi0.png") #if display private #end class __ASSET__assets_sprites_yatsuhashi0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb0.png") #if display private #end class __ASSET__assets_sprites_yinyangorb0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb1.png") #if display private #end class __ASSET__assets_sprites_yinyangorb1_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb10.png") #if display private #end class __ASSET__assets_sprites_yinyangorb10_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb11.png") #if display private #end class __ASSET__assets_sprites_yinyangorb11_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb12.png") #if display private #end class __ASSET__assets_sprites_yinyangorb12_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb13.png") #if display private #end class __ASSET__assets_sprites_yinyangorb13_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb14.png") #if display private #end class __ASSET__assets_sprites_yinyangorb14_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb15.png") #if display private #end class __ASSET__assets_sprites_yinyangorb15_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb2.png") #if display private #end class __ASSET__assets_sprites_yinyangorb2_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb3.png") #if display private #end class __ASSET__assets_sprites_yinyangorb3_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb4.png") #if display private #end class __ASSET__assets_sprites_yinyangorb4_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb5.png") #if display private #end class __ASSET__assets_sprites_yinyangorb5_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb6.png") #if display private #end class __ASSET__assets_sprites_yinyangorb6_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb7.png") #if display private #end class __ASSET__assets_sprites_yinyangorb7_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb8.png") #if display private #end class __ASSET__assets_sprites_yinyangorb8_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yinyangorb9.png") #if display private #end class __ASSET__assets_sprites_yinyangorb9_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yorihime0.png") #if display private #end class __ASSET__assets_sprites_yorihime0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yoshika0.png") #if display private #end class __ASSET__assets_sprites_yoshika0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/youmu0.png") #if display private #end class __ASSET__assets_sprites_youmu0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yukari0.png") #if display private #end class __ASSET__assets_sprites_yukari0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yuki0.png") #if display private #end class __ASSET__assets_sprites_yuki0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yumeko0.png") #if display private #end class __ASSET__assets_sprites_yumeko0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yumemi0.png") #if display private #end class __ASSET__assets_sprites_yumemi0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yuugi0.png") #if display private #end class __ASSET__assets_sprites_yuugi0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yuuka0.png") #if display private #end class __ASSET__assets_sprites_yuuka0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yuukaALT0.png") #if display private #end class __ASSET__assets_sprites_yuukaalt0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/yuyuko0.png") #if display private #end class __ASSET__assets_sprites_yuyuko0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/zombiefairy0.png") #if display private #end class __ASSET__assets_sprites_zombiefairy0_png extends lime.graphics.Image {}
 
 
+
+#end
+
+#if openfl
 
 #end
 
