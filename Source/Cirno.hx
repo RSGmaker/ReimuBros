@@ -92,6 +92,18 @@ class Cirno extends Enemy
 			}
 			countdown = mxtimer;
 		}
+		if (ground != null && !flaming && !electric)
+		{
+			 //&& (ground.dangerous)
+			 if (ground.type == "Block") 
+			 {
+				var D:Dynamic = ground;
+				if (D.dangerous || D.charred)
+				{
+					killed = true;
+				}
+			 }
+		}
 		if (timer <= 0)
 		{
 			if (ground != null && ((!ground.icy && !flaming) || (!ground.dangerous && flaming && y<500)) && x>0 && x<780)
