@@ -46,7 +46,6 @@ class BalloonItem extends EntityItem
 				dir = -1;
 			}
 		}
-		//Ldir = 0;
 		drift--;
 		if (drift < 0)
 		{

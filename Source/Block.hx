@@ -23,8 +23,6 @@ class Block extends Entity
 		type = "Block";
 		UID = -100 - GameView._this.entities.length;
 		started = false;
-		//icy = true;
-		//Freeze();
 	}
 	public function Burn()
 	{
@@ -63,7 +61,6 @@ class Block extends Entity
 		dangerous = false;
 		if (icy)
 		{
-			//dangerous = false;
 			icy = false;
 			Visual.image.ChangeAnimation(image.animation);
 		}
@@ -73,7 +70,6 @@ class Block extends Entity
 		dangerous = false;
 		if (icy || charred)
 		{
-			//dangerous = false;
 			icy = false;
 			charred = false;
 			Visual.image.ChangeAnimation(image.animation);

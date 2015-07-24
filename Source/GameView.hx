@@ -230,10 +230,9 @@ class GameView extends Sprite
 	public function GetImposterList():Array<String>
 	{
 		var stage = Math.floor((level - 1) / 5);
-		//var stage = level - ((level >> 2) + (level >> 3))
+
 		var generalstage = stage % 6;
 		var L = new Array<String>();
-		//var LL:new Array<String> =[
 		if (RoundType == TypeofRound.Cirno || RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.ElectricCirno)
 		{
 			L[L.length] = "cirno";
@@ -267,18 +266,6 @@ class GameView extends Sprite
 			L[L.length] = "chen";
 			L[L.length] = "ran";
 			L[L.length] = "yukari";
-			/*L[L.length] = "chen";
-			L[L.length] = "ran";
-			L[L.length] = "yukari";
-			L[L.length] = "chen";
-			L[L.length] = "ran";
-			L[L.length] = "yukari";
-			L[L.length] = "chen";
-			L[L.length] = "ran";
-			L[L.length] = "yukari";
-			
-			L[L.length] = "youmu";
-			L[L.length] = "yuyuko";*/
 		}
 		else
 		{
@@ -330,9 +317,6 @@ class GameView extends Sprite
 				L = L.concat(["wriggle", "mystia", "keine", "tewi", "udongein", "eirin", "kaguya", "mokou"]);
 				L = L.concat(["wakasagihime", "sekibanki", "kagerou", "benben", "yatsuhashi", "seija", "shinmyoumaru", "raiko"]);
 			}
-			/*L[L.length] = "sanae";
-			L[L.length] = "alice";
-			L[L.length] = "alice";*/
 			}
 			else
 			{
@@ -364,7 +348,6 @@ class GameView extends Sprite
 			L[L.length] = "marisa";
 		}
 		return L;
-		//return L[Math.floor(UID * 999999) % L.length];
 	}
 	
 	//disable/remove things that would leave memory leaks otherwise
@@ -395,17 +378,9 @@ class GameView extends Sprite
 	}
 	public function start() {
 		
-		//if (false)
 		{
 			
-		/*var sound = Assets.getSound ("assets/startgame.mp3");
-		sound.play().addEventListener(Event.SOUND_COMPLETE,function(e:Event):Void {
-		PlayMusic();
-
-		});*/
 		SoundManager.PlayJingle("startgame").addEventListener(Event.SOUND_COMPLETE,function(e:Event):Void {PlayMusic();});
-		//snd_killenemy = Assets.getSound("assets/killenemy.mp3");
-		//snd_finalkillenemy = Assets.getSound("assets/finalkill.mp3");
 		}
 		
 		successstreak = 0;
@@ -423,9 +398,6 @@ class GameView extends Sprite
 		Background.alpha = 0;
 		addChild(OBackground);
 		addChild(Background);
-		/*thegiant = new GiantSuika();
-		addChild(thegiant);
-		thegiant.activate();*/
 		HighScore = Main._this.savedata.data.highscore;
 		ufos = 0;
 		Players = new Map<String,Player>();
@@ -444,7 +416,6 @@ class GameView extends Sprite
 		Hoster = true;
 		#if flash
 		//if netplay is available don't automaticly assume to be the hoster.
-		//Hoster = false;
 		if (online)
 		{
 			#if flash
@@ -459,89 +430,61 @@ class GameView extends Sprite
 		#end
 		
 		
-		//nmax = 0;
 		control = new Array<Bool>();
 		control[0] = false;
 		control[1] = false;
 		control[2] = false;
 		control[3] = false;
 		control[4] = false;
-		//control[4] = false;
-		/*control2 = new Array<Bool>();
-		control[0] = false;
-		control[1] = false;
-		control[2] = false;
-		control[3] = false;*/
 		entities = new Array<Entity>();
 		thegiant = new GiantSuika();
 		thegiant.visible = false;
-		//addChild(thegiant);
 		AddObject(thegiant);
-		//thegiant.activate();
 		if (AL == null)
 		{
 			AL = new Animationloader();
 		}
-		//reimu = new Entity(this, "reimu");
-		/*var tmp = "reimu";
-		if (Math.random() > 0.5)
-		{
-			tmp = "marisa";
-		}*/
 		if (playerspick=="")
 		{
 			playerspick = Player.getRandomCharacter();
 		}
 		myplayer = new Player(playerspick, control);
 		myplayer.x = 140;
-		//myplayer.y = 500;
 		myplayer.y = (600-32)-myplayer.height;
 		myplayer.playername = playername;
 		
-		//if (gamemode == 2)
 		if (GameFlags.get(Main.KonamiCode))
 		{
 			startinglives = 30;
 			myplayer.lives = 30;
 		}
-		//if (gamemode == 8)
 		if (GameFlags.get(Main.NormalMode))
 		{
 			level = 30;
 		}
-		//if (gamemode == 9)
 		if (GameFlags.get(Main.HardMode))
 		{
 			level = 60;
 		}
-		//if (gamemode == 10)
 		if (GameFlags.get(Main.LunaticMode))
 		{
 			level = 90;
 		}
-		//if (gamemode == 11)
 		if (GameFlags.get(Main.ExtraMode))
 		{
 			level = 120;
 		}
 		//myplayer will need to be added to the Players list once an id is created.(or maybe just use "0")
-		//AddObject(myplayer);
 		myplayer.ID = "Myself";
 		
-		//AddObject(marisa);
-		//while (xx < 800)
 		spawnplatform(600 - 32);
 		spawnplatform(600 - 192);
-		//setholeinplatform(600 - 192, 256, 512,false);
 		spawnplatform(600 - 352);
-		//setholeinplatform(600 - 352, 192, 576,true);
 		spawnplatform(600 - 512);
-		//setholeinplatform(600 - 512, 256, 512, false);
 		
 		setformation();
 		powblock = new PowBlock("POW");
 		powblock.x = 352+16;
-		//powblock.y = (600-192)-64;
 		powblock.y = (600-192)-64+16;
 		powblock.solid = true;
 		AddObject(powblock);
@@ -550,7 +493,6 @@ class GameView extends Sprite
 		tmp.font = "Arial";
 		tmp.size = 22;
 		TF = new TextField();
-		//TF.text = "GameStarted";
 		TF.setTextFormat(tmp);
 		TF.x = 200;
 		TF.y = 10;
@@ -573,44 +515,31 @@ class GameView extends Sprite
 		scoreboard.text = "";
 		scoreboard.x = 300;
 		scoreboard.y = 10;
-		/*scoreboard.background = true;
-		scoreboard.backgroundColor = 0xFFFFFF;*/
-		//TF.background = true;
-		//TF.backgroundColor = 0xFFFFFF;
-		/////scoreboard.blendMode = flash.display.BlendMode.INVERT;
 		scoreboard.blendMode = openfl.display.BlendMode.INVERT;
 		addChild(scoreboard);
-		//TF.setTextFormat(tmp);
 		
 		//the miko sticks in the corners of the screen.
-		//var B = new Bitmap(Assets.getBitmapData("assets/barrier0.png"));
 		var B = new Bitmap(AL.GetAnimation("barrier")[0]);
 		B.x = -20-40;
 		B.y = 430;
 		addChild(B);
 		
-		//B = new Bitmap(Assets.getBitmapData("assets/barrierF.png"));
 		B = new Bitmap(AL.GetAnimation("barrierF")[0]);
 		B.x = 820-160+40;
 		B.y = 430;
 		addChild(B);
-		//B = new Bitmap(Assets.getBitmapData("assets/barrier0.png"));
 		B = new Bitmap(AL.GetAnimation("barrier")[0]);
 		B.x = -20-40;
 		B.y = -40;
 		addChild(B);
-		//B = new Bitmap(Assets.getBitmapData("assets/barrierF.png"));
 		B = new Bitmap(AL.GetAnimation("barrierF")[0]);
 		B.x = 820-160+40;
 		B.y = -40;
 		addChild(B);
 		
 		
-		//TF.width = 1000;
-		//TF.height = 1000;
 		direction = 1;
 		ZaWarudo = new Sprite();
-		//ZaWarudo.graphics.beginFill(0x000044, 0.5);
 		ZaWarudo.graphics.beginFill(0xFFFFFF, 1);
 		ZaWarudo.graphics.drawRect(0, 0, 800, 600);
 		ZaWarudo.graphics.endFill();
@@ -621,11 +550,8 @@ class GameView extends Sprite
 		
 		AddPlayer(myplayer);
 		addChild(TF);
-		//////////////////////////////////////////addEventListener (KeyboardEvent.KEY_DOWN, stage_onKeyDown);
-		//////////////////////////////////////////addEventListener (KeyboardEvent.KEY_UP, stage_onKeyUp);
 		
 		stage.color = 0x009977;
-		//stage.scaleMode = StageScaleMode.EXACT_FIT;
 		stage.scaleMode = StageScaleMode.SHOW_ALL;
 		//if (stage.allowsFullScreen)
 		{
@@ -637,16 +563,11 @@ class GameView extends Sprite
 		}
 		
 		
-		//addEventListener( MouseEvent.MOUSE_DOWN, function( ev ) { /*Lib.current.stage.displayState = openfl.display.StageDisplayState.FULL_SCREEN;*/MSE = true; } );
 		addEventListener (Event.ENTER_FRAME, this_onEnterFrame);
 	addEventListener( MouseEvent.MOUSE_DOWN, on_mousedown );
 	addEventListener(MouseEvent.MOUSE_UP, on_mouseup); 
 	addEventListener( TouchEvent.TOUCH_BEGIN, on_touchbegin);
 	addEventListener( TouchEvent.TOUCH_END, on_touchend);
-		//addEventListener( MouseEvent.MOUSE_UP, function( ev ) {if (stage.allowsFullScreen){Lib.current.stage.displayState = openfl.display.StageDisplayState.FULL_SCREEN;} if (!touched) {MSE = false; control[0] = false; control[1] = false; control[2] = false; control[3] = false;} } );
-		//addEventListener( TouchEvent.TOUCH_BEGIN, function( ev ) { /*if (!touched)*/{Lib.current.stage.displayState = openfl.display.StageDisplayState.FULL_SCREEN;}MSE = true; touched = true; } );
-		//addEventListener( TouchEvent.TOUCH_END, function( ev ) { MSE = false; control[0] = false; control[1] = false; control[2] = false; control[3] = false; } );
-		//stage.addEventListener(JoystickEvent.AXIS_MOVE, function(ev) { control[2] = true; } );
 		#if flash
 		stage.align = StageAlign.TOP;
 		#else
@@ -665,9 +586,6 @@ class GameView extends Sprite
 		BGCRight.y = 0;
 		BGCRight.scaleX = 500;
 		BGCRight.scaleY = 2000;
-		//BGCRight.z = -10;
-		//var C = new flash.filters.ColorMatrixFilter()
-		//BGCBottom.root.filters[0] = 
 		addChild(BGCRight);
 		BGCLeft = new Bitmap(Assets.getBitmapData("assets/bgcolor.png"));
 		BGCLeft.x = -500;
@@ -689,20 +607,11 @@ class GameView extends Sprite
 		addChild(Dpad);
 		
 		
-		
-		/*var MS = new MasterSpark();
-		MS.x = 0;
-		MS.y = 160-56;
-		AddObject(MS);*/
-		
-		//if (playerspick == "youmu")
 		if (myplayer.flags.get(Player.DoubleMyon))
 		{
 			var D:Dynamic = { };
 					D.UID = myplayer.UID;
 					SendEvent("AttachMyon", D);
-			//SendEvent("AttachMyon", myplayer.UID);
-			//myplayer.lives-=2;
 		}
 	}
 	//sets down platforms and puts holes in the platforms
@@ -778,7 +687,6 @@ class GameView extends Sprite
 				if (E.type == "Block")
 				{
 					var B:Block = D;
-					//D.Defrost();
 					if (B.y == Y)
 					{
 						B.platform = platform;
@@ -829,17 +737,6 @@ class GameView extends Sprite
 	}
 	private function PlayMusic():Void
 	{
-		/*music = Assets.getSound ("assets/theme1.mp3");
-		musicchannel = music.play();
-		musicchannel.addEventListener(Event.SOUND_COMPLETE, function(e:Event):Void {
-			PlayMusic();
-			return null;
-		});*/
-		/*var lvl = level;
-		if (gamemode == 4)
-		{
-			lvl += 30;
-		}*/
 		OBackground.bitmapData = Background.bitmapData;
 		var L = Math.floor((level-1) / 5);
 			var A = AL.GetAnimation("BG");
@@ -855,16 +752,10 @@ class GameView extends Sprite
 			Background.alpha = 0;
 			
 		L = Math.floor((level - 1) / 5);
-		//if (gamemode == 4)
 		if (GameFlags.get(Main.AltMusic) || (playerspick == "lunasa" || playerspick == "lyrica" || playerspick == "merlin"))
 		{
 			L += 6;
 		}
-		//dont use roundtype to switch songs, it sounds really stupid on low difficulty.(it just switches music without letting player actually listen to anything)
-		/*if (RoundType != TypeofRound.Normal)
-		{
-			L += 6;
-		}*/
 			var A:Array<Int> = [1,2,3,4,5,6,7,8,9,10,11,12];
 			if (L < 0)
 			{
@@ -874,12 +765,7 @@ class GameView extends Sprite
 			{
 				L -= A.length;
 			}
-			//L += 1;
-		//musicchannel = SoundManager.Play("theme1");
-		//musicchannel = SoundManager.Play("theme"+A[L]);
 		musicchannel = SoundManager.PlayMusic("theme" + A[L]);
-		//if ()
-		//musicchannel.addEventListener(Event.SOUND_COMPLETE,function(e:Event):Void {PlayMusic();});
 	}
 	public function GetPlayer(ID:String):Player {
 		if ((""+ID) == GetNetworkID())
@@ -920,7 +806,6 @@ class GameView extends Sprite
 		}		
 	}
 	public function RemovePlayer(P:String) {
-		//P = GetPlayer(P);
 		if (P != "Myself")
 		{
 			var player = Players[P];
@@ -937,8 +822,6 @@ class GameView extends Sprite
 			}
 			
 		}
-		//Players[P.ID] = P;
-		//AddObject(P);
 	}
 	private function AddEntityItem(E:EntityItem) {
 		AddObject(E);
@@ -952,12 +835,8 @@ class GameView extends Sprite
 		}
 	}
 	private function AddObject(E:Entity) {
-		//entities.add(E);
-		//entities.set(nmax, E);
-		//nmax += 1;
 		if (E.interactable/* && activeInteractables.indexOf(E >= 0)*/)
 		{
-			//activeInteractables.remove(E);
 			activeInteractables[activeInteractables.length] = E;
 		}
 		entities[entities.length] = E;
@@ -1009,8 +888,6 @@ class GameView extends Sprite
 			var E = activeItems[i];
 			if (!E.killed && E.alive)
 			{
-				//if (X >= E.x - E.width && Y >= E.y && X < (E.x) && Y < (E.y + E.height))
-				//if (E.getBounds(this).containsPoint(new Point(X,Y)))
 				if (E.GetHitbox().containsPoint(new Point(X,Y)))
 				{
 					return E;
@@ -1018,7 +895,6 @@ class GameView extends Sprite
 			}
 			i += 1;
 		}
-		//return false;
 		return null;
 	}
 	public function CollisionDetectPointPlayer(X:Float,Y:Float):Player {
@@ -1035,33 +911,7 @@ class GameView extends Sprite
 					return E;
 				}
 			}
-			//PL[PL.length] = E;
-			//CombinedScoreALL += E.score;
-			//CombinedScore += (E.score - E.spentscore);
-			/*if (S == "")
-			{
-				S = E.playername + ":" + E.score;
-			}
-			else
-			{
-				S = S + "\n" + E.playername + ":" + E.score;
-			}*/
 		}
-		/*while (i < activeEnemies.length)
-		{
-			var E = activeEnemies[i];
-			if (!E.killed)
-			{
-				//if (X >= E.x - E.width && Y >= E.y && X < (E.x) && Y < (E.y + E.height))
-				//if (E.getBounds(this).containsPoint(new Point(X,Y)))
-				if (E.GetHitbox().containsPoint(new Point(X,Y)))
-				{
-					return E;
-				}
-			}
-			i += 1;
-		}*/
-		//return false;
 		return null;
 	}
 	public function CollisionDetectPointEnemy(X:Float,Y:Float):Enemy {
@@ -1071,8 +921,6 @@ class GameView extends Sprite
 			var E = activeEnemies[i];
 			if (!E.killed)
 			{
-				//if (X >= E.x - E.width && Y >= E.y && X < (E.x) && Y < (E.y + E.height))
-				//if (E.getBounds(this).containsPoint(new Point(X,Y)))
 				if (E.GetHitbox().containsPoint(new Point(X,Y)))
 				{
 					return E;
@@ -1080,7 +928,6 @@ class GameView extends Sprite
 			}
 			i += 1;
 		}
-		//return false;
 		return null;
 	}
 	public function CollisionDetectPointDangerous(X:Float,Y:Float):Entity {
@@ -1091,7 +938,6 @@ class GameView extends Sprite
 			var E = entities[i];
 			if (E.dangerous && !E.killed && E.type != "Block")
 			{
-				//if (E.getBounds(this).containsPoint(new Point(X,Y)))
 				if (E.GetHitbox().containsPoint(new Point(X,Y)))
 				{
 					ret = E;
@@ -1112,8 +958,6 @@ class GameView extends Sprite
 			
 			if (E.dangerous && !E.killed && E.type != "Block")
 			{
-				//if (X >= E.x - E.width && Y >= E.y && X < (E.x) && Y < (E.y + E.height))
-				//if (E.hitTestObject(target))
 				if (R.intersects(E.getBounds(this))/*containsPoint(new Point(X,Y))*/)
 				{
 					return E;
@@ -1121,7 +965,6 @@ class GameView extends Sprite
 			}
 			i += 1;
 		}
-		//return false;
 		return null;
 	}
 	public function CollisionDetectTouchInteractable(target:Entity):Entity {
@@ -1133,8 +976,6 @@ class GameView extends Sprite
 			
 			if (E.interactable && E.alive && E.readyinteract && !E.killed && E.type != "Block")
 			{
-				//if (X >= E.x - E.width && Y >= E.y && X < (E.x) && Y < (E.y + E.height))
-				//if (E.hitTestObject(target))
 				if (R.intersects(E.getBounds(this))/*containsPoint(new Point(X,Y))*/)
 				{
 					return E;
@@ -1154,9 +995,7 @@ class GameView extends Sprite
 			
 			if (!E.killed)
 			{
-				//if (X >= E.x - E.width && Y >= E.y && X < (E.x) && Y < (E.y + E.height))
-				//if (E.hitTestObject(target))
-				if (R.intersects(E.getBounds(this))/*containsPoint(new Point(X,Y))*/)
+				if (R.intersects(E.getBounds(this)))
 				{
 					return E;
 				}
@@ -1175,9 +1014,7 @@ class GameView extends Sprite
 			
 			if (!E.killed)
 			{
-				//if (X >= E.x - E.width && Y >= E.y && X < (E.x) && Y < (E.y + E.height))
-				//if (E.hitTestObject(target))
-				if (R.intersects(E.getBounds(this))/*containsPoint(new Point(X,Y))*/)
+				if (R.intersects(E.getBounds(this)))
 				{
 					return E;
 				}
@@ -1200,7 +1037,6 @@ class GameView extends Sprite
 		var D:Dynamic = { };
 		D.evt = evt;
 		D.data = data;
-		//D.ID = NP.NID;
 		D.ID == GetNetworkID();
 		#if flash
 		if (online)
@@ -1223,7 +1059,6 @@ class GameView extends Sprite
 	public function ProcessEvent(evt:String, ID:String, data:Dynamic) {
 		if (ID == "Unknown" || ID == GetNetworkID() || ID == null)
 		{
-			//TF.text = "what?";
 			ID = "Myself";
 		}
 		var P = GetPlayer(ID);
@@ -1249,7 +1084,6 @@ class GameView extends Sprite
 		if (evt == "PlayerDeath") {
 			if (P != null)
 			{
-				//if (P.myMyon != null && P.myMyon.holder == P && P.myMyon.alive)
 				if (data)
 				{
 					if (P.myMyon != null && P.myMyon.holder == P && P.myMyon.alive)
@@ -1265,14 +1099,6 @@ class GameView extends Sprite
 						}
 					}
 					P.invincibility = 90;
-					/*if (P.flags.get(Player.MoreInvincibility))
-					{
-						P.invincibility += P.invincibility;
-						P.invincibility += P.invincibility;
-						P.invincibility += P.invincibility;
-						P.invincibility += P.invincibility;
-						P.invincibility += P.invincibility;
-					}*/
 				}
 				else
 				{
@@ -1304,7 +1130,6 @@ class GameView extends Sprite
 				if (evt == "Kill" && me && E.myMyon != null/* && P.myMyon == null*/)
 				{
 					var ok = (P.myMyon == null);
-					//if (!ok && myplayer.charname == "youmu")
 					if (!ok && (myplayer.flags.get(Player.DoubleMyon) || (E.myMyon.dualcarry || P.myMyon.dualcarry)))
 					{
 						var i = 0;
@@ -1342,18 +1167,9 @@ class GameView extends Sprite
 				var D:Dynamic = E;
 				if (/*me && */D.charname == "Cirno")
 				{
-					/*var V:Dynamic = { };
-					V.UID = data;
-					V.x = E.x;
-					V.y = E.y;
-					V.Hspeed = E.Hspeed;
-					V.Vspeed = -10;
-					.SendEvent("Bump", V);*/
 					if (D.alive)
 					{
-						//D.alive = false;
 						D.killed = true;
-						//P.score += D.pointvalue;
 					}
 				}
 				if (me && D.charname == "Imposter")
@@ -1396,7 +1212,6 @@ class GameView extends Sprite
 				}
 				if (P != null && evt == "Kill")
 				{
-					//P.score += 100;
 					if (E.type == "Enemy")
 					{
 						P.score += D.pointvalue;
@@ -1434,15 +1249,12 @@ class GameView extends Sprite
 		if (evt == "Headbonk")
 		{
 			var E = EntityFromUID(data);
-			//var E = entities[data];
 			if (E != null)
 			{
 				if (E == powblock)
 				{
-					//TF.text = "pow!";
 					if (Hoster && powblock.HP > 0)
 					{
-						//TF.text = "pow!2";
 						var D:Dynamic = { };
 						D.HP = powblock.HP;
 						if (!(P.flags.get(Player.PreservePowBlock) && Math.random() > 0.5))
@@ -1466,9 +1278,7 @@ class GameView extends Sprite
 					minipowactive = false;
 					if (Hoster)
 					{
-						//TF.text = "pow!2";
 						var D:Dynamic = { };
-						//D.HP = powblock.HP - 1;
 						if (me)
 						{
 							D.ID = GetNetworkID();
@@ -1515,22 +1325,11 @@ class GameView extends Sprite
 			}
 			minipowspawns = 0;
 			RoundType = R;
-			//RoundType = TypeofRound.Normal;
 			this.x = 0;
 			this.y = 0;
 			this.scaleX = 1;
 			this.scaleY = 1;
 			successstreak++;
-			/*if (Hoster)
-			{
-				//if (level % 5 == 1)
-				if (RoundType != TypeofRound.Normal && successstreak>1)
-				{
-					powblock.HP = 4;
-					SendStatus();
-				}
-			}*/
-			//if (myplayer.score > HighScore && gamemode == 0)
 			if (myplayer.score > HighScore && GameFlags.getactiveflags().length==0)
 				{
 					HighScore = myplayer.score;
@@ -1547,22 +1346,6 @@ class GameView extends Sprite
 			}
 			rank = Math.floor(L / 30);
 			
-			
-			/*L = Math.floor((level-1) / 5);
-			var A = AL.GetAnimation("BG");
-			if (L < 0)
-			{
-				L = 0;
-			}
-			while (L >= A.length)
-			{
-				L -= A.length;
-			}
-			Background.bitmapData = A[L];*/
-			//musicchannel.stop();
-			//SoundManager.Play("nextlevel").addEventListener(Event.SOUND_COMPLETE, function(e:Event):Void { PlayMusic(); } );
-			//SoundManager.Play("nextlevel").addEventListener(Event.SOUND_COMPLETE, function(e:Event):Void { PlayMusic(); } );
-			
 			//call playmusic() as it will change song if its new
 			SoundManager.PlayJingle("nextlevel").addEventListener(Event.SOUND_COMPLETE, function(e:Event):Void { PlayMusic(); } );
 			var i = 0;
@@ -1573,7 +1356,6 @@ class GameView extends Sprite
 				var D:Dynamic = E;
 				if (E.type == "Block" && RoundType != TypeofRound.Cirno && RoundType != TypeofRound.FireCirno && RoundType != TypeofRound.ElectricCirno)
 				{
-					//D.Defrost();
 					D.Clean();
 				}
 				if (E.type == "Enemy")
@@ -1592,7 +1374,6 @@ class GameView extends Sprite
 					E.killed = true;
 					E.alive = false;
 				}
-				//if (E.type == "Table" && RoundType != TypeofRound.Table)
 				if (E.type == "Table" && (RoundType != TypeofRound.Table || Hoster))
 				{
 					E.killed = true;
@@ -1666,8 +1447,6 @@ class GameView extends Sprite
 					}
 					if (me)
 					{
-						//if (playerspick == "youmu")
-						//if (P.charname == "youmu")
 						if (P.flags.get(Player.DoubleMyon))
 						{
 							var D:Dynamic = { };
@@ -1697,9 +1476,7 @@ class GameView extends Sprite
 		}
 		if (evt == "Continue")
 		{
-			//P.lives = 3;
 			P.lives = startinglives;
-			//if (level > 0 && level % 5 > 1)
 			if (level > 0 && level % 5 != 1)
 			{
 				level--;
@@ -1917,15 +1694,11 @@ class GameView extends Sprite
 			var dat:Dynamic = { };
 			var DD = new Array<Dynamic>();
 			dat.items = DD;
-			//while (i < activeItems.length)
-			//{
 				var missing:Array<Float> = data;
-			//while (i < activeEnemies.length)
 			while (i < missing.length)
 			{
 				var EE:Dynamic = EntityFromUID(missing[i]);
 				var E:EntityItem = EE;
-				//var E = activeItems[i];
 				if (E != null)
 				{
 				var D:Dynamic = { };
@@ -1948,7 +1721,6 @@ class GameView extends Sprite
 		{
 			var i = 0;
 			var dat:Dynamic = { };
-			//var DD = new Array<Dynamic>();
 			var DD = new Array<Float>();
 			dat.items = DD;
 			while (i < activeItems.length)
@@ -1990,10 +1762,8 @@ class GameView extends Sprite
 				var E = entities[i];
 				if (E.type == "Block" && E.y == data)
 				{
-					//E.bonked = 10;
 					E.bonked = 8;
 					E.bonkedby = GetPlayer(ID);
-					//E.bonkedby = myplayer;
 				}
 				i++;
 			}
@@ -2016,7 +1786,6 @@ class GameView extends Sprite
 				var E = entities[i];
 				if (E.type == "Block")
 				{
-					//E.bonked = 10;
 					E.bonked = 8;
 					E.bonkedby = GetPlayer(ID);
 				}
@@ -2096,10 +1865,8 @@ class GameView extends Sprite
 		if (evt == "CharWorld")
 		{
 			var i = 0;
-			//var C:Dynamic = EntityFromUID(data.UID);
 			while (i < entities.length)
 			{
-				//var D:Dynamic = entities[i]
 				var E = entities[i];
 				if (E.type == "Block"/* && E.y == data.y && E.x>=0 && E.x<800*/)
 				{
@@ -2110,37 +1877,6 @@ class GameView extends Sprite
 				i += 1;
 			}
 		}
-		//no longer uses mokoubomb(now we send "CharWorld" and SendKillAll() )
-		/*if (evt == "Mokoubomb")
-		{
-			var i = 0;
-			//var C:Dynamic = EntityFromUID(data.UID);
-			while (i < entities.length)
-			{
-				//var D:Dynamic = entities[i]
-				var E = entities[i];
-				if (E.type == "Block")
-				{
-					//E.icy = true;
-					var D:Dynamic = E;
-					D.Char();
-				}
-				i += 1;
-			}
-			i = 0;
-			if (me)
-			{
-			while (i < activeEnemies.length)
-			{
-				var E = activeEnemies[i];
-				if (E.alive && !E.killed)
-				{
-					SendEvent("Kill", E.UID);
-				}
-				i++;
-			}
-			}
-		}*/
 		if (evt == "UFOStrike" && !myplayer.flags.get(Player.FriendlyUFO))
 		{
 			
@@ -2360,7 +2096,6 @@ class GameView extends Sprite
 			{
 				O.Hspeed = -2;
 			}
-			//O.image_speed = 0.35;
 			O.image.image_speed = 0.7;
 			O.Vspeed = -10;
 			if (Math.random() > 0.9)
@@ -2377,7 +2112,6 @@ class GameView extends Sprite
 		if (evt == "Tableflip")
 		{
 			var E:Dynamic = EntityFromUID(data.UID);
-			//var P:Player = null;
 			if (data.TUID != null)
 			{
 				E.tossedBy = P;
@@ -2455,7 +2189,6 @@ class GameView extends Sprite
 			}
 			RoundType = TypeofRound.NoWrap;
 		}
-		//enemy bullet
 		if (evt == "ShootBullet")
 		{
 			var O = new Bullet();
@@ -2481,13 +2214,10 @@ class GameView extends Sprite
 			var i = 0;
 			while (i < entities.length)
 			{
-				//var D:Dynamic = entities[i]
 				var E = entities[i];
 				if (E.type == "Block")
 				{
-					//E.icy = true;
 					var D:Dynamic = E;
-					//D.Freeze();
 					D.DeepFreeze();
 				}
 				i += 1;
@@ -2507,7 +2237,6 @@ class GameView extends Sprite
 			#if flash
 			if (!me && P != null && NP != null)
 			{
-				//RemovePlayer(ID);
 				NP.removeplayer(ID);
 			}
 			if (me && NP != null)
@@ -2532,7 +2261,6 @@ class GameView extends Sprite
 			{
 				var D:Dynamic = { };
 				D.type = "Myon";
-				//D.UID = Math.random();
 				D.UID = data.UID + 1;
 				if (E.myMyon != null)
 				{
@@ -2544,7 +2272,6 @@ class GameView extends Sprite
 				{
 					D.holder = data.UID;
 				}
-				//if (me)
 				{
 					ProcessEvent("SpawnItem", "Myself", D);
 				}
@@ -2578,8 +2305,6 @@ class GameView extends Sprite
 				{
 					if (me)
 					{
-						//var M:Dynamic = EntityFromUID(data + 1);
-						//M.Collect(P);
 						SendEvent("Collect", data.UID + 1);
 					}
 				}
@@ -2596,12 +2321,10 @@ class GameView extends Sprite
 					D.holder.myMyon = null;
 				}
 				D.Collect(P);
-				//D.holder = P;
 			}
 		}
 		if (evt == "SummonYuka")
 		{
-			//if (!yuukaactive)
 			{
 				yuukaactive = true;
 				var Y = new Yuuka();
@@ -2617,10 +2340,6 @@ class GameView extends Sprite
 			MS.x = 0;
 			AddObject(MS);
 			SoundManager.Play("masterspark");
-			/*if (thegiant.active && thegiant.rotation == 0)
-			{
-				thegiant.tipover();
-			}*/
 		}
 		if (evt == "LightningStrike")
 		{
@@ -2629,10 +2348,6 @@ class GameView extends Sprite
 			MS.x = data.x;
 			AddObject(MS);
 			SoundManager.Play("se_tan01");
-			/*if (thegiant.active && thegiant.rotation == 0)
-			{
-				thegiant.tipover();
-			}*/
 		}
 		if (evt == "SpawnMiniPowBlock")
 		{
@@ -2655,7 +2370,6 @@ class GameView extends Sprite
 			P.ChangeAnimation("diosakuya");
 			P.Hspeed = 0;
 			P.Vspeed = 0;
-			//paused = true;
 			pausetime = 5.000;
 			ZaWarudoCaster = P;
 		}
@@ -2667,7 +2381,6 @@ class GameView extends Sprite
 				E.readyinteract = false;
 				if (Hoster)
 				{
-					//var R = 0.9+Math.random()*0.1;
 					var R = Math.random();
 					var type = "item";
 					var item = "1up";
@@ -2703,9 +2416,6 @@ class GameView extends Sprite
 						type = "myon";
 						HP = 2;
 					}
-					/*item = "ran";
-						type = "myon";
-						HP = 2;*/
 					if (type == "item")
 					{
 						var D:Dynamic = { };
@@ -2737,48 +2447,9 @@ class GameView extends Sprite
 				G.frames = 180;
 			}
 		}
-		/*D.y = y;
-							.SendEvent("MasterSpark", D);*/
-		/*var D:Dynamic = { };
-		D.x = 0;
-		if (Math.random() > 0.5)
-		{
-			D.x = 800;
-		}
-		D.y = 160;
-		if (Math.random() > 0.5)
-		{
-			D.y += 160;
-		}
-		SendEvent("SummonYuka", D);*/
-		//SendEvent("StealMyon", E.myMyon.UID);
-		//.SendEvent("AttachMyon", UID);
-		//"Kick"
 	}
 	// Event Handlers
 	
-	
-	//private function stage_onAxisMove (event:GameInputEvent):Void {
-		//TF.text = "test"+event.toString();
-		
-		/*if (event.keyCode == Keyboard.SPACE) {
-				TF.text = "space!";
-		}
-		switch (event.keyCode) {
-			
-			case Keyboard.DOWN: control[0] = true;
-			case Keyboard.LEFT: control[2] = true;
-			case Keyboard.RIGHT: control[3] = true;
-			case Keyboard.UP: control[1] = true;
-			
-		}*/
-		/*control[0] = event.y > 0.7;
-		control[2] = event.x < -0.7;
-		control[3] = event.x > 0.7;
-		control[1] = event.y < -0.7;*/
-		//TF.text = "movement?";
-		
-	//}
 	public function ZaWarudoKnives(P:Player)
 	{
 		{
@@ -2895,20 +2566,12 @@ class GameView extends Sprite
 		}
 		switch (event.keyCode) {
 			
-			/*case Keyboard.DOWN: control[0] = true;
-			case Keyboard.LEFT: control[2] = true;
-			case Keyboard.RIGHT: control[3] = true;
-			case Keyboard.UP: control[1] = true;*/
-			//case Keyboard.M: SoundManager._this.ToggleMute();
 		case Keyboard.Q:
 			SendEvent("Quitting", null);
 			status = "quitting";
-		//case Keyboard.SPACE:
 		case Keyboard.F1:
 			if (Hoster && Main._this.DEBUG)
 			{
-				//TF.text = "Gaps!!!";
-				//SendGap();
 				SpawnTimer = 1;
 				if (SpawnList.length == 0)
 				{
@@ -2934,14 +2597,11 @@ class GameView extends Sprite
 		case Keyboard.F3:
 			if (Hoster && Main._this.DEBUG)
 			{
-				//SendEvent("GiantSuikaAttack", null);
 				SendGap();
 			}
 		case Keyboard.F4:
 			if (Hoster && Main._this.DEBUG)
 			{
-				//SendEvent("GiantSuikaAttack", null);
-				//SendGap();
 				if (myplayer.invincibility <= 0)
 				{
 					myplayer.invincibility = 99999999;
@@ -2963,40 +2623,6 @@ class GameView extends Sprite
 			}
 		}
 		
-		/*if (!control[4] && event.keyCode == Main._this.controlscheme[4])
-		{
-			paused = !paused;
-		}*/
-		
-		/*if (event.keyCode == Main._this.controlscheme[1])
-		{
-			control[0] = true;
-		}
-		if (event.keyCode == Main._this.controlscheme[2])
-		{
-			control[2] = true;
-		}
-		if (event.keyCode == Main._this.controlscheme[3])
-		{
-			control[3] = true;
-		}
-		if (event.keyCode == Main._this.controlscheme[0])
-		{
-			control[1] = true;
-		}
-		if (event.keyCode == Main._this.controlscheme[5])
-		{
-			control[4] = true;
-		}
-		if (event.keyCode == Main._this.controlscheme[4])
-		{
-			//if (!control[4])
-			if (!online)
-			{
-				paused = !paused;
-			}
-			//control[4] = true;
-		}*/
 		if (event.keyCode == Main._this.controlscheme[0])
 		{
 			control[0] = true;
@@ -3061,16 +2687,6 @@ class GameView extends Sprite
 	
 	public function stage_onKeyUp (event:KeyboardEvent):Void {
 		
-		/*switch (event.keyCode) {
-			case Keyboard.DOWN: control[0] = false;
-			case Keyboard.LEFT: control[2] = false;
-			case Keyboard.RIGHT: control[3] = false;
-			case Keyboard.UP: control[1] = false;
-			//case Main._this.controlscheme[1]: control[0] = false;
-			//case Main._this.controlscheme[2]: control[2] = false;
-			//case Main._this.controlscheme[3]: control[3] = false;
-			//case Main._this.controlscheme[0]: control[1] = false;
-		}*/
 		if (event.keyCode == Main._this.controlscheme[0])
 		{
 			control[0] = false;
@@ -3091,33 +2707,6 @@ class GameView extends Sprite
 		{
 			control[4] = false;
 		}
-		/*if (event.keyCode == Main._this.controlscheme[5])
-		{
-			if (!online)
-			{
-				paused = !paused;
-			}
-		}*/
-		/*if (event.keyCode == Main._this.controlscheme[1])
-		{
-			control[0] = false;
-		}
-		if (event.keyCode == Main._this.controlscheme[2])
-		{
-			control[2] = false;
-		}
-		if (event.keyCode == Main._this.controlscheme[3])
-		{
-			control[3] = false;
-		}
-		if (event.keyCode == Main._this.controlscheme[0])
-		{
-			control[1] = false;
-		}
-		if (event.keyCode == Main._this.controlscheme[5])
-		{
-			control[4] = false;
-		}*/
 		ControlEvent = true;
 	}
 	
@@ -3292,19 +2881,16 @@ class GameView extends Sprite
 					if (D.type == "Trophy" || D.type == "trophy")
 					{
 						E = new TrophyItem();
-						//SoundManager.Play("spawncoin");
 						type = "Item";
 					}
 					if (D.type == "Balloon")
 					{
 						E = new BalloonItem();
-						//SoundManager.Play("spawncoin");
 						type = "Item";
 					}
 					if (D.type == "Myon" || D.type == "myon")
 					{
 						E = new MyonItem();
-						//SoundManager.Play("spawncoin");
 						type = "Item";
 					}
 					if (D.type == "1up")
@@ -3370,8 +2956,6 @@ class GameView extends Sprite
 		if (pausetime>0)
 		{
 			TF.text = "Time has stopped";
-			/*ltime = Timer.stamp ();
-			pausetime--;*/
 			var currentTime = Timer.stamp ();
 		var T = currentTime - ltime;
 		pausetime -= T;
@@ -3385,19 +2969,16 @@ class GameView extends Sprite
 				ZaWarudoCaster = null;
 			}
 		}
-		//missingTime += T;
 			return;
 		}
 		if (ZaWarudo.visible)
 		{
-			//removeChild(ZaWarudo);
-			//ZaWarudo = null;
 			ZaWarudo.visible = false;
 		}
 		var currentTime = Timer.stamp ();
 		var T = currentTime - ltime;
 		missingTime += T;
-		TF.blendMode = openfl.display.BlendMode.INVERT;//flash.display.BlendMode.INVERT;
+		TF.blendMode = openfl.display.BlendMode.INVERT;
 		if (online)
 		{
 			
@@ -3410,15 +2991,14 @@ class GameView extends Sprite
 					A.next();
 					if (A.hasNext())
 					{
-						//TF.text = TF.text + "\n[Hosting]";
-						TF.text = "Host:" + Room + "\nLevel:" + level +"\nLives:" + Math.max(myplayer.lives,0)+"\nEnemies:"+totalenemies;
+						TF.text = "Host: " + Room + "\nLevel: " + level +"\nLives: " + Math.max(myplayer.lives,0)+"\nEnemies: "+totalenemies;
 						ok = false;
 					}
 				}
 			}
 			if (ok)
 			{
-				TF.text = "Client:" + Room + "\nLevel:" + level +"\nLives:" + Math.max(myplayer.lives,0)+"\nEnemies:"+totalenemies;
+				TF.text = "Client: " + Room + "\nLevel: " + level +"\nLives: " + Math.max(myplayer.lives,0)+"\nEnemies: "+totalenemies;
 			}
 			if (netlog && Hoster)
 			{
@@ -3440,14 +3020,13 @@ class GameView extends Sprite
 		}
 		else
 		{
-			TF.text = "Level:" + level +"\nLives:" + Math.max(myplayer.lives,0)+"\nEnemies:"+totalenemies;
+			TF.text = "Level: " + level +"\nLives: " + Math.max(myplayer.lives,0)+"\nEnemies: "+totalenemies;
 		}
 		if (Main._this.DEBUG && Hoster)
 		{
-			TF.text = TF.text + "\nEPM:" + Math.round(epm) + " max:" + maxspawns+"\nspawnrate:"+spawnrate;
+			TF.text = TF.text + "\nEPM: " + Math.round(epm) + " max: " + maxspawns+"\nspawnrate: "+spawnrate;
 		}
 		TF.textColor = 0xFFFFFF;
-		//while (missingTime > 0.034)
 		if (missingTime > 3 /* && !online*/)
 		{
 			missingTime = 0.041;
@@ -3467,11 +3046,6 @@ class GameView extends Sprite
 		if (cameraenabled)
 		{
 		y = ( -myplayer.y) + 300;
-		//ceiling detect
-		//if (y + 600 > 600)
-		//{
-			//y = 0;
-		//}
 		//dont go past bottom
 		if (y < 0)
 		{
@@ -3485,7 +3059,6 @@ class GameView extends Sprite
 		{
 		var i = 0;
 		
-		//var A = Players.keys;
 		var PL = new Array<Player>();
 		var A = Players.iterator();
 		var ok = false;
@@ -3502,14 +3075,6 @@ class GameView extends Sprite
 			PL[PL.length] = E;
 			CombinedScoreALL += E.score;
 			CombinedScore += (E.score - E.spentscore);
-			/*if (S == "")
-			{
-				S = E.playername + ":" + E.score;
-			}
-			else
-			{
-				S = S + "\n" + E.playername + ":" + E.score;
-			}*/
 		}
 		if (!Hoster && !ok && PL.length>4)
 		{
@@ -3526,39 +3091,14 @@ class GameView extends Sprite
 			var E = PL[i];
 			if (S == "")
 			{
-				S = E.playername + ":" + E.score;
+				S = E.playername + ": " + E.score;
 			}
 			else
 			{
-				S = S + "\n" + E.playername + ":" + E.score;
+				S = S + "\n" + E.playername + ": " + E.score;
 			}
 			i++;
 		}
-		/*if (Hoster)
-		{
-			i = 0;
-			var A = Players.iterator();
-		while (A.hasNext())
-		{
-			var E = A.next();
-			//change back to 3 when done testing
-			//change to 2 but dont count yourself
-			if (E != myplayer)
-			{
-				//if (i > 0)
-				if (i == 0 && PL.length>2)
-				{
-					var D:Dynamic = { };
-					D.player = E.ID;
-					if (E.ID != "")
-					{
-						SendEvent("Kick", D);
-					}
-				}
-					i++;
-			}
-		}
-		}*/
 		
 		
 		}
@@ -3566,7 +3106,7 @@ class GameView extends Sprite
 		{
 			CombinedScore = (myplayer.score - myplayer.spentscore);
 			CombinedScoreALL = myplayer.score;
-			S = myplayer.playername + ":" + myplayer.score + "\nHighscore:" + HighScore;
+			S = myplayer.playername + ": " + myplayer.score + "\nHighscore: " + HighScore;
 		}
 		scoreboard.text = S;
 		scoreboard.width = scoreboard.textWidth+4;
@@ -3574,9 +3114,7 @@ class GameView extends Sprite
 		frame += 1;
 		//this is more efficient out of the update loop(espescially on slower machines)
 		
-		//i = i << 1;
 		#if flash
-		//if (frame & 2 > 0 || ControlEvent)
 		if (online)
 		{
 			//if there are no messages just run update character, this will keep a constant stream of messages going allowing newcomers to detect the group better
@@ -3602,28 +3140,12 @@ class GameView extends Sprite
 				D.playing = frame;
 				
 				//send a status update message instead if 
-			//if (NP.Queue.length == 0 && frame & 2 > 0)
-			//if (NP.Queue.length == 0 && frame % 10 == 0)
 			if (NP.Queue.length == 0 && frame % F == 0)
 			{
 				if (Hoster)
 				{
-					//this keeps visibility good and allows clients to double check to see if they are missing enemies
-					/*var D:Dynamic = { };
-					D.level = level;
-					D.totalenemies = (activeEnemies.length + SpawnList.length);
-					D.activeEnemies = (activeEnemies.length);
-					D.HP = powblock.HP;
-					D.activeItems = activeItems.length;
-					SendEvent("Status", D);*/
 					SendStatus();
 				}
-				/*else
-				{
-					//a blank message clients will send just to make sure group visibility is good
-					var D:Dynamic = { };
-					SendEvent("KeepAlive", D);
-				}*/
 			}
 			NP.SendData("UpdateCharacter", D);
 			}
@@ -3652,7 +3174,6 @@ class GameView extends Sprite
 					D.HP = powblock.HP;
 					D.activeItems = activeItems.length;
 					D.RoundType = RoundType.getIndex();
-					//D.gamemode = gamemode;
 					D.GameFlags = GameFlags.data;
 					D.sessionID = sessionID;
 					SendEvent("Status", D);
@@ -3692,27 +3213,10 @@ class GameView extends Sprite
 		{
 			syncdelay--;
 		}
-		//TF.text = "Hoster:" + Hoster;
-		//TF.text = "W:" + stage.fullScreenHeight + "\nY:" + mouseY;
-		
-		//TF.text = "score:"+myplayer.score;
-		//frame += 1;
-		//TF.text = "C:" + control.length;
-		//TF.text = "ST:" + SpawnTimer;
 		if (Hoster)
 		{
-			//totalenemies = (SpawnList.length + activeEnemies.length);
 			totalenemies = (SpawnList.length);
 			totalenemies += getenemycount();
-			/*var i = 0;
-			while (i < activeEnemies.length)
-			{
-				if (activeEnemies[i].needtokill)
-				{
-					totalenemies++;
-				}
-				i++;
-			}*/
 			SpawnTimer -= 1;
 			if (activeEnemies.length < 1 && spawns>0)
 			{
@@ -3744,9 +3248,7 @@ class GameView extends Sprite
 			}
 			if (CombinedScore > PointsToLife)
 			{
-				//PointsToLife += 10000;
 				var A = Players.iterator();
-				//var cost = CombinedScore;
 				var cost = PointsToLife;
 				while (A.hasNext())
 				{
@@ -3761,7 +3263,6 @@ class GameView extends Sprite
 						E.spentscore += cost;
 						cost = 0;
 					}
-					//CombinedScore += E.score;
 				}
 				var D:Dynamic = { };
 				D.type = "1up";
@@ -3782,17 +3283,6 @@ class GameView extends Sprite
 				CombinedScore -= PointsToLife;
 			}
 		}
-		//TF.text = "Total enemies:" + totalenemies;
-		//TF.text = "" + openfl.
-		
-		
-		//TF.text = "time:" + (1.0 / T);
-		//TF.text = "time:" + (T);
-		//DO NOT USE GRAPHICS it causes a memory leak or something
-		/*
-		this.graphics.beginFill(0x009977, 1);
-		this.graphics.drawRect(0, 0, 800, 600);
-		this.graphics.endFill();*/
 		var i:Int = 0;
 		while (i < entities.length)
 		{
@@ -3806,19 +3296,8 @@ class GameView extends Sprite
 					RemoveEnemy(E);
 					if (Hoster)
 					{
-						//totalenemies = (SpawnList.length + activeEnemies.length);
 						totalenemies = (SpawnList.length);
 						totalenemies += getenemycount();
-						/*var i = 0;
-						while (i < activeEnemies.length)
-						{
-							if (activeEnemies[i].needtokill)
-							{
-								totalenemies++;
-							}
-							i++;
-						}*/
-						//SendEvent("TotalEnemies", totalenemies);
 					}
 					else if (D.needtokill)
 					{
@@ -3834,7 +3313,6 @@ class GameView extends Sprite
 					RemoveObject(E);
 				}
 				
-				//if (E.toString() == "[object RedFairy]")
 				if (E.type == "Enemy")
 				{
 					if (!E.killed)
@@ -3853,17 +3331,12 @@ class GameView extends Sprite
 						{
 							
 							var D:Dynamic = { };
-							//D.item = "Point";
 							
 							D.type = "Point";
 							if (EE.rewarditem != null)
 							{
 								D.type = EE.rewarditem;
 							}
-							/*if (EE.charname == "Imposter")
-							{
-								D.type = "1up";
-							}*/
 							D.UID = Math.random();
 							if (Math.random() > 0.5)
 							{
@@ -3881,7 +3354,6 @@ class GameView extends Sprite
 					}
 					
 				}
-				//TF.text = E.toString();
 			}
 			i += 1;
 		}
@@ -3902,18 +3374,10 @@ class GameView extends Sprite
 			}
 			else
 			{
-				/*while (Dpad.y + 384 < stage.mouseY)
-				{
-					Dpad.y += 384;
-				}*/
 				if (Dpad.y + 384 < stage.mouseY)
 				{
 					Dpad.y = stage.mouseY - 383;
 				}
-				/*while (Dpad.y > stage.mouseY)
-				{
-					Dpad.y -= 384;
-				}*/
 				if (Dpad.y > stage.mouseY)
 				{
 					Dpad.y = stage.mouseY-1;
@@ -3935,107 +3399,13 @@ class GameView extends Sprite
 				
 			}
 		}
-		//if (frame & 4 > 0)
-		{
 		
-		}
-		
-		/*missingTime -= 0.034;
-		while (missingTime > 0.034)
-		{
-			this_onEnterFrame(event);
-		}*/
-		/*missingTime -= 0.034;
-		if (missingTime > 0.034)
-		{
-			this_onEnterFrame(event);
-		}*/
-		/*while (T > 0.034)
-		{
-			//TF.text = "underfpsing:" + (T);
-			this_onEnterFrame(event);
-			T -= 0.034;
-		}*/
 		if (Hoster)
 		{
 			//chances per minute(avg)
 			if (totalenemies > 0)
 			{
-			//var cpm = 2;
-			/*
-			var cpm = 0;
-			if (level > 1)
-			{
-				cpm += 1;
-			}
-			if (level > 2)
-			{
-				cpm += 1;
-			}
-			if (level > 4)
-			{
-				cpm += 1;
-			}
-			if (level > 6)
-			{
-				cpm += 1;
-			}
-			if (level > 8)
-			{
-				cpm += 1;
-			}
-			if (level > 10)
-			{
-				cpm += 1;
-			}
-			if (level > 15)
-			{
-				cpm += 1;
-			}
-			if (level > 20)
-			{
-				cpm += 1;
-			}
-			if (level > 30)
-			{
-				cpm += 1;
-			}
-			if (level > 40)
-			{
-				cpm += 1;
-			}
-			if (level > 50)
-			{
-				cpm += 1;
-			}
-			if (level > 60)
-			{
-				cpm += 1;
-			}
-			if (level > 70)
-			{
-				cpm += 1;
-			}
-			//if 50% more spawns than minimally required(aka round is taking too long) then punish the players with extra obstacles.
-			if (spawns > (maxspawns + (maxspawns >> 1)))
-			{
-				//cpm *= 2;
-				cpm += 3;
-				cpm += (cpm >> 1);
-			}
-			//BS test
-			//cpm += 10;
-			var R = 0.0;
-			if (frame & 2 > 0)
-			{
-				//half as often but double the chance
-				cpm = cpm + cpm;
-				R = onetickperminituechance * cpm;
-			}*/
-			//if (R > 0 && Math.random() < R)
-			//if (R>0 && frame & 2>0 && Math.random() < R)
 			var R = ept;
-			//if (spawns > (maxspawns + (maxspawns >> 1)))
 			if (spawns > (maxspawns + (maxspawns)))
 			{
 				R = rept;
@@ -4049,9 +3419,6 @@ class GameView extends Sprite
 					E = Obstacles[Math.floor(Obstacles.length * Math.random())];
 				}
 				
-				//Obstacles[Obstacles.length] = "Cirno";
-				//Obstacles[Obstacles.length] = "Gap";
-				//Obstacles[Obstacles.length] = "UFO";
 				if (true && Math.random() > 0.5)
 				{
 					//E = "Balloon";
@@ -4210,7 +3577,6 @@ class GameView extends Sprite
 				else if (E == "MiniPowBlock" && !minipowactive && minipowspawns < maxminipowspawns)
 				{
 					var D:Dynamic = { };
-					//D.x = 384;
 					var R = Math.random();
 					D.x = 400 - 16;
 					D.y = 32;
@@ -4264,36 +3630,12 @@ class GameView extends Sprite
 				}
 			}
 			}
-			/*var R = 0.9;
-				if (level > 3)
-				{
-					R -= 0.05;
-				}
-				if (level > 5)
-				{
-					R -= 0.05;
-				}
-				if (level > 7)
-				{
-					R -= 0.05;
-				}
-				if (level > 9)
-				{
-					R -= 0.05;
-				}
-				if (Math.random() > R)
-				{
-					SendGap();
-				}*/
 			//replace start music and spawning with events that trigger it instead.
 		if (SpawnTimer <= 0)
 		{
 			if (SpawnList.length > 1)
 			{
-				//SpawnTimer = Std.int(30 * (2 + (Math.random() * 5)));
 				ResetSpawnTimer();
-				
-				
 			}
 			
 			if (!SpawnList.isEmpty())
@@ -4329,10 +3671,8 @@ class GameView extends Sprite
 			}
 			else
 			{
-				//if (activeEnemies.length < 1)
 				if (getenemycount() < 1)
 				{
-					//SpawnTimer = Std.int(30 * (1 + (Math.random() * 3)));
 					ResetSpawnTimer();
 					SpawnTimer = SpawnTimer >> 1;
 				level += 1;
@@ -4359,8 +3699,6 @@ class GameView extends Sprite
 				spawnedChar = false;
 				SendEvent("SpawnItem", D);
 				
-						//powblock.HP = 4;
-						//SendStatus();
 					}
 				}
 				CalculateLevelData();
@@ -4382,52 +3720,10 @@ class GameView extends Sprite
 					//SendEvent("Spawntables", null);
 				}
 				
-				/*maxspawns = level + 4;
-				while (tmp < maxspawns)
-				{
-					var enemy:Enemy;
-					var R = Math.random();
-					if (R > 0.34)
-					{
-						if (R > 0.9)
-						{
-							enemy = new Keine();
-						}
-						else
-						{
-							enemy = new RedFairy();
-							//enemy = new Imposter();
-							//enemy = new Cirno();
-						}
-					}
-					else
-					{
-						if (R < 0.04)
-						{
-							enemy = new Imposter();
-						}
-						else
-						{
-							enemy = new Mystia();
-						}
-					}
-					SpawnList.add(enemy);
-					tmp += 1;
-				}*/
-				//totalenemies = (SpawnList.length + activeEnemies.length);
 				totalenemies = (SpawnList.length);
 				totalenemies += getenemycount();
-				/*var i = 0;
-				while (i < activeEnemies.length)
-				{
-					if (activeEnemies[i].needtokill)
-					{
-						totalenemies++;
-					}
-					i++;
-				}*/
+				
 				SendEvent("TotalEnemies", totalenemies);
-				//roundstarted = true;
 				}
 			}
 		}
@@ -4460,8 +3756,6 @@ class GameView extends Sprite
 		}
 		spawnrate = 1.0;
 		rank = Math.floor(L / 30);
-		//L -= rank * 20;
-		//L -= rank * 15;
 		L -= rank * 13;
 		//calculate available budget for this level
 		var points:Float = (L + 2);// * 2.0;
@@ -4474,11 +3768,8 @@ class GameView extends Sprite
 		var tmp = 0.7;
 		while (AR > 1)
 		{
-			//epm++;
-			//spawnrate *= 0.95;
 			spawnrate *= 0.96;
 			tmp *= 1.4;
-			//var tmp = (epm * 0.2);
 			if (tmp < 1)
 			{
 				tmp = 1;
@@ -4489,8 +3780,6 @@ class GameView extends Sprite
 		//calculate percentage of budget will be spent on events(a.k.a. obstacles).
 		R = 0.5 + (Math.random() * 0.2);//; (points * 0.7);
 		R = R * points;
-		//var R = Math.random() * (points * 0.7);
-		//epm = (R * 0.25);// * 3;
 		AR = R;
 		while (AR > 1)
 		{
@@ -4512,20 +3801,11 @@ class GameView extends Sprite
 			A.next();
 			P++;
 		}
-		//maxspawns = Math.ceil(points)+(P<<1);
-		
-		/*if (spawns > (maxspawns + (maxspawns >> 1)))
-			{
-				//cpm *= 2;
-				cpm += 3;
-				cpm += (cpm >> 1);
-			}*/
 		var EVT = Math.random();
 		if (level == 9)
 		{
 			//double chance of event
 			//EVT *= 0.25;
-			
 			EVT *= 0.1;
 		}
 		RoundType = TypeofRound.Normal;
@@ -4538,14 +3818,10 @@ class GameView extends Sprite
 		{
 			EVT = 0;
 		}
-		//if (EVT < 0.05)
-		//if (gamemode == 13)
 		if (GameFlags.get(Main.EventRoundsOnly))
 		{
 			EVT = 0;
 		}
-		//if (EVT < 0.08)
-		//if (EVT < 0.1)
 		if (EVT < 0.05)
 		{
 			var E:Array<TypeofRound> = new Array<TypeofRound>();
@@ -4584,25 +3860,19 @@ class GameView extends Sprite
 			}
 			RoundType = E[(Math.floor(Math.random() * E.length))];
 			
-			//RoundType = TypeofRound.NoWrap;
 		}
 		
 		
 		
 		var Ev:Array<TypeofRound> = new Array<TypeofRound>();
-		//RoundType = TypeofRound.Cirno;
-		//if (gamemode == 5)
 		if (GameFlags.get(Main.TableEvent))
 		{
 			Ev[Ev.length] = TypeofRound.Table;
 		}
-		//RoundType = TypeofRound.Nue;
-		//if (gamemode == 12)
 		if (GameFlags.get(Main.CirnoEvent))
 		{
 			Ev[Ev.length] = TypeofRound.Cirno;
 		}
-		//if (gamemode == 1)
 		if (GameFlags.get(Main.FireCirno))
 		{
 			Ev[Ev.length] = TypeofRound.FireCirno;
@@ -4611,17 +3881,14 @@ class GameView extends Sprite
 		{
 			Ev[Ev.length] = TypeofRound.ElectricCirno;
 		}
-		//if (gamemode == 15)
 		if (GameFlags.get(Main.NueEvent))
 		{
 			Ev[Ev.length] = TypeofRound.Nue;
 		}
-		//if (gamemode == 16)
 		if (GameFlags.get(Main.BalloonEvent))
 		{
 			Ev[Ev.length] = TypeofRound.Balloon;
 		}
-		//if (gamemode == 17)
 		if (GameFlags.get(Main.YukariEvent))
 		{
 			Ev[Ev.length] = TypeofRound.Yukari;
@@ -4630,28 +3897,21 @@ class GameView extends Sprite
 		{
 			RoundType = Ev[Math.floor(Math.random() * Ev.length)];
 		}
-		///////TEST!!!
-		//RoundType = TypeofRound.Nue;
 		if (RoundType == TypeofRound.Normal || RoundType == TypeofRound.Rumia || RoundType == TypeofRound.Table || RoundType == TypeofRound.Balloon || RoundType == TypeofRound.Characters || RoundType == TypeofRound.NoWrap)
 		{
 			if (level > 5)
 			{
 				AddToArrayMultiple(Obstacles, "Cirno", 64);
 				AddToArrayMultiple(Obstacles, "MrGhosty", 32);
-				//Obstacles[Obstacles.length] = "Cirno";
 			}
 			AddToArrayMultiple(Obstacles, "Gap", 80);
 			AddToArrayMultiple(Obstacles, "Yinyangorb", 12); 
 			AddToArrayMultiple(Obstacles, "MiniPowBlock", 2);
-			//Obstacles[Obstacles.length] = "Gap";
 			if (level > 10)
 			{
 				AddToArrayMultiple(Obstacles, "UFO", 32);
-				//Obstacles[Obstacles.length] = "UFO";
 			}
-			//if (level % 5 == 4)
 			{
-				//AddToArrayMultiple(Obstacles, "Balloon", 1);
 				AddToArrayMultiple(Obstacles, "GiantSuika", 2);
 				AddToArrayMultiple(Obstacles, "Trophy", 3);
 			}
@@ -4677,19 +3937,14 @@ class GameView extends Sprite
 		{
 			Obstacles[Obstacles.length] = "Gap";
 			AddToArrayMultiple(enemytypes, new Imposter(), 2);
-			//SpawnTimer = 30 * (maxspawns * 5);
-			//epm *= 0.5;
-			//epm += 6;
 		}
 		if (RoundType == TypeofRound.Balloon)
 		{
-			//AddToArrayMultiple(Obstacles, "Balloon", Math.round(Obstacles.length * 1.5));
 			AddToArrayMultiple(Obstacles, "Balloon", Math.round(Obstacles.length * 2));
 			epm *= 2.5;
 		}
 		if (RoundType == TypeofRound.Cirno || RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.ElectricCirno)
 		{
-			//Obstacles[Obstacles.length] = "Cirno";
 			AddToArrayMultiple(Obstacles, "Cirno", 8);
 			if (RoundType == TypeofRound.Cirno)
 			{
@@ -4704,12 +3959,9 @@ class GameView extends Sprite
 			{
 				epm += 2;
 			}
-			//SpawnTimer = 30 * (maxspawns * 5);
 			SpawnTimer = 120 + (maxspawns * 15);
-			//if (gamemode != 13)
 			if (GameFlags.get(Main.EventRoundsOnly))
 			{
-			//if (gamemode == 12)
 			if (GameFlags.get(Main.CirnoEvent))
 			{
 				maxspawns += 9;
@@ -4723,19 +3975,6 @@ class GameView extends Sprite
 			}
 			}
 			SendEvent("FreezeWorld", null);
-			/*var i = 0;
-			while (i < entities.length)
-			{
-				//var D:Dynamic = entities[i]
-				var E = entities[i];
-				if (E.type == "Block")
-				{
-					//E.icy = true;
-					var D:Dynamic = E;
-					D.Freeze();
-				}
-				i += 1;
-			}*/
 		}
 		
 		if (RoundType == TypeofRound.Rumia)
@@ -4759,7 +3998,6 @@ class GameView extends Sprite
 			if (level > 25)
 			{
 				AddToArrayMultiple(enemytypes, new Tewi(), 30);
-				//AddToArrayMultiple(enemytypes, new Reisen(), 12);
 				AddToArrayMultiple(enemytypes, new Reisen(), 10);
 				AddToArrayMultiple(enemytypes, new Imposter(), 1);
 			}
@@ -4778,69 +4016,14 @@ class GameView extends Sprite
 			AddToArrayMultiple(enemytypes, new Nue(), 50);
 			AddToArrayMultiple(enemytypes, new Imposter(), 2);
 			epm *= 0.5;
-			//maxspawns *= 0.5;
-			//maxspawns = maxspawns >> 1;
 			maxspawns = Math.ceil(maxspawns * 0.7);
 		}
 		if (RoundType == TypeofRound.Table)
 		{
-			/*var D:Dynamic = { };
-				D.UID = UID;
-				D.dangerous = true;
-				D.TUID = null;
-				if (enemy.Hspeed < 0)
-				{
-					D.Hspeed = -10;
-					D.image_speed = 0.5;
-				}
-				else
-				{
-					D.Hspeed = 10;
-					D.image_speed = -0.5;
-				}*/
-				//.SendEvent("Spawntables", null);
-			/*var Tbl = new Table();
-			Tbl.x = 140;
-			Tbl.y = 375;
-			Tbl.UID = 1.1;
-			AddObject(Tbl);
-		
-			Tbl = new Table();
-			Tbl.x = 660-20;
-			Tbl.y = 375;
-			Tbl.UID = 1.2;
-			AddObject(Tbl);
-			//
-			Tbl = new Table();
-			Tbl.x = 140;
-			Tbl.y = 375 + 160;
-			Tbl.UID = 1.3;
-			AddObject(Tbl);
-		
-			Tbl = new Table();
-			Tbl.x = 660-20;
-			Tbl.y = 375 + 160;
-			Tbl.UID = 1.4;
-			AddObject(Tbl);
-			//
-			//
-			Tbl = new Table();
-			Tbl.x = 140;
-			Tbl.y = 375 - 320;
-			Tbl.UID = 1.5;
-			AddObject(Tbl);
-		
-			Tbl = new Table();
-			Tbl.x = 660-20;
-			Tbl.y = 375 - 320;
-			Tbl.UID = 1.6;
-			AddObject(Tbl);*/
-			
 			epm *= 0.5;
 			maxspawns = Math.ceil(maxspawns * 0.7);
 		}
 		AddToArrayMultiple(enemytypes, new Imposter(), 2);
-		//if (gamemode == 14)
 		if (GameFlags.get(Main.UltraCommonCharacters) || RoundType == TypeofRound.Characters)
 		{
 			enemytypes = new Array<Enemy>();
@@ -4871,36 +4054,6 @@ class GameView extends Sprite
 			tmp++;
 		}
 		
-		/*
-				while (tmp < maxspawns)
-				{
-					var enemy:Enemy;
-					var R = Math.random();
-					if (R > 0.34)
-					{
-						if (R > 0.9 && level > 2)
-						{
-							enemy = new Keine();
-						}
-						else
-						{
-							enemy = new RedFairy();
-						}
-					}
-					else
-					{
-						if (R < 0.04)
-						{
-							enemy = new Imposter();
-						}
-						else
-						{
-							enemy = new Mystia();
-						}
-					}
-					SpawnList.add(enemy);
-					tmp += 1;
-				}*/
 				
 		epm += epmmodifier;
 		ept = epm * (onetickperminutechance2);//the times 2 is for equalling "frame & 2>0" out above

@@ -36,15 +36,16 @@ class Animationloader
 		
 	}
 	public function GetAnimation(path:String):Array<BitmapData> {
-		//if (Dictionary.exists(path))
 		if (Dictionary.exists(path))
 		{
 			return Dictionary[path];
 		}
 		else
 		{
+			//check if we need to edit this image
 			if (path.lastIndexOf("E") == path.length-1 || path.lastIndexOf("U") == path.length-1 || path.lastIndexOf("S") == path.length - 1)
 			{
+				//recolor the image
 				var color:UInt = 0xff0000;
 				var value:Float = 40;
 				var red:UInt = 0;
@@ -74,8 +75,6 @@ class Animationloader
 				var ctBlueOff:Float=Math.round(mul*blue);
 
 				var ct=new ColorTransform(ctMul,ctMul,ctMul,1,ctRedOff,ctGreenOff,ctBlueOff,0);
-
-				//clip.transform.colorTransform = ct;
 				
 				var P = path.substring(0, path.length - 1);
 				var lst = new Array<BitmapData>();
@@ -83,8 +82,6 @@ class Animationloader
 				var i = 0;
 				while (i < O.length)
 				{
-					//lst.push(flipBitmapData(O[i], "x"));
-					//lst[lst.length] = flipBitmapData(O[i], "x");
 					var OO = O[i].clone();
 					OO.colorTransform(O[i].rect, ct);
 					lst[lst.length] = OO;
@@ -95,19 +92,18 @@ class Animationloader
 			}
 			if (path.lastIndexOf("F") == path.length-1)
 			{
+				//flip the image
 				var P = path.substring(0, path.length - 1);
 				var lst = new Array<BitmapData>();
 				var O = GetAnimation(P);
 				var i = 0;
 				while (i < O.length)
 				{
-					//lst.push(flipBitmapData(O[i], "x"));
 					lst[lst.length] = flipBitmapData(O[i], "x");
 					i += 1;
 				}
 				Dictionary.set(path, lst);
 				return lst;
-				//return GetAnimation("POW");
 			}
 			else
 			{
@@ -116,19 +112,15 @@ class Animationloader
 			
 			var str = "assets/Sprites/" + path + i + ".png";
 			var bd = Assets.getBitmapData (str);
-			//while (Assets.exists(str)) {
 			while (bd != null) {
-				//lst.add(bd);
 				lst[lst.length] = bd;
 				i += 1;
 				str = "assets/Sprites/" + path + i + ".png";
 				bd = Assets.getBitmapData (str);
 			}
 			Dictionary.set(path, lst);
-			//return Dictionary.get(path);
 			return lst;
 			}
-			//return null;
 		}
 	}
 	function flipBitmapData(original:BitmapData, axis:String = "x"):BitmapData

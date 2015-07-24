@@ -26,15 +26,12 @@ import haxe.ds.ObjectMap;
 class Animation extends Bitmap
 {
 
-	//private var animation:List<BitmapData>;
 	public var animation:Array<BitmapData>;
 	private var Limage_index:Float;
 	public var image_index:Float;
 	public var image_speed:Float;
 	public function new(ani:Array<BitmapData>) {
 		super(ani[0]);
-		//super(Assets.getBitmapData ("assets/reimu0.png"));
-		//this.bitmapData = ani.first();
 		image_index = 0;
 		image_speed = 0;
 		Limage_index = -9999999999999999;
@@ -55,7 +52,6 @@ class Animation extends Bitmap
 		{
 			return;
 		}
-		//var oldindex = Math.floor(image_index);
 		var oldindex = Math.floor(Limage_index);
 		image_index += image_speed;
 		while (image_index < 0)
