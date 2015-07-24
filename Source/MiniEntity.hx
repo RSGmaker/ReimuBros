@@ -14,6 +14,8 @@ class MiniEntity extends Sprite
 	public var dangerous:Bool;
 	public var pointvalue:Int;
 	public var alive:Bool;
+	public var bounce:Bool;
+	public var timetobounce:Int;
 	public function new(x:Float,y:Float,bitmap:BitmapData,speed:Float,dangerous:Bool,pointvalue:Int) 
 	{
 		super();
@@ -56,6 +58,26 @@ class MiniEntity extends Sprite
 		if ((Hspeed < 0 && x < -width) || (Hspeed > 0 && x > 800) || (Vspeed < 0 && y < -height) || (Vspeed > 0 && y > 600))
 		{
 			alive =  false;
+		}
+		if (bounce)
+		{
+			timetobounce--;
+			if (timetobounce > 0)
+			{
+				
+			}
+			else
+			{
+				if (timetobounce == -1)
+				{
+					y -= 1;
+				}
+				else if (timetobounce < -1)
+				{
+					y += 1;
+					timetobounce = 5;
+				}
+			}
 		}
 	}
 }

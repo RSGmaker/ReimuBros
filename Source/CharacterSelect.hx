@@ -57,6 +57,10 @@ class CharacterSelect extends Sprite
 	public var custom:Bool;
 	public var charpreview:Bitmap;
 	public var char:Sprite;
+	//this is where the back image and background characters go on
+	public var backlayer:Sprite;
+	public var backlayerentities:Array<MiniEntity>;
+	public var timetospawn:Int;
 	
 	
 	///mini game variables
@@ -107,8 +111,13 @@ class CharacterSelect extends Sprite
 		entities = new Array<MiniEntity>();
 		
 		highscore = Main._this.savedata.data.minigamehighscore;
-		
-		var bg = new Bitmap(AL.GetAnimation("CSBG")[0]);
+		backlayer = new Sprite();
+		backlayerentities = new Array<MiniEntity>();
+		var bg = new Bitmap(AL.GetAnimation("CSBack")[0]);
+		backlayer.addChild(bg);
+		addChild(backlayer);
+		//var bg = new Bitmap(AL.GetAnimation("CSBG")[0]);
+		bg = new Bitmap(AL.GetAnimation("CSFront")[0]);
 		bg.x = 0;
 		bg.y = 0;
 		addChild(bg);
@@ -478,6 +487,59 @@ class CharacterSelect extends Sprite
 			Lselected = selected;
 		}
 		
+		//backlayer stuff
+		//if (backlayerentities.length > 0)
+		{
+			var i = 0;
+			while (i < backlayerentities.length)
+			{
+				backlayerentities[i].update();
+				if (!backlayerentities[i].alive)
+				{
+					var E = backlayerentities[i];
+					backlayerentities.remove(E);
+					backlayer.removeChild(E);
+					i--;
+				}
+				i++;
+			}
+			timetospawn -= 1;
+			if (timetospawn < 1)
+			{
+				var ind = Math.floor(Player.characters.length * Math.random());
+				var C = Player.characters[ind];
+				if (Main._this.savedata.data.unlock[ind])
+				{
+					var E = null;
+					var X = -1;
+					//determines how far down they are and adjusts their size for better pseudo 3d effect
+					var depth = Math.random();
+					if (Math.random() < 0.5)
+					{
+						X = 801;
+						C = C + "F";
+					}
+					E = new MiniEntity( X, 120 + (120 * depth), AL.GetAnimation(C)[0], 0.7, false, 0);
+					E.scaleX += (depth * 0.3);
+					E.scaleY = E.scaleX;
+					E.bounce = true;
+					backlayerentities[backlayerentities.length] = E;
+					if (E != null)
+					{
+						backlayer.removeChildren(1);
+						backlayerentities.sort(sortentities);
+						var i = 0;
+						while (i < backlayerentities.length)
+						{
+							backlayer.addChild(backlayerentities[i]);
+							i++;
+						}
+					}
+				}
+				timetospawn = Math.floor(60 + (180 * Math.random()));
+			}
+		}
+		
 		if (!following)
 		{
 			char.buttonMode = true;
@@ -492,7 +554,26 @@ class CharacterSelect extends Sprite
 		}
 		else
 		{
-			char.buttonMode = Vspeed == 0;
+			updateminigame();
+		}
+	}
+	
+	public function sortentities(A:MiniEntity, B:MiniEntity):Int
+	{
+		if (A.y < B.y)
+		{
+			return -1;
+		}
+		if (A.y > B.y)
+		{
+			return 1;
+		}
+		return 0;
+	}
+	
+	public function updateminigame()
+	{
+		char.buttonMode = Vspeed == 0;
 			var PX = char.x + (charpreview.width / 2);
 			if (Hspeed<0)
 		{
@@ -673,7 +754,6 @@ class CharacterSelect extends Sprite
 					}
 				}
 			}
-		}
 	}
 	private function gettext(i:Int):String
 	{

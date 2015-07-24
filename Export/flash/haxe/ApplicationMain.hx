@@ -310,7 +310,15 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/CSBack0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/CSBG0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/CSFront0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
