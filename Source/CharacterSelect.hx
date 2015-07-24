@@ -83,6 +83,13 @@ class CharacterSelect extends Sprite
 	public var highscore:Int;
 	public var newscore:Bool;
 	
+	//visual boundries(cleans up areas that are out of bounds)
+	private var BGCRight:Bitmap;
+	private var BGCLeft:Bitmap;
+	private var BGCBottom:Bitmap;
+	
+	public var refreshing:Bool;
+	
 	public function new() 
 	{
 		super();
@@ -104,6 +111,7 @@ class CharacterSelect extends Sprite
 		minigamestarted = false;
 		highscore = 0;
 		newscore = false;
+		refreshing = false;
 	}
 	public function start() {
 		
@@ -385,6 +393,35 @@ class CharacterSelect extends Sprite
 		Nameinput.borderColor = 0x0000FF;
 		Nameinput.backgroundColor = 0xFFFFFF;
 		GUI.addChild(Nameinput);
+		
+		BGCRight = new Bitmap(Assets.getBitmapData("assets/bgcolor.png"));
+		BGCRight.x = 800;
+		BGCRight.y = 0;
+		BGCRight.scaleX = 500;
+		BGCRight.scaleY = 2000;
+		addChild(BGCRight);
+		BGCLeft = new Bitmap(Assets.getBitmapData("assets/bgcolor.png"));
+		BGCLeft.x = -500;
+		BGCLeft.y = 0;
+		BGCLeft.scaleX = 500;
+		BGCLeft.scaleY = 2000;
+		//BGCLeft.z = -10;
+		addChild(BGCLeft);
+		BGCBottom = new Bitmap(Assets.getBitmapData("assets/bgcolor.png"));
+		BGCBottom.x = -500;
+		BGCBottom.y = 600;
+		BGCBottom.scaleX = 1500;
+		BGCBottom.scaleY = 1000;
+		//BGCBottom.z = -10;
+		addChild(BGCBottom);
+		
+		//simulate some time so background characters will appear immediatly
+		var i = 0;
+		while (i < 450)
+		{
+			this_onEnterFrame();
+			i++;
+		}
 	}
 	private function stage_onKeyDown (event:KeyboardEvent):Void {
 		var A = Nameinput.getTextFormat();
@@ -401,7 +438,7 @@ class CharacterSelect extends Sprite
 	private function refreshbuttons()
 	{
 		var i = 0;
-		
+		refreshing=true;
 		while (i < Buttons.length)
 		{
 			var B = Buttons[i];
@@ -416,7 +453,7 @@ class CharacterSelect extends Sprite
 			}
 			else
 			{
-				S = Player.hiddencharacters[i-Player.characters.length];
+				//S = Player.hiddencharacters[i-Player.characters.length];
 			}
 			#else
 			var S:String = tf.text.toLowerCase();
@@ -474,6 +511,7 @@ class CharacterSelect extends Sprite
 			this_onEnterFrame();
 			i += 1;
 		}
+		refreshing=false;
 	}
 	public function this_onEnterFrame ():Void {
 		if (Lselected != selected)
@@ -489,12 +527,13 @@ class CharacterSelect extends Sprite
 		
 		//backlayer stuff
 		//if (backlayerentities.length > 0)
+		if (!refreshing)
 		{
 			var i = 0;
 			while (i < backlayerentities.length)
 			{
 				backlayerentities[i].update();
-				if (!backlayerentities[i].alive)
+				if (!backlayerentities[i].alive || backlayerentities[i].charname == selected)
 				{
 					var E = backlayerentities[i];
 					backlayerentities.remove(E);
@@ -508,18 +547,32 @@ class CharacterSelect extends Sprite
 			{
 				var ind = Math.floor(Player.characters.length * Math.random());
 				var C = Player.characters[ind];
-				if (Main._this.savedata.data.unlock[ind])
+				var j = 0;
+				while (j < backlayerentities.length)
+				{
+					//check to see if this choice would be a duplicate
+					if (backlayerentities[j].charname == C)
+					{
+						//if so lets not add it.
+						C = "";
+						j = backlayerentities.length;
+					}
+					j++;
+				}
+				if (C!= "" && C != selected && Main._this.savedata.data.unlock[ind])
 				{
 					var E = null;
 					var X = -1;
 					//determines how far down they are and adjusts their size for better pseudo 3d effect
 					var depth = Math.random();
+					var CC = C;
 					if (Math.random() < 0.5)
 					{
 						X = 801;
-						C = C + "F";
+						CC = C + "F";
 					}
-					E = new MiniEntity( X, 120 + (120 * depth), AL.GetAnimation(C)[0], 0.7, false, 0);
+					E = new MiniEntity( X, 120 + (120 * depth), AL.GetAnimation(CC)[0], 0.5 + (Math.random() * 2), false, 0);
+					E.charname = C;
 					E.scaleX += (depth * 0.3);
 					E.scaleY = E.scaleX;
 					E.bounce = true;
@@ -552,27 +605,56 @@ class CharacterSelect extends Sprite
 			charpreview.bitmapData = AL.GetAnimation(selected)[0];
 		}
 		}
-		else
+		else if (!refreshing)
 		{
 			updateminigame();
+		}
+		if (BGCBottom != null)
+		{
+		//force always on top.
+		removeChild(BGCBottom);
+		removeChild(BGCLeft);
+		removeChild(BGCRight);
+		
+		addChild(BGCBottom);
+		addChild(BGCLeft);
+		addChild(BGCRight);
 		}
 	}
 	
 	public function sortentities(A:MiniEntity, B:MiniEntity):Int
 	{
-		if (A.y < B.y)
+		if (A.y + A.height < B.y + B.height)
+		{
+			return -1;
+		}
+		if (A.y + A.height > B.y + B.height)
+		{
+			return 1;
+		}
+		/*if (A.y < B.y)
 		{
 			return -1;
 		}
 		if (A.y > B.y)
 		{
 			return 1;
-		}
+		}*/
 		return 0;
 	}
 	
 	public function updateminigame()
 	{
+		var MX = mouseX;
+		var MY = mouseY;
+		if (MX < 0)
+		{
+			MX = 0;
+		}
+		if (MX > 800)
+		{
+			MX = 800;
+		}
 		char.buttonMode = Vspeed == 0;
 			var PX = char.x + (charpreview.width / 2);
 			if (Hspeed<0)
@@ -693,7 +775,7 @@ class CharacterSelect extends Sprite
 		
 			var OPX = PX;
 			var G = 500 - charpreview.height;
-			if (Vspeed == 0 && char.y+5 >= G && mouseY < 250)
+			if (Vspeed == 0 && char.y+5 >= G && MY < 250)
 			{
 				Vspeed = -20;
 			}
@@ -706,11 +788,11 @@ class CharacterSelect extends Sprite
 			}
 			var spd = 8;
 			
-			if (PX < mouseX)
+			if (PX < MX)
 			{
-				if (PX + spd > mouseX)
+				if (PX + spd > MX)
 				{
-					PX = mouseX;
+					PX = MX;
 					Hspeed = 0;
 				}
 				else
@@ -722,11 +804,11 @@ class CharacterSelect extends Sprite
 					}
 				}
 			}
-			if (PX > mouseX)
+			if (PX > MX)
 			{
-				if (PX - spd < mouseX)
+				if (PX - spd < MX)
 				{
-					PX = mouseX;
+					PX = MX;
 					Hspeed = 0;
 				}
 				else
@@ -765,7 +847,7 @@ class CharacterSelect extends Sprite
 		}
 		else
 		{
-			S = Player.hiddencharacters[i-Player.characters.length];
+			//S = Player.hiddencharacters[i-Player.characters.length];
 		}
 		return S.charAt(0).toUpperCase() + S.substr(1);
 		#else
