@@ -15,9 +15,6 @@ class Reimu extends Enemy
 	public function new() 
 	{
 		super("reimu");
-		//this.charname = "RedFairy";
-		//accel = 0.5;
-		//accel = 0.1;
 		accel = 0.25;
 		deccel = 0.1;
 		mxspd = 4.5;
@@ -26,7 +23,6 @@ class Reimu extends Enemy
 		flipped = -1;
 		pointvalue = 1100;
 		needtokill = false;
-		//reward = false;
 		reward = true;
 		rewarditem = "MiniBomb";
 	}
@@ -39,29 +35,12 @@ class Reimu extends Enemy
 	
 	override public function update():Void 
 	{
-		//super.update();
 		this.scaleX = 0.6;
 		this.scaleY = 0.6;
 		
 	if (!started)
 		{
-			/*var i = 0;
-			while (i < rank)
-			{
-				accel += 0.1;
-				mxspd += 0.5;
-				pointvalue += 50;
-				i++;
-			}*/
 			started = true;
-		}
-		/*accel = 0.5;
-		deccel = 0.1;
-		mxspd = 4;*/
-		if (enraged)
-		{
-			//accel += 0.2;
-			//mxspd += 2;
 		}
 		if (!killed)
 		{
@@ -155,7 +134,6 @@ class Reimu extends Enemy
 						Vspeed = -15;
 					}
 				}
-				//Vspeed = -16;
 			}
 		}
 		updphysics();
@@ -163,44 +141,32 @@ class Reimu extends Enemy
 		
 		if (ground != null)
 		{
-			//if (ground.bonked > -1000 && game.Hoster && game.myplayer == ground.bonkedby)
 			if (ground.bonked > -1000 && Vspeed>=0)
 			{
-				//if (game.ismyplayer(ground.bonkedby) && game.Hoster)
 				if (game.myplayer == ground.bonkedby)
 				{
-				//Vspeed = -4;
-				//flipped = 30 * 10;
 				var D:Dynamic = { };
 				D.UID = UID;
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
 				D.Vspeed = -10;
-				//game.SendEvent("Bump", this.UID);
 				game.SendEvent("Bump", D);
 				}
 			}
 			else
 			{
-				//if ((controller[1]) && Vspeed == 0)
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
 					Vspeed = -4;
-					//Vspeed = -13;
 				}
 			}
 			
 		}
-			//if (y > 408 && wrapped)
-			//if (y < 200 && wrapped)
-			//if (wrapped && target == null)
 			if (target == null && wrapped && (y>408 || y<200))
 			{
 				alive = false;
-				//killed = true;
-				//visible = false;
 			}
 		killable = flipped > 0;
 	}
@@ -216,7 +182,6 @@ class Reimu extends Enemy
 	
 	public override function bump()
 	{
-		//Vspeed = -4;
 		if (flipped < 1)
 		{
 			if (enraged)

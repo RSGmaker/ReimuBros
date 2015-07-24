@@ -10,15 +10,12 @@ class RedFairy extends Enemy
 	public var accel:Float;
 	
 	public var mxspd:Float;
-	//public var controller:Array<Bool>;
 	
 	
 	
 	public function new() 
 	{
-		//super(main, "RedFairy");
 		super("RedFairy");
-		//this.charname = "RedFairy";
 		accel = 0.5;
 		deccel = 0.1;
 		mxspd = 4;
@@ -37,23 +34,7 @@ class RedFairy extends Enemy
 	{
 		if (!started)
 		{
-			/*var i = 0;
-			while (i < rank)
-			{
-				accel += 0.1;
-				mxspd += 0.5;
-				pointvalue += 50;
-				i++;
-			}*/
 			started = true;
-		}
-		/*accel = 0.5;
-		deccel = 0.1;
-		mxspd = 4;*/
-		if (enraged)
-		{
-			//accel += 0.2;
-			//mxspd += 2;
 		}
 		if (!killed)
 		{
@@ -93,32 +74,25 @@ class RedFairy extends Enemy
 		
 		if (ground != null)
 		{
-			//if (ground.bonked > -1000 && game.Hoster && game.myplayer == ground.bonkedby)
 			if (ground.bonked > -1000 && Vspeed>=0)
 			{
-				//if (game.ismyplayer(ground.bonkedby) && game.Hoster)
 				if (game.myplayer == ground.bonkedby)
 				{
-				//Vspeed = -4;
-				//flipped = 30 * 10;
 				var D:Dynamic = { };
 				D.UID = UID;
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
 				D.Vspeed = -10;
-				//game.SendEvent("Bump", this.UID);
 				game.SendEvent("Bump", D);
 				}
 			}
 			else
 			{
-				//if ((controller[1]) && Vspeed == 0)
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
 					Vspeed = -4;
-					//Vspeed = -13;
 				}
 			}
 			
@@ -141,7 +115,6 @@ class RedFairy extends Enemy
 	}
 	public override function bump()
 	{
-		//Vspeed = -4;
 		if (flipped < 1)
 		{
 			if (enraged)

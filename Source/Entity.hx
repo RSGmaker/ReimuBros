@@ -93,15 +93,12 @@ class Entity extends Sprite
 		solid = false;
 		platform = false;
 		bonked = -1000;
-		//game = main;
 		alive = true;
 		if (ani != null)
 		{
 			image = new Animation(game.AL.GetAnimation(ani));
 			addChild(image);
 		}
-		//super(game.AL.GetAnimation(ani));
-		//fallaccel = 0.5;
 		fallaccel = 0.7;
 		Hspeed = 0;
 		Vspeed = 0;
@@ -141,17 +138,6 @@ class Entity extends Sprite
 		
 	}
 	public function update():Void {
-		//x += Hspeed;
-		//y += Vspeed;
-		
-		/*if (x < -width)
-		{
-			x += 800+width;
-		}
-		if (x >800+width)
-		{
-			x -= 800+width;
-		}*/
 		animate();
 	}
 	public function nearestplayer():Player
@@ -159,15 +145,10 @@ class Entity extends Sprite
 		var i = 0;
 		var dist = 999999999.0;
 		var ret:Player = null;
-		//var L = game.GetPlayers();
 		var L = game.Players.iterator();
 		while (L.hasNext())
 		{
-			//var E:Dynamic = L[i];
-			//if (E.type == "Player")
 			{
-				//var P:Player = E;
-				//var P:Player = L[i];
 				var P:Player = L.next();
 				var D = Math.abs(x - P.x) + Math.abs(y - P.y);
 				if (D < dist)
@@ -178,27 +159,11 @@ class Entity extends Sprite
 			}
 			i++;
 		}
-		/*while (i < game.entities.length)
-		{
-			var E:Dynamic = game.entities[i];
-			if (E.type == "Player")
-			{
-				var P:Player = E;
-				var D = Math.abs(x - P.x) + Math.abs(y - P.y);
-				if (D < dist)
-				{
-					ret = E;
-					dist = D;
-				}
-			}
-			i++;
-		}*/
 		return ret;
 	}
 	//execute a rotation with crude stabilizing.(has a bit of jitter)
 	public function rotateentity(rot:Float)
 	{
-		//if (rot != rotation)
 		{
 		var B = getBounds(game);
 		rotation = rot;
@@ -248,7 +213,6 @@ class Entity extends Sprite
 				Hspeed = 0;
 			}
 		}
-		//if (Vspeed < 10)
 		if (Vspeed < 12)
 		{
 			{
@@ -256,8 +220,6 @@ class Entity extends Sprite
 			}
 			
 		}
-		//if (rotationZ == 0)
-		//var game = game;
 		if (rotation == 0)
 		{
 		ground = game.CollisionDetectPoint(x + middle, y + feetposition+2);
@@ -266,11 +228,6 @@ class Entity extends Sprite
 		{
 			var B = getBounds(game);
 			ground = game.CollisionDetectPoint(B.left + middle, B.bottom+2/* + (height + 2)*/);
-		}
-		if (ground == null)
-		{
-			//ground = game.CollisionDetectPoint(x - (Math.floor(width) >> 1), y + height);
-			//ground = game.CollisionDetectPoint(x + (Math.floor(width) >> 1), y + height);
 		}
 		if (ground != null)
 		{
@@ -285,7 +242,6 @@ class Entity extends Sprite
 		if (Vspeed < 0)
 		{
 			headbonk = game.CollisionDetectPoint(x + middle, y+20);
-			//headbonk = game.CollisionDetectPoint(x + (Math.floor(width) >> 1), y);
 			if (headbonk != null && headbonk.platform)
 			{
 				headbonk = null;

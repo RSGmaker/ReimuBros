@@ -58,15 +58,6 @@ class Lightning extends Entity
 				i++;
 			}
 			
-			/*var A = Players.iterator();
-			while (A.hasNext())
-			{
-				var E:Player = A.next();
-				if (!E.killed)
-				{
-					
-				}
-			}*/
 		}
 		}
 		Time--;

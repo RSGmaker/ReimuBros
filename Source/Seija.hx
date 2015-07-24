@@ -9,7 +9,6 @@ class Seija extends Enemy
 	public var accel:Float;
 	
 	public var mxspd:Float;
-	//public var started:Bool;
 	public var timer:Int;
 	public var rng:MersenneTwister;
 	public var flipping:Bool;
@@ -29,13 +28,7 @@ class Seija extends Enemy
 		flipping = false;
 		this.scaleX = 0.8;
 		this.scaleY = 0.8;
-		//this.addChild(darkness);
 	}
-	/*public override function enrage()
-	{
-		accel += 0.1;
-		//mxspd += 6;
-	}*/
 	public override function update()
 	{
 		if (!started)
@@ -50,14 +43,6 @@ class Seija extends Enemy
 			timer = (60) + rng.twist(seed, 1, 30 * 8)[0];
 			countdown = 90;
 		}
-		/*if (enraged)
-		{
-		if (game.Hoster)
-		{
-			game.SendEvent("FLIP!", null);
-		}
-		}*/
-		//y += 1;
 		
 		if (!killed)
 		{
@@ -81,11 +66,9 @@ class Seija extends Enemy
 		if (flipping)
 		{
 			countdown -= 1;
-			//enraged = !enraged;
 			visuallyEnraged = !visuallyEnraged;
 			if (countdown <= 0)
 			{
-				//SoundManager.Play("fireballspawn");
 				if (game.Hoster && ground != null)
 				{
 					game.SendEvent("FLIP!", null);
@@ -98,8 +81,6 @@ class Seija extends Enemy
 		}
 		else
 		{
-			//countdown = 60;
-			//enraged = false;
 			visuallyEnraged = false;
 		}
 			}
@@ -159,43 +140,28 @@ class Seija extends Enemy
 		{
 			this.rotation = 0;
 		}
-		/*if (flipped>0)
-		{
-			scaleY = -1;
-		}
-		else
-		{
-			scaleY = 1;
-		}*/
 		
 		if (ground != null)
 		{
-			//if (ground.bonked > -1000 && game.Hoster && game.myplayer == ground.bonkedby)
 			if (ground.bonked > -1000 && Vspeed>=0)
 			{
-				//if (game.ismyplayer(ground.bonkedby) && game.Hoster)
 				if (game.myplayer == ground.bonkedby)
 				{
-				//Vspeed = -4;
-				//flipped = 30 * 10;
 				var D:Dynamic = { };
 				D.UID = UID;
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
 				D.Vspeed = -10;
-				//game.SendEvent("Bump", this.UID);
 				game.SendEvent("Bump", D);
 				}
 			}
 			else
 			{
-				//if ((controller[1]) && Vspeed == 0)
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
 					Vspeed = -4;
-					//Vspeed = -13;
 				}
 			}
 			
@@ -218,7 +184,6 @@ class Seija extends Enemy
 	}
 	public override function bump()
 	{
-		//Vspeed = -4;
 		if (flipped < 1)
 		{
 			if (enraged)

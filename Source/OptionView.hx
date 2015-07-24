@@ -50,7 +50,6 @@ class OptionView extends Sprite
 		var str = "assets/Sprites/options0.png";
 		var bd = Assets.getBitmapData (str);
 		img_options = new Bitmap(bd);
-		//img_options.bitmapData = bd;
 		
 		selection = -1;
 		var rectangleShape:Shape = new Shape();
@@ -83,8 +82,6 @@ class OptionView extends Sprite
 		var Y1 = YY;
 		sndmeter.buttonMode = true;
 		sndmeter.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				//status = "Back";
-				//sndmeter.graphics.clear();
 				var X:Float = ((sndmeter.mouseX - X1) / 200.0);
 				SoundManager._this.SetSoundVolume(X);
 				X = SoundManager._this.GetSoundVolume();
@@ -99,7 +96,6 @@ class OptionView extends Sprite
 				sndmeter.graphics.endFill();
 				 } 
 				);
-				//
 				T = new TextField();
 		T.x = 0;
 		T.y = 100+30;
@@ -121,8 +117,6 @@ class OptionView extends Sprite
 		musicmeter.buttonMode = true;
 		addChild(musicmeter);
 		musicmeter.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				//status = "Back";
-				//sndmeter.graphics.clear();
 				var X:Float = ((musicmeter.mouseX - XX) / 200.0);
 				SoundManager._this.SetMusicVolume(X);
 				X = SoundManager._this.GetMusicVolume();
@@ -150,7 +144,6 @@ class OptionView extends Sprite
 		B.x = 70;
 		B.y = 250;
 		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				//status = "Back";
 				selection = 0;
 				 } 
 				);
@@ -168,11 +161,9 @@ class OptionView extends Sprite
 		B.x = 210+W;
 		B.y = 250;
 		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				//status = "Back";
 				selection = 1;
 				 } 
 				);
-				///////////////////////////////
 				T = new TextField();
 		T.x = 0;
 		T.y = 350;
@@ -186,7 +177,6 @@ class OptionView extends Sprite
 		B.x = 70;
 		B.y = 350;
 		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				//status = "Back";
 				selection = 2;
 				 } 
 				);
@@ -204,7 +194,6 @@ class OptionView extends Sprite
 		B.x = 210+W;
 		B.y = 350;
 		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				//status = "Back";
 				selection = 3;
 				 } 
 				);
@@ -221,7 +210,6 @@ class OptionView extends Sprite
 		B.x = 70;
 		B.y = 450;
 		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				//status = "Back";
 				selection = 5;
 				 } 
 				);
@@ -238,7 +226,6 @@ class OptionView extends Sprite
 		B.x = 70;
 		B.y = 550;
 		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				//status = "Back";
 				selection = 4;
 				 } 
 				);
@@ -257,14 +244,6 @@ class OptionView extends Sprite
 			Main._this.savedata.data.controlscheme[selection] = event.keyCode;
 			status = "refresh";
 		}
-		/*switch (event.keyCode) {
-			case Keyboard.DOWN: control[0] = false;
-			case Keyboard.LEFT: control[2] = false;
-			case Keyboard.RIGHT: control[3] = false;
-			case Keyboard.UP: control[1] = false;
-			
-		}
-		ControlEvent = true;*/
 	}
 	//convert keycodes to string
 	public function stringfromcode(code:UInt):String
@@ -337,10 +316,6 @@ class OptionView extends Sprite
 		buttonSprite.x -= (textField.width / 2);
 		buttonSprite.width = textField.width;
 		buttonSprite.height = textField.height;
-		//buttonSprite.x -= Math.ceil(textField.getBounds(this).width);
-		//buttonSprite.y -= Math.ceil(textField.textHeight + SZ3);
-		//var tf:Dynamic = (buttonSprite.getChildByName("textField"));
-		//tf.text = "button sprite text";
 		buttonSprite.buttonMode = true;
 		return buttonSprite;
 	}

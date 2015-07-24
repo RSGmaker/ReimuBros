@@ -15,7 +15,6 @@ class PointItem extends EntityItem
 	{
 		alive = false;
 		player.score += 200;
-		//if (player == GameView._this.myplayer)
 		{
 			SoundManager.Play("collectcoin");
 		}

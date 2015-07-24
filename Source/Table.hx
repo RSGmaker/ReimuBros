@@ -18,16 +18,12 @@ class Table extends Entity
 		super("table");
 		started = false;
 		dangerous = false;
-		//dangerous = true;
 		type = "Table";
-		//if we kept track of these things would probly get messy.
-		//UID = -1;
 		image.image_speed = 0;
 		tossedBy = null;
 		respawn = 240;
 		interactable = true;
 		interacttext = "Throw";
-		//image_speed = 0.25;
 	}
 	public override function interact(P:Player)
 	{
@@ -40,21 +36,18 @@ class Table extends Entity
 			if (P.Ldir < 0)
 			{
 				D.Hspeed = -10;
-				//D.image_speed = 0.5;
 				D.image_speed = 1;
 			}
 			else
 			{
 				D.Hspeed = 10;
 				D.image_speed = -1;
-				//D.image_speed = -0.5;
 			}
 			game.SendEvent("Tableflip", D);
 		}
 	}
 	public override function update()
 	{
-		//rotateentity(rotation + 15);
 		if (!started)
 		{
 			started = true;
@@ -71,50 +64,13 @@ class Table extends Entity
 		
 		if (visible)
 		{
-			//var player = game.CollisionDetectPointPlayer(x + 24, y + 24);
 		var enemy = game.CollisionDetectPointEnemy(x + 24, y + 24);
-		//var danger = game.CollisionDetectPointDangerous(x + 24, y + 24);
 		if (Hspeed == 0 && Vspeed == 0)
 		{
 			readyinteract = true;
-			/*if (player != null && (player.controller[0] || player.controller[1]))
-			{
-				var D:Dynamic = { };
-				D.UID = UID;
-				D.dangerous = false;
-				D.TUID = player.UID;
-				if (player.Ldir < 0)
-				{
-					D.Hspeed = -10;
-					//D.image_speed = 0.5;
-					D.image_speed = 1;
-				}
-				else
-				{
-					D.Hspeed = 10;
-					D.image_speed = -1;
-					//D.image_speed = -0.5;
-				}
-				game.SendEvent("Tableflip", D);
-				
-			}
-			else */if (enemy != null && enemy.enraged && game.Hoster)
+			if (enemy != null && enemy.enraged && game.Hoster)
 			{
 				
-				/*if (enemy.Hspeed < 0)
-				{
-					Hspeed = -10;
-					image_speed = 0.5;
-				}
-				else
-				{
-					Hspeed = 10;
-					image_speed = -0.5;
-				}
-				dangerous = true;
-				Vspeed = -7;
-				gravY = 0.8;
-				image_speed = 0.5;*/
 				var D:Dynamic = { };
 				D.UID = UID;
 				D.dangerous = true;
@@ -122,13 +78,11 @@ class Table extends Entity
 				if (enemy.Hspeed < 0)
 				{
 					D.Hspeed = -10;
-					//D.image_speed = 0.5;
 					D.image_speed = 1;
 				}
 				else
 				{
 					D.Hspeed = 10;
-					//D.image_speed = -0.5;
 					D.image_speed = -1;
 				}
 				game.SendEvent("Tableflip", D);
@@ -148,7 +102,6 @@ class Table extends Entity
 				if (danger != null && danger.type=="Enemy" && (DD.charname == "Cirno" || DD.charname=="Iku"))
 				{
 					game.SendEvent("Kill", danger.UID);
-					//game.SendEvent("Kill", danger);
 				}
 			}
 		}
@@ -168,8 +121,6 @@ class Table extends Entity
 			x = startx;
 			y = starty;
 			respawn = 240;
-			//alive = false;
-			//killed = true;
 		}
 		}
 		else

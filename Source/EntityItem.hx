@@ -48,9 +48,8 @@ class EntityItem extends Entity
 			Hspeed = -4;
 		}
 		}
-		//Hspeed = 4;
 		updphysics();
-		if (y > 408 && wrapped && despawnatbottom/* && Ldir != 0*/)
+		if (y > 408 && wrapped && despawnatbottom)
 		{
 			alive = false;
 			visible = false;
@@ -61,18 +60,10 @@ class EntityItem extends Entity
 			{
 				if (game.myplayer == ground.bonkedby)
 				{
-					/*var D:Dynamic = { };
-					D.UID = UID;
-					D.x = x;
-					D.y = y;
-					D.Hspeed = -Hspeed;
-					D.Vspeed = -14;
-					game.SendEvent("Bump", D);*/
 					game.SendEvent("Collect", UID);
 				}
 			}
 		}
-		//Ldir = 0;
 		
 	}
 	

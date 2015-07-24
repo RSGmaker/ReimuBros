@@ -60,9 +60,6 @@ class TitleScreenView extends Sprite
 		img_titlescreen.y = 0;
 		addChild(img_titlescreen);
 		SoundManager.PlayJingle("titlescreen");
-		//SoundManager.Play("titlescreen");
-		//play music would make it repeat :/
-		//SoundManager.PlayMusic("titlescreen");
 		if (Main._this.DEBUG)
 		{
 			//warn the developer that they are using debug mode(so they won't accidently upload it)
@@ -79,7 +76,6 @@ class TitleScreenView extends Sprite
 			addChild(warning);
 		}
 		addEventListener( MouseEvent.MOUSE_UP, function( ev ) { MSE = true; show_menu(); } );
-		//stage.addEventListener( MouseEvent.MOUSE_UP, function( ev ) { if (!touched) {MSE = false; control[0] = false; control[1] = false; control[2] = false; control[3] = false;} } );
 		addEventListener (KeyboardEvent.KEY_UP, function( ev ) { MSE = true; show_menu(); } );
 		
 		var S = new Sprite();
@@ -121,16 +117,6 @@ class TitleScreenView extends Sprite
 			addChild(B);
 			statusmsg = B;
 		}
-		//addEventListener (Event.ENTER_FRAME, this_onEnterFrame);
-		//useHandCursor = true;
-		
-		/*var S = new Sprite();
-		S.x = 300;
-		S.y = 520;
-		S.width = 200;
-		S.height = 120;
-		S.buttonMode = true;
-		addChild(S);*/
 	}
 	public function show_menu()
 	{
@@ -157,9 +143,7 @@ class TitleScreenView extends Sprite
 		textField.width = textField.textWidth+16;
 		textField.height = textField.textHeight;
 		addChild(textField);
-			//
 			menu = true;
-			//startgame = AddButton("Start Game");
 			#if flash
 			startgame = AddButton("Multiplayer");
 			
@@ -169,21 +153,17 @@ class TitleScreenView extends Sprite
 			startgame.y = 50+200;
 			#end
 			startgame.x += 400;
-			//startgame.y = 50+200;
 			startgame.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 					#if flash
 					status = "OpenPlay";
 					#else
 					status = "SinglePlayer";
 					#end
-					//removeChild(startgame);
 				 } 
 				);
-				//addChild(startgame);
 				#if flash
 			var PA = AddButton("Play Alone");
 			PA.x += 400;
-			//PA.y = 200+200;
 			PA.y = 50+200;
 			PA.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 				status = "SinglePlayer";
@@ -202,7 +182,6 @@ class TitleScreenView extends Sprite
 				var PA = AddButton("Manual");
 			PA.x += 700;
 			PA.y = 10;
-				//addChild(PA);
 		}
 		else
 		{
@@ -218,26 +197,6 @@ class TitleScreenView extends Sprite
 		}
 		}
 	}
-	/*private function this_onEnterFrame (event:Event):Void {
-		if (!menu && MSE)
-		{
-			menu = true;
-			startgame = AddButton("Start Game");
-			startgame.x += 400;
-			startgame.y = 50+200;
-			startgame.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-					status = "OpenPlay";
-				 } 
-				);
-			singleplayer = AddButton("Play Alone");
-			singleplayer.x += 400;
-			singleplayer.y = 200+200;
-			singleplayer.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				status = "SinglePlayer";
-				 } 
-				);
-		}
-	}*/
 	private function AddButton(text:String):Sprite
 	{
 		var tmp = new TextFormat();
@@ -260,9 +219,6 @@ class TitleScreenView extends Sprite
 		textField.height = textField.textHeight+SZ2;
 		
 		var rectangleShape:Shape = new Shape();
-		//rectangleShape.width = textField.textWidth + 8;
-		//rectangleShape.height = textField.textHeight + 8;
-		//rectangleShape.graphics.beginFill(0xFF0000);
 		rectangleShape.graphics.beginFill(0x00AA33);
 		rectangleShape.graphics.drawRect(0, 0, textField.textWidth + SZ3, textField.textHeight + SZ3);
 		rectangleShape.graphics.endFill();
@@ -276,14 +232,9 @@ class TitleScreenView extends Sprite
 		buttonSprite.addChild(rectangleShape);
 		buttonSprite.addChild(textField);
 		addChild(buttonSprite);
-		//make the button centered.
 		buttonSprite.x -= (textField.width / 2);
 		buttonSprite.width = textField.width;
 		buttonSprite.height = textField.height;
-		//buttonSprite.x -= Math.ceil(textField.getBounds(this).width);
-		//buttonSprite.y -= Math.ceil(textField.textHeight + SZ3);
-		//var tf:Dynamic = (buttonSprite.getChildByName("textField"));
-		//tf.text = "button sprite text";
 		buttonSprite.buttonMode = true;
 		return buttonSprite;
 	}

@@ -23,12 +23,9 @@ class MyonItem extends CarryItem
 		facedirection = false;
 		dualcarry = false;
 		HP = 1;
-		//flags = new FlagManager(1);
-		//flags.set(Player.EatMystia, true);
 	}
 	override public function Collect(player:Player) 
 	{
-		//if (player.myMyon == null || player.charname == "youmu")
 		if (player.myMyon == null || dualcarries())
 		{
 			holder = player;
@@ -36,10 +33,8 @@ class MyonItem extends CarryItem
 			{
 				OffsetX = -40;
 				ChangeAnimation(rename+"F");
-				//holder = player;
 			}
 			super.Collect(player);
-			//player.myMyon = this;
 		}
 	}
 	public function dualcarries():Bool
@@ -49,7 +44,6 @@ class MyonItem extends CarryItem
 	override public function update():Void 
 	{
 		super.update();
-		//if (collectable && game.myplayer.myMyon != null && !(game.myplayer.flags.get(Player.DoubleMyon) && !(dualcarry || (game.myplayer.myMyon != null && game.myplayer.myMyon.dualcarry))))
 		if (!dualcarries() && collectable && game.myplayer.myMyon != null)
 		{
 			//prevent collect spam by players who cant even pick them up.
@@ -57,7 +51,6 @@ class MyonItem extends CarryItem
 		}
 		else if (collectable)
 		{
-			//if (game.myplayer.flags.get(Player.DoubleMyon) || (dualcarry || (game.myplayer.myMyon != null && game.myplayer.myMyon.dualcarry)))
 			if (dualcarries())
 			{
 				var i = 0;
@@ -91,7 +84,6 @@ class MyonItem extends CarryItem
 		}
 		else if (holder != null)
 		{
-			//if (holder.myMyon != this && holder.myMyon !=)
 			holder.myMyon = this;
 			Ldir = holder.Ldir;
 			if (holder.type == "Player")
@@ -108,19 +100,16 @@ class MyonItem extends CarryItem
 			if (Ldir > 0)
 			{
 				ChangeAnimation(rename);
-				//OffsetX = Math.abs(OffsetX);
 			}
 			if (Ldir < 0)
 			{
 				ChangeAnimation(rename+"F");
-				//OffsetX = -Math.abs(OffsetX);
 			}
 			}
 		}
 	}
 	public override function Death() 
 	{
-		//super.Death();
 		if (holder.type == "Player")
 		{
 			var D:Dynamic = holder;

@@ -19,7 +19,6 @@ class Yuuka extends Entity
 	}
 	override public function update():Void 
 	{
-		//super.update();
 		if (!started)
 		{
 			started = true;
@@ -88,7 +87,6 @@ class Yuuka extends Entity
 						if (GameView._this.Hoster && alive)
 						{
 							var D:Dynamic = { };
-							//D.x = x;
 							D.y = OY-56;
 							GameView._this.SendEvent("MasterSpark", D);
 						}

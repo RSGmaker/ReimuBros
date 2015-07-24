@@ -10,19 +10,15 @@ class Satori extends Enemy
 	public var accel:Float;
 	
 	public var mxspd:Float;
-	//public var controller:Array<Bool>;
 	public var rename:String;
 	
 	public var target:Player;
-	//public var frame:Int;
 	
 	public var wait:Int;
 	
 	public function new() 
 	{
-		//super(main, "RedFairy");
 		super("satori");
-		//this.charname = "RedFairy";
 		accel = 0.5;
 		deccel = 0.1;
 		mxspd = 4;
@@ -35,17 +31,9 @@ class Satori extends Enemy
 		scaleY = 0.7;
 	}
 	
-	/*public override function enrage()
-	{
-		accel += 0.2;
-		mxspd += 1;
-		//accel = 0.7;
-		//mxspd = 6;
-	}*/
 	override public function attack():Bool 
 	{
 		return alpha >= 1;
-		//return super.attack();
 	}
 	public override function increaserank()
 	{
@@ -57,14 +45,6 @@ class Satori extends Enemy
 	{
 		if (!started)
 		{
-			/*var i = 0;
-			while (i < rank)
-			{
-				accel += 0.1;
-				mxspd += 0.5;
-				pointvalue += 50;
-				i++;
-			}*/
 			if (UID < 0.5)
 			{
 				rename = "koishi";
@@ -115,14 +95,6 @@ class Satori extends Enemy
 				}
 			}
 		}
-		/*accel = 0.5;
-		deccel = 0.1;
-		mxspd = 4;*/
-		if (enraged)
-		{
-			//accel += 0.2;
-			//mxspd += 2;
-		}
 		if (!killed)
 		{
 		var dir = Ldir;
@@ -170,39 +142,30 @@ class Satori extends Enemy
 			}
 		}
 		}
-		//updphysics();
-		//updateanimation();
 		updphysics();
 		updateanimation(rename);
 		
 		if (ground != null)
 		{
-			//if (ground.bonked > -1000 && game.Hoster && game.myplayer == ground.bonkedby)
 			if (ground.bonked > -1000 && Vspeed>=0)
 			{
-				//if (game.ismyplayer(ground.bonkedby) && game.Hoster)
 				if (game.myplayer == ground.bonkedby)
 				{
-				//Vspeed = -4;
-				//flipped = 30 * 10;
 				var D:Dynamic = { };
 				D.UID = UID;
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
 				D.Vspeed = -10;
-				//game.SendEvent("Bump", this.UID);
 				game.SendEvent("Bump", D);
 				}
 			}
 			else
 			{
-				//if ((controller[1]) && Vspeed == 0)
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
 					Vspeed = -4;
-					//Vspeed = -13;
 				}
 			}
 			
