@@ -607,12 +607,6 @@ class GameView extends Sprite
 		addChild(Dpad);
 		
 		
-		if (myplayer.flags.get(Player.DoubleMyon))
-		{
-			var D:Dynamic = { };
-					D.UID = myplayer.UID;
-					SendEvent("AttachMyon", D);
-		}
 	}
 	//sets down platforms and puts holes in the platforms
 	public function setformation()
@@ -1123,10 +1117,7 @@ class GameView extends Sprite
 			var E = EntityFromUID(data);
 			if (E != null && !E.killed)
 			{
-				if (P.flags.get(Player.EnemyEater))
-				{
-					P.cooldown = P.maxcooldown;
-				}
+				P.ability.onkill(E);
 				if (evt == "Kill" && me && E.myMyon != null/* && P.myMyon == null*/)
 				{
 					var ok = (P.myMyon == null);
@@ -1441,19 +1432,7 @@ class GameView extends Sprite
 				{
 					SoundManager.Play("respawn");
 					P.invincibility = 150;
-					if (P.flags.get(Player.MoreInvincibility))
-					{
-						P.invincibility += P.invincibility+P.invincibility;
-					}
-					if (me)
-					{
-						if (P.flags.get(Player.DoubleMyon))
-						{
-							var D:Dynamic = { };
-							D.UID = myplayer.UID;
-							SendEvent("AttachMyon", D);
-						}
-					}
+					P.ability.onrespawn();
 				}
 				if (!me)
 				{
