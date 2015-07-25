@@ -1,0 +1,357 @@
+package;
+
+/**
+ * ...
+ * @author RSGmaker
+ */
+class PlayerAbilityManager
+{
+
+	public var abilities:Array<PlayerAbility>;
+	public var player:Player;
+	public function new(player:Player) 
+	{
+		abilities = new Array<PlayerAbility>();
+		this.player = player;
+	}
+	public function init()
+	{
+		var i = 0;
+		while (i < abilities.length)
+		{
+			abilities[i].init();
+			i++;
+		}
+	}
+	public function onbeginframe()
+	{
+		var i = 0;
+		while (i < abilities.length)
+		{
+			abilities[i].onbeginframe();
+			i++;
+		}
+	}
+	public function onframe()
+	{
+		var i = 0;
+		while (i < abilities.length)
+		{
+			abilities[i].onframe();
+			i++;
+		}
+	}
+	public function onuse()
+	{
+		var i = 0;
+		while (i < abilities.length)
+		{
+			abilities[i].onuse();
+			i++;
+		}
+	}
+	public function onrespawn()
+	{
+		var i = 0;
+		while (i < abilities.length)
+		{
+			abilities[i].onrespawn();
+			i++;
+		}
+	}
+	public function onheadbonk()
+	{
+		var i = 0;
+		while (i < abilities.length)
+		{
+			abilities[i].onheadbonk();
+			i++;
+		}
+	}
+	
+	public function onkill(E:Entity)
+	{
+		var i = 0;
+		while (i < abilities.length)
+		{
+			abilities[i].onkill(E);
+			i++;
+		}
+	}
+	public function SetAbilities()
+	{
+		SetFlags(player);
+		abilities = GetAbilities(player);
+	}
+	
+	//static functions
+	//set all the players ability flags
+	public static function SetFlags(player:Player)
+	{
+		player.flags = GetFlags(player.charname);
+	}
+	public static function GetFlags(charname:String):FlagManager
+	{
+		//if (!GameView._this.tournament)
+		var flags = new FlagManager(1);
+		{
+			//var charname = player.charname;
+			//var flags = player.flags;
+			switch (charname)
+		{
+			case "aya":
+				flags.set(Player.SuperSpeed, true);
+			case "alice":
+				//zombiefairytype = "shanghai";
+				//zombiefairyscale = 0.6;
+				//flags.set(SpawnZombieFairies, true);
+				//zombiefairychance += 0.06;
+				flags.set(Player.SpawnShanghai, true);
+			case "youmu":
+				flags.set(Player.DoubleMyon, true);
+			case "cirno":
+				flags.set(Player.IceAffinity, true);
+			case "letty":
+				flags.set(Player.IceAffinity, true);
+				flags.set(Player.WorldFreezer, true);
+				//warncooldown = true;
+				//maxcooldown = 3600+1000;
+			case "yukari":
+				flags.set(Player.GapManipulator, true);
+			case "seija":
+				flags.set(Player.FlipResistance, true);
+			case "mokou":
+				flags.set(Player.FireProof, true);
+				flags.set(Player.WorldScorcher, true);
+				//warncooldown = true;
+				//maxcooldown = 3600+1000;
+			case "orin":
+				flags.set(Player.MoreZombieFairies, true);
+				//zombiefairychance += 0.06;
+			case "yuyuko":
+				flags.set(Player.EatMystia, true);
+			case "kaguya":
+				flags.set(Player.MoreInvincibility, true);
+			case "kanako":
+				flags.set(Player.PreservePowBlock, true);
+			case "murasa":
+				flags.set(Player.Ambush, true);
+			case "koishi":
+				flags.set(Player.CanHide, true);
+				//maxcooldown = 25;
+				//cooldown = 150;
+			case "tewi":
+				flags.set(Player.FallThruPlatforms, true);
+			case "iku":
+				flags.set(Player.ElectricProof, true);
+			case "tenshi":
+				flags.set(Player.Earthquake, true);
+				//warncooldown = true;
+				//maxcooldown = 900;
+			case "keine":
+				flags.set(Player.ExKeine, true);
+				//warncooldown = true;
+				//maxcooldown = 1800;
+			case "reimu":
+				flags.set(Player.YinYangOrbs, true);
+				//warncooldown = true;
+				//maxcooldown = 380;
+			case "meiling":
+				flags.set(Player.DashAttack, true);
+				//warncooldown = true;
+				//maxcooldown = 300;
+			case "sakuya":
+				flags.set(Player.ZaWarudo, true);
+				//warncooldown = true;
+				//maxcooldown = 3600;
+			case "raiko":
+				flags.set(Player.KaPow, true);
+				//maxcooldown = 3600;
+				//warncooldown = true;
+			case "ran":
+				flags.set(Player.Cheeen, true);
+				//warncooldown = true;
+				//maxcooldown = 300;
+			case "chen":
+				flags.set(Player.DashAttack, true);
+				//warncooldown = true;
+				//maxcooldown = 300;
+			case "sanae":
+				flags.set(Player.StarBulletG, true);
+				//warncooldown = true;
+				//maxcooldown = 400;
+			case "marisa":
+				flags.set(Player.StarBulletY, true);
+				//warncooldown = true;
+				//maxcooldown = 660;
+			case "rumia":
+				flags.set(Player.EnemyEater, true);
+				//warncooldown = true;
+				//maxcooldown = 390;
+			case "komachi":
+				flags.set(Player.Teleporter, true);
+				//warncooldown = true;
+				//maxcooldown = 420;
+			case "nue":
+				flags.set(Player.FriendlyUFO, true);
+			case "wriggle":
+				flags.set(Player.LightDashAttack, true);
+				//warncooldown = true;
+				//maxcooldown = 180;
+			case "yuugi":
+				flags.set(Player.HeavyBonk, true);
+			default:
+		}
+		/*if (cooldown == 0 && maxcooldown > 0)
+		{
+			cooldown = maxcooldown;
+		}*/
+		if (flags.isempty())
+		{
+			flags.set(Player.Floating, true);
+		}
+		flags.set(Player.SpawnZombieFairies, true);
+		}
+		return flags;
+	}
+	//public static var       Flags:Array<Int> = [   Player.SuperSpeed,   Player.SpawnShanghai,   Player.MoreZombieFairies,   Player.DoubleMyon,   Player.Floating,   Player.YinYangOrbs,   Player.IceAffinity,   Player.WorldFreezer,   Player.GapManipulator,   Player.FlipResistance];
+	//public static var Abilities:Array<Class> = [abilities.SuperSpeed,abilities.SpawnShanghai,abilities.MoreZombieFairies,abilities.DoubleMyon,abilities.Floating,abilities.YinYangOrbs,abilities.IceAffinity,abilities.WorldFreezer,abilities.GapManipulator,abilities.FlipResistance];
+	public static function GetAbilities(player:Player):Array<PlayerAbility>
+	{
+		var ret = new Array<PlayerAbility>();
+		var flags = player.flags;
+		if (flags.get(Player.SuperSpeed))
+		{
+			ret[ret.length] = new abilities.SuperSpeed(player);
+		}
+		if (flags.get(Player.SpawnShanghai))
+		{
+			ret[ret.length] = new abilities.SpawnShanghai(player);
+		}
+		if (flags.get(Player.MoreZombieFairies))
+		{
+			ret[ret.length] = new abilities.MoreZombieFairies(player);
+		}
+		if (flags.get(Player.DoubleMyon))
+		{
+			ret[ret.length] = new abilities.DoubleMyon(player);
+		}
+		if (flags.get(Player.Floating))
+		{
+			ret[ret.length] = new abilities.Floating(player);
+		}
+		if (flags.get(Player.YinYangOrbs))
+		{
+			ret[ret.length] = new abilities.YinYangOrbs(player);
+		}
+		if (flags.get(Player.IceAffinity))
+		{
+			ret[ret.length] = new abilities.IceAffinity(player);
+		}
+		if (flags.get(Player.WorldFreezer))
+		{
+			ret[ret.length] = new abilities.WorldFreezer(player);
+		}
+		if (flags.get(Player.GapManipulator))
+		{
+			ret[ret.length] = new abilities.GapManipulator(player);
+		}
+		if (flags.get(Player.FlipResistance))
+		{
+			ret[ret.length] = new abilities.FlipResistance(player);
+		}
+		if (flags.get(Player.FireProof))
+		{
+			ret[ret.length] = new abilities.FireProof(player);
+		}
+		if (flags.get(Player.WorldScorcher))
+		{
+			ret[ret.length] = new abilities.WorldScorcher(player);
+		}
+		if (flags.get(Player.EatMystia))
+		{
+			ret[ret.length] = new abilities.EatMystia(player);
+		}
+		if (flags.get(Player.MoreInvincibility))
+		{
+			ret[ret.length] = new abilities.MoreInvincibility(player);
+		}
+		if (flags.get(Player.PreservePowBlock))
+		{
+			ret[ret.length] = new abilities.PreservePowBlock(player);
+		}
+		if (flags.get(Player.Ambush))
+		{
+			ret[ret.length] = new abilities.Ambush(player);
+		}
+		if (flags.get(Player.CanHide))
+		{
+			ret[ret.length] = new abilities.CanHide(player);
+		}
+		if (flags.get(Player.FallThruPlatforms))
+		{
+			ret[ret.length] = new abilities.FallThruPlatforms(player);
+		}
+		if (flags.get(Player.ElectricProof))
+		{
+			ret[ret.length] = new abilities.ElectricProof(player);
+		}
+		if (flags.get(Player.Earthquake))
+		{
+			ret[ret.length] = new abilities.Earthquake(player);
+		}
+		if (flags.get(Player.ExKeine))
+		{
+			ret[ret.length] = new abilities.ExKeine(player);
+		}
+		if (flags.get(Player.DashAttack))
+		{
+			ret[ret.length] = new abilities.DashAttack(player);
+		}
+		if (flags.get(Player.ZaWarudo))
+		{
+			ret[ret.length] = new abilities.ZaWarudo(player);
+		}
+		if (flags.get(Player.KaPow))
+		{
+			ret[ret.length] = new abilities.KaPow(player);
+		}
+		if (flags.get(Player.Cheeen))
+		{
+			ret[ret.length] = new abilities.Cheeen(player);
+		}
+		if (flags.get(Player.StarBulletG))
+		{
+			ret[ret.length] = new abilities.StarBulletG(player);
+		}
+		if (flags.get(Player.StarBulletY))
+		{
+			ret[ret.length] = new abilities.StarBulletY(player);
+		}
+		if (flags.get(Player.EnemyEater))
+		{
+			ret[ret.length] = new abilities.EnemyEater(player);
+		}
+		if (flags.get(Player.Teleporter))
+		{
+			ret[ret.length] = new abilities.Teleporter(player);
+		}
+		if (flags.get(Player.FriendlyUFO))
+		{
+			ret[ret.length] = new abilities.FriendlyUFO(player);
+		}
+		if (flags.get(Player.LightDashAttack))
+		{
+			ret[ret.length] = new abilities.LightDashAttack(player);
+		}
+		if (flags.get(Player.HeavyBonk))
+		{
+			ret[ret.length] = new abilities.HeavyBonk(player);
+		}
+		if (flags.get(Player.Warping))
+		{
+			ret[ret.length] = new abilities.Warping(player);
+		}
+		return ret;
+	}
+}

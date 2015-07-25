@@ -78,6 +78,9 @@ class Player extends Entity
 		return characters[Math.floor(Math.random() * characters.length)];
 	}
 	
+	//manages PlayerAbilities
+	//public var abilities:Array<PlayerAbility>;
+	public var ability:PlayerAbilityManager;
 	//public var killed:Bool;
 	public var started:Bool;
 	//ignores ice physics
@@ -157,6 +160,10 @@ class Player extends Entity
 	//bumps 3 blocks at a time
 	public static inline var HeavyBonk = 34;
 	
+	public static inline var SpawnShanghai = 35;
+	
+	public static inline var MoreZombieFairies = 36;
+	
 	
 	public var zombiefairychance = 0.04;
 	public var zombiefairytype = "zombiefairy";
@@ -183,7 +190,9 @@ class Player extends Entity
 	public static inline var base_accel = 0.7 + base_deccel;
 	public static inline var base_mxspd = 7+1.55;
 	public static inline var base_fallaccel = 1.0+0.1;
-	public static inline var base_jumpspd = -19-0.5;
+	public static inline var base_jumpspd = -19 - 0.5;
+	
+	public var evt_onframe:Dynamic;
 	public function new(charname:String,controller:Array<Bool>) 
 	{
 		super(charname);
@@ -198,108 +207,18 @@ class Player extends Entity
 		useotherhitbox = true;
 		warncooldown = false;
 		jumpspd = base_jumpspd;
+		this.controller = controller;
+		deccel = base_deccel;
+		accel = base_accel;
+		Haccel = accel * 0.35;
+		Hdeccel = deccel * 0.35;
+		
+		mxspd = base_mxspd;
+		fallaccel = base_fallaccel;
+		ability = new PlayerAbilityManager(this);
+		ability.SetAbilities();
 		switch (charname)
 		{
-			case "aya":
-				flags.set(SuperSpeed, true);
-			case "alice":
-				zombiefairytype = "shanghai";
-				zombiefairyscale = 0.6;
-				flags.set(SpawnZombieFairies, true);
-				zombiefairychance += 0.06;
-			case "youmu":
-				flags.set(DoubleMyon, true);
-			case "cirno":
-				flags.set(IceAffinity, true);
-			case "letty":
-				flags.set(IceAffinity, true);
-				flags.set(WorldFreezer, true);
-				warncooldown = true;
-				maxcooldown = 3600+1000;
-			case "yukari":
-				flags.set(GapManipulator, true);
-			case "seija":
-				flags.set(FlipResistance, true);
-			case "mokou":
-				flags.set(FireProof, true);
-				flags.set(WorldScorcher, true);
-				warncooldown = true;
-				maxcooldown = 3600+1000;
-			case "orin":
-				flags.set(SpawnZombieFairies, true);
-				zombiefairychance += 0.06;
-			case "yuyuko":
-				flags.set(EatMystia, true);
-			case "kaguya":
-				flags.set(MoreInvincibility, true);
-			case "kanako":
-				flags.set(PreservePowBlock, true);
-			case "murasa":
-				flags.set(Ambush, true);
-			case "koishi":
-				flags.set(CanHide, true);
-				maxcooldown = 25;
-				cooldown = 150;
-			case "tewi":
-				flags.set(FallThruPlatforms, true);
-			case "iku":
-				flags.set(ElectricProof, true);
-			case "tenshi":
-				flags.set(Earthquake, true);
-				warncooldown = true;
-				maxcooldown = 900;
-			case "keine":
-				flags.set(ExKeine, true);
-				warncooldown = true;
-				maxcooldown = 1800;
-			case "reimu":
-				flags.set(YinYangOrbs, true);
-				warncooldown = true;
-				maxcooldown = 380;
-			case "meiling":
-				flags.set(DashAttack, true);
-				warncooldown = true;
-				maxcooldown = 300;
-			case "sakuya":
-				flags.set(ZaWarudo, true);
-				warncooldown = true;
-				maxcooldown = 3600;
-			case "raiko":
-				flags.set(KaPow, true);
-				maxcooldown = 3600;
-				warncooldown = true;
-			case "ran":
-				flags.set(Cheeen, true);
-				warncooldown = true;
-				maxcooldown = 300;
-			case "chen":
-				flags.set(DashAttack, true);
-				warncooldown = true;
-				maxcooldown = 300;
-			case "sanae":
-				flags.set(StarBulletG, true);
-				warncooldown = true;
-				maxcooldown = 400;
-			case "marisa":
-				flags.set(StarBulletY, true);
-				warncooldown = true;
-				maxcooldown = 660;
-			case "rumia":
-				flags.set(EnemyEater, true);
-				warncooldown = true;
-				maxcooldown = 390;
-			case "komachi":
-				flags.set(Teleporter, true);
-				warncooldown = true;
-				maxcooldown = 420;
-			case "nue":
-				flags.set(FriendlyUFO, true);
-			case "wriggle":
-				flags.set(LightDashAttack, true);
-				warncooldown = true;
-				maxcooldown = 180;
-			case "yuugi":
-				flags.set(HeavyBonk, true);
 			case "tojiko":
 				feetposition -= 8;
 			case "ayana":
@@ -313,35 +232,6 @@ class Player extends Entity
 			case "noroiko":
 				feetposition -= 1;
 			default:
-		}
-		if (cooldown == 0 && maxcooldown > 0)
-		{
-			cooldown = maxcooldown;
-		}
-		if (flags.isempty())
-		{
-			flags.set(Floating, true);
-		}
-		flags.set(SpawnZombieFairies, true);
-		if (game.tournament)
-		{
-			//dissallow abilites in tourneys
-			flags.clearall();
-		}
-		this.controller = controller;
-		deccel = base_deccel;
-		accel = base_accel;
-		Haccel = accel * 0.35;
-		Hdeccel = deccel * 0.35;
-		
-		mxspd = base_mxspd;
-		fallaccel = base_fallaccel;
-		if (flags.get(SuperSpeed))
-		{
-			deccel -= 0.1;
-			fallaccel -= 0.1;
-			//accel += 0.1;
-			mxspd += 2;
 		}
 		
 		killed = false;
@@ -400,10 +290,7 @@ class Player extends Entity
 		playing = -1;
 		started = false;
 		ignoreice = false;
-		if (flags.get(IceAffinity))
-		{
-			ignoreice = true;
-		}
+		
 		
 		Ofallaccel = fallaccel;
 		fallaccel2 = fallaccel / 16;
@@ -425,12 +312,16 @@ class Player extends Entity
 	
 	public override function update()
 	{
+		
 		if (!killed && lives>-1)
 		{
 			if (!started)
 			{
 				started = true;
+				ability.init();
 			}
+			ability.onbeginframe();
+			
 			if (invincibility > 1000)
 			{
 				invincibility = 10001;
@@ -444,302 +335,11 @@ class Player extends Entity
 			{
 				deccel = Hdeccel;
 			}
-			if (flags.get(Floating))
-			{
-				if ((controller[0]) && Vspeed > -0 && Vspeed < 2.0)
-				{
-					fallaccel = fallaccel2;
-				}
-				else
-				{
-					fallaccel = Ofallaccel;
-				}
-			}
 			updphysics();
-			if (cooldown > 0)
+			ability.onframe();
+			if (controller[1])
 			{
-				cooldown--;
-				//scaleX = 1;
-				if (flags.get(CanHide) && invincibility<=0)
-				{
-					if (Hspeed != 0 || Vspeed != 0)
-					{
-						cooldown = maxcooldown;
-					}
-					alpha = 1;
-				}
-				if (superpower && flags.get(ExKeine) && cooldown < 30)
-				{
-					invincibility = 5;
-				}
-				if (flags.get(EnemyEater))
-				{
-					superpower = false;
-					if (mxspd <= base_mxspd)
-					{
-						deccel = base_deccel + 0.05;
-						accel = base_accel + 0.1;
-						mxspd = base_mxspd + 1;
-						fallaccel = base_fallaccel + 0.1;
-					}
-				}
-			}
-			else
-			{
-				cooldown--;
-				if (flags.get(CanHide))
-				{
-					
-					if (invincibility < 5)
-					{
-						invincibility = 5;
-					}
-					alpha = 0.5;
-					//scaleX = 2;
-					if (Hspeed != 0 || Vspeed != 0)
-					{
-						cooldown = maxcooldown;
-					}
-				}
-				if (flags.get(EnemyEater))
-				{
-					superpower = true;
-					cooldowntext = "Hungry...";
-					if (mxspd >= base_mxspd)
-					{
-						deccel = base_deccel - 0.05;
-						accel = base_accel - 0.1;
-						mxspd = base_mxspd - 1;
-						fallaccel = base_fallaccel;
-					}
-				}
-				else if (superpower)
-				{
-					superpower = false;
-					cooldown = maxcooldown;
-					if (flags.get(ExKeine))
-					{
-						maxcooldown = 1800;
-						cooldown = maxcooldown;
-					charname = "keine";
-					accel -= 0.3;
-					deccel -= 0.1;
-					mxspd -= 5;
-					if (Hspeed >= 0)
-					{
-						ChangeAnimation(charname);
-					}
-					if (Hspeed < 0)
-					{
-						ChangeAnimation(charname+"F");
-					}
-					invincibility = 90;
-					}
-					if (flags.get(DashAttack))
-					{
-						//mxspd -= 22;
-						mxspd -= 33;
-						invincibility = 20;
-						Hspeed = Ldir * mxspd;
-					}
-					if (flags.get(LightDashAttack))
-					{
-						mxspd -= 22;
-						invincibility = 10;
-						Hspeed = Ldir * mxspd;
-					}
-				}
-				else if (controller[1])
-				{
-					if (flags.get(Earthquake) && ground!=null && this == game.myplayer)
-					{
-						cooldown = maxcooldown;
-						game.SendEvent("Earthquake", ground.y);
-					}
-					if (flags.get(DashAttack))
-					{
-						superpower = true;
-						//mxspd += 22;
-						mxspd += 33;
-						Hspeed = Ldir * mxspd;
-						cooldown = 6;
-					}
-					if (flags.get(LightDashAttack))
-					{
-						superpower = true;
-						mxspd += 22;
-						Hspeed = Ldir * mxspd;
-						cooldown = 4;
-					}
-					if (flags.get(Teleporter))
-					{
-						x = Math.max(Math.min(stage.mouseX-40,800),0);
-						y = Math.max(Math.min(stage.mouseY,500),0);
-						if (x < 0)
-						{
-							x = 0;
-						}
-						cooldown = maxcooldown;
-					}
-					if (flags.get(ExKeine))
-					{
-						superpower = true;
-						maxcooldown = 360;
-						cooldown = maxcooldown;
-						charname = "exkeine";
-						accel += 0.3;
-						deccel += 0.1;
-						mxspd += 5;
-						if (Hspeed >= 0)
-						{
-							ChangeAnimation(charname);
-						}
-						if (Hspeed < 0)
-						{
-							ChangeAnimation(charname+"F");
-						}
-					}
-					if (flags.get(YinYangOrbs) && this == game.myplayer)
-					{
-						cooldown = maxcooldown;
-						var D:Dynamic = { };
-						D.x = x;
-						D.y = y + 10;
-						D.type = "yinyangorb";
-						D.scale = 0.4;
-						D.dir = Ldir;
-						D.Vspeed = 2;
-						D.HP = 6;
-						if (Ldir >= 0)
-						{
-							D.Hspeed = 10.5;
-						}
-						else
-						{
-							D.Hspeed = -10.5;
-						}
-						D.gravX = 0;
-						D.gravY = 0.4;
-						D.wrap = true;
-						D.bounces = true;
-						game.SendEvent("PlayerDanmaku", D);
-					}
-					if (flags.get(Cheeen) && this == game.myplayer)
-					{
-						cooldown = maxcooldown;
-						var D:Dynamic = { };
-						D.x = x;
-						D.y = y + 30;
-						D.type = "EChen";
-						D.scale = 0.8;
-						D.dir = Ldir;
-						D.Vspeed = 0;
-						if (Ldir >= 0)
-						{
-							D.Hspeed = 10;
-						}
-						else
-						{
-							D.Hspeed = -10;
-						}
-						D.gravX = 0;
-						D.gravY = 0;
-						D.wrap = false;
-						game.SendEvent("PlayerDanmaku", D);
-					}
-					if (flags.get(StarBulletG) && this == game.myplayer)
-					{
-						cooldown = maxcooldown;
-						var D:Dynamic = { };
-						D.x = x;
-						D.y = y + 0;
-						D.type = "starbulletg";
-						D.scale = 1;
-						D.dir = Ldir;
-						D.Vspeed = Vspeed;
-						if (Ldir >= 0)
-						{
-							D.Hspeed = 10;
-						}
-						else
-						{
-							D.Hspeed = -10;
-						}
-						D.gravX = 0;
-						D.gravY = 0;
-						D.wrap = false;
-						game.SendEvent("PlayerDanmaku", D);
-					}
-					if (flags.get(StarBulletY) && this == game.myplayer)
-					{
-						cooldown = maxcooldown;
-						var spd = 8;
-						var D:Dynamic = { };
-						D.x = x;
-						D.y = y + 30;
-						D.type = "starbullety";
-						D.scale = 0.8;
-						D.dir = Ldir;
-						D.Vspeed = 0;
-						if (Ldir >= 0)
-						{
-							D.Hspeed = spd;
-						}
-						else
-						{
-							D.Hspeed = -spd;
-						}
-						D.gravX = 0;
-						D.gravY = 0;
-						D.wrap = false;
-						game.SendEvent("PlayerDanmaku", D);
-						var i = 0;
-						D.Vspeed = 1;
-						while (i < 4)
-						{
-							D.Vspeed += 1;
-							D.Hspeed -= D.dir;
-							game.SendEvent("PlayerDanmaku", D);
-							D.Vspeed *= -1;
-							game.SendEvent("PlayerDanmaku", D);
-							D.Vspeed *= -1;
-							i++;
-						}
-					}
-					if (flags.get(ZaWarudo) && this == game.myplayer)
-					{
-						cooldown = maxcooldown;
-						var D:Dynamic = { };
-						game.SendEvent("ZaWarudo", D);
-					}
-					if (flags.get(WorldScorcher) && this == game.myplayer)
-					{
-						cooldown = maxcooldown;
-						var D:Dynamic = { };
-						game.SendKillAll();
-						game.SendEvent("CharWorld", D);
-					}
-					if (flags.get(WorldFreezer) && this == game.myplayer)
-					{
-						cooldown = maxcooldown;
-						var D:Dynamic = { };
-						game.SendKillAll();
-						game.SendEvent("FreezeWorld", D);
-					}
-					if (flags.get(KaPow) && this == game.myplayer)
-					{
-						cooldown = maxcooldown;
-						var D:Dynamic = { };
-						game.SendEvent("POW!", D);
-					}
-				}
-			}
-			if (wrapped && flags.get(Warping))
-			{
-				if (y < 160)
-				{
-					y += 480;
-				}
+				ability.onuse();
 			}
 			deccel = DCL;
 			if (!catchingup)
@@ -813,15 +413,6 @@ class Player extends Entity
 			else
 			{
 				y -= 2;
-				//Vspeed = 5;
-				if (Hspeed > 0)
-				{
-					//this.rotationZ = 20;
-				}
-				else
-				{
-					//this.rotationZ = -20;
-				}
 			}
 		}
 		}
@@ -864,28 +455,7 @@ class Player extends Entity
 			{
 				
 				game.SendEvent("Headbonk", headbonk.UID);
-				if (flags.get(HeavyBonk))
-				{
-					var T = game.CollisionDetectPoint(headbonk.x - 32, headbonk.y);
-					if (T != null)
-					{
-						game.SendEvent("Headbonk", T.UID);
-					}
-					T = game.CollisionDetectPoint(headbonk.x + 32, headbonk.y);
-					if (T != null)
-					{
-						game.SendEvent("Headbonk", T.UID);
-					}
-				}
-				if (flags.get(Ambush))
-				{
-					Vspeed = 0;
-					y = headbonk.y - feetposition;
-					if (invincibility < 15)
-					{
-						invincibility = 15;
-					}
-				}
+				ability.onheadbonk();
 			}
 		if (this == game.myplayer)
 		{
@@ -903,7 +473,7 @@ class Player extends Entity
 				danger = game.CollisionDetectTouchDangerous(this);
 				enemy = game.CollisionDetectTouchEnemy(this);
 			}
-		var eItem = game.CollisionDetectPointItem(x + W, y + (feetposition - H));//game.CollisionDetectTouchItem(this);//game.CollisionDetectPointItem(x, y + 60);
+		var eItem = game.CollisionDetectPointItem(x + W, y + (feetposition - H));
 		if (eItem != null && eItem.collectable)
 		{
 			if (!(flags.get(CanHide) && cooldown <= 0))
@@ -972,13 +542,6 @@ class Player extends Entity
 				}
 			}
 		}
-		}
-		if (ground != null)
-		{
-			if (flags.get(FallThruPlatforms) && controller[1] && y<400)
-			{
-				y += 40;
-			}
 		}
 		}
 		else
