@@ -627,7 +627,14 @@ class CharacterSelect extends Sprite
 	
 	public function sortentities(A:MiniEntity, B:MiniEntity):Int
 	{
-		
+		if (A.scaleX > 1.3 && !(B.scaleX > 1.3))
+		{
+			return -1;
+		}
+		if (B.scaleX > 1.3 && !(A.scaleX > 1.3))
+		{
+			return 1;
+		}
 		if (A.getBounds(this).bottom < B.getBounds(this).bottom)
 		{
 			return -1;

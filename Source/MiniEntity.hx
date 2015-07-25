@@ -95,8 +95,8 @@ class MiniEntity extends Sprite
 					Hspeed = 0;
 					x = 320 + ((130 - width) * Math.random());
 					y = 300;
-					scaleX = 1.3;
-					scaleY = 1.3;
+					scaleX = 1.35;
+					scaleY = 1.35;
 				}
 				if (frame < 45)
 				{
@@ -117,6 +117,7 @@ class MiniEntity extends Sprite
 			}
 			if (behavior == 3)
 			{
+				//looks back briefly
 				if (frame == 0)
 				{
 					frame = Math.floor(300 * Math.random());
