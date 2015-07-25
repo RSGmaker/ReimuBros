@@ -78,6 +78,15 @@ class PlayerAbilityManager
 			i++;
 		}
 	}
+	public function oncollect(E:EntityItem)
+	{
+		var i = 0;
+		while (i < abilities.length)
+		{
+			abilities[i].oncollect(E);
+			i++;
+		}
+	}
 	public function SetAbilities()
 	{
 		SetFlags(player);
@@ -165,6 +174,10 @@ class PlayerAbilityManager
 				flags.set(Player.LightDashAttack, true);
 			case "yuugi":
 				flags.set(Player.HeavyBonk, true);
+			case "ringo":
+				flags.set(Player.ExtraLives, true);
+			case "kyouko":
+				flags.set(Player.BounceEntities, true);
 			default:
 		}
 		/*if (cooldown == 0 && maxcooldown > 0)
@@ -320,6 +333,14 @@ class PlayerAbilityManager
 		if (flags.get(Player.DestructiveJump))
 		{
 			ret[ret.length] = new abilities.DestructiveJump(player);
+		}
+		if (flags.get(Player.ExtraLives))
+		{
+			ret[ret.length] = new abilities.ExtraLives(player);
+		}
+		if (flags.get(Player.BounceEntities))
+		{
+			ret[ret.length] = new abilities.BounceEntities(player);
 		}
 		return ret;
 	}

@@ -66,6 +66,11 @@ class PlayerAbility
 		
 	}
 	
+	public function oncollect(E:EntityItem)
+	{
+		
+	}
+	
 	
 	
 	//make each characters abilities

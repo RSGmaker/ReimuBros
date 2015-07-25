@@ -1716,15 +1716,18 @@ class GameView extends Sprite
 		{
 			if (P != null)
 			{
+				
 				if (data < 0)
 				{
 					var D:Dynamic = EntityFromUID( -data);
 					D.alive = false;
 					D.killed = true;
+					P.ability.oncollect(D);
 				}
 				else
 				{
 					var D:Dynamic = EntityFromUID(data);
+					P.ability.oncollect(D);
 					if (D != null && D.alive)
 					{
 						D.Collect(P);
@@ -1749,6 +1752,61 @@ class GameView extends Sprite
 			if (thegiant.active && thegiant.rotation == 0)
 			{
 				thegiant.tipover();
+			}
+		}
+		if (evt == "BounceEntities")
+		{
+			var i = 0;
+			while (i < entities.length)
+			{
+				var E = entities[i];
+				var D:Dynamic = E;
+				if (E.type == "Bullet" || E.type=="Enemy")
+				{
+					E.Hspeed *= -1;
+					E.Vspeed *= -1;
+					E.Ldir *= -1;
+					if (E.type == "Bullet")
+					{
+						D.gravX *= -1;
+						D.gravY *= -1;
+					}
+					//E.bonked = 8;
+					//E.bonkedby = GetPlayer(ID);
+				}
+				if (E.subtype == "UFO")
+				{
+					D.fuel = 0;
+				}
+				if (E.type == "MasterSpark")
+				{
+					if (D.Time > 60)
+					{
+						SoundManager.Play("killenemy");
+						if (Hoster)
+						{
+							var D:Dynamic = { };
+							
+							D.type = "GiantPoint";
+							D.UID = Math.random();
+							if (Math.random() > 0.5)
+							{
+								D.x = 800;
+								D.Ldir = -1;
+							}
+							else
+							{
+								D.x = -16;
+								D.Ldir = 1;
+							}
+							D.y = -100;
+							SendEvent("SpawnItem", D);
+						}
+					}
+					D.Time = 0;
+					D.Size = 0;
+				}
+				i++;
 			}
 		}
 		//pow block used
@@ -3342,8 +3400,8 @@ class GameView extends Sprite
 			if (stage.mouseY < 600)
 			{
 				var C = control.copy();
-			control[0] = stage.mouseY > 500;
-			control[1] = stage.mouseY < 100;
+			control[0] = stage.mouseY < 100;
+			control[1] = stage.mouseY > 500;
 			control[2] = stage.mouseX < 200;
 			control[3] = stage.mouseX > 600;
 			if (C[0] != control[0] || C[1] != control[1] || C[2] != control[2] || C[3] != control[3])
