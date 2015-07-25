@@ -21,6 +21,7 @@ class UFO extends Enemy
 	public function new() 
 	{
 		super("UFO");
+		subtype = "UFO";
 		deccel = 100;
 		Ldir = 1;
 		flipped = -1;

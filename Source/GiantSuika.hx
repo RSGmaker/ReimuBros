@@ -72,20 +72,20 @@ class GiantSuika extends Entity
 					{
 						var D:Dynamic = { };
 							
-							D.type = "GiantPoint";
-							D.UID = Math.random();
-							if (Math.random() > 0.5)
-							{
-								D.x = 800;
-								D.Ldir = -1;
-							}
-							else
-							{
-								D.x = -16;
-								D.Ldir = 1;
-							}
-							D.y = -100;
-							game.SendEvent("SpawnItem", D);
+						D.type = "GiantPoint";
+						D.UID = Math.random();
+						if (Math.random() > 0.5)
+						{
+							D.x = 800;
+							D.Ldir = -1;
+						}
+						else
+						{
+							D.x = -16;
+							D.Ldir = 1;
+						}
+						D.y = -100;
+						game.SendEvent("SpawnItem", D);
 					}
 				}
 			}
