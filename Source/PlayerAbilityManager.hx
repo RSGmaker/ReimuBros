@@ -102,10 +102,6 @@ class PlayerAbilityManager
 			case "aya":
 				flags.set(Player.SuperSpeed, true);
 			case "alice":
-				//zombiefairytype = "shanghai";
-				//zombiefairyscale = 0.6;
-				//flags.set(SpawnZombieFairies, true);
-				//zombiefairychance += 0.06;
 				flags.set(Player.SpawnShanghai, true);
 			case "youmu":
 				flags.set(Player.DoubleMyon, true);
@@ -114,8 +110,6 @@ class PlayerAbilityManager
 			case "letty":
 				flags.set(Player.IceAffinity, true);
 				flags.set(Player.WorldFreezer, true);
-				//warncooldown = true;
-				//maxcooldown = 3600+1000;
 			case "yukari":
 				flags.set(Player.GapManipulator, true);
 			case "seija":
@@ -123,11 +117,8 @@ class PlayerAbilityManager
 			case "mokou":
 				flags.set(Player.FireProof, true);
 				flags.set(Player.WorldScorcher, true);
-				//warncooldown = true;
-				//maxcooldown = 3600+1000;
 			case "orin":
 				flags.set(Player.MoreZombieFairies, true);
-				//zombiefairychance += 0.06;
 			case "yuyuko":
 				flags.set(Player.EatMystia, true);
 			case "kaguya":
@@ -138,66 +129,40 @@ class PlayerAbilityManager
 				flags.set(Player.Ambush, true);
 			case "koishi":
 				flags.set(Player.CanHide, true);
-				//maxcooldown = 25;
-				//cooldown = 150;
 			case "tewi":
 				flags.set(Player.FallThruPlatforms, true);
 			case "iku":
 				flags.set(Player.ElectricProof, true);
 			case "tenshi":
 				flags.set(Player.Earthquake, true);
-				//warncooldown = true;
-				//maxcooldown = 900;
+			case "flandre":
+				flags.set(Player.DestructiveJump, true);
 			case "keine":
 				flags.set(Player.ExKeine, true);
-				//warncooldown = true;
-				//maxcooldown = 1800;
 			case "reimu":
 				flags.set(Player.YinYangOrbs, true);
-				//warncooldown = true;
-				//maxcooldown = 380;
 			case "meiling":
 				flags.set(Player.DashAttack, true);
-				//warncooldown = true;
-				//maxcooldown = 300;
 			case "sakuya":
 				flags.set(Player.ZaWarudo, true);
-				//warncooldown = true;
-				//maxcooldown = 3600;
 			case "raiko":
 				flags.set(Player.KaPow, true);
-				//maxcooldown = 3600;
-				//warncooldown = true;
 			case "ran":
 				flags.set(Player.Cheeen, true);
-				//warncooldown = true;
-				//maxcooldown = 300;
 			case "chen":
 				flags.set(Player.DashAttack, true);
-				//warncooldown = true;
-				//maxcooldown = 300;
 			case "sanae":
 				flags.set(Player.StarBulletG, true);
-				//warncooldown = true;
-				//maxcooldown = 400;
 			case "marisa":
 				flags.set(Player.StarBulletY, true);
-				//warncooldown = true;
-				//maxcooldown = 660;
 			case "rumia":
 				flags.set(Player.EnemyEater, true);
-				//warncooldown = true;
-				//maxcooldown = 390;
 			case "komachi":
 				flags.set(Player.Teleporter, true);
-				//warncooldown = true;
-				//maxcooldown = 420;
 			case "nue":
 				flags.set(Player.FriendlyUFO, true);
 			case "wriggle":
 				flags.set(Player.LightDashAttack, true);
-				//warncooldown = true;
-				//maxcooldown = 180;
 			case "yuugi":
 				flags.set(Player.HeavyBonk, true);
 			default:
@@ -351,6 +316,10 @@ class PlayerAbilityManager
 		if (flags.get(Player.Warping))
 		{
 			ret[ret.length] = new abilities.Warping(player);
+		}
+		if (flags.get(Player.DestructiveJump))
+		{
+			ret[ret.length] = new abilities.DestructiveJump(player);
 		}
 		return ret;
 	}
