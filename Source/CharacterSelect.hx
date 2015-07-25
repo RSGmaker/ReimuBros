@@ -526,7 +526,6 @@ class CharacterSelect extends Sprite
 		}
 		
 		//backlayer stuff
-		//if (backlayerentities.length > 0)
 		if (!refreshing)
 		{
 			var i = 0;
@@ -571,11 +570,15 @@ class CharacterSelect extends Sprite
 						X = 801;
 						CC = C + "F";
 					}
-					E = new MiniEntity( X, 120 + (120 * depth), AL.GetAnimation(CC)[0], 0.5 + (Math.random() * 2), false, 0);
+					E = new MiniEntity( X, 124 + (110 * depth), AL.GetAnimation(CC)[0], 0.5 + (Math.random() * 2), false, 0);
 					E.charname = C;
 					E.scaleX += (depth * 0.3);
 					E.scaleY = E.scaleX;
 					E.bounce = true;
+					if (Math.random() > 0.5)
+					{
+						E.behavior = Math.floor(4 * Math.random());
+					}
 					backlayerentities[backlayerentities.length] = E;
 					if (E != null)
 					{
@@ -589,7 +592,7 @@ class CharacterSelect extends Sprite
 						}
 					}
 				}
-				timetospawn = Math.floor(60 + (180 * Math.random()));
+				timetospawn = Math.floor(30 + (150 * Math.random()));
 			}
 		}
 		
@@ -624,22 +627,15 @@ class CharacterSelect extends Sprite
 	
 	public function sortentities(A:MiniEntity, B:MiniEntity):Int
 	{
-		if (A.y + A.height < B.y + B.height)
+		
+		if (A.getBounds(this).bottom < B.getBounds(this).bottom)
 		{
 			return -1;
 		}
-		if (A.y + A.height > B.y + B.height)
+		if (A.getBounds(this).bottom > B.getBounds(this).bottom)
 		{
 			return 1;
 		}
-		/*if (A.y < B.y)
-		{
-			return -1;
-		}
-		if (A.y > B.y)
-		{
-			return 1;
-		}*/
 		return 0;
 	}
 	

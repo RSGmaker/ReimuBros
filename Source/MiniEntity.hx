@@ -18,6 +18,8 @@ class MiniEntity extends Sprite
 	public var timetobounce:Float;
 	public var charname:String;
 	public var bounced:Bool;
+	public var behavior:Int;
+	public var frame:Int;
 	public function new(x:Float,y:Float,bitmap:BitmapData,speed:Float,dangerous:Bool,pointvalue:Int) 
 	{
 		super();
@@ -30,6 +32,7 @@ class MiniEntity extends Sprite
 		alive = true;
 		Hspeed = 0;
 		Vspeed = 0;
+		behavior = 0;
 		if (x < 0)
 		{
 			x = -B.width;
@@ -55,11 +58,89 @@ class MiniEntity extends Sprite
 	}
 	public function update()
 	{
+		
 		x += Hspeed;
 		y += Vspeed;
 		if ((Hspeed < 0 && x < -width) || (Hspeed > 0 && x > 800) || (Vspeed < 0 && y < -height) || (Vspeed > 0 && y > 600))
 		{
 			alive =  false;
+		}
+		if (behavior > 0)
+		{
+			if (behavior == 1)
+			{
+				//runs back after walking halfway accross
+				if (Math.abs(x - 400) < 10)
+				{
+					frame++;
+					if (frame > 15)
+					{
+						x += (width * scaleX);
+						scaleX *= -1;
+						Hspeed *= -3;
+						behavior = 0;
+					}
+					else
+					{
+						x -= Hspeed;
+					}
+				}
+				frame--;
+			}
+			if (behavior == 2)
+			{
+				//stick head out from donation box
+				if (frame == 0)
+				{
+					Hspeed = 0;
+					x = 320 + ((130 - width) * Math.random());
+					y = 300;
+					scaleX = 1.3;
+					scaleY = 1.3;
+				}
+				if (frame < 45)
+				{
+					y-=2;
+				}
+				else if (frame < 90)
+				{
+					
+				}
+				else if (frame < 135)
+				{
+					y+=2;
+				}
+				else
+				{
+					alive = false;
+				}
+			}
+			if (behavior == 3)
+			{
+				if (frame == 0)
+				{
+					frame = Math.floor(300 * Math.random());
+				}
+				else if (frame < 300)
+				{
+				}
+				else if (frame < 301)
+				{
+					x -= Hspeed;
+					x += (width * scaleX);
+					scaleX *= -1;
+				}
+				else if (frame < 315)
+				{
+					x -= Hspeed;
+				}
+				else if (frame < 316)
+				{
+					x -= Hspeed;
+					x += (width * scaleX);
+					scaleX *= -1;
+				}
+			}
 		}
 		if (bounce)
 		{
@@ -94,5 +175,6 @@ class MiniEntity extends Sprite
 				}*/
 			}
 		}
+		frame++;
 	}
 }
