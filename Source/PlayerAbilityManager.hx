@@ -87,6 +87,24 @@ class PlayerAbilityManager
 			i++;
 		}
 	}
+	public function onbump(E:Entity)
+	{
+		var i = 0;
+		while (i < abilities.length)
+		{
+			abilities[i].onbump(E);
+			i++;
+		}
+	}
+	public function onbumped(E:Entity)
+	{
+		var i = 0;
+		while (i < abilities.length)
+		{
+			abilities[i].onbumped(E);
+			i++;
+		}
+	}
 	public function SetAbilities()
 	{
 		SetFlags(player);
@@ -178,6 +196,14 @@ class PlayerAbilityManager
 				flags.set(Player.ExtraLives, true);
 			case "kyouko":
 				flags.set(Player.BounceEntities, true);
+			case "elly":
+				flags.set(Player.TileDanmaku, true);
+			case "shou":
+				flags.set(Player.InstantCollect, true);
+			case "sariel":
+				flags.set(Player.AngelOfDeath, true);
+			case "shikieiki":
+				flags.set(Player.Fairplay, true);
 			default:
 		}
 		/*if (cooldown == 0 && maxcooldown > 0)
@@ -341,6 +367,22 @@ class PlayerAbilityManager
 		if (flags.get(Player.BounceEntities))
 		{
 			ret[ret.length] = new abilities.BounceEntities(player);
+		}
+		if (flags.get(Player.TileDanmaku))
+		{
+			ret[ret.length] = new abilities.TileDanmaku(player);
+		}
+		if (flags.get(Player.InstantCollect))
+		{
+			ret[ret.length] = new abilities.InstantCollect(player);
+		}
+		if (flags.get(Player.AngelOfDeath))
+		{
+			ret[ret.length] = new abilities.AngelOfDeath(player);
+		}
+		if (flags.get(Player.Fairplay))
+		{
+			ret[ret.length] = new abilities.Fairplay(player);
 		}
 		return ret;
 	}
