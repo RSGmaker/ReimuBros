@@ -36,6 +36,7 @@ class Block extends Entity
 			icy = false;
 			Visual.image.ChangeAnimation(image.animation);
 		}
+		respawn = 1500;
 		}
 	}
 	//freeze even if charred(used at start of cirno event)
@@ -56,6 +57,10 @@ class Block extends Entity
 			dangerous = false;
 			icy = true;
 			Visual.ChangeAnimation("icyblock");
+			if (solid)
+			{
+				//respawn = 1500;
+			}
 		}
 	}
 	public function Defrost()
@@ -101,6 +106,10 @@ class Block extends Entity
 			icy = false;
 			charred = true;
 			Visual.ChangeAnimation("charblock");
+			if (solid)
+			{
+				respawn = -1;
+			}
 		}
 	}
 	public override function update()
