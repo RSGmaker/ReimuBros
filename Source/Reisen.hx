@@ -31,6 +31,22 @@ class Reisen extends Enemy
 			mxspd += 0.5;
 			pointvalue += 50;
 	}
+	override public function attack():Bool 
+	{
+		if (dissappearing)
+		{
+			return false;
+		}
+		if (HP > 1)
+		{
+			HP--;
+			dissappearing = true;
+			Vspeed = 0;
+			alpha = 0.6;
+			return false;
+		}
+		return true;
+	}
 	public override function update()
 	{
 		if (!started)
