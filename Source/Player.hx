@@ -40,14 +40,16 @@ class Player extends Entity
 	public var note:Int = 0;
 	public var midi:Array<Int> = null;
 	public var tempo:Int = 35;
+	//a temp variable abilities can use to cancel events.
+	public var cancel:Bool;
 	private var filterArr:Array<flash.filters.BitmapFilter>;
 	//public var myMyon:MyonItem;
 
 	
 	public static var characters:Array<String> = ["reimu", "marisa", "patchouli", "remilia", "sanae", "sakuya", "suwako", "yuyuko", "tenshi", "iku", "aya", "alice", "youmu", "shikieiki", "flandre", "satori", "koishi", "momiji", "nitori", "udongein", "komachi", "yuuka", "mokou", "meiling", "parsee", "kokoro", "kogasa", "kasen", "utsuho", "suika", "kaguya", "eirin", "nazrin", "orin", "hina", "byakuren", "chiyuri", "ellen", "elly", "gengetsu", "kana", "kotohime", "elis", "louise", "mai", "meira", "mugetsu", "orange", "rika", "rikako", "sara", "yuki", "yumeko", "yumemi", "akyu", "futo", "kagerou", "keine", "kosuzu", "lunachild", "mamizou", "medicine", "minoriko", "murasa", "seiga", "sekibanki", "shanghai", "shinmyoumaru", "shizuha", "shou", "sunnymilk", "tokiko", "wriggle", "yoshika", "starsaphire", "lily", "letty", "makairesident-a", "makairesident-b", "ayana", "matenshi", "noroiko", "mystia", "lunasa", "lyrica", "merlin", "maribel", "renko", "miko", "reisen", "ruukoto", "tojiko", "toyohime", "yorihime", "wakasagihime", "yatsuhashi", "mima", "konngara","tewi","kanako","ringo","doremy","seiran","sumireko","rin","raiko","shingyoku","hatate","daiyousei","kurumi","yuugi","benben","ichirin","kyouko","yamame","koakuma","shinki","rengeteki","sariel","yukari", "seija", "rumia","cirno","nue","chen","ran"];
 	
-	public static var Scharacters:Array<String> = ["aya", "alice", "youmu", "cirno", "letty", "yukari", "seija", "mokou", "orin", "yuyuko","lunasa","lyrica","merlin","kaguya","kanako","murasa","koishi","tewi","iku","tenshi","keine","reimu","meiling","sakuya","ran","chen","nue","sanae","marisa","rumia","komachi","wriggle","raiko","yuugi","flandre","ringo","kyouko","elly","shou","sariel","shikieiki","suwako"];
-	public static var Description:Array<String> = ["Moves quickly", "Defeating fairies spawns\nShanghai dolls", "Can carry 2 myons\nstart with 1 myon", "doesn't slip on ice", "Chills the world\ndoesn't slip on ice", "Manipulate gaps", "Prevents screen\nflipping", "Turns everything to ash.\nFire proof", "Defeating fairies spawns\nZombie fairies", "Kills mystias on\ncontact", "Alternate music", "Alternate music", "Alternate music", "Invincibility time+", "Extra powblock uses", "Ambush", "Turns invisible by\nstaying still", "Digs down", "Electric proof", "Earthquakes", "EX Form", "Yin-Yang Orbs", "Dash Attack", "-The World-", "Cheeee~n", "Dash Attack", "UFOs won't fire", "Momentum aimed\nshot", "Wide shot", "Has an appetite\nfor enemies", "teleports to your\nmouse's position", "Light dash attack", "flips everything over","Hits 3 blocks at once","Jump upward\nwith destructive force","Gain a life for collecting\n point items","Bounces bullets,and \nenemy,has other effects","Throws blocks","Instantly collect all items","enemies may die\nat random","Remove extra obstacles","Throws an iron ring"];
+	public static var Scharacters:Array<String> = ["aya", "alice", "youmu", "cirno", "letty", "yukari", "seija", "mokou", "orin", "yuyuko","lunasa","lyrica","merlin","kaguya","kanako","murasa","koishi","tewi","iku","tenshi","keine","reimu","meiling","sakuya","ran","chen","nue","sanae","marisa","rumia","komachi","wriggle","raiko","yuugi","flandre","ringo","kyouko","elly","shou","sariel","shikieiki","suwako","minoriko","sunnymilk","nitori","byakuren"];
+	public static var Description:Array<String> = ["Moves quickly", "Defeating fairies spawns\nShanghai dolls", "Can carry 2 myons\nstart with 1 myon", "doesn't slip on ice", "Chills the world\ndoesn't slip on ice", "Manipulate gaps", "Prevents screen\nflipping", "Turns everything to ash.\nFire proof", "Defeating fairies spawns\nZombie fairies", "Kills mystias on\ncontact", "Alternate music", "Alternate music", "Alternate music", "Invincibility time+", "Extra powblock uses", "Ambush", "Turns invisible by\nstaying still", "Digs down", "Electric proof", "Earthquakes", "EX Form", "Yin-Yang Orbs", "Dash Attack", "-The World-", "Cheeee~n", "Dash Attack", "UFOs won't fire", "Momentum aimed\nshot", "Wide shot", "Has an appetite\nfor enemies", "teleports to your\nmouse's position", "Light dash attack", "flips everything over","Hits 3 blocks at once","Jump upward\nwith destructive force","Gain a life for collecting\n point items","Bounces bullets,and \nenemy,has other effects","Throws blocks","Instantly collect all items","enemies may die\nat random","Remove extra obstacles","Throws an iron ring","Items give more score","Turns invisible","Turns invisible","Extra HP"];
 	
 	public static var charorder:Array<String> = ["reimu", "marisa", "rumia", "daiyousei", "cirno", "meiling", "koakuma", "patchouli", "sakuya", "remilia", "flandre", "rin",
 	"letty", "chen", "alice", "shanghai"/*,"hourai"*/, "lily", "lyrica", "lunasa", "merlin", "youmu", "yuyuko", "ran", "yukari",
@@ -188,6 +190,12 @@ class Player extends Entity
 	public static inline var Fairplay = 43;
 	
 	public static inline var SuwakoHoop = 44;
+	
+	public static inline var ExtraPoints = 45;
+	
+	public static inline var BecomeInvisible = 46;
+	
+	public static inline var AbsorbDamage = 47;
 	
 	
 	public var zombiefairychance = 0.04;

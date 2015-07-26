@@ -78,6 +78,15 @@ class PlayerAbilityManager
 			i++;
 		}
 	}
+	public function onattacked()
+	{
+		var i = 0;
+		while (i < abilities.length)
+		{
+			abilities[i].onattacked();
+			i++;
+		}
+	}
 	public function oncollect(E:EntityItem)
 	{
 		var i = 0;
@@ -206,6 +215,14 @@ class PlayerAbilityManager
 				flags.set(Player.Fairplay, true);
 			case "suwako":
 				flags.set(Player.SuwakoHoop, true);
+			case "minoriko":
+				flags.set(Player.ExtraPoints, true);
+			case "sunnymilk":
+				flags.set(Player.BecomeInvisible, true);
+			case "nitori":
+				flags.set(Player.BecomeInvisible, true);
+			case "byakuren":
+				flags.set(Player.AbsorbDamage, true);
 			default:
 		}
 		/*if (cooldown == 0 && maxcooldown > 0)
@@ -389,6 +406,18 @@ class PlayerAbilityManager
 		if (flags.get(Player.SuwakoHoop))
 		{
 			ret[ret.length] = new abilities.SuwakoHoop(player);
+		}
+		if (flags.get(Player.ExtraPoints))
+		{
+			ret[ret.length] = new abilities.ExtraPoints(player);
+		}
+		if (flags.get(Player.BecomeInvisible))
+		{
+			ret[ret.length] = new abilities.BecomeInvisible(player);
+		}
+		if (flags.get(Player.AbsorbDamage))
+		{
+			ret[ret.length] = new abilities.AbsorbDamage(player);
 		}
 		return ret;
 	}
