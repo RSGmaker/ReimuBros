@@ -66,6 +66,11 @@ class PlayerAbility
 		
 	}
 	
+	public function onattacked()
+	{
+		
+	}
+	
 	public function oncollect(E:EntityItem)
 	{
 		

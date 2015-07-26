@@ -1105,6 +1105,10 @@ class GameView extends Sprite
 		if (evt == "PlayerDeath") {
 			if (P != null)
 			{
+				P.cancel = false;
+				P.ability.onattacked();
+				if (!P.cancel)
+				{
 				if (data)
 				{
 					if (P.myMyon != null && P.myMyon.holder == P && P.myMyon.alive)
@@ -1126,6 +1130,7 @@ class GameView extends Sprite
 					P.killed = true;
 					P.Vspeed = -9;
 					SoundManager.Play("died");
+				}
 				}
 			}
 			else
