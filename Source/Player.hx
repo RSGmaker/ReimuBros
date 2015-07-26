@@ -37,14 +37,17 @@ class Player extends Entity
 	public var frame:Int;
 	//how long this player has been playing
 	public var playing:Int;
+	public var note:Int = 0;
+	public var midi:Array<Int> = null;
+	public var tempo:Int = 35;
 	private var filterArr:Array<flash.filters.BitmapFilter>;
 	//public var myMyon:MyonItem;
 
 	
 	public static var characters:Array<String> = ["reimu", "marisa", "patchouli", "remilia", "sanae", "sakuya", "suwako", "yuyuko", "tenshi", "iku", "aya", "alice", "youmu", "shikieiki", "flandre", "satori", "koishi", "momiji", "nitori", "udongein", "komachi", "yuuka", "mokou", "meiling", "parsee", "kokoro", "kogasa", "kasen", "utsuho", "suika", "kaguya", "eirin", "nazrin", "orin", "hina", "byakuren", "chiyuri", "ellen", "elly", "gengetsu", "kana", "kotohime", "elis", "louise", "mai", "meira", "mugetsu", "orange", "rika", "rikako", "sara", "yuki", "yumeko", "yumemi", "akyu", "futo", "kagerou", "keine", "kosuzu", "lunachild", "mamizou", "medicine", "minoriko", "murasa", "seiga", "sekibanki", "shanghai", "shinmyoumaru", "shizuha", "shou", "sunnymilk", "tokiko", "wriggle", "yoshika", "starsaphire", "lily", "letty", "makairesident-a", "makairesident-b", "ayana", "matenshi", "noroiko", "mystia", "lunasa", "lyrica", "merlin", "maribel", "renko", "miko", "reisen", "ruukoto", "tojiko", "toyohime", "yorihime", "wakasagihime", "yatsuhashi", "mima", "konngara","tewi","kanako","ringo","doremy","seiran","sumireko","rin","raiko","shingyoku","hatate","daiyousei","kurumi","yuugi","benben","ichirin","kyouko","yamame","koakuma","shinki","rengeteki","sariel","yukari", "seija", "rumia","cirno","nue","chen","ran"];
 	
-	public static var Scharacters:Array<String> = ["aya", "alice", "youmu", "cirno", "letty", "yukari", "seija", "mokou", "orin", "yuyuko","lunasa","lyrica","merlin","kaguya","kanako","murasa","koishi","tewi","iku","tenshi","keine","reimu","meiling","sakuya","ran","chen","nue","sanae","marisa","rumia","komachi","wriggle","raiko","yuugi","flandre","ringo","kyouko","elly","shou","sariel","shikieiki"];
-	public static var Description:Array<String> = ["Moves quickly", "Defeating fairies spawns\nShanghai dolls", "Can carry 2 myons\nstart with 1 myon", "doesn't slip on ice", "Chills the world\ndoesn't slip on ice", "Manipulate gaps", "Prevents screen\nflipping", "Turns everything to ash.\nFire proof", "Defeating fairies spawns\nZombie fairies", "Kills mystias on\ncontact", "Alternate music", "Alternate music", "Alternate music", "Invincibility time+", "Extra powblock uses", "Ambush", "Turns invisible by\nstaying still", "Digs down", "Electric proof", "Earthquakes", "EX Form", "Yin-Yang Orbs", "Dash Attack", "-The World-", "Cheeee~n", "Dash Attack", "UFOs won't fire", "Momentum aimed\nshot", "Wide shot", "Has an appetite\nfor enemies", "teleports to your\nmouse's position", "Light dash attack", "flips everything over","Hits 3 blocks at once","Jump upward\nwith destructive force","Gain a life for collecting\n point items","Bounces bullets,and \nenemy,has other effects","Throws blocks","Instantly collect all items","enemies may die\nat random","Remove extra obstacles"];
+	public static var Scharacters:Array<String> = ["aya", "alice", "youmu", "cirno", "letty", "yukari", "seija", "mokou", "orin", "yuyuko","lunasa","lyrica","merlin","kaguya","kanako","murasa","koishi","tewi","iku","tenshi","keine","reimu","meiling","sakuya","ran","chen","nue","sanae","marisa","rumia","komachi","wriggle","raiko","yuugi","flandre","ringo","kyouko","elly","shou","sariel","shikieiki","suwako"];
+	public static var Description:Array<String> = ["Moves quickly", "Defeating fairies spawns\nShanghai dolls", "Can carry 2 myons\nstart with 1 myon", "doesn't slip on ice", "Chills the world\ndoesn't slip on ice", "Manipulate gaps", "Prevents screen\nflipping", "Turns everything to ash.\nFire proof", "Defeating fairies spawns\nZombie fairies", "Kills mystias on\ncontact", "Alternate music", "Alternate music", "Alternate music", "Invincibility time+", "Extra powblock uses", "Ambush", "Turns invisible by\nstaying still", "Digs down", "Electric proof", "Earthquakes", "EX Form", "Yin-Yang Orbs", "Dash Attack", "-The World-", "Cheeee~n", "Dash Attack", "UFOs won't fire", "Momentum aimed\nshot", "Wide shot", "Has an appetite\nfor enemies", "teleports to your\nmouse's position", "Light dash attack", "flips everything over","Hits 3 blocks at once","Jump upward\nwith destructive force","Gain a life for collecting\n point items","Bounces bullets,and \nenemy,has other effects","Throws blocks","Instantly collect all items","enemies may die\nat random","Remove extra obstacles","Throws an iron ring"];
 	
 	public static var charorder:Array<String> = ["reimu", "marisa", "rumia", "daiyousei", "cirno", "meiling", "koakuma", "patchouli", "sakuya", "remilia", "flandre", "rin",
 	"letty", "chen", "alice", "shanghai"/*,"hourai"*/, "lily", "lyrica", "lunasa", "merlin", "youmu", "yuyuko", "ran", "yukari",
@@ -88,6 +91,12 @@ class Player extends Entity
 	public var baseflags:FlagManager;
 	public var flags:FlagManager;
 	public var allmyons:Array<MyonItem>;
+	
+	public static var HammerSong:Array<Int> = [1, 0, 1, 1, 1, 0, 1,0, 2, 0, 1, 0, 2, 0, 1, 0,
+							2, 0, 2, 2, 2, 0, 2, 0, 3, 0, 2, 0, 3, 0, 2, 0];
+	
+	public static var StarSong:Array<Int> = [3, 0, 3, 0, 3, 3, 0, 3, 0, 3, 0, 3, 3, 0, 3, 0,
+						2, 0, 2, 0, 2, 2, 0, 2, 0, 2, 0, 2, 2, 0, 2, 0];
 	
 	//faster speed but slightly reduced responsiveness and more floaty
 	public static inline var SuperSpeed = 0;
@@ -177,6 +186,8 @@ class Player extends Entity
 	public static inline var AngelOfDeath = 42;
 	
 	public static inline var Fairplay = 43;
+	
+	public static inline var SuwakoHoop = 44;
 	
 	
 	public var zombiefairychance = 0.04;
@@ -408,10 +419,43 @@ class Player extends Entity
 			if (!catchingup)
 			{
 		steps += Math.abs(Hspeed);
-		if (steps > 35)
+		if (steps > tempo)
 		{
-			steps -= 35;
+			//superpower = true;
+			steps -= tempo;
 			var S;
+			if (midi == null)
+			{
+				if (superpower)
+				{
+					//tempo = 40;
+					tempo = Math.floor(mxspd * 3);
+					midi = HammerSong;
+				}
+				else if (invincibility>0)
+				{
+					//tempo = 50;
+					tempo = Math.floor(mxspd * 3);
+					midi = StarSong;
+				}
+			}
+			else
+			{
+				if (midi == HammerSong && !superpower)
+				{
+					midi = null;
+				}
+				else if (midi == StarSong && invincibility<=0)
+				{
+					midi = null;
+				}
+			}
+			//if (!superpower)
+			if (midi == null)
+			{
+				tempo = 35;
+				note = 0;
+				//midi = null;
 			if (game.GameFlags.get(Main.Drumstep))
 			{
 				S = "drum" + Math.floor(Math.random()*5);
@@ -420,7 +464,50 @@ class Player extends Entity
 			{
 				S = "step" + Math.ceil(Math.random()*3);
 			}
-			SoundManager.Play(S);
+			}
+			else
+			{
+				/*var modo:Array<Int> = [1, 0, 1, 1, 1, 0, 1,0, 2, 0, 1, 0, 2, 0, 1, 0,
+				2, 0, 2, 2, 2, 0, 2, 0, 3, 0, 2, 0, 3, 0, 2, 0];*/
+				if (midi == null)
+				{
+					if (UID < 0.5 || true)
+					{
+						tempo = 40;
+						//hammer
+						midi = [1, 0, 1, 1, 1, 0, 1,0, 2, 0, 1, 0, 2, 0, 1, 0,
+							2, 0, 2, 2, 2, 0, 2, 0, 3, 0, 2, 0, 3, 0, 2, 0];
+					}
+					else
+					{
+						tempo = 50;
+						//star
+						midi = [3, 0, 3, 0, 3, 3, 0, 3, 0, 3, 0, 3, 3, 0, 3, 0,
+						2, 0, 2, 0, 2, 2, 0, 2, 0, 2, 0, 2, 2, 0, 2, 0];
+						
+						/*midi = [1, 0, 1, 2, 1, 2, 1, 0, 2,
+						2, 0, 2, 3, 2, 3, 2, 0, 3];*/
+					}
+				}
+				if (midi[note] > 0)
+				{
+					S = "step" + midi[note];
+				}
+				else
+				{
+					S = "";
+					//S = "drum0";
+				}
+				note++;
+				if (note >= midi.length)
+				{
+					note = 0;
+				}
+			}
+			if (S != "")
+			{
+				SoundManager.Play(S);
+			}
 			if (this.rotation != 0)
 			{
 			}

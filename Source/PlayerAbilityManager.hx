@@ -204,6 +204,8 @@ class PlayerAbilityManager
 				flags.set(Player.AngelOfDeath, true);
 			case "shikieiki":
 				flags.set(Player.Fairplay, true);
+			case "suwako":
+				flags.set(Player.SuwakoHoop, true);
 			default:
 		}
 		/*if (cooldown == 0 && maxcooldown > 0)
@@ -383,6 +385,10 @@ class PlayerAbilityManager
 		if (flags.get(Player.Fairplay))
 		{
 			ret[ret.length] = new abilities.Fairplay(player);
+		}
+		if (flags.get(Player.SuwakoHoop))
+		{
+			ret[ret.length] = new abilities.SuwakoHoop(player);
 		}
 		return ret;
 	}
