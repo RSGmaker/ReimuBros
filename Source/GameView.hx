@@ -1542,10 +1542,10 @@ class GameView extends Sprite
 		if (evt == "Continue")
 		{
 			P.lives = startinglives;
-			if (level > 0 && level % 5 != 1)
+			/*if (level > 0 && level % 5 != 1)
 			{
 				level--;
-			}
+			}*/
 			if (me)
 			{
 				//save highscore here
