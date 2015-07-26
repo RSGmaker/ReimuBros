@@ -99,7 +99,20 @@ class GameView extends Sprite
 		{
 			ret[ret.length] = A.next();
 		}
+		ret.sort(sortplayer);
 		return ret;
+	}
+	public function sortplayer(A:Player, B:Player)
+	{
+		if (A.UID < B.UID)
+		{
+			return -1;
+		}
+		if (A.UID > B.UID)
+		{
+			return 1;
+		}
+		return 0;
 	}
 	//whether or not our player just pressed a button last frame(used to determine if we need to rush messages to the other players to keep them updated)
 	public var ControlEvent:Bool;
@@ -2082,6 +2095,14 @@ class GameView extends Sprite
 			{
 				O.HP = data.HP;
 			}
+			if (data.topbounce != null)
+			{
+				O.topbounce = data.topbounce;
+			}
+			if (data.bouncedrain != null)
+			{
+				O.bouncedrain = data.bouncedrain;
+			}
 			
 			O.image.image_speed = 1;
 			O.allowwrap = data.wrap;
@@ -2926,6 +2947,11 @@ class GameView extends Sprite
 					if (D.type == "satori")
 					{
 						E = new Satori();
+						type = "Enemy";
+					}
+					if (D.type == "Scarlet")
+					{
+						E = new Scarlet();
 						type = "Enemy";
 					}
 					if (D.type == "udongein")
@@ -4110,6 +4136,10 @@ class GameView extends Sprite
 				AddToArrayMultiple(enemytypes, new Tewi(), 30);
 				AddToArrayMultiple(enemytypes, new Reisen(), 10);
 				AddToArrayMultiple(enemytypes, new Imposter(), 1);
+			}
+			if (level > 35)
+			{
+				AddToArrayMultiple(enemytypes, new Scarlet(), 2);
 			}
 			if (level > 45)
 			{

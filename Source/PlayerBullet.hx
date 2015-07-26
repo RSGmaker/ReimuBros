@@ -10,6 +10,8 @@ class PlayerBullet extends Entity
 	public var gravY:Float = 0;
 	public var started:Bool=false;
 	public var bounces:Bool = false;
+	public var topbounce:Bool = false;
+	public var bouncedrain:Bool = false;
 	public var tossedBy:Player;
 	//how many enemies it can hit before dissappearing
 	public var HP:Int = 9999999;
@@ -88,6 +90,23 @@ class PlayerBullet extends Entity
 			{
 				Vspeed *= -0.5;
 				Vspeed -= 3;
+				if (bouncedrain)
+				{
+					HP--;
+				}
+			}
+		}
+		if (topbounce && Vspeed < 0)
+		{
+			block = game.CollisionDetectPoint(x + 24, y + 0);
+			if (block != null || y<0)
+			{
+				Vspeed *= -0.5;
+				Vspeed += 3;
+				if (bouncedrain)
+				{
+					HP--;
+				}
 			}
 		}
 		
