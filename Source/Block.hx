@@ -10,6 +10,7 @@ class Block extends Entity
 	public var Flames:Entity;
 	public var started:Bool;
 	public var charred:Bool;
+	public var respawn:Int;
 	public function new(ani:String) 
 	{
 		super(ani);
@@ -23,6 +24,7 @@ class Block extends Entity
 		type = "Block";
 		UID = -100 - GameView._this.entities.length;
 		started = false;
+		respawn = -1;
 	}
 	public function Burn()
 	{
@@ -74,6 +76,22 @@ class Block extends Entity
 			charred = false;
 			Visual.image.ChangeAnimation(image.animation);
 		}
+		if (respawn > -1)
+		{
+			if (!solid)
+			{
+				solid = true;
+			}
+			respawn = -1;
+		}
+	}
+	public function Destroy(timetorespawn:Int)
+	{
+		if (solid)
+		{
+			solid = false;
+			respawn = timetorespawn;
+		}
 	}
 	public function Char()
 	{
@@ -91,6 +109,14 @@ class Block extends Entity
 		{
 			Flames.x = x-10;
 			Flames.y = y - 20;
+		}
+		if (respawn > 0)
+		{
+			respawn--;
+		}
+		if (respawn == 0)
+		{
+			Clean();
 		}
 		Flames.visible = dangerous;
 		Flames.update();

@@ -1074,7 +1074,21 @@ class GameView extends Sprite
 			//update the last activity frame to this frame(this is to let this client determine inactive/linkdead players)
 			P.frame = frame;
 		}
-		
+		if (evt == "DestroyBlock")
+		{
+			var i = 0;
+			while (i < entities.length)
+			{
+				var E = entities[i];
+				if (E.x == data.x && E.y == data.y && E.type == "Block")
+				{
+					var D:Dynamic = E;
+					D.Destroy(data.Destroy);
+					i = entities.length;
+				}
+				i++;
+			}
+		}
 		if (evt == "PlayerDeath") {
 			if (P != null)
 			{
@@ -1403,11 +1417,70 @@ class GameView extends Sprite
 				E.y = data.y;
 				E.Hspeed = data.Hspeed;
 				E.Vspeed = data.Vspeed;
+				if (E != P)
+				{
+					P.ability.onbump(E);
+				}
 				E.bump();
 				if (!me)
 				{
 					E.catchup();
 				}
+			}
+		}
+		if (evt == "Fairplay")
+		{
+			var i = 0;
+			while (i < entities.length)
+			{
+				var E = entities[i];
+				var D:Dynamic = E;
+				/*if ((E.type == "Enemy" && activeEnemies.indexOf(E) < 0) || E.type == "Bullet" || E.type == "MasterSpark")
+				{
+					
+				}*/
+				var ok = true;
+				if (E.subtype == "UFO")
+				{
+					D.fuel = 0;
+					ok = false;
+				}
+				if (E.type == "Gap")
+				{
+					E.killed = true;
+					E.alive = false;
+					ok = false;
+				}
+				if (E.type == "Bullet" && (RoundType != TypeofRound.NoWrap))
+				{
+					E.killed = true;
+					E.alive = false;
+					ok = false;
+				}
+				if (E.type == "Yuuka")
+				{
+					E.killed = true;
+					E.alive = false;
+					ok = false;
+				}
+				if (E.type == "MasterSpark")
+				{
+					D.Size = 0;
+					D.Time = - 1000;
+					ok = false;
+				}
+				if (E.type == "Lightning")
+				{
+					D.Time = - 1000;
+					ok = false;
+				}
+				if (E.type == "Enemy" && (activeEnemies.indexOf(D) < 0 || !D.needtokill) && ok)
+				{
+					D.reward = false;
+					E.killed = true;
+					E.alive = false;
+				}
+				i++;
 			}
 		}
 		if (evt == "PlayerRespawn")

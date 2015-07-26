@@ -70,7 +70,16 @@ class PlayerAbility
 	{
 		
 	}
-	
+	//when you bump something
+	public function onbump(E:Entity)
+	{
+		
+	}
+	//when you are bumped by someone
+	public function onbumped(E:Entity)
+	{
+		
+	}
 	
 	
 	//make each characters abilities
