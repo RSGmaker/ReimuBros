@@ -759,7 +759,7 @@ class GameView extends Sprite
 			Background.alpha = 0;
 			
 		L = Math.floor((level - 1) / 5);
-		if (GameFlags.get(Main.AltMusic) || (playerspick == "lunasa" || playerspick == "lyrica" || playerspick == "merlin"))
+		if (GameFlags.get(Main.AltMusic)/* || (playerspick == "lunasa" || playerspick == "lyrica" || playerspick == "merlin")*/)
 		{
 			L += 6;
 		}
@@ -772,7 +772,10 @@ class GameView extends Sprite
 			{
 				L -= A.length;
 			}
-		musicchannel = SoundManager.PlayMusic("theme" + A[L]);
+		if (musicchannel == null || !myplayer.flags.get(Player.MusicSelector))
+		{
+			musicchannel = SoundManager.PlayMusic("theme" + A[L]);
+		}
 	}
 	public function GetPlayer(ID:String):Player {
 		if ((""+ID) == GetNetworkID())
