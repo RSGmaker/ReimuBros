@@ -223,6 +223,15 @@ class PlayerAbilityManager
 				flags.set(Player.BecomeInvisible, true);
 			case "byakuren":
 				flags.set(Player.AbsorbDamage, true);
+			case "lunasa":
+				flags.set(Player.MusicSelector, true);
+				flags.set(Player.Floating, true);
+			case "lyrica":
+				flags.set(Player.MusicSelector, true);
+				flags.set(Player.Floating, true);
+			case "merlin":
+				flags.set(Player.MusicSelector, true);
+				flags.set(Player.Floating, true);
 			default:
 		}
 		/*if (cooldown == 0 && maxcooldown > 0)
@@ -418,6 +427,10 @@ class PlayerAbilityManager
 		if (flags.get(Player.AbsorbDamage))
 		{
 			ret[ret.length] = new abilities.AbsorbDamage(player);
+		}
+		if (flags.get(Player.MusicSelector))
+		{
+			ret[ret.length] = new abilities.MusicSelector(player);
 		}
 		return ret;
 	}

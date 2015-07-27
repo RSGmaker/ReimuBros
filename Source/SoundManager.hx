@@ -97,6 +97,10 @@ class SoundManager
 			if (_this.music != null)
 			{
 				_this.music.stop();
+				/*if (_this.activeaudio.indexOf(_this.music) > -1)
+				{
+					_this.activeaudio.remove(_this.music);
+				}*/
 				_this.music = null;
 			}
 			A.addEventListener(Event.SOUND_COMPLETE, function(e:Event):Void {
@@ -119,6 +123,10 @@ class SoundManager
 		if (music != null)
 		{
 			music.stop();
+			/*if (activeaudio.indexOf(music) > -1)
+			{
+				activeaudio.remove(music);
+			}*/
 			music = null;
 		}
 		_songposition = -1.0;
