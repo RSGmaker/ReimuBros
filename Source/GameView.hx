@@ -2962,6 +2962,11 @@ class GameView extends Sprite
 						E = new Scarlet();
 						type = "Enemy";
 					}
+					if (D.type == "meiling")
+					{
+						E = new Meiling();
+						type = "Enemy";
+					}
 					if (D.type == "udongein")
 					{
 						E = new Reisen();
@@ -4138,6 +4143,10 @@ class GameView extends Sprite
 			{
 				AddToArrayMultiple(enemytypes, new Keine(), 16);
 			}
+			if (level > 5)
+			{
+				AddToArrayMultiple(enemytypes, new Meiling(), 5);
+			}
 			AddToArrayMultiple(enemytypes, new Mystia(), 28);
 			if (level > 25)
 			{
@@ -4183,14 +4192,15 @@ class GameView extends Sprite
 		}
 		var C = CombinedScoreALL + (level * 3000);
 		var limit = 10;
-		while (C >= 35000)
+		//while (C >= 35000)
+		while (C >= 40000)
 		{
 			if (limit > 0)
 			{
 				AddToArrayMultiple(enemytypes, new Imposter(), 1);
 				limit--;
 			}
-			C -= 30000;
+			C -= 35000;
 		}
 		
 		var tmp = 0;

@@ -842,6 +842,18 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/meilingflipped0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/meilingsleeping0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/meilingsleepingflipped0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/meira0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		

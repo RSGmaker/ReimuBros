@@ -454,6 +454,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Sprites/meiling0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/meilingALT0.png", __ASSET__assets_sprites_meilingalt0_png);
 		type.set ("assets/Sprites/meilingALT0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/meilingflipped0.png", __ASSET__assets_sprites_meilingflipped0_png);
+		type.set ("assets/Sprites/meilingflipped0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/meilingsleeping0.png", __ASSET__assets_sprites_meilingsleeping0_png);
+		type.set ("assets/Sprites/meilingsleeping0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/meilingsleepingflipped0.png", __ASSET__assets_sprites_meilingsleepingflipped0_png);
+		type.set ("assets/Sprites/meilingsleepingflipped0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/meira0.png", __ASSET__assets_sprites_meira0_png);
 		type.set ("assets/Sprites/meira0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/merlin0.png", __ASSET__assets_sprites_merlin0_png);
@@ -1545,6 +1551,18 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/meilingflipped0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/meilingsleeping0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/meilingsleepingflipped0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "assets/Sprites/meira0.png";
 		path.set (id, id);
 		
@@ -2113,6 +2131,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#else
 		
 		#if openfl
+		
+		
+		
 		
 		
 		
@@ -3067,6 +3088,15 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("assets/Sprites/meilingALT0.png", __ASSET__assets_sprites_meilingalt0_png);
 		type.set ("assets/Sprites/meilingALT0.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/meilingflipped0.png", __ASSET__assets_sprites_meilingflipped0_png);
+		type.set ("assets/Sprites/meilingflipped0.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/meilingsleeping0.png", __ASSET__assets_sprites_meilingsleeping0_png);
+		type.set ("assets/Sprites/meilingsleeping0.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/meilingsleepingflipped0.png", __ASSET__assets_sprites_meilingsleepingflipped0_png);
+		type.set ("assets/Sprites/meilingsleepingflipped0.png", AssetType.IMAGE);
 		
 		className.set ("assets/Sprites/meira0.png", __ASSET__assets_sprites_meira0_png);
 		type.set ("assets/Sprites/meira0.png", AssetType.IMAGE);
@@ -4377,6 +4407,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_medicine0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_meiling0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_meilingalt0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_meilingflipped0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_meilingsleeping0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_meilingsleepingflipped0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_meira0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_merlin0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_miko0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -4519,6 +4552,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 #elseif html5
+
+
+
 
 
 
@@ -5072,6 +5108,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("Assets/Sprites/medicine0.png") #if display private #end class __ASSET__assets_sprites_medicine0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/meiling0.png") #if display private #end class __ASSET__assets_sprites_meiling0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/meilingALT0.png") #if display private #end class __ASSET__assets_sprites_meilingalt0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/meilingflipped0.png") #if display private #end class __ASSET__assets_sprites_meilingflipped0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/meilingsleeping0.png") #if display private #end class __ASSET__assets_sprites_meilingsleeping0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/meilingsleepingflipped0.png") #if display private #end class __ASSET__assets_sprites_meilingsleepingflipped0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/meira0.png") #if display private #end class __ASSET__assets_sprites_meira0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/merlin0.png") #if display private #end class __ASSET__assets_sprites_merlin0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/miko0.png") #if display private #end class __ASSET__assets_sprites_miko0_png extends lime.graphics.Image {}
