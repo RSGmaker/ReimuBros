@@ -197,22 +197,6 @@ class Entity extends Sprite
 		{
 			dir = -1;
 		}
-		if (Hspeed > 0)
-		{
-			Hspeed -= deccel;
-			if (Hspeed < 0)
-			{
-				Hspeed = 0;
-			}
-		}
-		if (Hspeed < 0)
-		{
-			Hspeed += deccel;
-			if (Hspeed > 0)
-			{
-				Hspeed = 0;
-			}
-		}
 		if (Vspeed < 12)
 		{
 			{
@@ -273,6 +257,22 @@ class Entity extends Sprite
 		if ((headbonk==null && !bonking) || Vspeed > 0)
 		{
 			y += Vspeed;
+		}
+		if (Hspeed > 0)
+		{
+			Hspeed -= deccel;
+			if (Hspeed < 0)
+			{
+				Hspeed = 0;
+			}
+		}
+		if (Hspeed < 0)
+		{
+			Hspeed += deccel;
+			if (Hspeed > 0)
+			{
+				Hspeed = 0;
+			}
 		}
 		wrapped = false;
 		if (x < -width)
