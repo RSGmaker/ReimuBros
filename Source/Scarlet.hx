@@ -21,7 +21,7 @@ class Scarlet extends Enemy
 		super("Scarlet");
 		accel = 0.5;
 		deccel = 0.1;
-		mxspd = 6.5;
+		mxspd = 6;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -61,7 +61,7 @@ class Scarlet extends Enemy
 			else
 			{
 				who = "flandre";
-				mxspd-=3;
+				mxspd-=2.5;
 			}
 			var A = game.GetPlayers();
 			target = A[Std.int(99999 * UID) % A.length];
@@ -158,10 +158,12 @@ class Scarlet extends Enemy
 			}
 			else
 			{
-				if (ground.type == "Block" && who=="flandre" && flipped<=0 && ground.y < 500)
+				if (ground.type == "Block" && who=="flandre" && flipped<=0 && ground.y < 500 && !ground.dangerous)
 				{
 					var E:Dynamic = ground;
 					E.Burn();
+					//E.respawn = (E.respawn >> 2) - (E.respawn >> 3);
+					E.respawn = (E.respawn >> 3);
 				}
 				if (flipped>0 && flipped < 60)
 				{
