@@ -76,6 +76,20 @@ class SekibankiBullet extends PlayerBullet
 				}
 			}
 		}
+		else if (explosive)
+		{
+			dist += Math.abs(Vspeed);
+			if (dist > 200)
+			{
+				gravY = 0.0000001;
+			}
+			if (dist > 4000 && Vspeed<0)
+			{
+				y = -100;
+				Vspeed = 10;
+				rotateentity(180);
+			}
+		}
 		if (explosive)
 		{
 			if (Vspeed > 0)
@@ -94,10 +108,14 @@ class SekibankiBullet extends PlayerBullet
 			{
 				var X = explosion.width;
 				var Y = explosion.height;
-				explosion.scaleX += 0.05;
-				explosion.scaleY += 0.05;
+				explosion.scaleX += 0.15;
+				explosion.scaleY += 0.15;
 				explosion.x -= (explosion.width - X) / 2;
 				explosion.y -= (explosion.height - Y) / 2;
+				if (explosion.scaleX > 1)
+				{
+					alive = false;
+				}
 			}
 		}
 	}
