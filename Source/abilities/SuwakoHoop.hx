@@ -15,9 +15,12 @@ class SuwakoHoop extends PlayerAbility
 	{
 		super.init();
 		//player.maxcooldown = 380;
-		player.maxcooldown = 460;
+		
 		//player.maxcooldown = 640;
 		player.warncooldown = true;
+		
+		//player.maxcooldown = 460;
+		player.maxcooldown = 410;
 	}
 	override public function onframe() 
 	{
@@ -37,7 +40,8 @@ class SuwakoHoop extends PlayerAbility
 			D.scale = 0.9;
 			D.dir = player.Ldir;
 			
-			D.HP = 22;
+			//D.HP = 22;
+			D.HP = 18;
 			D.Vspeed = -6;
 			D.Hspeed = 20;
 			if (player.Ldir >= 0)
