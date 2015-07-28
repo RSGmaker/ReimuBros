@@ -220,10 +220,10 @@ class TitleScreenView extends Sprite
 		
 		var rectangleShape:Shape = new Shape();
 		rectangleShape.graphics.beginFill(0x00AA33);
-		rectangleShape.graphics.drawRect(0, 0, textField.textWidth + SZ3, textField.textHeight + SZ3);
+		rectangleShape.graphics.drawRect(0, 0, textField.textWidth + SZ, textField.textHeight + SZ2);
 		rectangleShape.graphics.endFill();
 		rectangleShape.graphics.beginFill(0x11CC55);
-		rectangleShape.graphics.drawRect(SZ, SZ, textField.textWidth + SZ, textField.textHeight + SZ);
+		rectangleShape.graphics.drawRect(SZ, SZ, textField.textWidth-SZ, textField.textHeight);
 		rectangleShape.graphics.endFill();
 
 		var buttonSprite:Sprite = new Sprite();

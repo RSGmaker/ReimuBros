@@ -298,6 +298,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Sprites/evilyuuka0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/exkeine0.png", __ASSET__assets_sprites_exkeine0_png);
 		type.set ("assets/Sprites/exkeine0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/explosion0.png", __ASSET__assets_sprites_explosion0_png);
+		type.set ("assets/Sprites/explosion0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/firecirno0.png", __ASSET__assets_sprites_firecirno0_png);
 		type.set ("assets/Sprites/firecirno0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/flames0.png", __ASSET__assets_sprites_flames0_png);
@@ -580,6 +582,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Sprites/seiran0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/sekibanki0.png", __ASSET__assets_sprites_sekibanki0_png);
 		type.set ("assets/Sprites/sekibanki0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/sekibankihead0.png", __ASSET__assets_sprites_sekibankihead0_png);
+		type.set ("assets/Sprites/sekibankihead0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/sekibankiheadless0.png", __ASSET__assets_sprites_sekibankiheadless0_png);
+		type.set ("assets/Sprites/sekibankiheadless0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/shanghai0.png", __ASSET__assets_sprites_shanghai0_png);
 		type.set ("assets/Sprites/shanghai0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/shikieiki0.png", __ASSET__assets_sprites_shikieiki0_png);
@@ -1239,6 +1245,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/explosion0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "assets/Sprites/firecirno0.png";
 		path.set (id, id);
 		
@@ -1803,6 +1813,14 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/sekibankihead0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/sekibankiheadless0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "assets/Sprites/shanghai0.png";
 		path.set (id, id);
 		
@@ -2131,6 +2149,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#else
 		
 		#if openfl
+		
+		
+		
 		
 		
 		
@@ -2855,6 +2876,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("assets/Sprites/exkeine0.png", __ASSET__assets_sprites_exkeine0_png);
 		type.set ("assets/Sprites/exkeine0.png", AssetType.IMAGE);
 		
+		className.set ("assets/Sprites/explosion0.png", __ASSET__assets_sprites_explosion0_png);
+		type.set ("assets/Sprites/explosion0.png", AssetType.IMAGE);
+		
 		className.set ("assets/Sprites/firecirno0.png", __ASSET__assets_sprites_firecirno0_png);
 		type.set ("assets/Sprites/firecirno0.png", AssetType.IMAGE);
 		
@@ -3277,6 +3301,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("assets/Sprites/sekibanki0.png", __ASSET__assets_sprites_sekibanki0_png);
 		type.set ("assets/Sprites/sekibanki0.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/sekibankihead0.png", __ASSET__assets_sprites_sekibankihead0_png);
+		type.set ("assets/Sprites/sekibankihead0.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/sekibankiheadless0.png", __ASSET__assets_sprites_sekibankiheadless0_png);
+		type.set ("assets/Sprites/sekibankiheadless0.png", AssetType.IMAGE);
 		
 		className.set ("assets/Sprites/shanghai0.png", __ASSET__assets_sprites_shanghai0_png);
 		type.set ("assets/Sprites/shanghai0.png", AssetType.IMAGE);
@@ -4329,6 +4359,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_eran9_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_evilyuuka0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_exkeine0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_explosion0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_firecirno0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_flames0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_flames1_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -4470,6 +4501,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_seija0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_seiran0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_sekibanki0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_sekibankihead0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_sekibankiheadless0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_shanghai0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_shikieiki0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_shingyoku0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -4552,6 +4585,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 #elseif html5
+
+
+
 
 
 
@@ -5030,6 +5066,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("Assets/Sprites/ERan9.png") #if display private #end class __ASSET__assets_sprites_eran9_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/evilyuuka0.png") #if display private #end class __ASSET__assets_sprites_evilyuuka0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/exkeine0.png") #if display private #end class __ASSET__assets_sprites_exkeine0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/explosion0.png") #if display private #end class __ASSET__assets_sprites_explosion0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/firecirno0.png") #if display private #end class __ASSET__assets_sprites_firecirno0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/flames0.png") #if display private #end class __ASSET__assets_sprites_flames0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/flames1.png") #if display private #end class __ASSET__assets_sprites_flames1_png extends lime.graphics.Image {}
@@ -5171,6 +5208,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("Assets/Sprites/seija0.png") #if display private #end class __ASSET__assets_sprites_seija0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/seiran0.png") #if display private #end class __ASSET__assets_sprites_seiran0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/sekibanki0.png") #if display private #end class __ASSET__assets_sprites_sekibanki0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/sekibankihead0.png") #if display private #end class __ASSET__assets_sprites_sekibankihead0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/sekibankiheadless0.png") #if display private #end class __ASSET__assets_sprites_sekibankiheadless0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/shanghai0.png") #if display private #end class __ASSET__assets_sprites_shanghai0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/shikieiki0.png") #if display private #end class __ASSET__assets_sprites_shikieiki0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/shingyoku0.png") #if display private #end class __ASSET__assets_sprites_shingyoku0_png extends lime.graphics.Image {}

@@ -2124,6 +2124,54 @@ class GameView extends Sprite
 			}
 			AddObject(O);
 		}
+		if (evt == "HeadCannon")
+		{
+			var O = new SekibankiBullet();
+			O.faulty = data.faulty;
+			O.x = P.x;
+			O.y = P.y;//+10;
+			O.Hspeed = 0;
+			O.Vspeed = 0;
+			O.gravX = 0;
+			O.gravY = -1;
+			O.scaleX = P.scaleX;
+			O.scaleY = P.scaleX;
+			O.tossedBy = P;
+			O.bounces = false;
+			/*if (data.bounces != null)
+			{
+				O.bounces = data.bounces;
+			}
+			if (data.HP != null)
+			{
+				O.HP = data.HP;
+			}
+			if (data.topbounce != null)
+			{
+				O.topbounce = data.topbounce;
+			}
+			if (data.bouncedrain != null)
+			{
+				O.bouncedrain = data.bouncedrain;
+			}*/
+			
+			O.image.image_speed = 1;
+			O.allowwrap = data.wrap;
+			P.charname = "sekibankiheadless";
+			if (P.Ldir>0)
+			{
+				O.ChangeAnimation("sekibankihead");
+				P.ChangeAnimation(P.charname);
+			}
+			else
+			{
+				O.ChangeAnimation("sekibankihead" + "F");
+				P.ChangeAnimation(P.charname+"F");
+			}
+			AddObject(O);
+			P.cooldown = P.maxcooldown;
+			
+		}
 		//fires a diamond shape of bullets
 		if (evt == "ChenDanmaku")
 		{

@@ -232,6 +232,8 @@ class PlayerAbilityManager
 			case "merlin":
 				flags.set(Player.MusicSelector, true);
 				flags.set(Player.Floating, true);
+			case "sekibanki":
+				flags.set(Player.HeadCannon, true);
 			default:
 		}
 		/*if (cooldown == 0 && maxcooldown > 0)
@@ -431,6 +433,10 @@ class PlayerAbilityManager
 		if (flags.get(Player.MusicSelector))
 		{
 			ret[ret.length] = new abilities.MusicSelector(player);
+		}
+		if (flags.get(Player.HeadCannon))
+		{
+			ret[ret.length] = new abilities.HeadCannon(player);
 		}
 		return ret;
 	}

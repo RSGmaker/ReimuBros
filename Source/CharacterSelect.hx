@@ -261,7 +261,7 @@ class CharacterSelect extends Sprite
 		if (ButtonsPage.length > 1 && ButtonsPage[1].length>0)
 		{
 		
-		NextButton = AddButton("→");
+		NextButton = AddButton("→ ");
 		
 		NextButton.x = 384;
 		NextButton.y = 530;
@@ -279,7 +279,7 @@ class CharacterSelect extends Sprite
 				 } 
 				);
 				
-		PrevButton = AddButton("←");
+		PrevButton = AddButton("← ");
 		
 		PrevButton.x = 244;
 		PrevButton.y = 530;
@@ -1030,10 +1030,10 @@ class CharacterSelect extends Sprite
 		
 		var rectangleShape:Shape = new Shape();
 		rectangleShape.graphics.beginFill(0x00AA33);
-		rectangleShape.graphics.drawRect(0, 0, textField.textWidth + SZ3, textField.textHeight + SZ3);
+		rectangleShape.graphics.drawRect(0, 0, textField.textWidth + SZ, textField.textHeight + SZ2);
 		rectangleShape.graphics.endFill();
 		rectangleShape.graphics.beginFill(0x11CC55);
-		rectangleShape.graphics.drawRect(SZ, SZ, textField.textWidth + SZ, textField.textHeight + SZ);
+		rectangleShape.graphics.drawRect(SZ, SZ, textField.textWidth-SZ, textField.textHeight);
 		rectangleShape.graphics.endFill();
 
 		var buttonSprite:Sprite = new Sprite();
