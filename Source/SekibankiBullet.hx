@@ -43,7 +43,7 @@ class SekibankiBullet extends PlayerBullet
 		}
 		super.update();
 		flames.animate();
-		explosive = true;
+		//explosive = true;
 		//faulty = true;
 		if (faulty)
 		{
