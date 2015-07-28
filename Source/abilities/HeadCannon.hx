@@ -16,7 +16,8 @@ class HeadCannon extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 340;
+		//player.maxcooldown = 340;
+		player.maxcooldown = 280;
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -59,6 +60,14 @@ class HeadCannon extends PlayerAbility
 			else
 			{
 				D.faulty = false;
+			}
+			if (Math.random() < 0.2)
+			{
+				D.explosive = true;
+			}
+			else
+			{
+				D.explosive = false;
 			}
 			game.SendEvent("HeadCannon", D);
 			/*var D:Dynamic = { };

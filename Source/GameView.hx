@@ -2128,6 +2128,7 @@ class GameView extends Sprite
 		{
 			var O = new SekibankiBullet();
 			O.faulty = data.faulty;
+			O.explosive = data.explosive;
 			O.x = P.x;
 			O.y = P.y;//+10;
 			O.Hspeed = 0;
