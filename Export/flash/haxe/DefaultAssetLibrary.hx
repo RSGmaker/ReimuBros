@@ -128,6 +128,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Audio/Mp3/theme9.mp3", AssetType.MUSIC);
 		className.set ("assets/Audio/Mp3/titlescreen.mp3", __ASSET__assets_audio_mp3_titlescreen_mp3);
 		type.set ("assets/Audio/Mp3/titlescreen.mp3", AssetType.MUSIC);
+		className.set ("assets/Audio/Mp3/zawarudo.mp3", __ASSET__assets_audio_mp3_zawarudo_mp3);
+		type.set ("assets/Audio/Mp3/zawarudo.mp3", AssetType.MUSIC);
 		className.set ("assets/bgcolor.png", __ASSET__assets_bgcolor_png);
 		type.set ("assets/bgcolor.png", AssetType.IMAGE);
 		className.set ("assets/black.png", __ASSET__assets_black_png);
@@ -902,6 +904,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		type.set (id, AssetType.MUSIC);
 		id = "assets/Audio/Mp3/titlescreen.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "assets/Audio/Mp3/zawarudo.mp3";
 		path.set (id, id);
 		
 		type.set (id, AssetType.MUSIC);
@@ -2498,6 +2504,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
 		#end
 		
 		#if (windows || mac || linux)
@@ -2620,6 +2627,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("assets/Audio/Mp3/titlescreen.mp3", __ASSET__assets_audio_mp3_titlescreen_mp3);
 		type.set ("assets/Audio/Mp3/titlescreen.mp3", AssetType.MUSIC);
+		
+		className.set ("assets/Audio/Mp3/zawarudo.mp3", __ASSET__assets_audio_mp3_zawarudo_mp3);
+		type.set ("assets/Audio/Mp3/zawarudo.mp3", AssetType.MUSIC);
 		
 		className.set ("assets/bgcolor.png", __ASSET__assets_bgcolor_png);
 		type.set ("assets/bgcolor.png", AssetType.IMAGE);
@@ -4274,6 +4284,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_theme8intro_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_theme9_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_titlescreen_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_zawarudo_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_bgcolor_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_black_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_dpad_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -4935,6 +4946,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
 #else
 
 
@@ -4981,6 +4993,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:file("Assets/Audio/Mp3/theme8intro.mp3") #if display private #end class __ASSET__assets_audio_mp3_theme8intro_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/theme9.mp3") #if display private #end class __ASSET__assets_audio_mp3_theme9_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/titlescreen.mp3") #if display private #end class __ASSET__assets_audio_mp3_titlescreen_mp3 extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Mp3/zawarudo.mp3") #if display private #end class __ASSET__assets_audio_mp3_zawarudo_mp3 extends lime.utils.ByteArray {}
 @:image("Assets/bgcolor.png") #if display private #end class __ASSET__assets_bgcolor_png extends lime.graphics.Image {}
 @:image("Assets/black.png") #if display private #end class __ASSET__assets_black_png extends lime.graphics.Image {}
 @:image("Assets/Dpad.png") #if display private #end class __ASSET__assets_dpad_png extends lime.graphics.Image {}

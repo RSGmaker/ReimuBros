@@ -2554,7 +2554,7 @@ class GameView extends Sprite
 		}
 		if (evt == "ZaWarudo")
 		{
-			//SoundManager.Play("zawarudo");
+			SoundManager.Play("zawarudo");
 			P.ChangeAnimation("diosakuya");
 			P.Hspeed = 0;
 			P.Vspeed = 0;
@@ -2634,6 +2634,15 @@ class GameView extends Sprite
 				var G:Dynamic = E;
 				G.frames = 180;
 			}
+		}
+		if (evt == "UnzanFist")
+		{
+			var O = new UnzanFist();
+			//O.y = -32;
+			//O.y = -100;
+			O.y = -200;
+			O.x = data.x;
+			AddObject(O);
 		}
 	}
 	// Event Handlers
@@ -3627,6 +3636,7 @@ class GameView extends Sprite
 					//E = "MiniPowBlock";
 					//E = "MrGhosty";
 					//E = "Reimu";
+					//E = "UnzanFist";
 				}
 				if (E == "Gap")
 				{
@@ -3825,6 +3835,12 @@ class GameView extends Sprite
 					D.rank = rank;
 					D.spawns = 0;
 					SendEvent("SpawnEnemy", D);
+				}
+				else if (E == "UnzanFist")
+				{
+					var D:Dynamic = { };
+					D.x = Math.floor(Math.random() * 750);
+					SendEvent("UnzanFist", D);
 				}
 			}
 			}
@@ -4099,11 +4115,13 @@ class GameView extends Sprite
 		{
 			if (level > 5)
 			{
-				AddToArrayMultiple(Obstacles, "Cirno", 64);
+				//AddToArrayMultiple(Obstacles, "Cirno", 64);
+				AddToArrayMultiple(Obstacles, "Cirno", 50);
 				AddToArrayMultiple(Obstacles, "MrGhosty", 32);
 			}
-			AddToArrayMultiple(Obstacles, "Gap", 80);
-			AddToArrayMultiple(Obstacles, "Yinyangorb", 12); 
+			AddToArrayMultiple(Obstacles, "Gap", 70);
+			//AddToArrayMultiple(Obstacles, "Yinyangorb", 12); 
+			AddToArrayMultiple(Obstacles, "Yinyangorb", 14); 
 			AddToArrayMultiple(Obstacles, "MiniPowBlock", 2);
 			if (level > 10)
 			{
@@ -4120,6 +4138,7 @@ class GameView extends Sprite
 			if (level > 20)
 			{
 				AddToArrayMultiple(Obstacles, "Reimu", 5);
+				AddToArrayMultiple(Obstacles, "UnzanFist", 12);
 			}
 			if (level > 30)
 			{
