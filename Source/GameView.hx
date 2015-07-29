@@ -3,6 +3,7 @@ package;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.Graphics;
+import openfl.display.Shape;
 import openfl.display.Sprite;
 import openfl.Assets;
 import openfl.geom.Point;
@@ -211,10 +212,18 @@ class GameView extends Sprite
 	public var paused:Bool = false;
 	public var pausetime:Float = 0;
 	
+	public var flashcolor:Int;
+	public var flashmaxalpha:Float;
+	public var flashalpha:Float;
+	public var flashrate:Float;
+	public var flashalphadirection:Bool;
+	
 	
 	public var spawnrate:Float = 1.0;
 	var ZaWarudo:Sprite = null;
 	var ZaWarudoCaster:Player = null;
+	
+	public var colorflash:Shape;
 	
 	public function new () {
 		super ();
@@ -238,6 +247,21 @@ class GameView extends Sprite
 		ImposterList = new Array<String>();
 		//netlog = Main._this.DEBUG;
 
+	}
+	
+	public function FlashColor(color:Int,maxalpha:Float,startalpha:Float,rate:Float)
+	{
+		flashcolor = color;
+		flashmaxalpha = maxalpha;
+		flashrate = rate;
+		flashalpha = startalpha;
+		flashalphadirection = true;
+		
+		colorflash.graphics.clear();
+		colorflash.graphics.beginFill(color, 1);
+		colorflash.graphics.drawRect(0, 0, 800, 600);
+		colorflash.graphics.endFill();
+		colorflash.alpha = flashalpha;
 	}
 	
 	public function GetImposterList():Array<String>
@@ -619,7 +643,8 @@ class GameView extends Sprite
 		Dpad.y = 600;
 		addChild(Dpad);
 		
-		
+		colorflash = new Shape();
+		addChild(colorflash);
 	}
 	//sets down platforms and puts holes in the platforms
 	public function setformation()
@@ -2007,6 +2032,7 @@ class GameView extends Sprite
 				}
 				i += 1;
 			}
+			FlashColor(0xFF0000, 0.4, 0, 0.1);
 		}
 		if (evt == "UFOStrike" && !myplayer.flags.get(Player.FriendlyUFO))
 		{
@@ -2410,6 +2436,7 @@ class GameView extends Sprite
 				}
 				i += 1;
 			}
+			FlashColor(0x9999FF, 0.4, 0, 0.1);
 		}
 		if (evt == "Kick")
 		{
@@ -3366,11 +3393,13 @@ class GameView extends Sprite
 		removeChild(BGCLeft);
 		removeChild(BGCRight);
 		removeChild(Dpad);
+		removeChild(colorflash);
 		
 		addChild(BGCBottom);
 		addChild(BGCLeft);
 		addChild(BGCRight);
 		addChild(Dpad);
+		addChild(colorflash);
 		ltime = currentTime;
 	}
 	public function SendStatus() {
@@ -3606,7 +3635,23 @@ class GameView extends Sprite
 				
 			}
 		}
-		
+		if (flashalpha > 0 || flashalphadirection)
+		{
+			if (flashalphadirection)
+			{
+				flashalpha += flashrate;
+				if (flashalpha > flashmaxalpha)
+				{
+					flashalpha = flashmaxalpha;
+					flashalphadirection = false;
+				}
+			}
+			else
+			{
+				flashalpha -= flashrate;
+			}
+			colorflash.alpha = flashalpha;
+		}
 		if (Hoster)
 		{
 			//chances per minute(avg)
