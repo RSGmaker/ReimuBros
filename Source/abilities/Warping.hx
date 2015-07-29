@@ -7,10 +7,11 @@ package abilities;
 class Warping extends PlayerAbility
 {
 
+	//currently unused
 	public function new(player:Player) 
 	{
 		super(player);
-		
+		description = "Top row warp";
 	}
 	override public function onframe() 
 	{

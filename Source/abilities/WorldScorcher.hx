@@ -9,6 +9,7 @@ class WorldScorcher extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
+		description = "Turns everything to ash.";
 	}
 	override public function init() 
 	{

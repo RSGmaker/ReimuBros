@@ -4025,7 +4025,7 @@ class GameView extends Sprite
 		L -= rank * 13;
 		//calculate available budget for this level
 		var points:Float = (L + 2);// * 2.0;
-		points *= 1.1;
+		//points *= 1.1;
 		points += ((level-1) % 5);
 		epm = 0;
 		var R = 0.2 + (Math.random() * 0.2);
@@ -4034,7 +4034,8 @@ class GameView extends Sprite
 		var tmp = 0.7;
 		while (AR > 1)
 		{
-			spawnrate *= 0.96;
+			//spawnrate *= 0.96;
+			spawnrate *= 0.97;
 			tmp *= 1.4;
 			if (tmp < 1)
 			{

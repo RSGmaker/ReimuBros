@@ -48,9 +48,6 @@ class Player extends Entity
 	
 	public static var characters:Array<String> = ["reimu", "marisa", "patchouli", "remilia", "sanae", "sakuya", "suwako", "yuyuko", "tenshi", "iku", "aya", "alice", "youmu", "shikieiki", "flandre", "satori", "koishi", "momiji", "nitori", "udongein", "komachi", "yuuka", "mokou", "meiling", "parsee", "kokoro", "kogasa", "kasen", "utsuho", "suika", "kaguya", "eirin", "nazrin", "orin", "hina", "byakuren", "chiyuri", "ellen", "elly", "gengetsu", "kana", "kotohime", "elis", "louise", "mai", "meira", "mugetsu", "orange", "rika", "rikako", "sara", "yuki", "yumeko", "yumemi", "akyu", "futo", "kagerou", "keine", "kosuzu", "lunachild", "mamizou", "medicine", "minoriko", "murasa", "seiga", "sekibanki", "shanghai", "shinmyoumaru", "shizuha", "shou", "sunnymilk", "tokiko", "wriggle", "yoshika", "starsaphire", "lily", "letty", "makairesident-a", "makairesident-b", "ayana", "matenshi", "noroiko", "mystia", "lunasa", "lyrica", "merlin", "maribel", "renko", "miko", "reisen", "ruukoto", "tojiko", "toyohime", "yorihime", "wakasagihime", "yatsuhashi", "mima", "konngara","tewi","kanako","ringo","doremy","seiran","sumireko","rin","raiko","shingyoku","hatate","daiyousei","kurumi","yuugi","benben","ichirin","kyouko","yamame","koakuma","shinki","rengeteki","sariel","yukari", "seija", "rumia","cirno","nue","chen","ran"];
 	
-	public static var Scharacters:Array<String> = ["aya", "alice", "youmu", "cirno", "letty", "yukari", "seija", "mokou", "orin", "yuyuko","lunasa","lyrica","merlin","kaguya","kanako","murasa","koishi","tewi","iku","tenshi","keine","reimu","meiling","sakuya","ran","chen","nue","sanae","marisa","rumia","komachi","wriggle","raiko","yuugi","flandre","ringo","kyouko","elly","shou","sariel","shikieiki","suwako","minoriko","sunnymilk","nitori","byakuren","sekibanki"];
-	public static var Description:Array<String> = ["Moves quickly", "Defeating fairies spawns\nShanghai dolls", "Can carry 2 myons\nstart with 1 myon", "doesn't slip on ice", "Chills the world\ndoesn't slip on ice", "Manipulate gaps", "Prevents screen\nflipping", "Turns everything to ash.\nFire proof", "Defeating fairies spawns\nZombie fairies", "Kills mystias on\ncontact", "Changes music\nCan float briefly", "Changes music\nCan float briefly", "Changes music\nCan float briefly", "Invincibility time+", "Extra powblock uses", "Ambush", "Turns invisible by\nstaying still", "Digs down", "Electric proof", "Earthquakes", "EX Form", "Yin-Yang Orbs", "Dash Attack", "-The World-", "Cheeee~n", "Dash Attack", "UFOs won't fire", "Momentum aimed\nshot", "Wide shot", "Has an appetite\nfor enemies", "teleports to your\nmouse's position", "Light dash attack", "flips everything over","Hits 3 blocks at once","Jump upward\nwith destructive force","Gain a life for collecting\npoint items","Bounces bullets,and \nenemy,has other effects","Throws blocks","Instantly collect all items","enemies may die\nat random","Remove extra obstacles","Throws an iron ring","Items give more score","Turns invisible","Turns invisible","Extra HP","Shoots upwards"];
-	
 	public static var charorder:Array<String> = ["reimu", "marisa", "rumia", "daiyousei", "cirno", "meiling", "koakuma", "patchouli", "sakuya", "remilia", "flandre", "rin",
 	"letty", "chen", "alice", "shanghai"/*,"hourai"*/, "lily", "lyrica", "lunasa", "merlin", "youmu", "yuyuko", "ran", "yukari",
 	"suika",
@@ -201,6 +198,8 @@ class Player extends Entity
 	
 	public static inline var HeadCannon = 49;
 	
+	public static inline var BasicShot = 50;
+	
 	
 	public var zombiefairychance = 0.04;
 	public var zombiefairytype = "zombiefairy";
@@ -272,6 +271,7 @@ class Player extends Entity
 				feetposition -= 1;
 			default:
 		}
+		
 		
 		killed = false;
 		lives = 3;
@@ -358,6 +358,10 @@ class Player extends Entity
 			{
 				started = true;
 				ability.init();
+				if (cooldown == 0)
+				{
+					cooldown = maxcooldown;
+				}
 			}
 			ability.onbeginframe();
 			

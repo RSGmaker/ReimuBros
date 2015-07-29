@@ -1,4 +1,6 @@
 package;
+import abilities.BasicShot;
+import abilities.Floating;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.Graphics;
@@ -166,7 +168,7 @@ class CharacterSelect extends Sprite
 		highestpointcounter.visible = false;
 		addChild(highestpointcounter);
 		
-		startminigamebutton = AddButton("Start");
+		startminigamebutton = AddButton("Start ");
 		startminigamebutton.x += 400;
 		startminigamebutton.y = 140;
 		startminigamebutton.visible = false;
@@ -377,7 +379,7 @@ class CharacterSelect extends Sprite
 		tmp = new TextFormat();
 		tmp.font = "Arial";
 		tmp.size = 22;
-		Nameinput.x = 250;
+		Nameinput.x = 300;
 		Nameinput.y = 25;
 		Nameinput.width = (512 - (Nameinput.x));
 		if (playername == null || playername == "")
@@ -459,11 +461,23 @@ class CharacterSelect extends Sprite
 			var S:String = tf.text.toLowerCase();
 			#end
 			var dsc = "Can float briefly";
-			var SP = Player.Scharacters.indexOf(S);
+			var AL = PlayerAbilityManager.GetAbilityList(PlayerAbilityManager.GetFlags(S));
+			dsc = "";
+			var c = 0;
+			while (c < AL.length)
+			{
+				dsc = dsc + AL[c].description;
+				if (i > 0)
+				{
+					dsc = dsc + "\n";
+				}
+				c++;
+			}
+			/*var SP = Player.Scharacters.indexOf(S);
 			if (SP >= 0)
 			{
-				dsc = Player.Description[SP];
-			}
+				//dsc = Player.Description[SP];
+			}*/
 			var SS = S.charAt(0).toUpperCase() + S.substr(1);
 			var O:Dynamic = (B.getChildByName("selectedshape"));
 			var V:Dynamic = (B.getChildByName("selectedshape2"));
@@ -500,7 +514,7 @@ class CharacterSelect extends Sprite
 				if ((S + "ALT") == selected)
 				{
 					V.visible = true;
-					selectedcharacter.text = SS+"☆";
+					selectedcharacter.text = SS+"☆" + "\n" + dsc;
 					selectedcharacter.setTextFormat(SC);
 				}
 				else
@@ -861,7 +875,8 @@ class CharacterSelect extends Sprite
 	private function makebuttons()
 	{
 		var X = 0.0;
-		var Y = 76.0;
+		//var Y = 76.0;
+		var Y = 110.0;
 		var S = 3;
 		var i = 0;
 		var j = 0;
@@ -875,7 +890,8 @@ class CharacterSelect extends Sprite
 		while (i < PC.length)
 		{
 			X = 0;
-			Y = 76;
+			//Y = 76;
+			Y = 110;
 		page = new Array<Sprite>();
 		ButtonsPage[ButtonsPage.length] = page;
 		while (i < PC.length && k<5)
@@ -1048,8 +1064,9 @@ class CharacterSelect extends Sprite
 		buttonSprite.buttonMode = true;
 		return buttonSprite;
 	}
-	public var BW:Int = 86;
-	public var BH:Float = 0.86;
+	//public var BW:Int = 86;
+	public var BW:Int = 78;
+	public var BH:Float = 0.75;
 	private function AddCharacterButton(text:String,unlocked:Bool):Sprite
 	{
 		var tmp = new TextFormat();
@@ -1090,7 +1107,13 @@ class CharacterSelect extends Sprite
 		rectangleShape.alpha = 0.65;
 		if (unlocked)
 		{
-			var AA = (Player.Scharacters.indexOf(text) < 0);
+			//var AA = (Player.Scharacters.indexOf(text) < 0);
+			var LL = PlayerAbilityManager.GetAbilityList(PlayerAbilityManager.GetFlags(text));
+			var AA = false;
+			if (LL.length == 1 && Std.is(LL[0], BasicShot) )
+			{
+				AA = true;
+			}
 			if (AA)
 			{
 				rectangleShape.graphics.beginFill(0x00AA33);

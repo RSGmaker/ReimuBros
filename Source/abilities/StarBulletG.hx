@@ -9,7 +9,7 @@ class StarBulletG extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		
+		description = "Momentum aimed\nshot";
 	}
 	override public function init() 
 	{

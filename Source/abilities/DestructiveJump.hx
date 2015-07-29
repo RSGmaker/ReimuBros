@@ -9,7 +9,7 @@ class DestructiveJump extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		
+		description = "Jump upward\nwith destructive force";
 	}
 	override public function init() 
 	{

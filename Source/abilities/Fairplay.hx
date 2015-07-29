@@ -10,7 +10,7 @@ class Fairplay extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		
+		description = "Remove extra obstacles";
 	}
 	override public function init() 
 	{
