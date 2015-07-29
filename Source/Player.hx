@@ -734,12 +734,23 @@ class Player extends Entity
 					var prct = (maxcooldown - cooldown + 0.001) / maxcooldown;
 					var C = Math.round(prct * 255);
 					var CD = 255 - C;
-					var col:UInt = (CD) + (C << 8) + (CD << 16);
+					var col:UInt = 255;
+					if (prct < 0.5)
+					{
+						//red to yellow transition
+						col= (0) + ((C << 1) << 8) + (255 << 16);
+					}
+					else
+					{
+						//remove half of progress from transitioning variables so this transition starts from 0(yellow) properly.
+						CD = CD << 1;
+						C = (C - 128) << 1;
+						//yellow to green transition
+						col= (0) + (255 << 8) + (CD << 16);
+					}
 					G.beginFill(col, 1);
 					G.drawRoundRect(0, 0, 50 * prct, 9,5);
 					G.endFill();
-					//var col2:UInt = (128 +(CD >> 1)) + ((128 +(C >> 1)) << 8) + ((128 +(CD >> 1)) << 16);
-					////var col2:UInt = (192 +(CD >> 2)) + ((192 +(C >> 2)) << 8) + ((192 +(CD >> 2)) << 16);
 					
 					
 					var fillType:flash.display.GradientType = flash.display.GradientType.LINEAR;
