@@ -45,9 +45,10 @@ class Player extends Entity
 	private var filterArr:Array<flash.filters.BitmapFilter>;
 	//public var myMyon:MyonItem;
 
+	//list of character in order of savedata
+	public static var characters:Array<String> = ["reimu", "marisa", "patchouli", "remilia", "sanae", "sakuya", "suwako", "yuyuko", "tenshi", "iku", "aya", "alice", "youmu", "shikieiki", "flandre", "satori", "koishi", "momiji", "nitori", "udongein", "komachi", "yuuka", "mokou", "meiling", "parsee", "kokoro", "kogasa", "kasen", "utsuho", "suika", "kaguya", "eirin", "nazrin", "orin", "hina", "byakuren", "chiyuri", "ellen", "elly", "gengetsu", "kana", "kotohime", "elis", "louise", "mai", "meira", "mugetsu", "orange", "rika", "rikako", "sara", "yuki", "yumeko", "yumemi", "akyu", "futo", "kagerou", "keine", "kosuzu", "lunachild", "mamizou", "medicine", "minoriko", "murasa", "seiga", "sekibanki", "shanghai", "shinmyoumaru", "shizuha", "shou", "sunnymilk", "tokiko", "wriggle", "yoshika", "starsaphire", "lily", "letty", "makairesident-a", "lilith", "ayana", "matenshi", "noroiko", "mystia", "lunasa", "lyrica", "merlin", "maribel", "renko", "miko", "reisen", "ruukoto", "tojiko", "toyohime", "yorihime", "wakasagihime", "yatsuhashi", "mima", "konngara","tewi","kanako","ringo","doremy","seiran","sumireko","rin","raiko","shingyoku","hatate","daiyousei","kurumi","yuugi","benben","ichirin","kyouko","yamame","koakuma","shinki","rengeteki","sariel","yukari", "seija", "rumia","cirno","nue","chen","ran"];
 	
-	public static var characters:Array<String> = ["reimu", "marisa", "patchouli", "remilia", "sanae", "sakuya", "suwako", "yuyuko", "tenshi", "iku", "aya", "alice", "youmu", "shikieiki", "flandre", "satori", "koishi", "momiji", "nitori", "udongein", "komachi", "yuuka", "mokou", "meiling", "parsee", "kokoro", "kogasa", "kasen", "utsuho", "suika", "kaguya", "eirin", "nazrin", "orin", "hina", "byakuren", "chiyuri", "ellen", "elly", "gengetsu", "kana", "kotohime", "elis", "louise", "mai", "meira", "mugetsu", "orange", "rika", "rikako", "sara", "yuki", "yumeko", "yumemi", "akyu", "futo", "kagerou", "keine", "kosuzu", "lunachild", "mamizou", "medicine", "minoriko", "murasa", "seiga", "sekibanki", "shanghai", "shinmyoumaru", "shizuha", "shou", "sunnymilk", "tokiko", "wriggle", "yoshika", "starsaphire", "lily", "letty", "makairesident-a", "makairesident-b", "ayana", "matenshi", "noroiko", "mystia", "lunasa", "lyrica", "merlin", "maribel", "renko", "miko", "reisen", "ruukoto", "tojiko", "toyohime", "yorihime", "wakasagihime", "yatsuhashi", "mima", "konngara","tewi","kanako","ringo","doremy","seiran","sumireko","rin","raiko","shingyoku","hatate","daiyousei","kurumi","yuugi","benben","ichirin","kyouko","yamame","koakuma","shinki","rengeteki","sariel","yukari", "seija", "rumia","cirno","nue","chen","ran"];
-	
+	//list of characters sorted by game(from touhou wiki's character format)
 	public static var charorder:Array<String> = ["reimu", "marisa", "rumia", "daiyousei", "cirno", "meiling", "koakuma", "patchouli", "sakuya", "remilia", "flandre", "rin",
 	"letty", "chen", "alice", "shanghai"/*,"hourai"*/, "lily", "lyrica", "lunasa", "merlin", "youmu", "yuyuko", "ran", "yukari",
 	"suika",
@@ -66,7 +67,7 @@ class Player extends Entity
 	"rika","noroiko", "meira", "matenshi",
 	"ellen", "kotohime", "kana", "rikako", "chiyuri", "yumemi", "ruukoto",
 	"orange", "kurumi", "elly", "rengeteki"/*, "yuuka"*/, "mugetsu", "gengetsu",
-	"sara","louise"/*,"alice"*/,"yuki","mai","ayana","yumeko","shinki","makairesident-a","makairesident-b"];
+	"sara","louise"/*,"alice"*/,"yuki","mai","ayana","yumeko","shinki","makairesident-a","lilith"];
 	//yukari:idk maybe a rare event that has something to do with the chen gaps.
 	//rumia rare round event where rumias spawn(they have a large darkness around them making it hard to see, beating the round unlocks rumia for all players)
 	//seija rare event only seijas spawn and the view flips during the round.
@@ -96,109 +97,22 @@ class Player extends Entity
 	
 	public static var StarSong:Array<Int> = [3, 0, 3, 0, 3, 3, 0, 3, 0, 3, 0, 3, 3, 0, 3, 0,
 						2, 0, 2, 0, 2, 2, 0, 2, 0, 2, 0, 2, 2, 0, 2, 0];
+						
+	//ability flags(applies hacks that do the intended effect of the ability)
+	public static inline var DoubleMyon = 0;
+	public static inline var CanHide = 1;
+	public static inline var EatMystia = 2;
+	//(unused)
+	public static inline var JumpMan = 3;
+	public static inline var SpawnZombieFairies = 4;
+	public static inline var FireProof = 5;
+	public static inline var PreservePowBlock = 6;
+	public static inline var MusicSelector = 7;
+	public static inline var FriendlyUFO = 8;
+	public static inline var FlipResistance = 9;
+	public static inline var ElectricProof = 10;
+	public static inline var GapManipulator = 11;
 	
-	//faster speed but slightly reduced responsiveness and more floaty
-	public static inline var SuperSpeed = 0;
-	//start out with a myon and can carry a second one.
-	public static inline var DoubleMyon = 1;
-	//walk on ice with no penalty
-	public static inline var IceAffinity = 2;
-	//wrapping around the top row warps you to the bottom
-	public static inline var Warping = 3;
-	//causes client to ignore "Flip!" events
-	public static inline var FlipResistance = 4;
-	//sometimes when killing a redfairy a zombie fairy will spawn
-	public static inline var SpawnZombieFairies = 5;
-	//ignore firey platforms
-	public static inline var FireProof = 6;
-	//ability to cling to ceilings longer
-	public static inline var Floating = 7;
-	//kills mystia on contact even if unflipped
-	public static inline var EatMystia = 8;
-	//invincibility time increased
-	public static inline var MoreInvincibility = 9;
-	//a 50% chance to not use pow block hp when used
-	public static inline var PreservePowBlock = 10;
-	//when the player hits a block they teleport ontop of it
-	public static inline var Ambush = 11;
-	//Turns invisible&invincible if the player sits still long enough
-	public static inline var CanHide = 12;
-	//pressing down lets you fall through platforms
-	public static inline var FallThruPlatforms = 13;
-	//Immune to lightning
-	public static inline var ElectricProof = 14;
-	//ability to hit the entire row of blocks youre standing on
-	public static inline var Earthquake = 15;
-	//ability to gain super power status and improved stats by transforming into ExKeine
-	public static inline var ExKeine = 16;
-	//ability to throw a yinyang orb to attack enemies
-	public static inline var YinYangOrbs = 17;
-	//Accelerate quickly forward with superpower
-	public static inline var DashAttack = 18;
-	//
-	public static inline var ZaWarudo = 19;
-	//fires a chen bullet
-	public static inline var Cheeen = 20;
-	//ufos don't fire bullets
-	public static inline var FriendlyUFO = 21;
-	
-	//public static inline var Drums = 22;
-	//a straight moving bullet with vertical momentum
-	public static inline var StarBulletG = 22;
-	
-	//a shotgun shot
-	public static inline var StarBulletY = 23;
-	
-	//kills an enemy instead of killing you...if your cooldown is ready.
-	public static inline var EnemyEater = 26;
-	//teleports to your mouse
-	public static inline var Teleporter = 27;
-	//kill enemies by jumping on them(possibly too OP)
-	public static inline var JumpMan = 28;
-	//a lesser dash attack, can be used more often though
-	public static inline var LightDashAttack = 29;
-	//hits all block(identical to hitting powblock)
-	public static inline var KaPow = 30;
-	//mokou's bomb ability, kills everything and chars all blocks. 
-	public static inline var WorldScorcher = 31;
-	
-	public static inline var GapManipulator = 32;
-	
-	public static inline var WorldFreezer = 33;
-	//bumps 3 blocks at a time
-	public static inline var HeavyBonk = 34;
-	
-	public static inline var SpawnShanghai = 35;
-	
-	public static inline var MoreZombieFairies = 36;
-	
-	public static inline var DestructiveJump = 37;
-	
-	public static inline var ExtraLives = 38;
-	
-	public static inline var BounceEntities = 39;
-	
-	public static inline var TileDanmaku = 40;
-	
-	public static inline var InstantCollect = 41;
-	
-	public static inline var AngelOfDeath = 42;
-	
-	public static inline var Fairplay = 43;
-	
-	public static inline var SuwakoHoop = 44;
-	
-	public static inline var ExtraPoints = 45;
-	
-	public static inline var BecomeInvisible = 46;
-	
-	public static inline var AbsorbDamage = 47;
-	
-	public static inline var MusicSelector = 48;
-	
-	public static inline var HeadCannon = 49;
-	
-	public static inline var BasicShot = 50;
 	
 	
 	public var zombiefairychance = 0.04;
@@ -255,6 +169,7 @@ class Player extends Entity
 		fallaccel = base_fallaccel;
 		ability = new PlayerAbilityManager(this);
 		ability.SetAbilities();
+		flags.set(Player.SpawnZombieFairies, true);
 		switch (charname)
 		{
 			case "tojiko":
@@ -334,7 +249,7 @@ class Player extends Entity
 		Ofallaccel = fallaccel;
 		fallaccel2 = fallaccel / 16;
 		
-		baseflags = flags.clone();
+		//baseflags = flags.clone();
 	}
 	
 	public static var myplayer(get, null):Player;
@@ -362,6 +277,7 @@ class Player extends Entity
 				{
 					cooldown = maxcooldown;
 				}
+				baseflags = flags.clone();
 			}
 			ability.onbeginframe();
 			
@@ -615,7 +531,7 @@ class Player extends Entity
 				if ((superpower || (flags.get(JumpMan) && y<enemy.y && Vspeed>0)) && danger != enemy)
 				{
 					var DD:Dynamic = danger;
-					if (danger != null && danger.type == "Enemy" && (DD.charname == "Cirno" || DD.charname == "Iku"))
+					if (danger != null && danger.type == "Enemy" && (DD.charname == "Cirno" || DD.charname == "Iku") && danger.invincibility<=0)
 					{
 						game.SendEvent("Kill", danger.UID);
 					}

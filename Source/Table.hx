@@ -93,13 +93,14 @@ class Table extends Entity
 			readyinteract = false;
 			if (tossedBy != null && tossedBy == game.myplayer)
 			{
-				var danger = game.CollisionDetectPointDangerous(x + 24, y + 24);
-				if (enemy != null && !enemy.killed)
+				//var danger = game.CollisionDetectPointDangerous(x + 24, y + 24);
+				var danger = game.CollisionDetectTouchDangerous(this);
+				if (enemy != null && !enemy.killed && enemy.invincibility<=0)
 				{
 					game.SendEvent("Kill", enemy.UID);
 				}
 				var DD:Dynamic = danger;
-				if (danger != null && danger.type=="Enemy" && (DD.charname == "Cirno" || DD.charname=="Iku"))
+				if (danger != null && danger.type=="Enemy" && (DD.charname == "Cirno" || DD.charname=="Iku") && danger.invincibility<=0)
 				{
 					game.SendEvent("Kill", danger.UID);
 				}

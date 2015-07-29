@@ -12,5 +12,9 @@ class PreservePowBlock extends PlayerAbility
 		super(player);
 		description = "Extra powblock uses";
 	}
-	
+	override public function init() 
+	{
+		super.init();
+		player.flags.set(Player.PreservePowBlock, true);
+	}
 }

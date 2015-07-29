@@ -11,5 +11,9 @@ class GapManipulator extends PlayerAbility
 		super(player);
 		description = "Manipulate gaps";
 	}
-	
+	override public function init() 
+	{
+		super.init();
+		player.flags.set(Player.GapManipulator, true);
+	}
 }

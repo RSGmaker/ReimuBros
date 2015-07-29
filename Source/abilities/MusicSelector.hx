@@ -18,6 +18,7 @@ class MusicSelector extends PlayerAbility
 		player.maxcooldown = 10;
 		player.warncooldown = true;
 		song = 1;
+		player.flags.set(Player.MusicSelector, true);
 	}
 	override public function onframe() 
 	{

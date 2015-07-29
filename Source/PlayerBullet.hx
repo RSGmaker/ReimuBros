@@ -112,13 +112,13 @@ class PlayerBullet extends Entity
 		
 		if (tossedBy != null && tossedBy == game.myplayer)
 			{
-				if (enemy != null && !enemy.killed)
+				if (enemy != null && !enemy.killed && enemy.invincibility<=0)
 				{
 					game.SendEvent("Attack", enemy.UID);
 					HP--;
 				}
 				var DD:Dynamic = danger;
-				if (danger != null && danger.type=="Enemy" && (DD.charname == "Cirno" || DD.charname=="Iku"))
+				if (danger != null && danger.type=="Enemy" && (DD.charname == "Cirno" || DD.charname=="Iku") && danger.invincibility<=0)
 				{
 					game.SendEvent("Kill", danger.UID);
 					HP--;

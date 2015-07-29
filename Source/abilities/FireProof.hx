@@ -12,5 +12,9 @@ class FireProof extends PlayerAbility
 		super(player);
 		description = "Fire proof";
 	}
-	
+	override public function init() 
+	{
+		super.init();
+		player.flags.set(Player.FireProof, true);
+	}
 }

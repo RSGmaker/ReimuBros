@@ -252,7 +252,7 @@ class CharacterSelect extends Sprite
 		selectedcharacter.x = 10;
 		selectedcharacter.y = 2;
 		selectedcharacter.text = "";
-		selectedcharacter.width = 250-selectedcharacter.x;
+		selectedcharacter.width = 290-selectedcharacter.x;
 		selectedcharacter.mouseEnabled = false;
 		GUI.addChild(selectedcharacter);
 		makebuttons();
@@ -265,7 +265,7 @@ class CharacterSelect extends Sprite
 		
 		NextButton = AddButton("→ ");
 		
-		NextButton.x = 384;
+		NextButton.x = 284;
 		NextButton.y = 530;
 		NextButton.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 					if (!following)
@@ -283,7 +283,7 @@ class CharacterSelect extends Sprite
 				
 		PrevButton = AddButton("← ");
 		
-		PrevButton.x = 244;
+		PrevButton.x = 144;
 		PrevButton.y = 530;
 		PrevButton.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 					if (!following)
@@ -461,7 +461,8 @@ class CharacterSelect extends Sprite
 			var S:String = tf.text.toLowerCase();
 			#end
 			var dsc = "Can float briefly";
-			var AL = PlayerAbilityManager.GetAbilityList(PlayerAbilityManager.GetFlags(S));
+			//var AL = PlayerAbilityManager.GetAbilityList(PlayerAbilityManager.GetFlags(S));
+			var AL = PlayerAbilityManager.GetAbilities2(S);
 			dsc = "";
 			var c = 0;
 			while (c < AL.length)
@@ -1108,7 +1109,8 @@ class CharacterSelect extends Sprite
 		if (unlocked)
 		{
 			//var AA = (Player.Scharacters.indexOf(text) < 0);
-			var LL = PlayerAbilityManager.GetAbilityList(PlayerAbilityManager.GetFlags(text));
+			//var LL = PlayerAbilityManager.GetAbilityList(PlayerAbilityManager.GetFlags(text));
+			var LL = PlayerAbilityManager.GetAbilities2(text);
 			var AA = false;
 			if (LL.length == 1 && Std.is(LL[0], BasicShot) )
 			{
