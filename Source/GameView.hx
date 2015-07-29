@@ -534,6 +534,8 @@ class GameView extends Sprite
 		TF.x = 200;
 		TF.y = 10;
 		TF.visible = true;
+		
+		TF.cacheAsBitmap = true;
 		tmp = new TextFormat();
 		tmp.font = "Arial";
 		tmp.size = 66;
@@ -549,6 +551,7 @@ class GameView extends Sprite
 		addChild(gameover);
 		
 		scoreboard = new TextField();
+		scoreboard.cacheAsBitmap = true;
 		scoreboard.text = "";
 		scoreboard.x = 300;
 		scoreboard.y = 10;
@@ -3361,17 +3364,21 @@ class GameView extends Sprite
 			{
 				//made this still the main default blank message as it helps stabalize character movements anyways.
 				var D:Dynamic = { };
-				D.Hspeed = myplayer.Hspeed;
-				D.Vspeed = myplayer.Vspeed;
+				D.Hsp = myplayer.Hspeed;
+				D.Vsp = myplayer.Vspeed;
 				D.x = myplayer.x;
 				D.y = myplayer.y;
-				D.visible = myplayer.visible;
-				D.controller = myplayer.controller;
-				D.charname = myplayer.charname;
-				D.UID = myplayer.UID;
-				D.playername = this.playername;
-				D.score = myplayer.score;
-				D.playing = frame;
+				//D.visible = myplayer.visible;
+				D.con = myplayer.controller;
+				//if (frame % F == 0)
+				if (frame % 45 == 0)
+				{
+					D.ID = myplayer.UID;
+					D.char = myplayer.charname;
+					D.name = this.playername;
+					D.score = myplayer.score;
+				}
+				D.F = frame;
 				
 				//send a status update message instead if 
 			if (NP.Queue.length == 0 && frame % F == 0)
@@ -3381,7 +3388,7 @@ class GameView extends Sprite
 					SendStatus();
 				}
 			}
-			NP.SendData("UpdateCharacter", D);
+			NP.SendData("Upd", D);
 			}
 			
 			NP.Flush();

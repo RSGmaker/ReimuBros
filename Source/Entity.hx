@@ -112,6 +112,7 @@ class Entity extends Sprite
 		middle = 0;
 		feetposition = 0;
 		
+		mouseEnabled = false;
 	}
 	public function Customevent(data:Dynamic)
 	{
