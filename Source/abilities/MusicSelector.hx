@@ -10,7 +10,7 @@ class MusicSelector extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		
+		description = "Changes music";
 	}
 	override public function init() 
 	{

@@ -10,7 +10,7 @@ class InstantCollect extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		
+		description = "Instantly collect all items";
 	}
 	override public function init() 
 	{

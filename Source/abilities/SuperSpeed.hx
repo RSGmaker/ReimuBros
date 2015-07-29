@@ -10,6 +10,7 @@ class SuperSpeed extends PlayerAbility
 	public function new(player:Player)  
 	{
 		super(player);
+		description = "Moves quickly";
 	}
 	override public function init() 
 	{

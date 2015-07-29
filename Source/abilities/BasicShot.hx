@@ -4,17 +4,17 @@ package abilities;
  * ...
  * @author RSGmaker
  */
-class StarBulletY extends PlayerAbility
+class BasicShot extends PlayerAbility
 {
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Wide shot";
+		description = "Fires a magic bullet";
 	}
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 660;
+		player.maxcooldown = 420;
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -28,29 +28,28 @@ class StarBulletY extends PlayerAbility
 		if (player.isme && player.cooldown <= 0)
 		{
 			player.cooldown = player.maxcooldown;
-			var spd = 8;
 			var D:Dynamic = { };
 			D.x = player.x;
 			D.y = player.y + 30;
-			D.type = "starbullety";
+			D.type = "bullet";
 			D.scale = 0.8;
 			D.dir = player.Ldir;
 			D.Vspeed = 0;
 			if (player.Ldir >= 0)
 			{
-				D.Hspeed = spd;
+				D.Hspeed = 10;
 			}
 			else
 			{
-				D.Hspeed = -spd;
+				D.Hspeed = -10;
 			}
 			D.gravX = 0;
 			D.gravY = 0;
 			D.wrap = false;
 			game.SendEvent("PlayerDanmaku", D);
-			var i = 0;
 			D.Vspeed = 1;
-			while (i < 4)
+			var i = 0;
+			while (i < 1)
 			{
 				D.Vspeed += 1;
 				D.Hspeed -= D.dir;

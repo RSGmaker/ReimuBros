@@ -10,7 +10,7 @@ class TileDanmaku extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		
+		description = "Throws blocks";
 	}
 	override public function init() 
 	{

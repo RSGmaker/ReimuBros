@@ -10,7 +10,7 @@ class FallThruPlatforms extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		
+		description = "Digs down";
 	}
 	override public function onuse() 
 	{

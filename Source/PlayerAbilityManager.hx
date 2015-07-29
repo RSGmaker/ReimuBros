@@ -133,6 +133,10 @@ class PlayerAbilityManager
 		{
 			//var charname = player.charname;
 			//var flags = player.flags;
+			if (charname.indexOf("ALT")>-1)
+			{
+				charname = charname.substr(0, charname.length - 3);
+			}
 			switch (charname)
 		{
 			case "aya":
@@ -234,6 +238,28 @@ class PlayerAbilityManager
 				flags.set(Player.Floating, true);
 			case "sekibanki":
 				flags.set(Player.HeadCannon, true);
+			case "daiyousei":
+				flags.set(Player.Floating, true);
+			case "mystia":
+				flags.set(Player.Floating, true);
+			case "lunachild":
+				flags.set(Player.Floating, true);
+			case "starsaphire":
+				flags.set(Player.Floating, true);
+			case "elis":
+				flags.set(Player.Floating, true);
+			case "kurumi":
+				flags.set(Player.Floating, true);
+			case "gengetsu":
+				flags.set(Player.Floating, true);
+			case "mai":
+				flags.set(Player.Floating, true);
+			case "shinki":
+				flags.set(Player.Floating, true);
+			case "makairesident-a":
+				flags.set(Player.Floating, true);
+			case "makairesident-b":
+				flags.set(Player.Floating, true);
 			default:
 		}
 		/*if (cooldown == 0 && maxcooldown > 0)
@@ -242,7 +268,8 @@ class PlayerAbilityManager
 		}*/
 		if (flags.isempty())
 		{
-			flags.set(Player.Floating, true);
+			//flags.set(Player.Floating, true);
+			flags.set(Player.BasicShot, true);
 		}
 		flags.set(Player.SpawnZombieFairies, true);
 		}
@@ -252,8 +279,12 @@ class PlayerAbilityManager
 	//public static var Abilities:Array<Class> = [abilities.SuperSpeed,abilities.SpawnShanghai,abilities.MoreZombieFairies,abilities.DoubleMyon,abilities.Floating,abilities.YinYangOrbs,abilities.IceAffinity,abilities.WorldFreezer,abilities.GapManipulator,abilities.FlipResistance];
 	public static function GetAbilities(player:Player):Array<PlayerAbility>
 	{
+		return GetAbilityList(player.flags,player);
+	}
+	public static function GetAbilityList(flags:FlagManager,player:Player=null):Array<PlayerAbility>
+	{
 		var ret = new Array<PlayerAbility>();
-		var flags = player.flags;
+		//var flags = player.flags;
 		if (flags.get(Player.SuperSpeed))
 		{
 			ret[ret.length] = new abilities.SuperSpeed(player);
@@ -437,6 +468,10 @@ class PlayerAbilityManager
 		if (flags.get(Player.HeadCannon))
 		{
 			ret[ret.length] = new abilities.HeadCannon(player);
+		}
+		if (flags.get(Player.BasicShot))
+		{
+			ret[ret.length] = new abilities.BasicShot(player);
 		}
 		return ret;
 	}

@@ -9,7 +9,7 @@ class SuwakoHoop extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		
+		description = "Throws an iron ring";
 	}
 	override public function init() 
 	{

@@ -10,7 +10,7 @@ class BecomeInvisible extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		
+		description = "Turns invisible";
 	}
 	override public function init() 
 	{

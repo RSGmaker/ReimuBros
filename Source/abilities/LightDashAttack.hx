@@ -9,7 +9,7 @@ class LightDashAttack extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		
+		description = "Light dash attack";
 	}
 	override public function init() 
 	{

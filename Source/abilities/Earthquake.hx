@@ -10,7 +10,7 @@ class Earthquake extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		
+		description = "Earthquakes";
 	}
 	override public function init() 
 	{

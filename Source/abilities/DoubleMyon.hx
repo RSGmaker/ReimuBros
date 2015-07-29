@@ -10,6 +10,7 @@ class DoubleMyon extends PlayerAbility
 	public function new(player:Player)  
 	{
 		super(player);
+		description = "Can carry 2 myons\nstart with 1 myon";
 	}
 	override public function init() 
 	{

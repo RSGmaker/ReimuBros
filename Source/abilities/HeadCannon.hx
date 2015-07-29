@@ -11,7 +11,7 @@ class HeadCannon extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		
+		description = "Shoots upwards";
 	}
 	override public function init() 
 	{

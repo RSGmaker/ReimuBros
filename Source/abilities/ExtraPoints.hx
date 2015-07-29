@@ -10,7 +10,7 @@ class ExtraPoints extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		
+		description = "Items give more score";
 	}
 	override public function oncollect(E:EntityItem) 
 	{

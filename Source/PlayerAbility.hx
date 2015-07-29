@@ -18,13 +18,17 @@ class PlayerAbility
 	public var player:Player;
 	public var initialized:Bool;
 	public var game:GameView;
+	public var description:String = "";
 	//public var cooldown:Int;
 	//public var timepowered:Int;
 	//public var poweractive:Bool;
 	public function new(player:Player) 
 	{
 		this.player = player;
-		game = player.game;
+		if (player != null)
+		{
+			game = player.game;
+		}
 	}
 	public function init()
 	{

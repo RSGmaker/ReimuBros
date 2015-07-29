@@ -9,7 +9,7 @@ class WorldFreezer extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		
+		description = "Chills the world";
 	}
 	override public function init() 
 	{

@@ -9,6 +9,7 @@ class KaPow extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
+		description = "flips everything over";
 	}
 	override public function init() 
 	{
