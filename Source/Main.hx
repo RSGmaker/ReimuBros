@@ -110,7 +110,7 @@ class Main extends Sprite {
 	public var GameFlags:FlagManager;
 	public function new () {
 		super ();
-		
+		stage.quality = flash.display.StageQuality.LOW;
 		AL = new Animationloader();
 		_this = this;
 		optionscreen = null;

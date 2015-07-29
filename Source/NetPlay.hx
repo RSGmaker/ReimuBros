@@ -28,6 +28,7 @@ class NetPlay
 	//whether or not this client ever posted a "WhosWho" or "IAm" yet
 	public var Announced:Bool;
 	public var Room:String;
+	public var game:GameView;
 	
 	public function new() 
 	{
@@ -92,6 +93,7 @@ class NetPlay
 	}
 	public function start()
 	{
+		game = GameView._this;
 		started = true;
         _nc     = new NetConnection();
         var nc = _nc;
@@ -154,19 +156,23 @@ class NetPlay
 						
 					case "NetGroup.Posting.Notify":
 						var A:Array<Dynamic> = e.info.message;
-						while (A.length > 0)
+						var i = 0;
+						while (/*A.length > 0*/ i<A.length)
 						{
-							var D:Dynamic = A[0];
+							var D:Dynamic = A[i];
 							OnPosting(D);
-							A.remove(D);
+							//A.remove(D);
+							i++;
 						}
 					case "NetGroup.SendTo.Notify":
 						var A:Array<Dynamic> = e.info.message;
-						while (A.length > 0)
+						var i = 0;
+						while (/*A.length > 0*/ i<A.length)
 						{
-							var D:Dynamic = A[0];
+							var D:Dynamic = A[i];
 							OnPosting(D);
-							A.remove(D);
+							//A.remove(D);
+							i++;
 						}
 					
 				}
@@ -190,9 +196,9 @@ class NetPlay
 			if (groupstarted)
 			{
 			var msg:Dynamic = { };
-			msg.text = message;
-			msg.data = data;
-			msg.id = NID;
+			msg.t = message;
+			msg.d = data;
+			msg.i = NID;
 			Queue[Queue.length] = msg;
 			}
 		}
@@ -201,9 +207,9 @@ class NetPlay
 			if (groupstarted)
 			{
 			var msg:Dynamic = { };
-			msg.text = message;
-			msg.data = null;
-			msg.id = NID;
+			msg.t = message;
+			msg.d = null;
+			msg.i = NID;
 			Queue[Queue.length] = msg;
 			}
 		}
@@ -220,15 +226,15 @@ class NetPlay
 		}
 		private function OnPosting(message:Dynamic):Void{
 			
-			if ((""+message.id) != (""+_nc.nearID))
+			if ((""+message.i) != (""+_nc.nearID))
 			{
 			//try
 			{
-				if (message.text == "UpdateCharacter")
+				if (message.t == "Upd")
 				{
 					if (!Announced && groupstarted)
 			{
-				GameView._this.TF.text = "Announcing!";
+				//GameView._this.TF.text = "Announcing!";
 				var D:Dynamic = { };
 				D.ElapsedTime = Timer.stamp() - StartTime;
 					
@@ -238,33 +244,44 @@ class NetPlay
 				SendMessage("WhosWho");
 				Announced = true;
 			}
-					var i = message.data;
-					var M = GameView._this.GetPlayer(message.id);
+					var i = message.d;
+					var M = game.GetPlayer(message.i);
 					var add = false;
 					if (M == null)
 					{
-						M = new Player(i.charname, new Array<Bool>());
-						M.ID = message.id;
+						if (i.name != null)
+						{
+						M = new Player(i.char, new Array<Bool>());
+						M.ID = message.i;
 						//this might fix the :a bunch of reward spawning issue. so they dont spawn on a glitchy quit scenario
 						M.spentscore = i.score;
 						
-						M.playing = i.playing;
-						GameView._this.AddPlayer(M);
+						M.playing = i.F;
+						game.AddPlayer(M);
+						}
 					}
-					M.controller[0] = i.controller[0];
-					M.controller[1] = i.controller[1];
-					M.controller[2] = i.controller[2];
-					M.controller[3] = i.controller[3];
+					if (M != null)
+					{
+					M.controller[0] = i.con[0];
+					M.controller[1] = i.con[1];
+					M.controller[2] = i.con[2];
+					M.controller[3] = i.con[3];
 					M.x = i.x;
 					M.y = i.y;
-					M.Hspeed = i.Hspeed;
-					M.Vspeed = i.Vspeed;
-					M.visible = i.visible;
-					M.UID = i.UID;
+					M.Hspeed = i.Hsp;
+					M.Vspeed = i.Vsp;
+					//M.visible = i.visible;
+					
+					
+					if (i.name != null)
+					{
+					M.UID = i.ID;
+					M.playername = i.name;
 					M.score = i.score;
-					M.playername = i.playername;
-					M.playing = i.playing;
-					M.frame = GameView._this.frame;
+					}
+					M.playing = i.F;
+					M.frame = game.frame;
+					
 					//tries to predict current state of player
 					//M.catchupsmall();
 					M.catchingup = true;
@@ -272,12 +289,13 @@ class NetPlay
 					//M.update();
 					//M.update();
 					M.catchingup = false;
+					}
 				}
 				/*if (message.text != "UpdateCharacter")
 			{
 				GameView._this.TF.text =  message.text;
 			}*/
-				if (message.text == "WhosWho")
+				if (message.t == "WhosWho")
 				{
 					////GameView._this.TF.text = "Player request!";
 					//do not send start time, as that is relative info to client.
@@ -286,12 +304,12 @@ class NetPlay
 					
 					SendData("IAm", D);
 				}
-				if (message.text == "IAm")
+				if (message.t == "IAm")
 				{
 					var i = 0;
 					while (i < Connections.length)
 					{
-						if ((""+Connections[i].id) == (""+message.id))
+						if ((""+Connections[i].id) == (""+message.i))
 						{
 							i = Connections.length + 2;
 						}
@@ -303,10 +321,10 @@ class NetPlay
 					}
 					if (i != Connections.length + 2)
 					{
-						GameView._this.TF.text = "blargen";
+						//GameView._this.TF.text = "blargen";
 						var D:Dynamic = { };
-						D.id = message.id;
-						D.StartTime = Timer.stamp() - message.data.ElapsedTime;
+						D.id = message.i;
+						D.StartTime = Timer.stamp() - message.d.ElapsedTime;
 						Connections[Connections.length] = D;
 						Connections.sort(function(a:Dynamic, b:Dynamic):Int{
 							if (a.StartTime < b.StartTime) return -1;
@@ -323,7 +341,7 @@ class NetPlay
 							if (Main._this.game != null)
 							{
 								Main._this.game.Hoster = true;
-								Main._this.game.TF.text = "Now Hosting!!!";
+								//Main._this.game.TF.text = "Now Hosting!!!";
 							}
 						}
 						else
@@ -331,15 +349,15 @@ class NetPlay
 							if (Main._this.game != null)
 							{
 								Main._this.game.Hoster = false;
-								Main._this.game.TF.text = "Joined game!";
+								//Main._this.game.TF.text = "Joined game!";
 							}
 						}
 					}
 					
 				}
-				if (message.text == "GameEvent")
+				if (message.t == "GameEvent")
 				{
-					GameView._this.ProcessEvent(message.data.evt,message.id, message.data.data);
+					game.ProcessEvent(message.d.evt,message.i, message.d.data);
 				}
 			}
 			}

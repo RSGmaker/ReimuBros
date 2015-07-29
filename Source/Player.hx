@@ -251,6 +251,7 @@ class Player extends Entity
 		Haccel = accel * 0.35;
 		Hdeccel = deccel * 0.35;
 		
+		
 		mxspd = base_mxspd;
 		fallaccel = base_fallaccel;
 		ability = new PlayerAbilityManager(this);

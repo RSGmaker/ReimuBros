@@ -14,7 +14,7 @@ class PowBlock extends Entity
 		type = "PowBlock";
 		HP = 4;
 		bonked = -1000;
-		UID = -100-GameView._this.entities.length;
+		UID = -100 - GameView._this.entities.length;
 	}
 	public override function update()
 	{
