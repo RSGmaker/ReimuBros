@@ -12,5 +12,9 @@ class FriendlyUFO extends PlayerAbility
 		super(player);
 		description = "UFOs won't fire";
 	}
-	
+	override public function init() 
+	{
+		super.init();
+		player.flags.set(Player.FriendlyUFO, true);
+	}
 }

@@ -12,5 +12,10 @@ class EatMystia extends PlayerAbility
 		super(player);
 		description = "Kills mystias on\ncontact";
 	}
+	override public function init() 
+	{
+		super.init();
+		player.flags.set(Player.EatMystia, true);
+	}
 	
 }

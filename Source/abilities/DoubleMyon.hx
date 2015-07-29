@@ -21,6 +21,7 @@ class DoubleMyon extends PlayerAbility
 					D.UID = player.UID;
 					game.SendEvent("AttachMyon", D);
 		}
+		player.flags.set(Player.DoubleMyon, true);
 	}
 	override public function onrespawn() 
 	{

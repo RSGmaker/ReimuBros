@@ -1176,6 +1176,14 @@ class GameView extends Sprite
 				ProcessEvent("Kill", ID, data);
 			}
 		}
+		if (evt == "Remove")
+		{
+			var E = EntityFromUID(data);
+			if (E != null)
+			{
+				E.alive = false;
+			}
+		}
 		if (evt == "Kill" || evt == "Destroy") {
 			var E = EntityFromUID(data);
 			if (E != null && !E.killed)
@@ -1857,6 +1865,11 @@ class GameView extends Sprite
 				}
 			}
 		}
+		if (evt == "Take")
+		{
+			var D:Dynamic = EntityFromUID(data.target);
+			D.holder = EntityFromUID(data.UID);
+		}
 		if (evt == "Earthquake")
 		{
 			SoundManager.Play("pow");
@@ -2020,6 +2033,24 @@ class GameView extends Sprite
 				}
 				i += 1;
 			}
+		}
+		if (evt == "RefreshBlocks")
+		{
+			var i = 0;
+			while (i < entities.length)
+			{
+				if (entities[i].type == "Block")
+				{
+					var D:Dynamic = entities[i];
+					D.Clean();
+					FlashColor(0xFFFFFF, 0.4, 0, 0.1);
+				}
+				i++;
+			}
+		}
+		if (evt == "ClearSpawnList")
+		{
+			SpawnList.clear();
 		}
 		if (evt == "CharWorld")
 		{
@@ -2674,6 +2705,39 @@ class GameView extends Sprite
 			O.x = data.x;
 			AddObject(O);
 		}
+		if (evt == "SpawnHunters")
+		{
+			var D:Dynamic = { };
+			D.type = "kaguya";
+			D.UID = Math.random();
+			/*if (Math.random() > 0.5)
+			{
+				D.x = Math.random() * 800;
+				D.Ldir = -1;
+			}
+			else
+			{
+				D.x = Math.random() * 800;
+				D.Ldir = 1;
+			}*/
+			D.x = 0;
+			D.Ldir = 1;
+			//D.y = -100;
+			D.y = 500;
+			D.alive = true;
+			D.Hspeed = 0;
+			D.Vspeed = 0;
+			D.enraged = false;
+			D.visible = true;
+			D.rank = rank;
+			D.spawns = 0;
+			SendEvent("SpawnEnemy", D);
+			D.x = 800;
+			D.Ldir = -1;
+			D.type = "mokou";
+			D.UID = Math.random();
+			SendEvent("SpawnEnemy", D);
+		}
 	}
 	// Event Handlers
 	
@@ -3038,6 +3102,18 @@ class GameView extends Sprite
 					if (D.type == "tewi")
 					{
 						E = new Tewi();
+						type = "Enemy";
+					}
+					if (D.type == "kaguya" || D.type == "mokou")
+					{
+						if (D.type == "mokou")
+						{
+							E = new TwuckHunter(true);
+						}
+						else
+						{
+							E = new TwuckHunter(false);
+						}
 						type = "Enemy";
 					}
 					if (D.type == "satori")
@@ -4035,7 +4111,7 @@ class GameView extends Sprite
 		while (AR > 1)
 		{
 			//spawnrate *= 0.96;
-			spawnrate *= 0.97;
+			spawnrate *= 0.965;
 			tmp *= 1.4;
 			if (tmp < 1)
 			{

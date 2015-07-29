@@ -17,6 +17,7 @@ class CanHide extends PlayerAbility
 	{
 		super.init();
 		charge = 150;
+		player.flags.set(Player.CanHide, true);
 	}
 	override public function onframe() 
 	{
