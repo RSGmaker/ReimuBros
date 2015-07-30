@@ -44,7 +44,7 @@ class Meiling extends Enemy
 		if (!started)
 		{
 			started = true;
-			awake = 45 + Math.floor(300 * UID);
+			awake = 75 + Math.floor(900 * UID);
 		}
 		if (!killed)
 		{
