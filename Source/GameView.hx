@@ -652,11 +652,20 @@ class GameView extends Sprite
 	//sets down platforms and puts holes in the platforms
 	public function setformation()
 	{
+		resetblocks();
 		if (platformformation == 0)
 		{
 			setholeinplatform(600 - 192, 256, 512,false);
-			setholeinplatform(600 - 352, 192, 576,true);
-			setholeinplatform(600 - 512, 256, 512, false);
+			//setholeinplatform(600 - 192, 288, 480,false);
+			//setholeinplatform(600 - 352, 192, 576,true);
+			setholeinplatform(600 - 352, 160-32, 608+32,true);
+			//setholeinplatform(600 - 512, 256, 512, false);
+			setholeinplatform(600 - 512, 288, 480, false);
+			
+			//addsectioninplatform(600 - 352, -1000, 96, false);
+			//addsectioninplatform(600 - 352, 672, 2000, false);
+			
+			
 			setplatformasplatform(600 - 192, false);
 			setplatformasplatform(600 - 352, false);
 			setplatformasplatform(600 - 512, false);
@@ -669,6 +678,28 @@ class GameView extends Sprite
 			setholeinplatform(600 - 512, -256, 5120, false);
 			currentformation = 1;
 		}
+	}
+	public function resetblocks()
+	{
+		var i = 0;
+			while (i < entities.length)
+			{
+				
+				var E = entities[i];
+				var D:Dynamic = E;
+				
+				if (E.type == "Block")
+				{
+					var B:Block = D;
+					//D.Defrost();
+					B.Clean();
+					//if (B.y == Y)
+					{
+						B.solid = true;
+					}
+				}
+				i += 1;
+			}
 	}
 	public function spawnplatform(Y:Float)
 	{
@@ -683,6 +714,36 @@ class GameView extends Sprite
 			AddObject(block);
 			xx += 32;
 		}
+	}
+	public function addsectioninplatform(Y:Float,minx:Float, maxx:Float, inverse:Bool)
+	{
+		var i = 0;
+			while (i < entities.length)
+			{
+				
+				var E = entities[i];
+				var D:Dynamic = E;
+				
+				if (E.type == "Block")
+				{
+					var B:Block = D;
+					//D.Defrost();
+					if (B.y == Y)
+					{
+						var ok = (B.x > minx && B.x < maxx);
+						
+						if (ok)
+						{
+							if (inverse)
+							{
+								ok = !ok;
+							}
+							B.solid = ok;
+						}
+					}
+				}
+				i += 1;
+			}
 	}
 	public function setholeinplatform(Y:Float,minx:Float, maxx:Float, inverse:Bool)
 	{
@@ -787,7 +848,7 @@ class GameView extends Sprite
 			Background.alpha = 0;
 			
 		L = Math.floor((level - 1) / 5);
-		if (GameFlags.get(Main.AltMusic)/* || (playerspick == "lunasa" || playerspick == "lyrica" || playerspick == "merlin")*/)
+		if (GameFlags.get(Main.AltMusic) || (playerspick == "benben" || playerspick == "yatsuhashi"))
 		{
 			L += 6;
 		}
@@ -1584,9 +1645,21 @@ class GameView extends Sprite
 				}
 			}
 		}
+		if (evt == "RefreshPowBlock")
+		{
+			powblock.HP = 4;
+			powblock.scaleY = 1;
+			powblock.solid = true;
+			powblock.visible = true;
+			if (Hoster)
+			{
+				ControlEvent = true;
+			}
+		}
 		if (evt == "Continue")
 		{
 			P.lives = startinglives;
+			P.ability.oncontinue();
 			/*if (level > 0 && level % 5 != 1)
 			{
 				level--;
@@ -1858,9 +1931,9 @@ class GameView extends Sprite
 				else
 				{
 					var D:Dynamic = EntityFromUID(data);
-					P.ability.oncollect(D);
 					if (D != null && D.alive)
 					{
+						P.ability.oncollect(D);
 						D.Collect(P);
 					}
 				}
