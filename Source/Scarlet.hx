@@ -189,6 +189,10 @@ class Scarlet extends Enemy
 	alive = false;
 	}
 	}
+	if (!alive && game.myplayer == bonkedby)
+	{
+		Main._this.savedata.data.unlock[Player.characters.indexOf(who)] = true;
+	}
 	}
 	public override function bump()
 	{

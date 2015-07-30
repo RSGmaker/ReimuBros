@@ -165,6 +165,10 @@ class Rumia extends Enemy
 	alive = false;
 	}
 	}
+	if (!alive && game.myplayer == bonkedby)
+	{
+		Main._this.savedata.data.unlock[Player.characters.indexOf("rumia")] = true;
+	}
 	}
 	public override function bump()
 	{

@@ -185,6 +185,10 @@ class Satori extends Enemy
 	alive = false;
 	}
 	}
+	if (!alive && game.myplayer == bonkedby)
+	{
+		Main._this.savedata.data.unlock[Player.characters.indexOf(rename)] = true;
+	}
 	}
 	public override function bump()
 	{

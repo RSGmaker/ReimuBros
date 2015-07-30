@@ -64,6 +64,8 @@ class CharacterSelect extends Sprite
 	public var backlayerentities:Array<MiniEntity>;
 	public var timetospawn:Int;
 	
+	private var filterArr:Array<flash.filters.BitmapFilter>;
+	
 	
 	///mini game variables
 	
@@ -258,6 +260,15 @@ class CharacterSelect extends Sprite
 		makebuttons();
 		refreshbuttons();
 		selectedcharacter.setTextFormat(tmp);
+		
+		var AA = new flash.filters.DropShadowFilter();
+		AA.alpha = 1;
+		AA.distance = 3;
+		AA.alpha = 25;
+		AA.color = 0;
+		filterArr = new Array();
+		filterArr[0] = AA;
+		selectedcharacter.filters = filterArr;
 		
 		SoundManager.PlayMusic("characterselect");
 		if (ButtonsPage.length > 1 && ButtonsPage[1].length>0)

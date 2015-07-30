@@ -40,7 +40,7 @@ class TrophyItem extends CarryItem
 		super.update();
 		if (!started)
 		{
-			if (UID < 0.1)
+			if (UID < 0.2 && game.level>15)
 			{
 				ChangeAnimation("truck");
 				twuck = true;
@@ -74,10 +74,19 @@ class TrophyItem extends CarryItem
 	}
 	public override function Death() 
 	{
-		if (holder.type == "Player")
+		if (holder!=null && holder.type == "Player")
 		{
 			var D:Dynamic = holder;
 			D.score += 5000;
+			if (twuck)
+			{
+				D.score += 5000;
+				if (game.myplayer == holder)
+				{
+					Main._this.savedata.data.unlock[Player.characters.indexOf("mokou")] = true;
+					Main._this.savedata.data.unlock[Player.characters.indexOf("kaguya")] = true;
+				}
+			}
 		}
 	}
 }
