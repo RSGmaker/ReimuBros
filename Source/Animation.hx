@@ -37,11 +37,18 @@ class Animation extends Bitmap
 		Limage_index = -9999999999999999;
 		animation = ani;
 	}
-	public function ChangeAnimation(ani:Array<BitmapData>):Void {
+	public function ChangeAnimation(ani:Array<BitmapData>,reset:Bool=true):Void {
 		if (animation != ani)
 		{
-			this.bitmapData = ani[0];
-			image_index = 0;
+			if (reset)
+			{
+				image_index = 0;
+				this.bitmapData = ani[0];
+			}
+			else
+			{
+				this.bitmapData = ani[Math.floor(image_index) % ani.length];
+			}
 			//image_speed = 0;
 			animation = ani;
 		}

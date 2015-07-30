@@ -87,11 +87,20 @@ class UFO extends Enemy
 		if (iter > 0)
 		{
 			iter --;
+			if (iter < 12)
+			{
+				visuallyEnraged = !visuallyEnraged;
+			}
+			if (iter < 4)
+			{
+				visuallyEnraged = true;
+			}
 		}
 		else
 		{
 			{
-				iter = 30 + rng.twist(0, 1, 270-reducetime)[0];
+				iter = 30 + rng.twist(0, 1, 270 - reducetime)[0];
+				visuallyEnraged = false;
 			}
 			if (game.Hoster)
 			{
@@ -112,6 +121,7 @@ class UFO extends Enemy
 		else
 		{
 			y--;
+			visuallyEnraged = false;
 			if (y < -200)
 			{
 				if (alive)
