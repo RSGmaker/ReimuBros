@@ -71,15 +71,21 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.ClearSpawnList(null), names:["rin"] };
 		L[L.length] = { type:new abilities.RefreshBlocks(null), names:["lily"] };
 		L[L.length] = { type:new abilities.MasterSpark(null), names:["yuuka"] };
+		L[L.length] = { type:new abilities.AlternateMusic(null), names:["benben", "yatsuhashi"] };
+		L[L.length] = { type:new abilities.VampiricTouch(null), names:["remilia"] };
+		L[L.length] = { type:new abilities.MoreLives(null), names:["shanghai"] };
+		L[L.length] = { type:new abilities.OneWeekGirl(null), names:["patchouli"] };
 		
 		
-		L[L.length] = { type:new abilities.BasicShot(null), names:[""] };
+		
+		L[L.length] = { type:new abilities.BasicShot(null), names:["benben","yatsuhashi"] };
 	}
 	public function init()
 	{
 		var i = 0;
 		while (i < abilities.length)
 		{
+			abilities[i].player = player;
 			abilities[i].init();
 			i++;
 		}
@@ -172,6 +178,16 @@ class PlayerAbilityManager
 		while (i < abilities.length)
 		{
 			abilities[i].onbumped(E);
+			i++;
+		}
+	}
+	
+	public function oncontinue()
+	{
+		var i = 0;
+		while (i < abilities.length)
+		{
+			abilities[i].oncontinue();
 			i++;
 		}
 	}
