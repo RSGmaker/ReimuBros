@@ -90,6 +90,11 @@ class PlayerAbility
 		
 	}
 	
+	public function oncontinue()
+	{
+		
+	}
+	
 	
 	//make each characters abilities
 }
