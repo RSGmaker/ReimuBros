@@ -78,18 +78,26 @@ class Chen extends Enemy
 		{
 			danmaku = 15+rng.twist(rng.seed, 1, 540-reducetime)[0];
 		}
-		if (danmaku > -1000 && game.Hoster)
+		if (danmaku > -1000/* && game.Hoster*/)
 		{
 			if (danmaku < 1)
 			{
-				var D:Dynamic = { };
-				D.UID = UID;
-				game.SendEvent("ChenDanmaku", D);
+				if (game.Hoster)
+				{
+					var D:Dynamic = { };
+					D.UID = UID;
+					game.SendEvent("ChenDanmaku", D);
+				}
+				visuallyEnraged = false;
 				danmaku = 15+rng.twist(rng.seed, 1, 540-reducetime)[0];
 			}
 			else
 			{
 				danmaku -= 1;
+				if (danmaku < 8)
+				{
+					visuallyEnraged = !visuallyEnraged;
+				}
 			}
 		}
 		animate();

@@ -65,7 +65,7 @@ class Entity extends Sprite
 	public var game:GameView;
 	
 	public var invincibility:Int;
-	public function ChangeAnimation(ani:String)
+	public function ChangeAnimation(ani:String,reset:Bool=true)
 	{
 		if (image == null)
 		{
@@ -74,7 +74,7 @@ class Entity extends Sprite
 		}
 		else
 		{
-			image.ChangeAnimation(game.AL.GetAnimation(ani));
+			image.ChangeAnimation(game.AL.GetAnimation(ani),reset);
 		}
 	}
 	public function animate()

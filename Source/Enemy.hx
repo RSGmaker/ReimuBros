@@ -129,11 +129,11 @@ class Enemy extends Entity
 		}
 		if (Ldir > 0)
 		{
-			ChangeAnimation(C);
+			ChangeAnimation(C,false);
 		}
 		if (Ldir < 0)
 		{
-			ChangeAnimation(C+"F");
+			ChangeAnimation(C+"F",false);
 		}
 	}
 	
