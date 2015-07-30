@@ -182,6 +182,10 @@ class Nue extends Enemy
 	alive = false;
 	}
 	}
+	if (!alive && game.myplayer == bonkedby)
+	{
+		Main._this.savedata.data.unlock[Player.characters.indexOf("nue")] = true;
+	}
 	}
 	public override function bump()
 	{

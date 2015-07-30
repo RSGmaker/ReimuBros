@@ -16,6 +16,7 @@ class Block extends Entity
 		super(ani);
 		this.visible = false;
 		Visual = new Entity(ani);
+		Visual.visible = false;
 		GameView._this.addChild(Visual);
 		Flames = new Entity("flames");
 		Flames.visible = false;

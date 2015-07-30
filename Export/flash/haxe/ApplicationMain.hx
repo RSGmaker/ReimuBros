@@ -346,6 +346,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/diosakuyaALT0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/doremy0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		

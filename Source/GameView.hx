@@ -317,14 +317,14 @@ class GameView extends Sprite
 			//shrine
 			if (generalstage == 0)
 			{
-				L = L.concat(["reimu", "marisa", "sanae", "kanako", "suwako", "alice", "shanghai", "suika"]);
-				L = L.concat(["sara", "louise", "yuki", "mai", "ayana", "yumeko", "shinki", "makairesident-a", "makairesident-b", "orange", "kurumi", "elly", "rengeteki"/*, "yuuka"*/, "mugetsu", "gengetsu", "ellen", "kotohime", "kana", "rikako", "chiyuri", "yumemi", "ruukoto", "rika", "noroiko", "meira", "matenshi", "shingyoku", "elis", "sariel", "mima", "konngara"]);
+				L = L.concat(["reimu", "marisa", "sanae", "kanako", "suwako", "alice", "shanghai"/*, "suika"*/]);
+				L = L.concat(["sara", "louise", "yuki", "mai", "ayana", "yumeko", "shinki", "makairesident-a", "lilith", "orange", "kurumi", "elly", "rengeteki"/*, "yuuka"*/, "mugetsu", "gengetsu", "ellen", "kotohime", "kana", "rikako", "chiyuri", "yumemi", "ruukoto", "rika", "noroiko", "meira", "matenshi", "shingyoku", "elis", "sariel", "mima", "konngara"]);
 				L = L.concat(["lily", "lyrica", "lunasa", "merlin","youmu", "yuyuko"]);
 			}
 			//sdm
 			if (generalstage == 1)
 			{
-				L = L.concat(["daiyousei", "meiling", "koakuma", "patchouli", "sakuya", "remilia", "flandre", "rin"]);
+				L = L.concat(["daiyousei", "meiling", "koakuma", "patchouli", "sakuya",/* "remilia", "flandre",*/ "rin"]);
 				L = L.concat(["lunachild", "starsaphire", "sunnymilk"]);
 			}
 			//space
@@ -339,7 +339,7 @@ class GameView extends Sprite
 			//underground
 			if (generalstage == 3)
 			{
-				L = L.concat([/*"kisume", */"yamame", "parsee", "yuugi", "satori", "orin", "utsuho", "koishi"]);
+				L = L.concat([/*"kisume", */"yamame", "parsee", "yuugi", /*"satori", "koishi",*/ "orin", "utsuho"]);
 				L = L.concat(["shizuha", "minoriko", "hina", "nitori", "momiji"/*, "sanae", "kanako", "suwako"*/]);
 			}
 			//palanquin ship
@@ -351,7 +351,7 @@ class GameView extends Sprite
 			//eintei
 			if (generalstage == 5)
 			{
-				L = L.concat(["wriggle", "mystia", "keine", "tewi", "udongein", "eirin", "kaguya", "mokou"]);
+				L = L.concat(["wriggle", "mystia", "keine", "tewi", "udongein", "eirin"/*, "kaguya", "mokou"*/]);
 				L = L.concat(["wakasagihime", "sekibanki", "kagerou", "benben", "yatsuhashi", "seija", "shinmyoumaru", "raiko"]);
 			}
 			}
@@ -376,7 +376,7 @@ class GameView extends Sprite
 				"rika","noroiko", "meira", "matenshi",
 				"ellen", "kotohime", "kana", "rikako", "chiyuri", "yumemi", "ruukoto",
 				"orange", "kurumi", "elly", "rengeteki"/*, "yuuka"*/, "mugetsu", "gengetsu",
-				"sara", "louise"/*,"alice"*/, "yuki", "mai", "ayana", "yumeko", "shinki", "makairesident-a", "makairesident-b"]);
+				"sara", "louise"/*,"alice"*/, "yuki", "mai", "ayana", "yumeko", "shinki", "makairesident-a", "lilith"]);
 			}
 		}
 		if (L.length == 0)
@@ -1189,6 +1189,7 @@ class GameView extends Sprite
 			if (E != null && !E.killed)
 			{
 				P.ability.onkill(E);
+				E.bonkedby = P;
 				if (evt == "Kill" && me && E.myMyon != null/* && P.myMyon == null*/)
 				{
 					var ok = (P.myMyon == null);
@@ -1951,6 +1952,10 @@ class GameView extends Sprite
 			{
 				powblock.HP = data.HP;
 			}
+			if (myplayer == P)
+			{
+				Main._this.savedata.data.unlock[Player.characters.indexOf("suika")] = true;
+			}
 			SoundManager.Play("pow");
 			var i = 0;
 			while (i < entities.length)
@@ -2582,6 +2587,15 @@ class GameView extends Sprite
 				AddObject(Y);
 			}
 		}
+		if (evt == "PlayerMasterSpark")
+		{
+			var MS = new PlayerMasterSpark();
+			MS.y = P.y;
+			MS.x = P.x;
+			MS.user = P;
+			AddObject(MS);
+			SoundManager.Play("masterspark");
+		}
 		if (evt == "MasterSpark")
 		{
 			var MS = new MasterSpark();
@@ -2616,7 +2630,7 @@ class GameView extends Sprite
 		if (evt == "ZaWarudo")
 		{
 			SoundManager.Play("zawarudo");
-			P.ChangeAnimation("diosakuya");
+			P.ChangeAnimation("dio"+P.charname);
 			P.Hspeed = 0;
 			P.Vspeed = 0;
 			pausetime = 5.000;

@@ -178,7 +178,7 @@ class Player extends Entity
 				feetposition -= 2;
 			case "makairesident-a":
 				feetposition -= 2;
-			case "makairesident-b":
+			case "lilith":
 				feetposition -= 1;
 			case "matenshi":
 				feetposition -= 1;

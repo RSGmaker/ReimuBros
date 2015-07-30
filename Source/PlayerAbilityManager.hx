@@ -70,6 +70,7 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.HeadCannon(null), names:["sekibanki"] };
 		L[L.length] = { type:new abilities.ClearSpawnList(null), names:["rin"] };
 		L[L.length] = { type:new abilities.RefreshBlocks(null), names:["lily"] };
+		L[L.length] = { type:new abilities.MasterSpark(null), names:["yuuka"] };
 		
 		
 		L[L.length] = { type:new abilities.BasicShot(null), names:[""] };
@@ -183,37 +184,27 @@ class PlayerAbilityManager
 	public static var ListAbilities:Array<Dynamic>;
 	public static function GetAbilities(player:Player):Array<PlayerAbility>
 	{
-		var ret = new Array<PlayerAbility>();
-		var i = 0;
-		while (i < ListAbilities.length)
-		{
-			if (ListAbilities[i].names.indexOf(player.charname)>-1)
-			{
-				var C = Type.getClass(ListAbilities[i].type);
-				 ret[ret.length] = Type.createInstance(C, [player]);
-			}
-			i++;
-		}
-		if (ret.length < 1)
-		{
-			ret[ret.length] = new abilities.BasicShot(player);
-		}
+		var ret = GetAbilities2(player.charname, player);
 		return ret;
 	}
-	public static function GetAbilities2(player:String):Array<PlayerAbility>
+	public static function GetAbilities2(name:String,player:Player=null):Array<PlayerAbility>
 	{
 		if (ListAbilities == null)
 		{
 			initlist();
 		}
+		if (name.indexOf("ALT") > -1)
+		{
+			name = name.substring(0, name.length - 3);
+		}
 		var ret = new Array<PlayerAbility>();
 		var i = 0;
 		while (i < ListAbilities.length)
 		{
-			if (ListAbilities[i].names.indexOf(player)>-1)
+			if (ListAbilities[i].names.indexOf(name)>-1)
 			{
 				var C = Type.getClass(ListAbilities[i].type);
-				 ret[ret.length] = Type.createInstance(C, [null]);
+				 ret[ret.length] = Type.createInstance(C, [player]);
 			}
 			i++;
 		}
