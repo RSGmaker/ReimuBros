@@ -147,6 +147,7 @@ class Player extends Entity
 	public function new(charname:String,controller:Array<Bool>) 
 	{
 		super(charname);
+		Ldir = 1;
 		allmyons = new Array<MyonItem>();
 		scaleX = 0.85;
 		scaleY = 0.85;
@@ -280,7 +281,14 @@ class Player extends Entity
 				baseflags = flags.clone();
 			}
 			ability.onbeginframe();
-			
+			if (Ldir > 0)
+			{
+				ChangeAnimation(charname);
+			}
+			if (Ldir < 0)
+			{
+				ChangeAnimation(charname+"F");
+			}
 			if (invincibility > 1000)
 			{
 				invincibility = 10001;
@@ -452,14 +460,15 @@ class Player extends Entity
 		}
 		}
 		}
-		if (Hspeed > 0)
+		/*if (Hspeed > 0)
 		{
 			ChangeAnimation(charname);
 		}
 		if (Hspeed < 0)
 		{
 			ChangeAnimation(charname+"F");
-		}
+		}*/
+		
 		
 		if (ground != null)
 		{
@@ -691,6 +700,7 @@ class Player extends Entity
 			}
 			nameplatetext.setTextFormat(format);
 			var B = getBounds(game);
+			nameplatetext.width = nameplatetext.textWidth+8;
 			nameplate.x = B.left - (Math.floor(nameplatetext.textWidth) >> 1) + (Math.floor(B.width) >> 1);
 			nameplate.y = B.top - 20;
 		}
