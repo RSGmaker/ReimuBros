@@ -3935,9 +3935,11 @@ class GameView extends Sprite
 					var D:Dynamic = { };
 					D.type = "Yinyangorb";
 					D.UID = Math.random();
+					D.y = -100;
 					if (Math.random() > 0.5)
 					{
 						D.x = 800;
+						D.y = -200;
 						D.Ldir = -1;
 					}
 					else
@@ -3945,7 +3947,7 @@ class GameView extends Sprite
 						D.x = -16;
 						D.Ldir = 1;
 					}
-					D.y = -100;
+					
 					D.alive = true;
 					D.Hspeed = 0;
 					D.Vspeed = 0;
@@ -4197,8 +4199,8 @@ class GameView extends Sprite
 		var tmp = 0.7;
 		while (AR > 1)
 		{
-			//spawnrate *= 0.96;
-			spawnrate *= 0.965;
+			spawnrate *= 0.96;
+			//spawnrate *= 0.965;
 			tmp *= 1.4;
 			if (tmp < 1)
 			{
