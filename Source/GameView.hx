@@ -3662,10 +3662,30 @@ class GameView extends Sprite
 					}
 				}
 			}
-			if (CombinedScore > PointsToLife)
+			//check for silly amounts of unspent score.(may stop "quit glitch" from happening)
+			if (CombinedScore > PointsToLife+PointsToLife)
 			{
 				var A = Players.iterator();
+				while (A.hasNext())
+				{
+					var E = A.next();
+					//if a single player has tons of unspent score let's assume that's invalid and 0 it out.
+					if (PointsToLife+PointsToLife > (E.score - E.spentscore))
+					{
+					}
+					else
+					{
+						E.spentscore = E.score;
+						//prevent rewards from activating this frame
+						CombinedScore = 0;
+					}
+				}
+			}
+			if (CombinedScore > PointsToLife)
+			{
+				
 				var cost = PointsToLife;
+				var A = Players.iterator();
 				while (A.hasNext())
 				{
 					var E = A.next();
