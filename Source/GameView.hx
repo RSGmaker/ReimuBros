@@ -2254,6 +2254,11 @@ class GameView extends Sprite
 			{
 				O.bouncedrain = data.bouncedrain;
 			}
+			if (data.bumps != null)
+			{
+				O.bumps = data.bumps;
+			}
+			
 			
 			O.image.image_speed = 1;
 			O.allowwrap = data.wrap;

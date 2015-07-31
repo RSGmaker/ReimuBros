@@ -374,6 +374,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Sprites/hammer9.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/hatate0.png", __ASSET__assets_sprites_hatate0_png);
 		type.set ("assets/Sprites/hatate0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/heartbullet0.png", __ASSET__assets_sprites_heartbullet0_png);
+		type.set ("assets/Sprites/heartbullet0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/hina0.png", __ASSET__assets_sprites_hina0_png);
 		type.set ("assets/Sprites/hina0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/ichirin0.png", __ASSET__assets_sprites_ichirin0_png);
@@ -1410,6 +1412,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		type.set (id, AssetType.IMAGE);
 		id = "assets/Sprites/hatate0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/heartbullet0.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -2554,6 +2560,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
 		#end
 		
 		#if (windows || mac || linux)
@@ -3045,6 +3052,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("assets/Sprites/hatate0.png", __ASSET__assets_sprites_hatate0_png);
 		type.set ("assets/Sprites/hatate0.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/heartbullet0.png", __ASSET__assets_sprites_heartbullet0_png);
+		type.set ("assets/Sprites/heartbullet0.png", AssetType.IMAGE);
 		
 		className.set ("assets/Sprites/hina0.png", __ASSET__assets_sprites_hina0_png);
 		type.set ("assets/Sprites/hina0.png", AssetType.IMAGE);
@@ -4477,6 +4487,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_hammer8_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_hammer9_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_hatate0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_heartbullet0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_hina0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_ichirin0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_icyblock0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -5031,6 +5042,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
 #else
 
 
@@ -5200,6 +5212,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("Assets/Sprites/hammer8.png") #if display private #end class __ASSET__assets_sprites_hammer8_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/hammer9.png") #if display private #end class __ASSET__assets_sprites_hammer9_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/hatate0.png") #if display private #end class __ASSET__assets_sprites_hatate0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/heartbullet0.png") #if display private #end class __ASSET__assets_sprites_heartbullet0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/hina0.png") #if display private #end class __ASSET__assets_sprites_hina0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/ichirin0.png") #if display private #end class __ASSET__assets_sprites_ichirin0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/icyblock0.png") #if display private #end class __ASSET__assets_sprites_icyblock0_png extends lime.graphics.Image {}

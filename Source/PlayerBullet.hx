@@ -17,6 +17,8 @@ class PlayerBullet extends Entity
 	public var HP:Int = 9999999;
 	public var allowwrap:Bool = false;
 	public var wrapdrain:Bool = true;
+	//whether or not if it bumps the enemy instead of attacking them
+	public var bumps:Bool = false;
 	private var filterArr:Array<flash.filters.BitmapFilter>;
 	public function new() 
 	{
@@ -110,17 +112,37 @@ class PlayerBullet extends Entity
 			}
 		}
 		
-		if (tossedBy != null && tossedBy == game.myplayer)
+		if (tossedBy != null)
 			{
 				if (enemy != null && !enemy.killed && enemy.invincibility<=0)
 				{
-					game.SendEvent("Attack", enemy.UID);
-					HP--;
+					if (tossedBy == game.myplayer && !bumps)
+					{
+						game.SendEvent("Attack", enemy.UID);
+					}
+					if (bumps)
+					{
+						if (enemy.flipped <= 0)
+						{
+							enemy.bump();
+							HP--;
+						}
+					}
+					else
+					{
+						HP--;
+					}
+					//game.SendEvent("Attack", enemy.UID);
+					
+					
 				}
 				var DD:Dynamic = danger;
 				if (danger != null && danger.type=="Enemy" && (DD.charname == "Cirno" || DD.charname=="Iku") && danger.invincibility<=0)
 				{
-					game.SendEvent("Kill", danger.UID);
+					if (tossedBy == game.myplayer)
+					{
+						game.SendEvent("Kill", danger.UID);
+					}
 					HP--;
 				}
 			}
