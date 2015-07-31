@@ -163,7 +163,8 @@ class Scarlet extends Enemy
 					var E:Dynamic = ground;
 					E.Burn();
 					//E.respawn = (E.respawn >> 2) - (E.respawn >> 3);
-					E.respawn = (E.respawn >> 3);
+					//E.respawn = (E.respawn >> 3);
+					E.respawn = (E.respawn >> 2);
 				}
 				if (flipped>0 && flipped < 60)
 				{
