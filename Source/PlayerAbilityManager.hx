@@ -75,6 +75,7 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.VampiricTouch(null), names:["remilia"] };
 		L[L.length] = { type:new abilities.MoreLives(null), names:["shanghai"] };
 		L[L.length] = { type:new abilities.OneWeekGirl(null), names:["patchouli"] };
+		L[L.length] = { type:new abilities.StageSeal(null), names:["eirin"] };
 		
 		
 		
