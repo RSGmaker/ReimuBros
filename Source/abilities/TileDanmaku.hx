@@ -34,7 +34,8 @@ class TileDanmaku extends PlayerAbility
 			if (player.isme)
 			{
 			var D:Dynamic = { };
-			D.Destroy = 1400;
+			//D.Destroy = 1400;
+			D.Destroy = 1300;
 			D.x = player.ground.x;
 			D.y = player.ground.y;
 			game.SendEvent("DestroyBlock", D);
