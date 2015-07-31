@@ -37,7 +37,8 @@ class Block extends Entity
 			icy = false;
 			Visual.image.ChangeAnimation(image.animation);
 		}
-		respawn = 1500;
+		//respawn = 1500;
+		respawn = 800;
 		}
 	}
 	//freeze even if charred(used at start of cirno event)
