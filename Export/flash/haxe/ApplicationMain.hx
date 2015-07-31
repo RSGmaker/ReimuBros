@@ -682,6 +682,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/heartbullet0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/hina0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		

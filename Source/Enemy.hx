@@ -11,7 +11,7 @@ class Enemy extends Entity
 	///whether or not a player touching the enemy will set killed to true.
 	public var killable:Bool;
 	public var charname:String;
-	private var flipped:Int;
+	public var flipped:Int;
 	//whether or not the enemy has augmented abilities(the last enemy of the round gets this)
 	public var enraged:Bool;
 	//makes enemy red without messing with stats.
