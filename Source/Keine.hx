@@ -23,7 +23,18 @@ class Keine extends Enemy
 		ex = false;
 		pointvalue = 300;
 	}
-	
+	override public function attack():Bool 
+	{
+		if (!ex)
+		{
+			bump();
+			invincibility = 10;
+			return false;
+		}
+		return true;
+		//return ex;
+		//return super.attack();
+	}
 	public override function increaserank()
 	{
 		accel += 0.05;
@@ -35,6 +46,10 @@ class Keine extends Enemy
 		if (!started)
 		{
 			started = true;
+		}
+		if (invincibility > 0)
+		{
+			invincibility--;
 		}
 		var MXS = mxspd;
 		var acl = accel;
