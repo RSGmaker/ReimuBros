@@ -280,6 +280,11 @@ class Player extends Entity
 				}
 				baseflags = flags.clone();
 			}
+			if (!game.Hoster && game.online)
+			{
+				//since we don't manage rewards on client side we should have this reset.(this might fix the "quit glitch")
+				spentscore = score;
+			}
 			ability.onbeginframe();
 			if (Ldir > 0)
 			{
