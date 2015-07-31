@@ -14,7 +14,7 @@ class Cheeen extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 300;
+		player.maxcooldown = 1400;
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -37,15 +37,17 @@ class Cheeen extends PlayerAbility
 			D.Vspeed = 0;
 			if (player.Ldir >= 0)
 			{
-				D.Hspeed = 10;
+				D.Hspeed = 12;
 			}
 			else
 			{
-				D.Hspeed = -10;
+				D.Hspeed = -12;
 			}
 			D.gravX = 0;
 			D.gravY = 0;
-			D.wrap = false;
+			D.wrap = true;
+			D.wrapdrain = true;
+			D.HP = 17;
 			game.SendEvent("PlayerDanmaku", D);
 		}
 	}
