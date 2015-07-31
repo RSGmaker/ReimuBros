@@ -30,6 +30,7 @@ class Mystia extends Enemy
 		mntime = 1;
 		pointvalue = 200;
 		rename = "EMystia";
+		subtype = "mystia";
 	}
 	
 	public override function increaserank()

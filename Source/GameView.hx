@@ -91,6 +91,7 @@ class GameView extends Sprite
 	public var touched:Bool;
 	public var ImposterList:Array<String>;
 	public var Players:Map < String, Player>;
+	public var Sealed:Int;
 	
 	public function GetPlayers():Array<Player>
 	{
@@ -1178,6 +1179,10 @@ class GameView extends Sprite
 		{
 			//update the last activity frame to this frame(this is to let this client determine inactive/linkdead players)
 			P.frame = frame;
+		}
+		if (evt == "StageSeal")
+		{
+			Sealed = data.timer;
 		}
 		if (evt == "DestroyBlock")
 		{
@@ -3689,11 +3694,42 @@ class GameView extends Sprite
 				CombinedScore -= PointsToLife;
 			}
 		}
+		if (Sealed > 0)
+		{
+			Sealed--;
+		}
 		var i:Int = 0;
 		while (i < entities.length)
 		{
 			var E = entities[i];
+			var X = E.x;
 			E.update();
+			if (Sealed>0 && E.type == "Enemy" && (E.ground!=null || E.subtype=="mystia") && E.y<440)
+			{
+				//if (E.x > 800 || E.x < 0)
+				//if (E.x > 784 || E.x < 0)
+				var ok = false;
+				if (E.x<0 && E.Hspeed<0)
+				{
+					//undo the movement.
+					ok = true;
+				}
+				if (E.x>800 - E.width && E.Hspeed>0)
+				{
+					//undo the movement.
+					ok = true;
+				}
+				if (E.wrapped)
+				{
+					ok = true;
+					
+				}
+				if (ok)
+				{
+					E.x = Math.max(Math.min(X, 800 - E.width), 0);
+					E.Hspeed = 0;
+				}
+			}
 			if (!E.alive)
 			{
 				if (E.type == "Enemy")
@@ -3832,7 +3868,7 @@ class GameView extends Sprite
 			{
 				R = rept;
 			}
-			if (R>0 && frame & 2 > 0 && Math.random()<R)
+			if (Sealed<1 && R>0 && frame & 2 > 0 && Math.random()<R)
 			{
 				var evt = Math.random();
 				var E = "";

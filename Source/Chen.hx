@@ -40,7 +40,7 @@ class Chen extends Enemy
 		rename = "E" + charname;
 		danmaku = -1000;
 		needtokill = false;
-		
+		subtype = "chen";
 	}
 	
 	public override function enrage()
