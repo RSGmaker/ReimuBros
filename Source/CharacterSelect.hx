@@ -254,7 +254,8 @@ class CharacterSelect extends Sprite
 		selectedcharacter.x = 10;
 		selectedcharacter.y = 2;
 		selectedcharacter.text = "";
-		selectedcharacter.width = 290-selectedcharacter.x;
+		selectedcharacter.width = 290 - selectedcharacter.x;
+		selectedcharacter.height = 200;
 		selectedcharacter.mouseEnabled = false;
 		GUI.addChild(selectedcharacter);
 		makebuttons();
