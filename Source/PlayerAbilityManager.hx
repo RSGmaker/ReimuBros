@@ -183,6 +183,16 @@ class PlayerAbilityManager
 			i++;
 		}
 	}
+	public function lostability()
+	{
+		var i = 0;
+		while (i < abilities.length)
+		{
+			abilities[i].lostability();
+			i++;
+		}
+	}
+	
 	
 	public function oncontinue()
 	{

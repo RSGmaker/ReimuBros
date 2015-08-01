@@ -262,6 +262,13 @@ class NetPlay
 					}
 					if (M != null)
 					{
+						if (i.name != null)
+						{
+							if (i.char != M.charname)
+							{
+								M.init(i.char);
+							}
+						}
 					M.controller[0] = i.con[0];
 					M.controller[1] = i.con[1];
 					M.controller[2] = i.con[2];

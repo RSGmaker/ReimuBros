@@ -43,7 +43,7 @@ class Main extends Sprite {
 	//the current player status, used to determine what view to transition to.
 	public var status:String;
 	//...yeah it should be called CharacterSelectView ... that isn't consistent, i should fix that...
-	public var characterselect:CharacterSelect;
+	public var characterselect:CharacterSelectView;
 	public var playerspick:String;
 	//whether or not if the player is doing multiplayer
 	public var online:Bool;
@@ -483,7 +483,7 @@ class Main extends Sprite {
 	private function showcharacterselect()
 	{
 		clear();
-		characterselect = new CharacterSelect();
+		characterselect = new CharacterSelectView();
 		characterselect.AL = AL;
 		stage.addChild(characterselect);
 		characterselect.playername = savedata.data.playername;
