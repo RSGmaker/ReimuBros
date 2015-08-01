@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	
-	<meta title="ReimuBros" package="RSG.Game" version="1.5.0" company="RSGmaker" />
+	<meta title="ReimuBros" package="RSG.Game" version="1.6.0" company="RSGmaker" />
 	<app file="ReimuBros" main="Main" path="Export" preloader="Preloader"/>
 	
 	<source path="Source" />
