@@ -192,7 +192,7 @@ class Scarlet extends Enemy
 	}
 	if (!alive && game.myplayer == bonkedby)
 	{
-		Main._this.savedata.data.unlock[Player.characters.indexOf(who)] = true;
+		game.unlockcharacter(who);
 	}
 	}
 	public override function bump()

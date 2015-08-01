@@ -167,7 +167,7 @@ class Rumia extends Enemy
 	}
 	if (!alive && game.myplayer == bonkedby)
 	{
-		Main._this.savedata.data.unlock[Player.characters.indexOf("rumia")] = true;
+		game.unlockcharacter("rumia");
 	}
 	}
 	public override function bump()
