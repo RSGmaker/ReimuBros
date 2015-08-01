@@ -92,6 +92,10 @@ class GameView extends Sprite
 	public var ImposterList:Array<String>;
 	public var Players:Map < String, Player>;
 	public var Sealed:Int;
+	public var messages:Array<String>;
+	public var messagetime:Int;
+	
+	public var charselect:CharacterSelect;
 	
 	public function GetPlayers():Array<Player>
 	{
@@ -103,6 +107,41 @@ class GameView extends Sprite
 		}
 		ret.sort(sortplayer);
 		return ret;
+	}
+	public function unlockcharacter(name:String)
+	{
+		var i = Player.characters.indexOf(name);
+		var savedata = Main._this.savedata;
+		if (i > -1)
+		{
+			if (name.indexOf("ALT") > -1)
+			{
+				name = name.substr(0, name.length - 3);
+				i = Player.characters.indexOf(name);
+				if (!savedata.data.alts[i])
+				{
+					savedata.data.alts[i] = true;
+					ShowMessage("Unlocked " + name.charAt(0).toUpperCase() + name.substr(1)+"☆!");
+				}
+			}
+			if (!savedata.data.unlock[i])
+			{
+				savedata.data.unlock[i] = true;
+				ShowMessage("Unlocked " + name.charAt(0).toUpperCase() + name.substr(1)+"!");
+			}
+		}
+	}
+	public function ShowMessage(message:String)
+	{
+		if (messages.length == 0)
+		{
+			messagetime = 500;
+		}
+		else if (messages.length < 6)
+		{
+			messagetime += 100;
+		}
+		messages[messages.length] = message;
 	}
 	public function sortplayer(A:Player, B:Player)
 	{
@@ -124,6 +163,9 @@ class GameView extends Sprite
 	private var BGCLeft:Bitmap;
 	private var BGCBottom:Bitmap;
 	
+	//used for buttons,messages and such.
+	public var gui:Sprite;
+	
 	
 	public var powblock:PowBlock;
 	public var roundstarted:Bool;
@@ -139,6 +181,7 @@ class GameView extends Sprite
 	public var playername:String;
 	//list of players and their scores in multiplayer
 	public var scoreboard:TextField;
+	public var SC:Sprite;
 	
 	public var Room:String;
 	public var status:String;
@@ -211,6 +254,7 @@ class GameView extends Sprite
 	public var endongameover:Bool;
 	public var tournament:Bool;
 	public var paused:Bool = false;
+	public var menu:Bool = false;
 	public var pausetime:Float = 0;
 	
 	public var flashcolor:Int;
@@ -247,7 +291,7 @@ class GameView extends Sprite
 		minipowactive = false;
 		ImposterList = new Array<String>();
 		//netlog = Main._this.DEBUG;
-
+		messages = new Array<String>();
 	}
 	
 	public function FlashColor(color:Int,maxalpha:Float,startalpha:Float,rate:Float)
@@ -554,10 +598,19 @@ class GameView extends Sprite
 		scoreboard = new TextField();
 		scoreboard.cacheAsBitmap = true;
 		scoreboard.text = "";
-		scoreboard.x = 300;
-		scoreboard.y = 10;
+		scoreboard.x = 3;
+		scoreboard.y = 3;
+		//scoreboard.x = 300;
+		//scoreboard.y = 10;
 		scoreboard.blendMode = openfl.display.BlendMode.INVERT;
-		addChild(scoreboard);
+		
+		SC = new Sprite();
+		SC.x = 300;
+		SC.y = 10;
+		SC.addChild(scoreboard);
+		addChild(SC);
+		
+		//addChild(scoreboard);
 		
 		//the miko sticks in the corners of the screen.
 		var B = new Bitmap(AL.GetAnimation("barrier")[0]);
@@ -620,35 +673,41 @@ class GameView extends Sprite
 		missingTime = 0;
 		SpawnList = new List<Enemy>();
 		
-		
+		gui = new Sprite();
+		addChild(gui);
 		
 		BGCRight = new Bitmap(Assets.getBitmapData("assets/bgcolor.png"));
 		BGCRight.x = 800;
 		BGCRight.y = 0;
 		BGCRight.scaleX = 500;
 		BGCRight.scaleY = 2000;
-		addChild(BGCRight);
+		//addChild(BGCRight);
+		gui.addChild(BGCRight);
 		BGCLeft = new Bitmap(Assets.getBitmapData("assets/bgcolor.png"));
 		BGCLeft.x = -500;
 		BGCLeft.y = 0;
 		BGCLeft.scaleX = 500;
 		BGCLeft.scaleY = 2000;
 		//BGCLeft.z = -10;
-		addChild(BGCLeft);
+		//addChild(BGCLeft);
+		gui.addChild(BGCLeft);
 		BGCBottom = new Bitmap(Assets.getBitmapData("assets/bgcolor.png"));
 		BGCBottom.x = -500;
 		BGCBottom.y = 600;
 		BGCBottom.scaleX = 1500;
 		BGCBottom.scaleY = 1000;
 		//BGCBottom.z = -10;
-		addChild(BGCBottom);
+		//addChild(BGCBottom);
+		gui.addChild(BGCBottom);
 		Dpad = new Bitmap(Assets.getBitmapData("assets/Dpad.png"));
 		Dpad.x = 0;
 		Dpad.y = 600;
-		addChild(Dpad);
+		//addChild(Dpad);
+		gui.addChild(Dpad);
 		
 		colorflash = new Shape();
-		addChild(colorflash);
+		//addChild(colorflash);
+		gui.addChild(colorflash);
 	}
 	//sets down platforms and puts holes in the platforms
 	public function setformation()
@@ -1180,6 +1239,13 @@ class GameView extends Sprite
 			//update the last activity frame to this frame(this is to let this client determine inactive/linkdead players)
 			P.frame = frame;
 		}
+		if (evt == "ChangeCharacter")
+		{
+			if (P.charname != data)
+			{
+				P.init(data);
+			}
+		}
 		if (evt == "StageSeal")
 		{
 			Sealed = data.timer;
@@ -1304,8 +1370,10 @@ class GameView extends Sprite
 				if (me && D.charname == "Imposter")
 				{
 					//if an unlockable character(aka imposter) is killed, unlock the character.
-					if (!D.hidden)
+					unlockcharacter(D.rename);
+					/*if (!D.hidden)
 					{
+
 					Main._this.savedata.data.unlock[D.unlock] = true;
 					if (D.alternate)
 					{
@@ -1315,7 +1383,7 @@ class GameView extends Sprite
 					else
 					{
 						Main._this.savedata.data.hidden[D.unlock] = true;
-					}
+					}*/
 				}
 				if (totalenemies != 1)
 				{
@@ -2032,7 +2100,8 @@ class GameView extends Sprite
 			}
 			if (myplayer == P)
 			{
-				Main._this.savedata.data.unlock[Player.characters.indexOf("suika")] = true;
+				//Main._this.savedata.data.unlock[Player.characters.indexOf("suika")] = true;
+				unlockcharacter("suika");
 			}
 			SoundManager.Play("pow");
 			var i = 0;
@@ -2525,6 +2594,31 @@ class GameView extends Sprite
 			}
 			RoundType = TypeofRound.NoWrap;
 		}
+		if (evt == "unyucannon")
+		{
+			var O = new UtsuhoBullet();
+			O.x = data.x;
+			O.y = data.y;
+			O.Hspeed = data.Hspeed;
+			O.Vspeed = data.Vspeed;
+			if (data.gravX != null)
+			{
+				O.gravX = data.gravX;
+			}
+			if (data.gravY != null)
+			{
+				O.gravY = data.gravY;
+			}
+			if (data.image_speed != null)
+			{
+				O.image.image_speed = data.image_speed;
+			}
+			if (data.image != null)
+			{
+				O.ChangeAnimation(data.image);
+			}
+			AddObject(O);
+		}
 		if (evt == "ShootBullet")
 		{
 			var O = new Bullet();
@@ -2532,9 +2626,14 @@ class GameView extends Sprite
 			O.y = data.y;
 			O.Hspeed = data.Hspeed;
 			O.Vspeed = data.Vspeed;
-			O.gravX = data.gravX;
-			O.gravY = data.gravY;
-			
+			if (data.gravX != null)
+			{
+				O.gravX = data.gravX;
+			}
+			if (data.gravY != null)
+			{
+				O.gravY = data.gravY;
+			}
 			if (data.image_speed != null)
 			{
 				O.image.image_speed = data.image_speed;
@@ -3033,9 +3132,11 @@ class GameView extends Sprite
 		}
 		if (event.keyCode == Main._this.controlscheme[5])
 		{
+			menu = !menu;
 			if (!online)
 			{
-				paused = !paused;
+				//paused = !paused;
+				paused = menu;
 			}
 		}
 		ControlEvent = true;
@@ -3213,6 +3314,11 @@ class GameView extends Sprite
 						}
 						type = "Enemy";
 					}
+					if (D.type == "utsuho")
+					{
+						E = new Utsuho();
+						type = "Enemy";
+					}
 					if (D.type == "satori")
 					{
 						E = new Satori();
@@ -3357,11 +3463,30 @@ class GameView extends Sprite
 		{
 			return;
 		}
+		if (menu)
+		{
+			if (charselect == null)
+			{
+				charselect = new CharacterSelect(playerspick);
+				gui.addChild(charselect);
+			}
+		}
 		if (!online && paused)
 		{
 			TF.text = "Paused";
 			ltime = Timer.stamp ();
 			return;
+		}
+		if (charselect != null && !menu)
+		{
+			if (charselect.selected != playerspick)
+			{
+				playerspick = charselect.selected;
+				SendEvent("ChangeCharacter", playerspick);
+				//myplayer.init(playerspick);
+			}
+			gui.removeChild(charselect);
+			charselect = null;
 		}
 		if (pausetime>0)
 		{
@@ -3518,9 +3643,48 @@ class GameView extends Sprite
 			CombinedScoreALL = myplayer.score;
 			S = myplayer.playername + ": " + myplayer.score + "\nHighscore: " + HighScore;
 		}
+		if (messages.length > 0)
+		{
+			SC.scaleX = 1.5;
+			SC.scaleY = 1.5;
+			messagetime--;
+			S = messages[0];
+			var i = 1;
+			while (i < 6 && i < messages.length)
+			{
+				S = S + "\n" + messages[i];
+				i++;
+			}
+			if (messagetime < 1)
+			{
+				//messages.remove(messages[0]);
+				var i = 0;
+				while (i < 6 && messages.length>0)
+				{
+					messages.remove(messages[0]);
+					i++;
+				}
+				messagetime = 500;
+			}
+		}
+		else
+		{
+			SC.scaleX = 1;
+			SC.scaleY = 1;
+		}
 		scoreboard.text = S;
 		scoreboard.width = scoreboard.textWidth+4;
 		scoreboard.height = scoreboard.textHeight + 4;
+		SC.graphics.clear();
+		if (messages.length > 0)
+		{
+		SC.graphics.beginFill(0xFFFFFF, 0.7);
+		SC.graphics.drawRect(0, 0, scoreboard.width+6, scoreboard.height+6);
+		SC.graphics.endFill();
+		SC.graphics.beginFill(0x000044, 0.8);
+		SC.graphics.drawRect(3, 3, scoreboard.width, scoreboard.height);
+		SC.graphics.endFill();
+		}
 		frame += 1;
 		//this is more efficient out of the update loop(espescially on slower machines)
 		
@@ -3569,7 +3733,9 @@ class GameView extends Sprite
 		}
 		
 		#end
-		removeChild(BGCBottom);
+		removeChild(gui);
+		addChild(gui);
+		/*removeChild(BGCBottom);
 		removeChild(BGCLeft);
 		removeChild(BGCRight);
 		removeChild(Dpad);
@@ -3579,7 +3745,7 @@ class GameView extends Sprite
 		addChild(BGCLeft);
 		addChild(BGCRight);
 		addChild(Dpad);
-		addChild(colorflash);
+		addChild(colorflash);*/
 		ltime = currentTime;
 	}
 	public function SendStatus() {
@@ -3851,11 +4017,13 @@ class GameView extends Sprite
 				}
 				if (stage.mouseX < 384 && stage.mouseY < Dpad.y+384)
 				{
-					var X = Math.floor(stage.mouseX / 128);
-					var Y = Math.floor((stage.mouseY - Dpad.y) / 128);
+					var X = Math.floor(stage.mouseX) >> 7;
+					var Y = Math.floor((stage.mouseY - Dpad.y))>> 7;
+					//var X = Math.floor(stage.mouseX / 128);
+					//var Y = Math.floor((stage.mouseY - Dpad.y) / 128);
 					var C = control.copy();
-					control[0] = Y == 2;
-					control[1] = Y == 0;
+					control[0] = Y == 0;
+					control[1] = Y == 2;
 					control[2] = X == 0;
 					control[3] = X == 2;
 					if (C[0] != control[0] || C[1] != control[1] || C[2] != control[2] || C[3] != control[3])
@@ -4494,6 +4662,10 @@ class GameView extends Sprite
 			{
 				AddToArrayMultiple(enemytypes, new Meiling(), 5);
 			}
+			if (level > 15)
+			{
+				AddToArrayMultiple(enemytypes, new Utsuho(), 3);
+			}
 			AddToArrayMultiple(enemytypes, new Mystia(), 28);
 			if (level > 25)
 			{
@@ -4513,7 +4685,6 @@ class GameView extends Sprite
 			{
 				AddToArrayMultiple(enemytypes, new Kogasa(), 1);
 			}
-			
 		}
 		if (RoundType == TypeofRound.Nue)
 		{

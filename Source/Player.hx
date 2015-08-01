@@ -147,56 +147,11 @@ class Player extends Entity
 	public function new(charname:String,controller:Array<Bool>) 
 	{
 		super(charname);
+		this.controller = controller;
 		Ldir = 1;
 		allmyons = new Array<MyonItem>();
 		scaleX = 0.85;
 		scaleY = 0.85;
-		type = "Player";
-		this.charname = charname;
-		flags = new FlagManager(1);
-		maxcooldown = 300;
-		cooldown = 0;
-		useotherhitbox = true;
-		warncooldown = false;
-		jumpspd = base_jumpspd;
-		this.controller = controller;
-		deccel = base_deccel;
-		accel = base_accel;
-		Haccel = accel * 0.35;
-		Hdeccel = deccel * 0.35;
-		
-		
-		mxspd = base_mxspd;
-		fallaccel = base_fallaccel;
-		ability = new PlayerAbilityManager(this);
-		ability.SetAbilities();
-		flags.set(Player.SpawnZombieFairies, true);
-		switch (charname)
-		{
-			case "tojiko":
-				feetposition -= 8;
-			case "ayana":
-				feetposition -= 2;
-			case "makairesident-a":
-				feetposition -= 2;
-			case "lilith":
-				feetposition -= 1;
-			case "matenshi":
-				feetposition -= 1;
-			case "noroiko":
-				feetposition -= 1;
-			default:
-		}
-		
-		
-		killed = false;
-		lives = 3;
-		ID = "";
-		score = 0;
-		steps = 0;
-		invincibility = 0;
-		
-		playername = "";
 		nameplate = new Sprite();
 		nameplatetext = new TextField();
 		cooldownbar = new Shape();
@@ -212,7 +167,6 @@ class Player extends Entity
 		filterArr = new Array();
 		filterArr[0] = AA;
 		nameplate.filters = filterArr;
-		
 		{
 			var AB = new flash.filters.GlowFilter();
 			AB.blurX = 20;
@@ -243,14 +197,86 @@ class Player extends Entity
 		game.addChild(nameplate);
 		frame = game.frame;
 		playing = -1;
+		killed = false;
+		
+		ID = "";
+		score = 0;
+		lives = 3;
+		steps = 0;
+		invincibility = 0;
+		playername = "";
+		init(charname);
+		
+		
+		//baseflags = flags.clone();
+	}
+	
+	public function init(charname:String)
+	{
+		if (ability != null)
+		{
+			ability.lostability();
+		}
+		alpha = 1;
+		this.charname = charname;
+		flags = new FlagManager(1);
+		type = "Player";
+		
+		maxcooldown = 300;
+		cooldown = 0;
+		useotherhitbox = true;
+		warncooldown = false;
+		jumpspd = base_jumpspd;
+		
+		deccel = base_deccel;
+		accel = base_accel;
+		Haccel = accel * 0.35;
+		Hdeccel = deccel * 0.35;
+		
+		
+		mxspd = base_mxspd;
+		fallaccel = base_fallaccel;
+		ability = new PlayerAbilityManager(this);
+		ability.SetAbilities();
+		flags.set(Player.SpawnZombieFairies, true);
+		feetposition = 0;
+		middle = 0;
+		hasotherhitbox = false;
+		switch (charname)
+		{
+			case "tojiko":
+				feetposition -= 8;
+			case "ayana":
+				feetposition -= 2;
+			case "makairesident-a":
+				feetposition -= 2;
+			case "lilith":
+				feetposition -= 1;
+			case "matenshi":
+				feetposition -= 1;
+			case "noroiko":
+				feetposition -= 1;
+			default:
+		}
+		
+		var H = height;
+		if (Ldir > 0)
+			{
+				ChangeAnimation(charname);
+			}
+			if (Ldir < 0)
+			{
+				ChangeAnimation(charname+"F");
+			}
+			y -= (height - H);
+		
+		
 		started = false;
 		ignoreice = false;
 		
 		
 		Ofallaccel = fallaccel;
 		fallaccel2 = fallaccel / 16;
-		
-		//baseflags = flags.clone();
 	}
 	
 	public static var myplayer(get, null):Player;

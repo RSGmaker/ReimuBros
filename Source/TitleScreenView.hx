@@ -172,8 +172,8 @@ class TitleScreenView extends Sprite
 				#end
 				
 				options = AddButton("Options");
-			options.x = 0;
-			options.y = 0;
+			options.x = 6;
+			options.y = 6;
 			options.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 				status = "Options";
 				 } 
@@ -199,7 +199,9 @@ class TitleScreenView extends Sprite
 	}
 	private function AddButton(text:String):Sprite
 	{
-		var tmp = new TextFormat();
+		var buttonSprite = new MenuButton(text);
+		addChild(buttonSprite);
+		/*var tmp = new TextFormat();
 		tmp.font = "Arial";
 		tmp.size = 44;
 		var textField:TextField = new TextField();
@@ -235,7 +237,7 @@ class TitleScreenView extends Sprite
 		buttonSprite.x -= (textField.width / 2);
 		buttonSprite.width = textField.width;
 		buttonSprite.height = textField.height;
-		buttonSprite.buttonMode = true;
+		buttonSprite.buttonMode = true;*/
 		return buttonSprite;
 	}
 }
