@@ -44,6 +44,8 @@ class OptionView extends Sprite
 	
 	//the current button being configured
 	public var selection:Int;
+	
+	public var selected:MenuButton;
 	public function new() 
 	{
 		super();
@@ -143,8 +145,9 @@ class OptionView extends Sprite
 		var B = AddButton(stringfromcode(Main._this.savedata.data.controlscheme[0]));
 		B.x = 70;
 		B.y = 250;
+		var B0 = B;
 		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				selection = 0;
+				select(B0, 0);
 				 } 
 				);
 				T = new TextField();
@@ -160,8 +163,9 @@ class OptionView extends Sprite
 		B = AddButton(stringfromcode(Main._this.savedata.data.controlscheme[1]));
 		B.x = 210+W;
 		B.y = 250;
+		var B1 = B;
 		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				selection = 1;
+				select(B1, 1);
 				 } 
 				);
 				T = new TextField();
@@ -176,8 +180,9 @@ class OptionView extends Sprite
 		B = AddButton(stringfromcode(Main._this.savedata.data.controlscheme[2]));
 		B.x = 70;
 		B.y = 350;
+		var B2 = B;
 		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				selection = 2;
+				select(B2, 2);
 				 } 
 				);
 				W = B.width-40;
@@ -193,8 +198,9 @@ class OptionView extends Sprite
 		B = AddButton(stringfromcode(Main._this.savedata.data.controlscheme[3]));
 		B.x = 210+W;
 		B.y = 350;
+		var B3 = B;
 		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				selection = 3;
+				select(B3, 3);
 				 } 
 				);
 				T = new TextField();
@@ -209,8 +215,10 @@ class OptionView extends Sprite
 		var B = AddButton(stringfromcode(Main._this.savedata.data.controlscheme[5]));
 		B.x = 70;
 		B.y = 450;
+
+		var B5 = B;
 		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				selection = 5;
+				select(B5, 5);
 				 } 
 				);
 			T = new TextField();
@@ -225,8 +233,9 @@ class OptionView extends Sprite
 		var B = AddButton(stringfromcode(Main._this.savedata.data.controlscheme[4]));
 		B.x = 70;
 		B.y = 550;
+		var B4 = B;
 		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				selection = 4;
+				select(B4, 4);
 				 } 
 				);
 		status = "";
@@ -242,8 +251,20 @@ class OptionView extends Sprite
 		if (selection > -1)
 		{
 			Main._this.savedata.data.controlscheme[selection] = event.keyCode;
-			status = "refresh";
+			var X = selected.x;
+			selected.settext(stringfromcode(event.keyCode)+" ");
+			selected.x = X;
 		}
+	}
+	public function select(button:MenuButton,ind:Int)
+	{
+		selection = ind;
+		if (selected != null)
+		{
+			selected.setcolors(0x11CC55,0x00AA33);
+		}
+		button.setcolors(0xFF0000, 0xFFFFFF);
+		selected = button;
 	}
 	//convert keycodes to string
 	public function stringfromcode(code:UInt):String
@@ -279,44 +300,10 @@ class OptionView extends Sprite
 		}
 		return ret;
 	}
-	private function AddButton(text:String):Sprite
+	private function AddButton(text:String):MenuButton
 	{
-		var tmp = new TextFormat();
-		tmp.font = "Arial";
-		tmp.size = 32;
-		var textField:TextField = new TextField();
-		textField.name = "textField";
-		textField.setTextFormat(tmp);
-		textField.width = 500;
-		textField.height = 500;
-		textField.text = text;
-		textField.setTextFormat(tmp);
-		textField.mouseEnabled = false;
-		var SZ = 6;
-		var SZ2 = SZ + SZ;
-		var SZ3 = SZ + SZ + SZ;
-		textField.x = SZ;
-		textField.y = SZ;
-		textField.width = textField.textWidth+SZ2;
-		textField.height = textField.textHeight+SZ2;
-		
-		var rectangleShape:Shape = new Shape();
-		rectangleShape.graphics.beginFill(0x00AA33);
-		rectangleShape.graphics.drawRect(0, 0, textField.textWidth + SZ3, textField.textHeight + SZ3);
-		rectangleShape.graphics.endFill();
-		rectangleShape.graphics.beginFill(0x11CC55);
-		rectangleShape.graphics.drawRect(SZ, SZ, textField.textWidth + SZ, textField.textHeight + SZ);
-		rectangleShape.graphics.endFill();
-
-		var buttonSprite:Sprite = new Sprite();
-		
-		buttonSprite.addChild(rectangleShape);
-		buttonSprite.addChild(textField);
+		var buttonSprite = new MenuButton(text+" ", 32);
 		addChild(buttonSprite);
-		buttonSprite.x -= (textField.width / 2);
-		buttonSprite.width = textField.width;
-		buttonSprite.height = textField.height;
-		buttonSprite.buttonMode = true;
 		return buttonSprite;
 	}
 }

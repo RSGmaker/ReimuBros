@@ -62,6 +62,12 @@ class MenuButton extends Sprite
 		
 		this.buttonMode = true;
 	}
+	public function settext(text:String)
+	{
+		textfield.text = text;
+		textfield.setTextFormat(textformat);
+		update();
+	}
 	public function setcolors(innercolor:UInt = 0x11CC55, outlinecolor:UInt = 0x00AA33,alpha:Float=-1)
 	{
 		this.outlinecolor = outlinecolor;
