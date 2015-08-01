@@ -3468,6 +3468,15 @@ class GameView extends Sprite
 			if (charselect == null)
 			{
 				charselect = new CharacterSelect(playerspick);
+				var B = new MenuButton("Quit Game");
+				B.x += 670;
+				B.y += 500;
+				B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					status = "quitting";
+					
+				 } 
+				);
+				charselect.addChild(B);
 				gui.addChild(charselect);
 			}
 		}
