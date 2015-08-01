@@ -134,7 +134,7 @@ class Player extends Entity
 	public var warncooldown:Bool;
 	
 	//public var cooldowntext = "READY";
-	public var cooldowntext = "Ability ready!";
+	public var cooldowntext:String;
 	
 	public static inline var base_deccel = 0.5+0.4;
 	public static inline var base_accel = 0.7 + base_deccel;
@@ -224,6 +224,7 @@ class Player extends Entity
 		
 		maxcooldown = 300;
 		cooldown = 0;
+		cooldowntext = "Ability ready!";
 		useotherhitbox = true;
 		warncooldown = false;
 		jumpspd = base_jumpspd;
