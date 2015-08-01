@@ -187,7 +187,7 @@ class Satori extends Enemy
 	}
 	if (!alive && game.myplayer == bonkedby)
 	{
-		Main._this.savedata.data.unlock[Player.characters.indexOf(rename)] = true;
+		game.unlockcharacter("satori");
 	}
 	}
 	public override function bump()

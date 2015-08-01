@@ -183,7 +183,7 @@ class Seija extends Enemy
 	}
 	if (!alive && game.myplayer == bonkedby)
 	{
-		Main._this.savedata.data.unlock[Player.characters.indexOf("seija")] = true;
+		game.unlockcharacter("seija");
 	}
 	}
 	public override function bump()

@@ -83,8 +83,8 @@ class TrophyItem extends CarryItem
 				D.score += 5000;
 				if (game.myplayer == holder)
 				{
-					Main._this.savedata.data.unlock[Player.characters.indexOf("mokou")] = true;
-					Main._this.savedata.data.unlock[Player.characters.indexOf("kaguya")] = true;
+					game.unlockcharacter("mokou");
+					game.unlockcharacter("kaguya");
 				}
 			}
 		}
