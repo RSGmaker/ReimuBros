@@ -55,7 +55,7 @@ class Main extends Sprite {
 	//activates debug keys and enhanced level info.
 	public var DEBUG:Bool = true;
 	//info displayed in titlescreen
-	public var gameversion:String = "1.5.1 Beta";
+	public var gameversion:String = "1.6.0";
 	public var controlscheme:Array<UInt>;
 	//message shown to player should the host of that session make them leave
 	public var statusmessage:String = "";
