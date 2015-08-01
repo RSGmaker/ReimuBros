@@ -96,6 +96,8 @@ class GameView extends Sprite
 	public var messagetime:Int;
 	
 	public var charselect:CharacterSelect;
+	public var collisiondata:Array<Dynamic>;
+	public var collisiondangerousdata:Array<Dynamic>;
 	
 	public function GetPlayers():Array<Player>
 	{
@@ -464,7 +466,8 @@ class GameView extends Sprite
 			
 		SoundManager.PlayJingle("startgame").addEventListener(Event.SOUND_COMPLETE,function(e:Event):Void {PlayMusic();});
 		}
-		
+		collisiondata = new Array<Dynamic>();
+		collisiondangerousdata = new Array<Dynamic>();
 		successstreak = 0;
 		recievedmessagelog = new Map<String,Int>();
 		sentmessagelog = new Map<String,Int>();
@@ -908,6 +911,7 @@ class GameView extends Sprite
 			Background.alpha = 0;
 			
 		L = Math.floor((level - 1) / 5);
+		ShowLevel();
 		if (GameFlags.get(Main.AltMusic) || (playerspick == "benben" || playerspick == "yatsuhashi"))
 		{
 			L += 6;
@@ -1023,31 +1027,29 @@ class GameView extends Sprite
 	public function CollisionDetectPoint(X:Float,Y:Float):Entity {
 		var i = 0;
 		var ret = null;
-		while (i < entities.length)
+		var P = new Point(X, Y);
+		while (i < collisiondata.length)
 		{
-			var E = entities[i];
-			if (E.solid)
+			var c = collisiondata[i];
+			var e:Entity = c.E;
+			if (e.solid && c.B.containsPoint(P))
 			{
-				if (E.GetHitbox().containsPoint(new Point(X,Y)))
-				{
-					ret = E;
-					i = entities.length;
-					return E;
-				}
+				return e;
 			}
-			i += 1;
+			i++;
 		}
 		return ret;
 	}
 	//retuns collectables at point
 	public function CollisionDetectPointItem(X:Float,Y:Float):EntityItem {
 		var i = 0;
+		var P = new Point(X, Y);
 		while (i < activeItems.length)
 		{
 			var E = activeItems[i];
 			if (!E.killed && E.alive)
 			{
-				if (E.GetHitbox().containsPoint(new Point(X,Y)))
+				if (E.GetHitbox().containsPoint(P))
 				{
 					return E;
 				}
@@ -1060,12 +1062,13 @@ class GameView extends Sprite
 		var i = 0;
 		var PL = new Array<Player>();
 		var A = Players.iterator();
+		var P = new Point(X, Y);
 		while (A.hasNext())
 		{
 			var E = A.next();
 			if (!E.killed)
 			{
-				if (E.GetHitbox().containsPoint(new Point(X,Y)))
+				if (E.GetHitbox().containsPoint(P))
 				{
 					return E;
 				}
@@ -1075,12 +1078,13 @@ class GameView extends Sprite
 	}
 	public function CollisionDetectPointEnemy(X:Float,Y:Float):Enemy {
 		var i = 0;
+		var P = new Point(X, Y);
 		while (i < activeEnemies.length)
 		{
 			var E = activeEnemies[i];
 			if (!E.killed)
 			{
-				if (E.GetHitbox().containsPoint(new Point(X,Y)))
+				if (E.GetHitbox().containsPoint(P))
 				{
 					return E;
 				}
@@ -1092,7 +1096,8 @@ class GameView extends Sprite
 	public function CollisionDetectPointDangerous(X:Float,Y:Float):Entity {
 		var i = 0;
 		var ret = null;
-		while (i < entities.length)
+		var P = new Point(X, Y);
+		/*while (i < entities.length)
 		{
 			var E = entities[i];
 			if (E.dangerous && !E.killed && E.type != "Block")
@@ -1105,24 +1110,44 @@ class GameView extends Sprite
 				}
 			}
 			i += 1;
+		}*/
+		while (i < collisiondangerousdata.length)
+		{
+			var c = collisiondangerousdata[i];
+			var e:Entity = c.E;
+			if (e.dangerous && !e.killed && c.B.containsPoint(P))
+			{
+				return e;
+			}
+			i++;
 		}
 		return ret;
 	}
 	public function CollisionDetectTouchDangerous(target:Entity):Entity {
 		var i = 0;
 		var R = target.getBounds(this);
-		while (i < entities.length)
+		/*while (i < entities.length)
 		{
 			var E = entities[i];
 			
 			if (E.dangerous && !E.killed && E.type != "Block")
 			{
-				if (R.intersects(E.getBounds(this))/*containsPoint(new Point(X,Y))*/)
+				if (R.intersects(E.getBounds(this)))
 				{
 					return E;
 				}
 			}
 			i += 1;
+		}*/
+		while (i < collisiondangerousdata.length)
+		{
+			var c = collisiondangerousdata[i];
+			var e:Entity = c.E;
+			if (e.dangerous && !e.killed && R.intersects(c.B))
+			{
+				return e;
+			}
+			i++;
 		}
 		return null;
 	}
@@ -1542,7 +1567,7 @@ class GameView extends Sprite
 				L = 0;
 			}
 			rank = Math.floor(L / 30);
-			
+			//ShowLevel();
 			//call playmusic() as it will change song if its new
 			SoundManager.PlayJingle("nextlevel").addEventListener(Event.SOUND_COMPLETE, function(e:Event):Void { PlayMusic(); } );
 			var i = 0;
@@ -3063,7 +3088,11 @@ class GameView extends Sprite
 				if (SpawnList.length == 0)
 				{
 					level++;
-					PlayMusic();
+					if (((level - 1) % 5)+1 == 1)
+					{
+						PlayMusic();
+						messagetime = 0;
+					}
 				}
 				if (activeEnemies.length > 0)
 				{
@@ -3442,6 +3471,72 @@ class GameView extends Sprite
 		}
 		return E;
 	}
+	public function ShowLevel()
+	{
+		var S = "";
+		if (rank == 0)
+		{
+			S = "Easy:";
+		}
+		if (rank == 1)
+		{
+			S = "Normal:";
+		}
+		if (rank == 2)
+		{
+			S = "Hard:";
+		}
+		if (rank == 3)
+		{
+			S = "Lunatic:";
+		}
+		if (rank == 4)
+		{
+			S = "Extra:";
+		}
+		if (rank > 4)
+		{
+			S = "EX" + (rank - 3) + ":";
+		}
+		var stage = Math.floor((level - 1) / 5);
+		stage = stage % 6;
+
+		var lvl = ((level - 1) % 5);
+		lvl++;
+		var S2 = "";
+		if (stage == 0)
+		{
+			S2 = "Hakurei Shrine";
+		}
+		if (stage == 1)
+		{
+			S2 = "Scarlet Mansion";
+		}
+		if (stage == 2)
+		{
+			S2 = "Space";
+		}
+		if (stage == 3)
+		{
+			S2 = "Underworld";
+		}
+		if (stage == 4)
+		{
+			S2 = "Palanquin Ship";
+		}
+		if (stage == 5)
+		{
+			S2 = "Eintei";
+		}
+		S = S + S2 + "-" + lvl;
+		var M = messages.length;
+		ShowMessage(S);
+		if (M == 0)
+		{
+			messagetime = 300;
+		}
+		
+	}
 	
 	
 	public function EntityFromUID(UID:Float):Entity
@@ -3804,6 +3899,25 @@ class GameView extends Sprite
 		{
 			syncdelay--;
 		}
+		collisiondata = new Array<Dynamic>();
+		collisiondangerousdata = new Array<Dynamic>();
+		var col = 0;
+		while (col < entities.length)
+		{
+			var E = entities[col];
+			var D:Dynamic = { };
+			D.E = E;
+			D.B = E.GetHitbox();
+			if (E.solid)
+			{
+				collisiondata[collisiondata.length] = D;
+			}
+			if (E.dangerous && !E.killed && E.type != "Block")
+			{
+				collisiondangerousdata[collisiondangerousdata.length] = D;
+			}
+			col++;
+		}
 		if (Hoster)
 		{
 			totalenemies = (SpawnList.length);
@@ -4072,7 +4186,7 @@ class GameView extends Sprite
 			}
 			if (Sealed<1 && R>0 && frame & 2 > 0 && Math.random()<R)
 			{
-				var evt = Math.random();
+				//var evt = Math.random();
 				var E = "";
 				if (Obstacles.length > 0)
 				{
@@ -4429,7 +4543,10 @@ class GameView extends Sprite
 		//calculate available budget for this level
 		var points:Float = (L + 2);// * 2.0;
 		//points *= 1.1;
-		points += ((level-1) % 5);
+		//points += ((level-1) % 5);
+		var lvl = ((level - 1) % 5);
+		lvl++;
+		points += lvl;
 		epm = 0;
 		var R = 0.2 + (Math.random() * 0.2);
 		R = R * points;
