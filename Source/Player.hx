@@ -710,8 +710,9 @@ class Player extends Entity
 						//yellow to green transition
 						col= (0) + (255 << 8) + (CD << 16);
 					}
+					var prg = 50 * prct;
 					G.beginFill(col, 1);
-					G.drawRoundRect(0, 0, 50 * prct, 9,5);
+					G.drawRoundRect(0, 0, prg, 9,5);
 					G.endFill();
 					
 					
@@ -724,7 +725,7 @@ class Player extends Entity
 					var spreadMethod:flash.display.SpreadMethod = flash.display.SpreadMethod.REFLECT;
 					G.beginGradientFill(fillType, colors, alphas, ratios, matr, spreadMethod);  
 	 
-					G.drawRoundRect(0, 0, 50 * prct, 9,5);
+					G.drawRoundRect(0, 0, prg, 9,5);
 					G.endFill();
 					
 					nameplatetext.text = "            ";
