@@ -36,7 +36,7 @@ class Bullet extends Entity
 		x += Hspeed;
 		y += Vspeed;
 		var ok = true;
-		if ((x < -32 && gravX<=0 && Hspeed<=0) || (y < -32 && gravY<=0 && Vspeed<=0) || (x>832 && gravX>=0 && Hspeed>=0) || (y>832 && gravY>=0 && Vspeed>=0))
+		if ((x < -width && gravX<=0 && Hspeed<=0) || (y < -height && gravY<=0 && Vspeed<=0) || (x>832 && gravX>=0 && Hspeed>=0) || (y>832 && gravY>=0 && Vspeed>=0))
 		{
 			alive = false;
 			killed = true;

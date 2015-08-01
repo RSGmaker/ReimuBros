@@ -518,6 +518,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Sprites/noroiko0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/nue0.png", __ASSET__assets_sprites_nue0_png);
 		type.set ("assets/Sprites/nue0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/okuu0.png", __ASSET__assets_sprites_okuu0_png);
+		type.set ("assets/Sprites/okuu0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/okuuflipped0.png", __ASSET__assets_sprites_okuuflipped0_png);
+		type.set ("assets/Sprites/okuuflipped0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/options0.png", __ASSET__assets_sprites_options0_png);
 		type.set ("assets/Sprites/options0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/orange0.png", __ASSET__assets_sprites_orange0_png);
@@ -698,6 +702,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Sprites/unzanfist0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/utsuho0.png", __ASSET__assets_sprites_utsuho0_png);
 		type.set ("assets/Sprites/utsuho0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/utsuhobullet0.png", __ASSET__assets_sprites_utsuhobullet0_png);
+		type.set ("assets/Sprites/utsuhobullet0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/wakasagihime0.png", __ASSET__assets_sprites_wakasagihime0_png);
 		type.set ("assets/Sprites/wakasagihime0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/wriggle0.png", __ASSET__assets_sprites_wriggle0_png);
@@ -1703,6 +1709,14 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/okuu0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/okuuflipped0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "assets/Sprites/options0.png";
 		path.set (id, id);
 		
@@ -2063,6 +2077,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/utsuhobullet0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "assets/Sprites/wakasagihime0.png";
 		path.set (id, id);
 		
@@ -2203,6 +2221,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#else
 		
 		#if openfl
+		
+		
+		
 		
 		
 		
@@ -3269,6 +3290,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("assets/Sprites/nue0.png", __ASSET__assets_sprites_nue0_png);
 		type.set ("assets/Sprites/nue0.png", AssetType.IMAGE);
 		
+		className.set ("assets/Sprites/okuu0.png", __ASSET__assets_sprites_okuu0_png);
+		type.set ("assets/Sprites/okuu0.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/okuuflipped0.png", __ASSET__assets_sprites_okuuflipped0_png);
+		type.set ("assets/Sprites/okuuflipped0.png", AssetType.IMAGE);
+		
 		className.set ("assets/Sprites/options0.png", __ASSET__assets_sprites_options0_png);
 		type.set ("assets/Sprites/options0.png", AssetType.IMAGE);
 		
@@ -3538,6 +3565,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("assets/Sprites/utsuho0.png", __ASSET__assets_sprites_utsuho0_png);
 		type.set ("assets/Sprites/utsuho0.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/utsuhobullet0.png", __ASSET__assets_sprites_utsuhobullet0_png);
+		type.set ("assets/Sprites/utsuhobullet0.png", AssetType.IMAGE);
 		
 		className.set ("assets/Sprites/wakasagihime0.png", __ASSET__assets_sprites_wakasagihime0_png);
 		type.set ("assets/Sprites/wakasagihime0.png", AssetType.IMAGE);
@@ -4559,6 +4589,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_nitori0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_noroiko0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_nue0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_okuu0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_okuuflipped0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_options0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_orange0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_orin0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -4649,6 +4681,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_unused0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_unzanfist0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_utsuho0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_utsuhobullet0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_wakasagihime0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_wriggle0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_yamame0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -4684,6 +4717,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 #elseif html5
+
+
+
 
 
 
@@ -5284,6 +5320,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("Assets/Sprites/nitori0.png") #if display private #end class __ASSET__assets_sprites_nitori0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/noroiko0.png") #if display private #end class __ASSET__assets_sprites_noroiko0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/nue0.png") #if display private #end class __ASSET__assets_sprites_nue0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/okuu0.png") #if display private #end class __ASSET__assets_sprites_okuu0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/okuuflipped0.png") #if display private #end class __ASSET__assets_sprites_okuuflipped0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/options0.png") #if display private #end class __ASSET__assets_sprites_options0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/orange0.png") #if display private #end class __ASSET__assets_sprites_orange0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/orin0.png") #if display private #end class __ASSET__assets_sprites_orin0_png extends lime.graphics.Image {}
@@ -5374,6 +5412,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("Assets/Sprites/unused0.png") #if display private #end class __ASSET__assets_sprites_unused0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/unzanfist0.png") #if display private #end class __ASSET__assets_sprites_unzanfist0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/utsuho0.png") #if display private #end class __ASSET__assets_sprites_utsuho0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/utsuhobullet0.png") #if display private #end class __ASSET__assets_sprites_utsuhobullet0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/wakasagihime0.png") #if display private #end class __ASSET__assets_sprites_wakasagihime0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/wriggle0.png") #if display private #end class __ASSET__assets_sprites_wriggle0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/yamame0.png") #if display private #end class __ASSET__assets_sprites_yamame0_png extends lime.graphics.Image {}
