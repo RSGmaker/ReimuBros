@@ -166,14 +166,14 @@ class Entity extends Sprite
 	//execute a rotation with crude stabilizing.(has a bit of jitter)
 	public function rotateentity(rot:Float)
 	{
-		/*{
+		{
 		var B = getBounds(game);
 		rotation = rot;
 		var B2 = getBounds(game);
 		x += B.left - B2.left;
 		y += B.top - B2.top;
-		}*/
-		var matrix:Matrix = transform.matrix;
+		}
+		/*var matrix:Matrix = transform.matrix;
 		var rect:Rectangle = getBounds(parent);
 
 		matrix.translate(-(rect.left + (rect.width / 2)), -(rect.top + (rect.height / 2)));
@@ -181,7 +181,7 @@ class Entity extends Sprite
 		matrix.translate(rect.left + (rect.width / 2), rect.top + (rect.height / 2));
 		transform.matrix = matrix;
 
-		rotation = Math.round(rotation);
+		rotation = Math.round(rotation);*/
 	}
 	public function updphysics()
 	{
