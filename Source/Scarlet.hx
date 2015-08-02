@@ -45,6 +45,22 @@ class Scarlet extends Enemy
 		dist = Math.sqrt(dx*dx + dy*dy);
 		//trace(dist);
 	}*/
+	override public function CustomEvent(data:Dynamic) 
+	{
+		super.CustomEvent(data);
+		if (transformed)
+		{
+			x = data.x;
+			y = data.y;
+			Ldir = data.Ldir;
+			if (who == "remilia")
+			{
+				Hspeed *= (Ldir * (mxspd / 2));
+			}
+			rename = who;
+			transformed = false;
+		}
+	}
 	override public function attack():Bool 
 	{
 		return !transformed;
@@ -73,7 +89,7 @@ class Scarlet extends Enemy
 				if (!target.alive)
 				{
 					var A = game.GetPlayers();
-					target = A[Std.int((99993 * UID)) % A.length];
+					target = A[Std.int((79993 * UID)) % A.length];
 				}
 				else
 				{
@@ -81,10 +97,14 @@ class Scarlet extends Enemy
 					P.normalize(3);
 					x += P.x;
 					y += P.y;
-					if (Math.abs(target.y - y) < 60/* && target.y < y*/)
+					if (target == game.myplayer && Math.abs(target.y - y) < 60/* && target.y < y*/)
 					{
 						if (Math.abs(target.x - x) < 200)
 						{
+							var D:Dynamic = { };
+							D.x = x;
+							D.y = y;
+							
 							if (x < target.x)
 							{
 								Ldir = 1;
@@ -93,12 +113,14 @@ class Scarlet extends Enemy
 							{
 								Ldir = -1;
 							}
-							if (who == "remilia")
+							D.Ldir = Ldir;
+							game.SendEvent("CustomEvent", D);
+							/*if (who == "remilia")
 							{
 								Hspeed *= (Ldir * (mxspd / 2));
 							}
 							rename = who;
-							transformed = false;
+							transformed = false;*/
 						}
 					}
 				}

@@ -33,6 +33,12 @@ class Meiling extends Enemy
 		scaleY = 0.7;
 	}
 	
+	override public function CustomEvent(data:Dynamic) 
+	{
+		super.CustomEvent(data);
+		speedup = true;
+	}
+	
 	public override function increaserank()
 	{
 			accel += 0.1;
@@ -95,12 +101,16 @@ class Meiling extends Enemy
 		}
 		else if (target.alive && !target.killed && ground != null)
 		{
-			if (Math.abs(target.y - y) < 60 && ((Ldir == -1 && target.x<x) || (Ldir==1 && target.x>x)))
+			if (game.Hoster && Math.abs(target.y - y) < 60 && ((Ldir == -1 && target.x<x) || (Ldir==1 && target.x>x)))
 			{
 				//simulate double speed
 				//x += Hspeed;
 				//x += Hspeed;
-				speedup = true;
+				//speedup = true;
+				var D:Dynamic = { };
+				D.UID = UID;
+				D.data = null;
+				game.SendEvent("CustomEvent", D);
 			}
 			
 		}

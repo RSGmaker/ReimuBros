@@ -115,7 +115,7 @@ class Entity extends Sprite
 		
 		mouseEnabled = false;
 	}
-	public function Customevent(data:Dynamic)
+	public function CustomEvent(data:Dynamic)
 	{
 		
 	}
