@@ -997,7 +997,7 @@ class GameView extends Sprite
 			activeEnemies[activeEnemies.length] = E;
 		}
 	}
-	private function AddObject(E:Entity) {
+	public function AddObject(E:Entity) {
 		if (E.interactable/* && activeInteractables.indexOf(E >= 0)*/)
 		{
 			activeInteractables[activeInteractables.length] = E;
@@ -2073,6 +2073,10 @@ class GameView extends Sprite
 					E.Hspeed *= -1;
 					E.Vspeed *= -1;
 					E.Ldir *= -1;
+					if (E.subtype == "DanmakuBullet")
+					{
+						D.currot += 3.14;
+					}
 					if (E.type == "Bullet")
 					{
 						D.gravX *= -1;
@@ -2959,6 +2963,14 @@ class GameView extends Sprite
 			D.UID = Math.random();
 			SendEvent("SpawnEnemy", D);
 		}
+		if (evt == "CustomEvent")
+		{
+			var E = EntityFromUID(data.UID);
+			if (E != null && E.alive)
+			{
+				E.CustomEvent(data.data);
+			}
+		}
 	}
 	// Event Handlers
 	
@@ -3137,7 +3149,15 @@ class GameView extends Sprite
 			{
 				myplayer.cooldown = 0;
 			}
+		case Keyboard.F7:
+			if (Hoster && Main._this.DEBUG)
+			{
+				//SendYuuka();
+				var B = new Boss();
+				AddObject(B);
+			}
 		}
+		
 		
 		if (event.keyCode == Main._this.controlscheme[0])
 		{
