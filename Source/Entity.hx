@@ -115,9 +115,18 @@ class Entity extends Sprite
 		
 		mouseEnabled = false;
 	}
+	//called when this client receives a custom event for this entity
 	public function CustomEvent(data:Dynamic)
 	{
 		
+	}
+	//send a custom event for this entity to all players
+	public function SendCustomEvent(data:Dynamic)
+	{
+		var D:Dynamic = { };
+		D.UID = UID;
+		D.data = data;
+		game.SendEvent("CustomEvent", D);
 	}
 	public function GetHitbox():Rectangle
 	{
