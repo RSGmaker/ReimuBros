@@ -9,7 +9,7 @@ class ExKeine extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "EX Form";
+		description = "Temporary invincibility";
 	}
 	override public function init() 
 	{

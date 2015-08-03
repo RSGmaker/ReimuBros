@@ -9,7 +9,7 @@ class Cheeen extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Cheeee~n";
+		description = "Throws Chen";
 	}
 	override public function init() 
 	{

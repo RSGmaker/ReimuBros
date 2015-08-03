@@ -10,7 +10,7 @@ class AlternateMusic extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Alternate music";
+		description = "Plays alternate music";
 	}
 	
 }

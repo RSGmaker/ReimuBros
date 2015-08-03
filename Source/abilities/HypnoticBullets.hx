@@ -9,7 +9,7 @@ class HypnoticBullets extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Fires a hypnotic bullet";
+		description = "Hypnotic bullets";
 	}
 	override public function init() 
 	{

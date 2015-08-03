@@ -11,7 +11,7 @@ class Floating extends PlayerAbility
 	public function new(player:Player)  
 	{
 		super(player);
-		description = "Can hover briefly";
+		description = "Hovers briefly";
 	}
 	override public function onbeginframe() 
 	{

@@ -30,7 +30,7 @@ class OneWeekGirl extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Can cause a\nvariety of effects";
+		description = "Random effects";
 	}
 	
 	override public function init() 

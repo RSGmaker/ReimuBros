@@ -9,7 +9,7 @@ class MasterSpark extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Fires a Master Spark\ncharge by punishing enemies";
+		description = "Fires a Master Spark that is\ncharged by killing enemies";
 	}
 	override public function init() 
 	{

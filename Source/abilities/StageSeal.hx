@@ -10,7 +10,7 @@ class StageSeal extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Seals the stage preventing\nenemies from walking\noff stage";
+		description = "Seals the stage, preventing\nenemies from walking\noffstage";
 	}
 	override public function init() 
 	{

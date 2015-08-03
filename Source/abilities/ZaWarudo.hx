@@ -9,7 +9,7 @@ class ZaWarudo extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "-The World-";
+		description = "「The World」";
 	}
 	override public function init() 
 	{
