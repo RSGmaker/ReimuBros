@@ -1,7 +1,7 @@
 -main ApplicationMain 
--cp C:/HaxeToolkit/haxe/lib/openfl/3,2,1
+-cp C:/Users/Scott/Documents/haxe/lib/openfl/3,2,1
 -D openfl=3.2.1
--cp C:/HaxeToolkit/haxe/lib/lime/2,5,1
+-cp C:/Users/Scott/Documents/haxe/lib/lime/2,5,1
 -D lime=2.5.1
 -cp Source
 -D native-trace

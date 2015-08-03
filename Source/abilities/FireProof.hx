@@ -10,7 +10,7 @@ class FireProof extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Fire proof";
+		description = "Fireproof";
 	}
 	override public function init() 
 	{

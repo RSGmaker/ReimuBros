@@ -9,7 +9,7 @@ class YinYangOrbs extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Yin-Yang Orbs";
+		description = "Yin-yang orbs";
 	}
 	override public function init() 
 	{

@@ -10,7 +10,7 @@ class BounceEntities extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Bounces bullets,and \nenemy,has other effects";
+		description = "Bounces bullets and\nenemies (has other effects)";
 	}
 	override public function init() 
 	{

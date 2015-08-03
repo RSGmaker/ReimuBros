@@ -10,7 +10,7 @@ class MoreInvincibility extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description =  "Invincibility time+";
+		description =  "Twice the invincibility time\nafter getting hit";
 	}
 	override public function onrespawn() 
 	{

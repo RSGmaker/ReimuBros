@@ -10,7 +10,7 @@ class FlipResistance extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Prevents screen\nflipping";
+		description = "Prevents screen-flipping";
 	}
 	override public function init() 
 	{
