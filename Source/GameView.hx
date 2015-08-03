@@ -113,13 +113,21 @@ class GameView extends Sprite
 	public function unlockcharacter(name:String)
 	{
 		var i = Player.characters.indexOf(name);
+		var alt = false;
+		if (name.indexOf("ALT") > -1)
+		{
+			alt = true;
+			name = name.substr(0, name.length - 3);
+			i = Player.characters.indexOf(name);
+		}
 		var savedata = Main._this.savedata;
 		if (i > -1)
 		{
-			if (name.indexOf("ALT") > -1)
+			//if (name.indexOf("ALT") > -1)
+			if (alt)
 			{
-				name = name.substr(0, name.length - 3);
-				i = Player.characters.indexOf(name);
+				//name = name.substr(0, name.length - 3);
+				//i = Player.characters.indexOf(name);
 				if (!savedata.data.alts[i])
 				{
 					savedata.data.alts[i] = true;
@@ -191,6 +199,8 @@ class GameView extends Sprite
 	public var ufos:Int;
 	public var HighScore:Int;
 	
+	public var boss:Boss = null;
+	
 	public var minipowactive:Bool;
 	public var minipowspawns:Int=0;
 	public var maxminipowspawns:Int=2;
@@ -223,6 +233,7 @@ class GameView extends Sprite
 	//ALL means it even counts score used up on 1ups
 	public var CombinedScoreALL:Int = 0;
 	public var Obstacles:Array<String>;
+	public var enemytypes:Array<Enemy>;
 	public var platformformation:Int = 0;
 	public var currentformation = -1;
 	
@@ -1545,6 +1556,7 @@ class GameView extends Sprite
 					ProcessEvent("FreezeWorld", "Myself", null);
 				}
 			}
+			boss = null;
 			minipowspawns = 0;
 			RoundType = R;
 			this.x = 0;
@@ -2127,11 +2139,6 @@ class GameView extends Sprite
 			{
 				powblock.HP = data.HP;
 			}
-			if (myplayer == P)
-			{
-				//Main._this.savedata.data.unlock[Player.characters.indexOf("suika")] = true;
-				unlockcharacter("suika");
-			}
 			SoundManager.Play("pow");
 			var i = 0;
 			while (i < entities.length)
@@ -2158,6 +2165,10 @@ class GameView extends Sprite
 			if (thegiant.active && thegiant.rotation == 0)
 			{
 				thegiant.tipover();
+				if (myplayer == P)
+				{
+					unlockcharacter("suika");
+				}
 			}
 		}
 		if (evt == "Enrage")
@@ -3153,8 +3164,9 @@ class GameView extends Sprite
 			if (Hoster && Main._this.DEBUG)
 			{
 				//SendYuuka();
-				var B = new Boss();
-				AddObject(B);
+				var B = new BossCirno();
+				AddEnemy(B);
+				//AddObject(B);
 			}
 		}
 		
@@ -3383,6 +3395,16 @@ class GameView extends Sprite
 						E = new Meiling();
 						type = "Enemy";
 					}
+					if (D.type == "bosscirno")
+					{
+						E = new BossCirno();
+						type = "Enemy";
+					}
+					if (D.type == "tenshi")
+					{
+						E = new Tenshi();
+						type = "Enemy";
+					}
 					if (D.type == "udongein")
 					{
 						E = new Reisen();
@@ -3426,6 +3448,10 @@ class GameView extends Sprite
 						E.rank = D.rank;
 						E.visible = D.visible;
 						E.spawns = D.spawns + 1;
+						if (D.HP != null)
+						{
+							E.HP = D.HP;
+						}
 						if (D.enraged)
 						{
 							E.enrage();
@@ -3949,7 +3975,7 @@ class GameView extends Sprite
 			}
 			if (totalenemies == 1 && Hoster)
 			{
-				if (activeEnemies.length > 0 && !activeEnemies[0].enraged && activeEnemies[0].needtokill)
+				if (activeEnemies.length > 0 && !activeEnemies[0].enraged && activeEnemies[0].needtokill && activeEnemies[0].subtype!="boss")
 				{
 					SendEvent("Enrage", activeEnemies[0].UID);
 				}
@@ -4470,11 +4496,16 @@ class GameView extends Sprite
 				data.type = E.charname;
 				data.rank = E.rank;
 				data.spawns = E.spawns;
+				if (E.HP > -1)
+				{
+					data.HP = E.HP;
+				}
 				SendEvent("SpawnEnemy", data);
 			}
 			else
 			{
-				if (getenemycount() < 1)
+				var count = getenemycount();
+				if (count < 1)
 				{
 					ResetSpawnTimer();
 					SpawnTimer = SpawnTimer >> 1;
@@ -4527,6 +4558,10 @@ class GameView extends Sprite
 				totalenemies += getenemycount();
 				
 				SendEvent("TotalEnemies", totalenemies);
+				}
+				else if (boss != null && count == 1)
+				{
+					boss.outofminions();
 				}
 			}
 		}
@@ -4616,7 +4651,7 @@ class GameView extends Sprite
 			EVT *= 0.1;
 		}
 		RoundType = TypeofRound.Normal;
-		var enemytypes:Array<Enemy> = new Array<Enemy>();
+		enemytypes = new Array<Enemy>();
 		maxspawns = Math.ceil(points) + (P) + 1;
 		
 		Obstacles = new Array<String>();
@@ -4808,6 +4843,10 @@ class GameView extends Sprite
 			{
 				AddToArrayMultiple(enemytypes, new Meiling(), 5);
 			}
+			if (level > 10)
+			{
+				AddToArrayMultiple(enemytypes, new Tenshi(), 4);
+			}
 			if (level > 15)
 			{
 				AddToArrayMultiple(enemytypes, new Utsuho(), 3);
@@ -4866,20 +4905,42 @@ class GameView extends Sprite
 			}
 			C -= 35000;
 		}
-		
-		var tmp = 0;
+		if (RoundType == TypeofRound.Cirno)
+		{
+			//SpawnList.add(new BossCirno());
+		}
+		populatespawnlist();
+		/*var tmp = 0;
 		while (tmp < maxspawns)
 		{
 			var enemy = enemytypes[Math.floor(Math.random() * enemytypes.length)];
 			enemy.UID = 0;
 			SpawnList.add(enemy);
 			tmp++;
-		}
+		}*/
 		
 				
 		epm += epmmodifier;
 		ept = epm * (onetickperminutechance2);//the times 2 is for equalling "frame & 2>0" out above
 		rept = (epm + 3 + (Math.floor(epm) >> 1)) * (onetickperminutechance2);
+	}
+	public function populatespawnlist()
+	{
+		if (enemytypes != null && enemytypes.length > 0)
+		{
+			var tmp = 0;
+			while (tmp < maxspawns)
+			{
+				var enemy = enemytypes[Math.floor(Math.random() * enemytypes.length)];
+				enemy.UID = 0;
+				SpawnList.add(enemy);
+				tmp++;
+				if (boss != null)
+				{
+					tmp++;
+				}
+			}
+		}
 	}
 	
 }
