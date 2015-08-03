@@ -136,6 +136,8 @@ class Player extends Entity
 	//public var cooldowntext = "READY";
 	public var cooldowntext:String;
 	
+	public var glow:flash.filters.GlowFilter;
+	
 	public static inline var base_deccel = 0.5+0.4;
 	public static inline var base_accel = 0.7 + base_deccel;
 	//public static inline var base_mxspd = 7+1.55;
@@ -179,7 +181,9 @@ class Player extends Entity
 			{
 				AB.color = 0xFFAA66;
 			}
+			
 			AB.strength = 1.25;
+			glow = AB;
 		
 		filterArr = new Array();
 		filterArr[0] = AB;
@@ -583,7 +587,8 @@ class Player extends Entity
 		{
 			if (enemy.killable)
 			{
-				game.SendEvent("Kill", enemy.UID);
+				enemy.kick();
+				//game.SendEvent("Kill", enemy.UID);
 				if (enemy.charname == "RedFairy" && flags.get(SpawnZombieFairies) && Math.random()<zombiefairychance)
 				{
 					var i = 0;
@@ -677,6 +682,22 @@ class Player extends Entity
 			cooldownbar.visible = false;
 			if (this == game.myplayer)
 			{
+				if (cooldown <= 0)
+				{
+					glow.strength = 2.0;
+					glow.blurX = 30;
+					glow.blurY = 30;
+				}
+				else
+				{
+					glow.strength = 1.25;
+					glow.blurX = 20;
+					glow.blurY = 20;
+				}
+				filterArr = new Array();
+				filterArr[0] = glow;
+				filters = filterArr;
+				
 				if (warncooldown && cooldown <= 0)
 				{
 					nameplatetext.text = cooldowntext;
@@ -740,6 +761,14 @@ class Player extends Entity
 		else
 		{
 			nameplate.visible = false;
+			if (this == game.myplayer)
+			{
+				glow.strength = 1.25;
+				glow.blurX = 20;
+				glow.blurY = 20;
+				filterArr = new Array();
+				filterArr[0] = glow;
+			}
 		}
 		if (true)
 		{
