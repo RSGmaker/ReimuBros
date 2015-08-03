@@ -42,7 +42,7 @@ class Enemy extends Entity
 		reward = true;
 		pointvalue = 100;
 		respawn = true;
-		HP = 0;
+		HP = -1;
 		started = false;
 		rank = game.rank;
 		currentrank = 0;
@@ -58,6 +58,11 @@ class Enemy extends Entity
 	public function attack():Bool
 	{
 		return invincibility <= 0;
+	}
+	//when a player touches the enemy when it isnt dangerous(vulnerable)
+	public function kick()
+	{
+		game.SendEvent("Kill", UID);
 	}
 	//call this when enemy recovers from being flipped
 	public function powerup()
