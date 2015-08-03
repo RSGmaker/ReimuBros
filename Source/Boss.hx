@@ -20,15 +20,30 @@ class Boss extends Enemy
 	private var filterArr:Array<flash.filters.BitmapFilter>;
 	private var glow:Array<flash.filters.GlowFilter>;
 	
+	public var frame:Int;
 	
 	
 	public var phase:Int;
 	public var totalphases:Int;
+	public var W2:Int;
+	public var H2:Int;
+	
+	public var cx:Float;
+	public var cy:Float;
+	
+	public var tx:Float;
+	public var ty:Float;
+	//whether or not the boss is flying in the air, and firing danmaku or just walking around
+	public var firingdanmaku:Bool;
+	public var rename:String;
+	//public var unlock:String;
 	
 	
-	public function new() 
+	public function new(bosstype:String="bosscirno") 
 	{
-		super("cirno");
+		super(bosstype);
+		rename = "cirno";
+		subtype = "boss";
 		accel = 1;
 		deccel = 0.1;
 		mxspd = 4;
@@ -51,29 +66,16 @@ class Boss extends Enemy
 		filterArr[filterArr.length] = AB;
 		glow[glow.length] = AB;
 		totalphases = 3;
-		/*AB = new flash.filters.GlowFilter();
-		AB.blurX = 10;
-		AB.blurY = 10;
-		AB.color = 0x000000;
-		AB.strength = 2;
-		filterArr[filterArr.length] = AB;
-		glow[glow.length] = AB;
-		AB = new flash.filters.GlowFilter();
-		AB.blurX = 5;
-		AB.blurY = 5;
-		AB.color = 0x00FF00;
-		AB.strength = 2;
-		filterArr[filterArr.length] = AB;
-		glow[glow.length] = AB;
-		AB = new flash.filters.GlowFilter();
-		AB.blurX = 0;
-		AB.blurY = 0;
-		AB.color = 0x000000;
-		AB.strength = 2;
-		filterArr[filterArr.length] = AB;
-		glow[glow.length] = AB;*/
+		
+		tx = 400;
+		ty = 40;
 		
 		filters = filterArr;
+		
+		needtokill = true;
+		
+		firingdanmaku = true;
+		ChangeAnimation(rename);
 	}
 	
 	private function RadianToDegree(angle:Float):Float
@@ -95,6 +97,109 @@ class Boss extends Enemy
 			mxspd += 0.5;
 			pointvalue += 50;
 	}
+	public function outofminions()
+	{
+		if (firingdanmaku)
+		{
+			var D:Dynamic = { };
+			var data:Dynamic = { };
+			D.UID = UID;
+			D.data = data;
+			data.firing = !firingdanmaku;
+			data.seed = rng.seed;
+			data.phase = phase;
+			game.SendEvent("CustomEvent", D);
+			game.populatespawnlist();
+		}
+	}
+	override public function CustomEvent(data:Dynamic) 
+	{
+		super.CustomEvent(data);
+		firingdanmaku = data.firing;
+		rng.seed = data.seed;
+		phase = data.phase;
+		frame = 0;
+		visuallyEnraged = false;
+	}
+	public function defeated(P:Player)
+	{
+		if (P.isme)
+		{
+			game.unlockcharacter(rename);
+			game.SendKillAll();
+			var D:Dynamic = { };
+			game.SendEvent("ClearSpawnList", D);
+		}
+	}
+	public function dodanmaku()
+	{
+		if (shottime > 0)
+		{
+			shottime--;
+			if (shottime <= 0)
+			{
+				var O = new DanmakuBullet("icebullet");
+				O.x = cx;
+				O.y = cy;
+				O.Vspeed = 4;
+				O.visuallyrotates = true;
+				O.changeangle(DegreeToRadian(180 + (rng.random() * 20)));
+				O.shotby = this;
+
+				O.rotrate = -0.019;
+				O.rotdelay = 5;
+				O.spiral = 1 - 0.01;
+				O.currot = O.getangle();
+					
+				game.AddObject(O);
+				O = new DanmakuBullet("icebullet");
+				O.x = cx;
+				O.y = cy;
+				O.Vspeed = 4;
+				O.visuallyrotates = true;
+				O.changeangle(DegreeToRadian(0 - (rng.random() * 20)));
+				O.shotby = this;
+					
+				O.rotrate = 0.019;
+				O.rotdelay = 5;
+				O.spiral = 1 - 0.01;
+				O.currot = O.getangle();
+				game.AddObject(O);
+					
+				shottime = 10;
+			}
+		}
+		if (game.rank > 0 || true)
+		{
+		if (frame % 350 < 25)
+		{
+			visuallyEnraged = !visuallyEnraged;
+		}
+		
+		if (frame % 350 == 25)
+		{
+			visuallyEnraged = false;
+			var i = 0;
+			var X = cx - 200+(rng.quick(300));
+			while (i < 5)
+			{
+				var O = new DanmakuBullet("icebullet");
+				O.x = X;
+				O.y = cy;
+				O.Vspeed = 4;
+				O.visuallyrotates = true;
+				O.changeangle(1.57);
+				O.shotby = this;
+
+				O.currot = O.getangle();
+					
+				game.AddObject(O);
+				i++;
+				X += 32;
+			}
+		}
+		}
+	}
 	public override function update()
 	{
 		if (!started)
@@ -103,45 +208,21 @@ class Boss extends Enemy
 			rng = new MersenneTwister();
 			var seed:UInt = Math.floor(UID * 100000);
 			rng.twist(seed, 1, 100000);
-		}
-		/*var i = 0;
-		//var reset = glow[0].color > 0x00F000;
-		var reset = glow[0].color <= 0x000100;
-		var R = true;
-		while (i < glow.length)
-		{
-			//glow[i].strength++;
-			
-			if (reset)
+			W2 = (Math.floor(width) >> 1);
+			H2 = (Math.floor(height) >> 1);
+			if (game.boss != null)
 			{
-				if (R)
-				{
-					glow[i].color = 0x00FF00;
-				}
-				else
-				{
-					glow[i].color = 0x000000;
-				}
-				//glow[i].strength = R;
-				//R += 0;
+				alive = false;
 			}
 			else
 			{
-				if (R)
-				{
-					glow[i].color -= 0x0001;
-				}
-				else
-				{
-					glow[i].color += 0x0001;
-				}
+				game.boss = this;
 			}
-			R = !R;
-			i++;
 		}
-		filters = filterArr;*/
-		scaleX = 1;
-		scaleY = 1;
+		scaleX = 0.85;
+		scaleY = 0.85;
+		
+		
 		if (flipped < 1 || phase < totalphases)
 		{
 			invincibility = 10;
@@ -150,62 +231,30 @@ class Boss extends Enemy
 		{
 			invincibility--;
 		}
-		x = 400;
-		y = 10;
+		if (firingdanmaku && !killed)
+		{
+		//x = 400 - W2;
+		//y = 10;
+		var xx = tx - W2;
+		var yy = ty - H2 + (H2 >> 1);
+		cx = x + W2;
+		cy = y + H2 + (H2 >> 1);
 		Hspeed = 0;
 		Vspeed = 0;
-		surprisetime = 100;
-		if (surprisetime > 0)
+		var P:flash.geom.Point = new flash.geom.Point(cx - tx, cy - ty);
+		if (P.length <= 4)
 		{
-			surprisetime--;
-			if (shottime > 0 && game.Hoster)
-			{
-				shottime--;
-				if (shottime <= 0)
-				{
-					/*var D:Dynamic = { };
-					D.UID = UID;
-					game.SendEvent("ChenDanmaku", D);
-					shottime = 10;*/
-					var O = new DanmakuBullet("icebullet");
-					O.x = x;
-					O.y = y + 10;
-					O.Vspeed = 4;
-					O.visuallyrotates = true;
-					O.changeangle(DegreeToRadian(180 + (rng.random() * 20)));
-					//O.Vspeed =-0.2;
-					//O.Hspeed = -3.5 - (rng.random()*3);
-					O.shotby = this;
-
-					O.rotrate = -0.019;
-					O.rotdelay = 5;
-					O.spiral = 1 - 0.01;
-					O.currot = O.getangle();
-					
-					game.AddObject(O);
-					O = new DanmakuBullet("icebullet");
-					O.x = x;
-					O.y = y + 10;
-					O.Vspeed = 4;
-					O.visuallyrotates = true;
-					O.changeangle(DegreeToRadian(0 - (rng.random() * 20)));
-					//O.Vspeed = -0.2;
-					//O.Hspeed = 3.5 + (rng.random()*3);
-					O.shotby = this;
-					
-					O.rotrate = 0.019;
-					O.rotdelay = 5;
-					O.spiral = 1 - 0.01;
-					O.currot = O.getangle();
-					game.AddObject(O);
-					
-					shottime = 10;
-				}
-			}
-			if (surprisetime <= 0)
-			{
-				mxspd -= 4;
-			}
+			x = tx - (cx - x);
+			y = ty - (cy - y);
+		}
+		else
+		{
+			P.normalize(4);
+			Hspeed = -P.x;
+			y -= P.y;
+		}
+		
+		dodanmaku();
 		}
 		if (!killed)
 		{
@@ -217,7 +266,7 @@ class Boss extends Enemy
 			if (flipped == 0)
 			{
 				flipped = -1;
-				powerup();
+				//powerup();
 			}
 		}
 		else
@@ -241,7 +290,7 @@ class Boss extends Enemy
 			}
 		}
 		updphysics();
-		updateanimation();
+		updateanimation(rename);
 		
 		if (ground != null)
 		{
@@ -270,8 +319,14 @@ class Boss extends Enemy
 		}
 			if (y > 408 && wrapped)
 			{
-				alive = false;
-				visible = false;
+				Ldir = 1;
+				x = -32;
+				y = - 200;
+				if (rng.quick(100) > 50)
+				{
+					Ldir = -1;
+					x = 832;
+				}
 			}
 		killable = flipped > 0;
 	}
@@ -283,23 +338,44 @@ class Boss extends Enemy
 	alive = false;
 	}
 	}
+	if (!alive/* && game.myplayer == bonkedby*/ && bonkedby != null)
+	{
+		if (bonkedby.type == "Player")
+		{
+			var D:Dynamic = bonkedby;
+			defeated(D);
+		}
+		/*game.unlockcharacter(unlock);
+		game.SendKillAll();
+		var D:Dynamic = { };
+		game.SendEvent("ClearSpawnList", D);*/
+	}
+	frame++;
 	}
 	public override function bump()
 	{
-		if (flipped < 1)
+		phase++;
+		if (!firingdanmaku)
 		{
-			if (enraged)
+			if (phase >= totalphases)
 			{
-				flipped = 30 * 4;
+				flipped = 30 * 10;
 			}
 			else
 			{
-				flipped = 30 * 7;
+				if (game.Hoster)
+				{
+					var D:Dynamic = { };
+					var data:Dynamic = { };
+					D.UID = UID;
+					D.data = data;
+					data.firing = !firingdanmaku;
+					data.seed = rng.seed;
+					data.phase = phase;
+					game.populatespawnlist();
+					game.SendEvent("CustomEvent", D);
+				}
 			}
-		}
-		else
-		{
-			flipped = 0;
 		}
 	}
 	
