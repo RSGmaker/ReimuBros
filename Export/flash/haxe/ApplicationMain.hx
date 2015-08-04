@@ -1022,7 +1022,7 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("assets/Sprites/poisonblock0.png");
+		urls.push ("assets/Sprites/poisoncloud0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
