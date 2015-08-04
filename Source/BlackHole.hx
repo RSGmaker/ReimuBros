@@ -18,7 +18,7 @@ class BlackHole extends Entity
 		visual = new Bitmap(game.AL.GetAnimation("blackhole")[0]);
 		visual.x -= visual.width/2;
 		visual.y -= visual.height/2;
-		timeleft = 500;
+		timeleft = 550;
 		scaleX = 0.05;
 		scaleY = 0.05;
 		addChild(visual);

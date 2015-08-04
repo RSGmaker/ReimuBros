@@ -14,7 +14,7 @@ class SummonBlackHole extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 1200;
+		player.maxcooldown = 2000;
 		player.warncooldown = true;
 	}
 	override public function onframe() 
