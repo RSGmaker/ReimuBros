@@ -241,6 +241,11 @@ class Entity extends Sprite
 				Vspeed = 0;
 				y = ground.y - feetposition;
 			}
+			var D:Dynamic = ground;
+			if (type != "Player" && ground.type == "Block" && D.poison)
+			{
+				Hspeed *= 0.80;
+			}
 		}
 		headbonk = null;
 		if (Vspeed < 0)

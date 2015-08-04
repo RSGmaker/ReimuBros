@@ -149,6 +149,7 @@ class Player extends Entity
 	public function new(charname:String,controller:Array<Bool>) 
 	{
 		super(charname);
+		type = "Player";
 		this.controller = controller;
 		Ldir = 1;
 		allmyons = new Array<MyonItem>();
@@ -224,7 +225,7 @@ class Player extends Entity
 		alpha = 1;
 		this.charname = charname;
 		flags = new FlagManager(1);
-		type = "Player";
+		
 		
 		maxcooldown = 300;
 		cooldown = 0;

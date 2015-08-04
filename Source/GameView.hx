@@ -489,6 +489,18 @@ class GameView extends Sprite
 		spawnedChar = false;
 		OBackground = new Bitmap(AL.GetAnimation("CSBG")[0]);
 		Background = new Bitmap(AL.GetAnimation("BG")[0]);
+		var L = Math.floor((level) / 5);
+			var A = AL.GetAnimation("BG");
+			if (L < 0)
+			{
+				L = 0;
+			}
+			while (L >= A.length)
+			{
+				L -= A.length;
+			}
+			Background.bitmapData = A[L];
+			Background.alpha = 0;
 		
 		
 		Background.alpha = 0;
@@ -506,7 +518,7 @@ class GameView extends Sprite
 		SpawnTimer = 30 * 5;
 		MSE = false;
 		
-		level = 0;
+		//level = 0;
 		roundstarted = false;
 		frame = 0;
 		Hoster = true;
@@ -1541,6 +1553,7 @@ class GameView extends Sprite
 		if (evt == "NextLevel")
 		{
 			var R = TypeofRound.createByIndex(data.RoundType);
+			
 			if (RoundType != R)
 			{
 				if (R == TypeofRound.Table)
@@ -1573,6 +1586,13 @@ class GameView extends Sprite
 			spawns = 0;
 			roundstarted = false;
 			level = data.level;
+			if (!online)
+			{
+				if (Main._this.savedata.data.maxlevel < level)
+				{
+					Main._this.savedata.data.maxlevel = level;
+				}
+			}
 			var L = level - 1;
 			if (L < 0)
 			{
@@ -2053,6 +2073,22 @@ class GameView extends Sprite
 		{
 			var D:Dynamic = EntityFromUID(data.target);
 			D.holder = EntityFromUID(data.UID);
+		}
+		if (evt == "PoisonPlatform")
+		{
+			var i = 0;
+			while (i < entities.length)
+			{
+				var E = entities[i];
+				if (E.type == "Block" && E.y == data)
+				{
+					var D:Dynamic = E;
+					D.Poison();
+					//E.bonked = 8;
+					//E.bonkedby = GetPlayer(ID);
+				}
+				i++;
+			}
 		}
 		if (evt == "Earthquake")
 		{
@@ -3517,8 +3553,10 @@ class GameView extends Sprite
 		}
 		return E;
 	}
-	public function ShowLevel()
+	public static function GetLevelTitle(level:Int, sublevel:Bool=true)
 	{
+		var L = level - 1;
+		var rank = Math.floor(L / 30);
 		var S = "";
 		if (rank == 0)
 		{
@@ -3574,7 +3612,19 @@ class GameView extends Sprite
 		{
 			S2 = "Eintei";
 		}
-		S = S + S2 + "-" + lvl;
+		if (sublevel)
+		{
+			S = S + S2 + "-" + lvl;
+		}
+		else
+		{
+			S = S +"\n" + S2;
+		}
+		return S;
+	}
+	public function ShowLevel()
+	{
+		var S = GetLevelTitle(level);
 		var M = messages.length;
 		ShowMessage(S);
 		if (M == 0)
@@ -4611,7 +4661,8 @@ class GameView extends Sprite
 		{
 			spawnrate *= 0.96;
 			//spawnrate *= 0.965;
-			tmp *= 1.4;
+			///tmp *= 1.4;
+			tmp *= 1.3;
 			if (tmp < 1)
 			{
 				tmp = 1;
@@ -4626,7 +4677,8 @@ class GameView extends Sprite
 		while (AR > 1)
 		{
 			epm++;
-			tmp = (epm * 0.2);
+			//tmp = (epm * 0.2);
+			tmp = (epm * 0.18);
 			if (tmp < 1)
 			{
 				tmp = 1;
@@ -4824,47 +4876,47 @@ class GameView extends Sprite
 		
 		if (RoundType == TypeofRound.Rumia)
 			{
-				AddToArrayMultiple(enemytypes, new Rumia(), 100);
-				AddToArrayMultiple(enemytypes, new Imposter(), 2);
+				AddToArrayMultiple(enemytypes, new Rumia(), 125);
+				AddToArrayMultiple(enemytypes, new Imposter(), 3);
 			}
 			if (RoundType == TypeofRound.Seija)
 			{
-				AddToArrayMultiple(enemytypes, new Seija(), 50);
-				AddToArrayMultiple(enemytypes, new Imposter(), 2);
+				AddToArrayMultiple(enemytypes, new Seija(), 62);
+				AddToArrayMultiple(enemytypes, new Imposter(), 3);
 			}
-		if (RoundType == TypeofRound.Normal || RoundType == TypeofRound.Rumia || RoundType == TypeofRound.Seija || RoundType == TypeofRound.Nue || RoundType == TypeofRound.Table || RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.Balloon || RoundType == TypeofRound.ElectricCirno)
+		if (RoundType == TypeofRound.Normal || RoundType == TypeofRound.Rumia || RoundType == TypeofRound.Seija || RoundType == TypeofRound.Nue || RoundType == TypeofRound.Table || RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.Balloon || RoundType == TypeofRound.ElectricCirno || RoundType == TypeofRound.NoWrap)
 		{
-			AddToArrayMultiple(enemytypes, new RedFairy(), 48);
+			AddToArrayMultiple(enemytypes, new RedFairy(), 60);
 			if (level > 3)
 			{
-				AddToArrayMultiple(enemytypes, new Keine(), 16);
+				AddToArrayMultiple(enemytypes, new Keine(), 20);
 			}
 			if (level > 5)
 			{
-				AddToArrayMultiple(enemytypes, new Meiling(), 5);
+				AddToArrayMultiple(enemytypes, new Meiling(), 6);
 			}
 			if (level > 10)
 			{
-				AddToArrayMultiple(enemytypes, new Tenshi(), 4);
+				AddToArrayMultiple(enemytypes, new Tenshi(), 5);
 			}
 			if (level > 15)
 			{
-				AddToArrayMultiple(enemytypes, new Utsuho(), 3);
+				AddToArrayMultiple(enemytypes, new Utsuho(), 4);
 			}
-			AddToArrayMultiple(enemytypes, new Mystia(), 28);
+			AddToArrayMultiple(enemytypes, new Mystia(), 34);
 			if (level > 25)
 			{
-				AddToArrayMultiple(enemytypes, new Tewi(), 30);
-				AddToArrayMultiple(enemytypes, new Reisen(), 10);
+				AddToArrayMultiple(enemytypes, new Tewi(), 37);
+				AddToArrayMultiple(enemytypes, new Reisen(), 15);
 				AddToArrayMultiple(enemytypes, new Imposter(), 1);
 			}
 			if (level > 35)
 			{
-				AddToArrayMultiple(enemytypes, new Scarlet(), 2);
+				AddToArrayMultiple(enemytypes, new Scarlet(), 3);
 			}
 			if (level > 45)
 			{
-				AddToArrayMultiple(enemytypes, new Satori(), 2);
+				AddToArrayMultiple(enemytypes, new Satori(), 3);
 			}
 			if (level > 50)
 			{
@@ -4873,8 +4925,8 @@ class GameView extends Sprite
 		}
 		if (RoundType == TypeofRound.Nue)
 		{
-			AddToArrayMultiple(enemytypes, new Nue(), 50);
-			AddToArrayMultiple(enemytypes, new Imposter(), 2);
+			AddToArrayMultiple(enemytypes, new Nue(), 62);
+			AddToArrayMultiple(enemytypes, new Imposter(), 3);
 			epm *= 0.5;
 			maxspawns = Math.ceil(maxspawns * 0.7);
 		}
@@ -4884,7 +4936,12 @@ class GameView extends Sprite
 			maxspawns = Math.ceil(maxspawns * 0.7);
 		}
 		AddToArrayMultiple(enemytypes, new Imposter(), 2);
-		if (GameFlags.get(Main.UltraCommonCharacters) || RoundType == TypeofRound.Characters)
+		if (RoundType == TypeofRound.Characters)
+		{
+			//enemytypes = new Array<Enemy>();
+			AddToArrayMultiple(enemytypes, new Imposter(), 50);
+		}
+		if (GameFlags.get(Main.UltraCommonCharacters))
 		{
 			enemytypes = new Array<Enemy>();
 			AddToArrayMultiple(enemytypes, new Imposter(), 200);
