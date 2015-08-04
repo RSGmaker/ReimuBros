@@ -11,6 +11,7 @@ class Block extends Entity
 	public var started:Bool;
 	public var charred:Bool;
 	public var respawn:Int;
+	public var poison:Bool;
 	public function new(ani:String) 
 	{
 		super(ani);
@@ -27,14 +28,28 @@ class Block extends Entity
 		started = false;
 		respawn = -1;
 	}
+	public function Poison()
+	{
+		if (solid && !charred)
+		{
+		dangerous = false;
+		icy = false;
+		poison = true;
+		//Visual.image.ChangeAnimation(image.animation);
+		Visual.ChangeAnimation("poisonblock");
+		//respawn = 1500;
+		respawn = 800;
+		}
+	}
 	public function Burn()
 	{
 		if (solid && !charred)
 		{
 		dangerous = true;
-		if (icy)
+		if (icy || poison)
 		{
 			icy = false;
+			poison = false;
 			Visual.image.ChangeAnimation(image.animation);
 		}
 		//respawn = 1500;
@@ -48,6 +63,7 @@ class Block extends Entity
 		{
 			dangerous = false;
 			icy = true;
+			poison = false;
 			charred = false;
 			Visual.ChangeAnimation("icyblock");
 		}
@@ -58,6 +74,7 @@ class Block extends Entity
 		{
 			dangerous = false;
 			icy = true;
+			poison = false;
 			Visual.ChangeAnimation("icyblock");
 			if (solid)
 			{
@@ -77,10 +94,11 @@ class Block extends Entity
 	public function Clean()
 	{
 		dangerous = false;
-		if (icy || charred)
+		if (icy || charred || poison)
 		{
 			icy = false;
 			charred = false;
+			poison = false;
 			Visual.image.ChangeAnimation(image.animation);
 		}
 		if (respawn > -1)
