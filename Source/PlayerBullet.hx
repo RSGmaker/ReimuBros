@@ -10,6 +10,7 @@ class PlayerBullet extends Entity
 	public var gravY:Float = 0;
 	public var started:Bool=false;
 	public var bounces:Bool = false;
+	public var rolls:Bool = false;
 	public var topbounce:Bool = false;
 	public var bouncedrain:Bool = false;
 	public var tossedBy:Player;
@@ -85,16 +86,25 @@ class PlayerBullet extends Entity
 		var enemy = game.CollisionDetectTouchEnemy(this);
 		var danger = game.CollisionDetectTouchDangerous(this);
 		var block = null;
-		if (bounces && Vspeed > 0)
+		if ((bounces || rolls) && Vspeed > 0)
 		{
-			block = game.CollisionDetectPoint(x + 24, y + 36);
+			//block = game.CollisionDetectPoint(x + 24, y + 36);
+			block = game.CollisionDetectPoint(x + 24, y + height);
 			if (block != null)
 			{
-				Vspeed *= -0.5;
-				Vspeed -= 3;
-				if (bouncedrain)
+				if (rolls)
 				{
-					HP--;
+					Vspeed = 0;
+					y = block.y - height;
+				}
+				else
+				{
+					Vspeed *= -0.5;
+					Vspeed -= 3;
+					if (bouncedrain)
+					{
+						HP--;
+					}
 				}
 			}
 		}
