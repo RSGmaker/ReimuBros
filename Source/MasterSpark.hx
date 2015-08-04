@@ -114,7 +114,7 @@ class MasterSpark extends Entity
 			while (i <T.activeEnemies.length)
 			{
 				var E = T.activeEnemies[i];
-				if (B.containsPoint(new Point(E.x, E.y)))
+				if (B.containsPoint(new Point(E.x, E.y)) && E.invincibility<=0)
 				{
 					game.SendEvent("Destroy", E.UID);
 				}
