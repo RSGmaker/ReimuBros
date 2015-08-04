@@ -2155,7 +2155,7 @@ class GameView extends Sprite
 				}
 				if (E.subtype == "UFO")
 				{
-					D.fuel = 0;
+					//D.fuel = 0;
 				}
 				if (E.type == "MasterSpark")
 				{
@@ -3874,7 +3874,8 @@ class GameView extends Sprite
 		{
 			CombinedScore = (myplayer.score - myplayer.spentscore);
 			CombinedScoreALL = myplayer.score;
-			S = myplayer.playername + ": " + myplayer.score + "\nHighscore: " + HighScore;
+			var HS = Math.max(HighScore,myplayer.score);
+			S = myplayer.playername + ": " + myplayer.score + "\nHighscore: " + HS;
 		}
 		if (messages.length > 0)
 		{
