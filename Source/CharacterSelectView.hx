@@ -377,7 +377,9 @@ class CharacterSelectView extends Sprite
 					StartButton.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 					status = "PlayGame";
 					StartButton.x -= 10;
-					
+					var T = select.selectedcharacter.getTextFormat();
+					select.selectedcharacter.text = "Cheat code toggled!\nyou may enter more codes\nor start the game";
+					select.selectedcharacter.setTextFormat(T);
 				 });
 				}
 				else
