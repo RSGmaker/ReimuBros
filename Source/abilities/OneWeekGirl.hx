@@ -23,7 +23,7 @@ class OneWeekGirl extends PlayerAbility
 	//(wood)thursday:gives 1 life
 	//(metal)friday:boosts points from items
 	//(earth)saturday:restore the pow block
-	//(sun)sunday:(action/offense?)kill all enemies on screen
+	//(sun)sunday:(action/offense?)kill all enemies onscreen
 	//(moon)monday:grants a myon or an extra hp
 	
 	//maybe using this ability should cost pow block uses

@@ -11,7 +11,7 @@ class EnemyEater extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Has an appetite for\nenemies";
+		description = "Gets a speed boost from\neating enemies\nKills by touch while hungry";
 	}
 	override public function init() 
 	{
