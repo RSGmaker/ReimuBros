@@ -78,6 +78,8 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.StageSeal(null), names:["eirin"] };
 		L[L.length] = { type:new abilities.HypnoticBullets(null), names:["satori"] };
 		L[L.length] = { type:new abilities.PoisonBlocks(null), names:["medicine"] };
+		L[L.length] = { type:new abilities.IceBall(null), names:["cirno"] };
+		L[L.length] = { type:new abilities.SummonBlackHole(null), names:["suika"] };
 		
 		
 		

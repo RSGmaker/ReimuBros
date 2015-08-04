@@ -1154,9 +1154,13 @@ class GameView extends Sprite
 		}
 		return ret;
 	}
-	public function CollisionDetectTouchDangerous(target:Entity):Entity {
+	public function CollisionDetectTouchDangerous(target:Entity,hitbox:Bool=false):Entity {
 		var i = 0;
 		var R = target.getBounds(this);
+		if (hitbox)
+		{
+			R = target.GetHitbox();
+		}
 		/*while (i < entities.length)
 		{
 			var E = entities[i];
@@ -1201,9 +1205,13 @@ class GameView extends Sprite
 		//return false;
 		return null;
 	}
-	public function CollisionDetectTouchEnemy(target:Entity):Enemy {
+	public function CollisionDetectTouchEnemy(target:Entity,hitbox:Bool=false):Enemy {
 		var i = 0;
 		var R = target.getBounds(this);
+		if (hitbox)
+		{
+			R = target.GetHitbox();
+		}
 		while (i < activeEnemies.length)
 		{
 			var E = activeEnemies[i];
@@ -1372,12 +1380,16 @@ class GameView extends Sprite
 				E.alive = false;
 			}
 		}
-		if (evt == "Kill" || evt == "Destroy") {
+		if (evt == "Kill" || evt == "Destroy" || evt == "Obliterate") {
 			var E = EntityFromUID(data);
 			if (E != null && !E.killed)
 			{
 				P.ability.onkill(E);
 				E.bonkedby = P;
+				if (evt == "Obliterate")
+				{
+					E.y = 601;
+				}
 				if (evt == "Kill" && me && E.myMyon != null/* && P.myMyon == null*/)
 				{
 					var ok = (P.myMyon == null);
@@ -2377,6 +2389,15 @@ class GameView extends Sprite
 				AddObject(O);
 			}
 		}
+		if (evt == "SummonBlackHole")
+		{
+			var E = new BlackHole();
+			E.thrownby = P;
+			E.x = data.x;
+			E.y = data.y;
+			E.Ldir = data.dir;
+			AddObject(E);
+		}
 		if (evt == "PlayerDanmaku")
 		{
 			//var E:Dynamic = EntityFromUID(data.UID);
@@ -2410,6 +2431,10 @@ class GameView extends Sprite
 			if (data.bumps != null)
 			{
 				O.bumps = data.bumps;
+			}
+			if (data.rolls != null)
+			{
+				O.rolls = data.rolls;
 			}
 			
 			
