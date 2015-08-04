@@ -9,7 +9,7 @@ class GapManipulator extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Can interact with gaps";
+		description = "Interacts with gaps";
 	}
 	override public function init() 
 	{
