@@ -155,9 +155,9 @@ class PlayerMasterSpark extends Entity
 			while (i <game.activeEnemies.length)
 			{
 				var E = game.activeEnemies[i];
-				if (B.containsPoint(new Point(E.x, E.y)))
+				if (B.containsPoint(new Point(E.x, E.y)) && E.invincibility<=0)
 				{
-					game.SendEvent("Destroy", E.UID);
+					game.SendEvent("Kill", E.UID);
 				}
 				i++;
 			}
