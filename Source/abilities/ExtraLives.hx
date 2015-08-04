@@ -25,6 +25,11 @@ class ExtraLives extends PlayerAbility
 		if (E.charname == "Point")
 		{
 			player.cooldown--;
+			if (E.scaleX >= 2)
+			{
+				//giant point items give more
+				player.cooldown-=2;
+			}
 		}
 		if (player.cooldown <= 0)
 		{
