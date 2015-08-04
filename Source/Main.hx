@@ -53,7 +53,11 @@ class Main extends Sprite {
 	//public var walfassavedata:flash.net.SharedObject;
 	public var Room:String;
 	//activates debug keys and enhanced level info.
+	#if debug
 	public var DEBUG:Bool = true;
+	#else
+	public var DEBUG:Bool = false;
+	#end
 	//info displayed in titlescreen
 	public var gameversion:String = "1.6.0";
 	public var controlscheme:Array<UInt>;
@@ -205,11 +209,11 @@ class Main extends Sprite {
 			{
 				characterselect.Nameinput.text = MD5.hash(characterselect.Nameinput.text);
 			}
-			case Keyboard.Q:
+			/*case Keyboard.Q:
 				if (titlescreen != null)
 				{
 					showtitlescreen();
-				}
+				}*/
 			case Keyboard.LEFTBRACKET:
 			{
 				if (SoundManager._this.GetMusicVolume() > 0.0)
