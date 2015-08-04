@@ -18,6 +18,7 @@ class UFO extends Enemy
 	public var fuel:Int;
 	public static var HB = new Rectangle(9, 9, 10, 10);
 	public var reducetime:Int;
+	public var movement:Int;
 	public function new() 
 	{
 		super("UFO");
@@ -39,6 +40,7 @@ class UFO extends Enemy
 		
 		hitbox = HB;
 		needtokill = false;
+		movement = -2;
 	}
 	
 	public override function enrage()
@@ -79,14 +81,18 @@ class UFO extends Enemy
 		killed = false;
 		dangerous = true;
 		killable = false;
-		x -= 2;
+		x += movement;
 		if (fuel>0 && game.myplayer.GetHitbox().intersects(GetHitbox()))
 		{
 			SendCustomEvent(null);
 		}
-		if (x < -64)
+		if (x < -4 && movement<0)
 		{
 			x = 900;
+		}
+		if (x > 900 && movement>0)
+		{
+			x = -4;
 		}
 		if (fuel > 0)
 		{
