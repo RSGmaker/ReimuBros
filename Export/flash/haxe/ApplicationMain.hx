@@ -278,6 +278,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/blackhole0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/block0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -699,6 +703,10 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/icebullet0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/icecube0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		

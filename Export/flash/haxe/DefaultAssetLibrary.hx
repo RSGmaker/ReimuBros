@@ -172,6 +172,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Sprites/BG5.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/black0.png", __ASSET__assets_sprites_black0_png);
 		type.set ("assets/Sprites/black0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/blackhole0.png", __ASSET__assets_sprites_blackhole0_png);
+		type.set ("assets/Sprites/blackhole0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/block0.png", __ASSET__assets_sprites_block0_png);
 		type.set ("assets/Sprites/block0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/BlueFairy0.png", __ASSET__assets_sprites_bluefairy0_png);
@@ -384,6 +386,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Sprites/hina0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/icebullet0.png", __ASSET__assets_sprites_icebullet0_png);
 		type.set ("assets/Sprites/icebullet0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/icecube0.png", __ASSET__assets_sprites_icecube0_png);
+		type.set ("assets/Sprites/icecube0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/ichirin0.png", __ASSET__assets_sprites_ichirin0_png);
 		type.set ("assets/Sprites/ichirin0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/icyblock0.png", __ASSET__assets_sprites_icyblock0_png);
@@ -1031,6 +1035,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/blackhole0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "assets/Sprites/block0.png";
 		path.set (id, id);
 		
@@ -1452,6 +1460,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		type.set (id, AssetType.IMAGE);
 		id = "assets/Sprites/icebullet0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/icecube0.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -2631,6 +2643,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
@@ -2819,6 +2833,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("assets/Sprites/black0.png", __ASSET__assets_sprites_black0_png);
 		type.set ("assets/Sprites/black0.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/blackhole0.png", __ASSET__assets_sprites_blackhole0_png);
+		type.set ("assets/Sprites/blackhole0.png", AssetType.IMAGE);
 		
 		className.set ("assets/Sprites/block0.png", __ASSET__assets_sprites_block0_png);
 		type.set ("assets/Sprites/block0.png", AssetType.IMAGE);
@@ -3137,6 +3154,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("assets/Sprites/icebullet0.png", __ASSET__assets_sprites_icebullet0_png);
 		type.set ("assets/Sprites/icebullet0.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/icecube0.png", __ASSET__assets_sprites_icecube0_png);
+		type.set ("assets/Sprites/icecube0.png", AssetType.IMAGE);
 		
 		className.set ("assets/Sprites/ichirin0.png", __ASSET__assets_sprites_ichirin0_png);
 		type.set ("assets/Sprites/ichirin0.png", AssetType.IMAGE);
@@ -4486,6 +4506,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_bg4_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_bg5_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_black0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_blackhole0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_block0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_bluefairy0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_bluefairyflipped0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -4592,6 +4613,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_heartbullet0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_hina0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_icebullet0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_icecube0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_ichirin0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_icyblock0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_iku0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -5163,6 +5185,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
 #else
 
 
@@ -5231,6 +5255,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("Assets/Sprites/BG4.png") #if display private #end class __ASSET__assets_sprites_bg4_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/BG5.png") #if display private #end class __ASSET__assets_sprites_bg5_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/black0.png") #if display private #end class __ASSET__assets_sprites_black0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/blackhole0.png") #if display private #end class __ASSET__assets_sprites_blackhole0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/block0.png") #if display private #end class __ASSET__assets_sprites_block0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/BlueFairy0.png") #if display private #end class __ASSET__assets_sprites_bluefairy0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/BlueFairyflipped0.png") #if display private #end class __ASSET__assets_sprites_bluefairyflipped0_png extends lime.graphics.Image {}
@@ -5337,6 +5362,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("Assets/Sprites/heartbullet0.png") #if display private #end class __ASSET__assets_sprites_heartbullet0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/hina0.png") #if display private #end class __ASSET__assets_sprites_hina0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/icebullet0.png") #if display private #end class __ASSET__assets_sprites_icebullet0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/icecube0.png") #if display private #end class __ASSET__assets_sprites_icecube0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/ichirin0.png") #if display private #end class __ASSET__assets_sprites_ichirin0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/icyblock0.png") #if display private #end class __ASSET__assets_sprites_icyblock0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/iku0.png") #if display private #end class __ASSET__assets_sprites_iku0_png extends lime.graphics.Image {}
