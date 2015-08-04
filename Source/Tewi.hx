@@ -35,6 +35,10 @@ class Tewi extends Enemy
 			mxspd += 0.5;
 			pointvalue += 100;
 			mntime += 30;
+			if (mntime > 100)
+			{
+				mntime = 100;
+			}
 	}
 	public override function update()
 	{

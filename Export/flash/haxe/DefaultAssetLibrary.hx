@@ -544,6 +544,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Sprites/pika0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/Point0.png", __ASSET__assets_sprites_point0_png);
 		type.set ("assets/Sprites/Point0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/poisonblock0.png", __ASSET__assets_sprites_poisonblock0_png);
+		type.set ("assets/Sprites/poisonblock0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/POW0.png", __ASSET__assets_sprites_pow0_png);
 		type.set ("assets/Sprites/POW0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/POWalt0.png", __ASSET__assets_sprites_powalt0_png);
@@ -554,6 +556,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Sprites/raiko0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/ran0.png", __ASSET__assets_sprites_ran0_png);
 		type.set ("assets/Sprites/ran0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/redeyedudongein0.png", __ASSET__assets_sprites_redeyedudongein0_png);
+		type.set ("assets/Sprites/redeyedudongein0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/RedFairy0.png", __ASSET__assets_sprites_redfairy0_png);
 		type.set ("assets/Sprites/RedFairy0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/RedFairyflipped0.png", __ASSET__assets_sprites_redfairyflipped0_png);
@@ -1771,6 +1775,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/poisonblock0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "assets/Sprites/POW0.png";
 		path.set (id, id);
 		
@@ -1788,6 +1796,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		type.set (id, AssetType.IMAGE);
 		id = "assets/Sprites/ran0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/redeyedudongein0.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -2251,6 +2263,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#else
 		
 		#if openfl
+		
+		
 		
 		
 		
@@ -3364,6 +3378,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("assets/Sprites/Point0.png", __ASSET__assets_sprites_point0_png);
 		type.set ("assets/Sprites/Point0.png", AssetType.IMAGE);
 		
+		className.set ("assets/Sprites/poisonblock0.png", __ASSET__assets_sprites_poisonblock0_png);
+		type.set ("assets/Sprites/poisonblock0.png", AssetType.IMAGE);
+		
 		className.set ("assets/Sprites/POW0.png", __ASSET__assets_sprites_pow0_png);
 		type.set ("assets/Sprites/POW0.png", AssetType.IMAGE);
 		
@@ -3378,6 +3395,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("assets/Sprites/ran0.png", __ASSET__assets_sprites_ran0_png);
 		type.set ("assets/Sprites/ran0.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/redeyedudongein0.png", __ASSET__assets_sprites_redeyedudongein0_png);
+		type.set ("assets/Sprites/redeyedudongein0.png", AssetType.IMAGE);
 		
 		className.set ("assets/Sprites/RedFairy0.png", __ASSET__assets_sprites_redfairy0_png);
 		type.set ("assets/Sprites/RedFairy0.png", AssetType.IMAGE);
@@ -4652,11 +4672,13 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_patchouli0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_pika0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_point0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_poisonblock0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_pow0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_powalt0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_prinny0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_raiko0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_ran0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_redeyedudongein0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_redfairy0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_redfairyflipped0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_redufo0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -4772,6 +4794,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 #elseif html5
+
+
 
 
 
@@ -5393,11 +5417,13 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("Assets/Sprites/patchouli0.png") #if display private #end class __ASSET__assets_sprites_patchouli0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/pika0.png") #if display private #end class __ASSET__assets_sprites_pika0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/Point0.png") #if display private #end class __ASSET__assets_sprites_point0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/poisonblock0.png") #if display private #end class __ASSET__assets_sprites_poisonblock0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/POW0.png") #if display private #end class __ASSET__assets_sprites_pow0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/POWalt0.png") #if display private #end class __ASSET__assets_sprites_powalt0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/prinny0.png") #if display private #end class __ASSET__assets_sprites_prinny0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/raiko0.png") #if display private #end class __ASSET__assets_sprites_raiko0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/ran0.png") #if display private #end class __ASSET__assets_sprites_ran0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/redeyedudongein0.png") #if display private #end class __ASSET__assets_sprites_redeyedudongein0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/RedFairy0.png") #if display private #end class __ASSET__assets_sprites_redfairy0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/RedFairyflipped0.png") #if display private #end class __ASSET__assets_sprites_redfairyflipped0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/Redufo0.png") #if display private #end class __ASSET__assets_sprites_redufo0_png extends lime.graphics.Image {}

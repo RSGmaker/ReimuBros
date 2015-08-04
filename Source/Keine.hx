@@ -143,7 +143,15 @@ class Keine extends Enemy
 	}
 	public override function bump()
 	{
-		Hspeed = accel * ( -Ldir);
+		//
+		if (!ex)
+		{
+			Hspeed = -Hspeed;
+		}
+		else
+		{
+			Hspeed = accel * ( -Ldir);
+		}
 		if (flipped < 1)
 		{
 			if (!ex)

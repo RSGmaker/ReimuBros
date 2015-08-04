@@ -27,7 +27,8 @@ class Mystia extends Enemy
 		frames = 0;
 		image.image_speed = 0.4;
 		rng = null;
-		mntime = 1;
+		//mntime = 1;
+		mntime = 40;
 		pointvalue = 200;
 		rename = "EMystia";
 		subtype = "mystia";
@@ -37,7 +38,10 @@ class Mystia extends Enemy
 	{
 			accel += 0.15;
 			mxspd += 1;
-			mntime += 5;
+			if (mntime < 80)
+			{
+				mntime += 5;
+			}
 			pointvalue += 100;
 	}
 	public override function update()
@@ -100,14 +104,16 @@ class Mystia extends Enemy
 				if (frames == 0)
 				{
 					rng.seed += rng.twist(rng.seed, 1, 30)[0];
-					frames = mntime + (rng.seed % 30);
+					//frames = mntime + (rng.seed % 30);
+					frames = mntime;
 				}
 				Hspeed = 0;
 				frames += 1;
 				if (frames > 90)
 				{
 					rng.seed += rng.twist(rng.seed, 1, 800)[0];
-					Vspeed = -4 - ((rng.seed % 800)*0.01);
+					//Vspeed = -4 - ((rng.seed % 800)*0.01);
+					Vspeed = -7;
 				}
 			}
 			
