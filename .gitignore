@@ -45,3 +45,9 @@ Temporary Items
 .apdisk
 Export/.build
 Assets/Audio/Mp3/zawarudo.mp3
+Export/flash/haxe/ApplicationMain.hx
+Export/flash/haxe/DefaultAssetLibrary.hx
+Export/flash/haxe/DefaultAssetLibrary.hx
+*.build
+Export/flash/haxe/final.hxml
+*.hxml
