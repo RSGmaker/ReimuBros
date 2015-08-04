@@ -9,7 +9,7 @@ class DashAttack extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Dash Attack";
+		description = "Dash attack";
 	}
 	override public function init() 
 	{

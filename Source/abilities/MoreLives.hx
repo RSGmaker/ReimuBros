@@ -10,7 +10,7 @@ class MoreLives extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Start with more lives";
+		description = "Starts with double the lives";
 	}
 	override public function init() 
 	{

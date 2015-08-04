@@ -9,7 +9,7 @@ class ClearSpawnList extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Kills all non present enemies";
+		description = "Kills all unspawned\nenemies";
 	}
 	override public function init() 
 	{

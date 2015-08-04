@@ -9,7 +9,7 @@ class Teleporter extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "teleports to your\nmouse's position";
+		description = "Teleports to your mouse's\nposition";
 	}
 	override public function init() 
 	{

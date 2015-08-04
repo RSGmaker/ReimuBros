@@ -10,7 +10,7 @@ class EatMystia extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Kills mystias on\ncontact";
+		description = "Kills Mystias on contact";
 	}
 	override public function init() 
 	{
