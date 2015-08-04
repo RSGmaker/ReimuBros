@@ -790,15 +790,23 @@ class GameView extends Sprite
 	public function spawnplatform(Y:Float)
 	{
 		var xx = 0;
-		xx -= 128+128;
+		xx -= 128 + 128;
+		var L = new Array<Block>();
 		while (xx < 928+128)
 		{
 			var block = new Block("block");
 			block.x = xx;
 			block.y = Y;
 			block.solid = true;
-			AddObject(block);
+			//AddObject(block);
+			L[L.length] = block;
 			xx += 32;
+		}
+		xx = 0;
+		while (xx < L.length)
+		{
+			AddObject(L[xx]);
+			xx++;
 		}
 	}
 	public function addsectioninplatform(Y:Float,minx:Float, maxx:Float, inverse:Bool)

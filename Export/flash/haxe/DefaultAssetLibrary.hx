@@ -544,8 +544,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Sprites/pika0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/Point0.png", __ASSET__assets_sprites_point0_png);
 		type.set ("assets/Sprites/Point0.png", AssetType.IMAGE);
-		className.set ("assets/Sprites/poisonblock0.png", __ASSET__assets_sprites_poisonblock0_png);
-		type.set ("assets/Sprites/poisonblock0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/poisoncloud0.png", __ASSET__assets_sprites_poisoncloud0_png);
+		type.set ("assets/Sprites/poisoncloud0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/POW0.png", __ASSET__assets_sprites_pow0_png);
 		type.set ("assets/Sprites/POW0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/POWalt0.png", __ASSET__assets_sprites_powalt0_png);
@@ -1775,7 +1775,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
-		id = "assets/Sprites/poisonblock0.png";
+		id = "assets/Sprites/poisoncloud0.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -3378,8 +3378,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("assets/Sprites/Point0.png", __ASSET__assets_sprites_point0_png);
 		type.set ("assets/Sprites/Point0.png", AssetType.IMAGE);
 		
-		className.set ("assets/Sprites/poisonblock0.png", __ASSET__assets_sprites_poisonblock0_png);
-		type.set ("assets/Sprites/poisonblock0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/poisoncloud0.png", __ASSET__assets_sprites_poisoncloud0_png);
+		type.set ("assets/Sprites/poisoncloud0.png", AssetType.IMAGE);
 		
 		className.set ("assets/Sprites/POW0.png", __ASSET__assets_sprites_pow0_png);
 		type.set ("assets/Sprites/POW0.png", AssetType.IMAGE);
@@ -4672,7 +4672,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_patchouli0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_pika0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_point0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
-@:keep @:bind #if display private #end class __ASSET__assets_sprites_poisonblock0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_poisoncloud0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_pow0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_powalt0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_prinny0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -5417,7 +5417,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("Assets/Sprites/patchouli0.png") #if display private #end class __ASSET__assets_sprites_patchouli0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/pika0.png") #if display private #end class __ASSET__assets_sprites_pika0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/Point0.png") #if display private #end class __ASSET__assets_sprites_point0_png extends lime.graphics.Image {}
-@:image("Assets/Sprites/poisonblock0.png") #if display private #end class __ASSET__assets_sprites_poisonblock0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/poisoncloud0.png") #if display private #end class __ASSET__assets_sprites_poisoncloud0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/POW0.png") #if display private #end class __ASSET__assets_sprites_pow0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/POWalt0.png") #if display private #end class __ASSET__assets_sprites_powalt0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/prinny0.png") #if display private #end class __ASSET__assets_sprites_prinny0_png extends lime.graphics.Image {}
