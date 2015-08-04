@@ -11,6 +11,7 @@ class Reisen extends Enemy
 	
 	public var mxspd:Float;
 	public var dissappearing:Bool;
+	public var rename:String;
 	public function new() 
 	{
 		super("udongein");
@@ -106,6 +107,14 @@ class Reisen extends Enemy
 			}
 		}
 		}
+		if (HP > 1)
+		{
+			rename = "redeyedudongein";
+		}
+		else
+		{
+			rename = "udongein";
+		}
 		if (!killed)
 		{
 		var dir = Ldir;
@@ -140,7 +149,7 @@ class Reisen extends Enemy
 			}
 		}
 		updphysics();
-		updateanimation();
+		updateanimation(rename);
 		
 		if (ground != null)
 		{
