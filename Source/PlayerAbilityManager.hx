@@ -77,6 +77,7 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.OneWeekGirl(null), names:["patchouli"] };
 		L[L.length] = { type:new abilities.StageSeal(null), names:["eirin"] };
 		L[L.length] = { type:new abilities.HypnoticBullets(null), names:["satori"] };
+		L[L.length] = { type:new abilities.PoisonBlocks(null), names:["medicine"] };
 		
 		
 		
