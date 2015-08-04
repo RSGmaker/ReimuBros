@@ -114,7 +114,8 @@ class Scarlet extends Enemy
 								Ldir = -1;
 							}
 							D.Ldir = Ldir;
-							game.SendEvent("CustomEvent", D);
+							SendCustomEvent(D);
+							//game.SendEvent("CustomEvent", D);
 							/*if (who == "remilia")
 							{
 								Hspeed *= (Ldir * (mxspd / 2));

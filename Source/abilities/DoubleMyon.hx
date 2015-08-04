@@ -15,7 +15,7 @@ class DoubleMyon extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		if (player.isme)
+		if (player.isme && game.frame==0)
 		{
 		var D:Dynamic = { };
 					D.UID = player.UID;
@@ -36,5 +36,6 @@ class DoubleMyon extends PlayerAbility
 	override public function lostability() 
 	{
 		super.lostability();
+		player.flags.set(Player.DoubleMyon, false);
 	}
 }
