@@ -11,7 +11,7 @@ class CanHide extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Turns invisible by\nstaying still";
+		description = "Turns invisible by staying\nstill";
 	}
 	override public function init() 
 	{

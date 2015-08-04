@@ -10,7 +10,7 @@ class SpawnShanghai extends PlayerAbility
 	public function new(player:Player)  
 	{
 		super(player);
-		description = "Defeating fairies spawns\nShanghai dolls";
+		description = "Defeating fairies has a\nchance to spawn Shanghai\ndolls";
 	}
 	override public function init() 
 	{

@@ -10,7 +10,7 @@ class MoreZombieFairies extends PlayerAbility
 	public function new(player:Player)  
 	{
 		super(player);
-		description = "Defeating fairies spawns\nZombie fairies";
+		description = "Zombie fairies spawn more\nfrequently";
 	}
 	override public function init() 
 	{

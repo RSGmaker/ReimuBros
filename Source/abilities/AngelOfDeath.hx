@@ -10,7 +10,7 @@ class AngelOfDeath extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "enemies may die\nat random";
+		description = "Enemies may die randomly";
 	}
 	override public function onframe() 
 	{

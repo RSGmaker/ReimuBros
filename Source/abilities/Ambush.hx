@@ -10,7 +10,7 @@ class Ambush extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Ambush";
+		description = "Jumps through blocks";
 	}
 	override public function onheadbonk() 
 	{
