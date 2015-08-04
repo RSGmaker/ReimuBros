@@ -29,13 +29,14 @@ class Kogasa extends Enemy
 		surprisetime = 40;
 		shottime = 9;
 		mxspd += 4;
+		pointvalue = 1000;
 	}
 	
 	public override function increaserank()
 	{
 			accel += 0.1;
 			mxspd += 0.5;
-			pointvalue += 50;
+			pointvalue += 100;
 	}
 	public override function update()
 	{

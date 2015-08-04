@@ -31,6 +31,7 @@ class Meiling extends Enemy
 		rename = "meiling";
 		scaleX = 0.7;
 		scaleY = 0.7;
+		pointvalue = 300;
 	}
 	
 	override public function CustomEvent(data:Dynamic) 
@@ -43,7 +44,7 @@ class Meiling extends Enemy
 	{
 			accel += 0.1;
 			mxspd += 0.5;
-			pointvalue += 50;
+			pointvalue += 100;
 	}
 	public override function update()
 	{

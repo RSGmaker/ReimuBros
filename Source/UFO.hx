@@ -45,6 +45,11 @@ class UFO extends Enemy
 	{
 		trace("enraged UFO??? wut?");
 	}
+	override public function CustomEvent(data:Dynamic) 
+	{
+		//super.CustomEvent(data);
+		fuel = 0;
+	}
 	public override function update()
 	{
 		if (rng == null)
@@ -75,6 +80,10 @@ class UFO extends Enemy
 		dangerous = true;
 		killable = false;
 		x -= 2;
+		if (fuel>0 && game.myplayer.GetHitbox().intersects(GetHitbox()))
+		{
+			SendCustomEvent(null);
+		}
 		if (x < -64)
 		{
 			x = 900;
