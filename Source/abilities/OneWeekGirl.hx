@@ -136,7 +136,7 @@ class OneWeekGirl extends PlayerAbility
 			}
 			else if (R < 0.28)
 			{
-				player.cooldowntext = "clears block effects(water)";
+				player.cooldowntext = "Clears block effects(water)";
 				game.SendEvent("RefreshBlocks", null);
 			}
 			else if (R < 0.42)
