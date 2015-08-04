@@ -29,6 +29,7 @@ class Utsuho extends Enemy
 		scaleX = 0.7;
 		scaleY = 0.7;
 		HP = 2;
+		pointvalue = 300;
 	}
 	override public function attack():Bool 
 	{
@@ -43,7 +44,7 @@ class Utsuho extends Enemy
 	{
 			//accel += 0.1;
 			//mxspd += 0.5;
-			pointvalue += 200;
+			pointvalue += 50;
 	}
 	public override function update()
 	{

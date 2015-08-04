@@ -29,13 +29,14 @@ class Scarlet extends Enemy
 		image.image_speed = 0.2;
 		scaleX = 0.7;
 		scaleY = 0.7;
+		pointvalue = 1000;
 	}
 	
 	public override function increaserank()
 	{
 			accel += 0.1;
 			mxspd += 0.5;
-			pointvalue += 50;
+			pointvalue += 200;
 	}
 	/*function distance(p1,p2)
 	{

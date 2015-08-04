@@ -37,8 +37,8 @@ class Keine extends Enemy
 	}
 	public override function increaserank()
 	{
-		accel += 0.05;
-		mxspd += 1.5;
+		accel += 0.04;
+		mxspd += 0.5;
 		pointvalue += 150;
 	}
 	public override function update()
@@ -58,7 +58,7 @@ class Keine extends Enemy
 		
 		if (ex)
 		{
-			MXS += 4;
+			MXS += 4+rank;
 			acl += 0.1;
 			charname = charname + "ex";
 		}

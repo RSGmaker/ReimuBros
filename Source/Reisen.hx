@@ -25,12 +25,13 @@ class Reisen extends Enemy
 		scaleY = 0.7;
 		HP = 2;
 		dissappearing = false;
+		pointvalue = 500;
 	}
 	public override function increaserank()
 	{
 			accel += 0.1;
 			mxspd += 0.5;
-			pointvalue += 50;
+			pointvalue += 100;
 	}
 	override public function attack():Bool 
 	{

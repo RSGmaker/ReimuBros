@@ -33,7 +33,7 @@ class Tenshi extends Enemy
 		flipped = -1;
 		scaleX = 0.7;
 		scaleY = 0.7;
-		
+		pointvalue = 200;
 		HP = 1;
 	}
 	
@@ -41,7 +41,7 @@ class Tenshi extends Enemy
 	{
 			accel += 0.1;
 			mxspd += 0.5;
-			pointvalue += 50;
+			pointvalue += 100;
 	}
 	override public function kick() 
 	{

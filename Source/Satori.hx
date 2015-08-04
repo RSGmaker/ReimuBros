@@ -29,6 +29,7 @@ class Satori extends Enemy
 		target = null;
 		scaleX = 0.7;
 		scaleY = 0.7;
+		pointvalue = 1000;
 	}
 	
 	override public function attack():Bool 
@@ -39,7 +40,16 @@ class Satori extends Enemy
 	{
 			accel += 0.1;
 			mxspd += 0.5;
-			pointvalue += 50;
+			pointvalue += 200;
+	}
+	override public function CustomEvent(data:Dynamic) 
+	{
+		//super.CustomEvent(data);
+		Hspeed = data.Hspeed;
+		Vspeed = data.Vspeed;
+		alpha = data.alpha;
+		x = data.x;
+		y = data.y;
 	}
 	public override function update()
 	{
@@ -97,6 +107,16 @@ class Satori extends Enemy
 		}
 		if (!killed)
 		{
+			if (target == game.myplayer && game.ControlEvent)
+			{
+			var D:Dynamic = { };
+			D.Hspeed = Hspeed;
+			D.Vspeed = Vspeed;
+			D.alpha = alpha;
+			D.x = x;
+			D.y = y;
+			SendCustomEvent(D);
+			}
 		var dir = Ldir;
 		if (flipped > 0)
 		{
