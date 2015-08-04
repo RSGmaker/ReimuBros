@@ -95,6 +95,9 @@ class CharacterSelectView extends Sprite
 	public var highscore:Int;
 	public var newscore:Bool;
 	
+	public var level:Int;
+	public var leveltitle:TextField;
+	
 	//visual boundries(cleans up areas that are out of bounds)
 	private var BGCRight:Bitmap;
 	private var BGCLeft:Bitmap;
@@ -103,6 +106,8 @@ class CharacterSelectView extends Sprite
 	public var refreshing:Bool;
 	
 	public var select:CharacterSelect;
+	
+	public var format:TextFormat;
 	
 	public function new() 
 	{
@@ -126,6 +131,7 @@ class CharacterSelectView extends Sprite
 		highscore = 0;
 		newscore = false;
 		refreshing = false;
+		level = 1;
 	}
 	public function start() {
 		
@@ -154,6 +160,7 @@ class CharacterSelectView extends Sprite
 		tmp.font = "Arial";
 		tmp.size = 22;
 		tmp.color = 0xFFFFFF;
+		//format = tmp;
 		warningtext = new TextField();
 		warningtext.visible = false;
 		warningtext.text = "Click on your character again to return.";
@@ -275,12 +282,102 @@ class CharacterSelectView extends Sprite
 				);
 				if (!online)
 				{
+					tmp = new TextFormat();
+					tmp.font = "Arial";
+					tmp.size = 32;
+					tmp.color = 0xFFFFFF;
+		
 					StartButton = AddButton("Start Game");
 					StartButton.x = 554;
 					StartButton.y = 6;
+					
+					leveltitle = new TextField();
+					leveltitle.mouseEnabled = false;
+					leveltitle.text = GameView.GetLevelTitle(level, false);
+					leveltitle.x = 540;
+					leveltitle.y = 100;
+					leveltitle.backgroundColor = 0xFFFFFF;
+					//leveltitle.background = true;
+					leveltitle.setTextFormat(tmp);
+					//leveltitle.autoSize = true;
+					leveltitle.width = 260;
+					leveltitle.wordWrap = true;
+					var AB = new flash.filters.GlowFilter();
+					AB.blurX = 35;
+					AB.blurY = 35;
+					//AB.color = 0x66AAFF;
+					AB.color = 0x3377CC;
+			
+					AB.strength = 3.25;
+					
+					var AA = new flash.filters.DropShadowFilter();
+					AA.alpha = 1;
+					AA.distance = 3;
+					AA.alpha = 25;
+					AA.color = 0;
+			
+					filterArr = new Array();
+					filterArr[0] = AA;
+					filterArr[1] = AB;
+					leveltitle.filters = filterArr;
+					addChild(leveltitle);
+					
+					var B = AddButton("+ ");
+					var B2 = AddButton(" - ");
+					B.x = 700;
+					B.y = 190;
+					if (Main._this.savedata.data.maxlevel < 6)
+					{
+						B.visible = false;
+					}
+					addChild(B);
+					B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+						if (level + 5 <= Main._this.savedata.data.maxlevel)
+						{
+							level += 5;
+							var tmp = leveltitle.getTextFormat();
+							leveltitle.text = GameView.GetLevelTitle(level, false);
+							leveltitle.setTextFormat(tmp);
+							B2.visible = true;
+							if (!(level + 5 <= Main._this.savedata.data.maxlevel))
+							{
+								B.visible = false;
+							}
+						}
+						else
+						{
+							SoundManager.Play("bonk");
+						}
+				 });
+				 
+					B2.x = 550;
+					B2.y = 190;
+					B2.visible = false;
+					addChild(B2);
+					B2.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+						if (level > 1)
+						{
+					level -= 5;
+					var tmp = leveltitle.getTextFormat();
+					leveltitle.text = GameView.GetLevelTitle(level, false);
+					leveltitle.setTextFormat(tmp);
+					B.visible = true;
+					if (!(level > 1))
+					{
+						B2.visible = false;
+					}
+						}
+						else
+						{
+							SoundManager.Play("bonk");
+						}
+				 });
+				 
+					
 					StartButton.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 					status = "PlayGame";
 					StartButton.x -= 10;
+					
 				 });
 				}
 				else

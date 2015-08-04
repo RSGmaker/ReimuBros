@@ -62,6 +62,8 @@ class Main extends Sprite {
 	
 	public var lastsession:Dynamic;
 	public var session:Dynamic;
+	
+	public var level:Int;
 	//cheatcode flags
 	public static inline var FireCirno = 1;
 	public static inline var KonamiCode = 2;
@@ -133,6 +135,10 @@ class Main extends Sprite {
 		if (savedata.data.musicvolume == null)
 		{
 			savedata.data.musicvolume = 1.0;
+		}
+		if (savedata.data.maxlevel == null)
+		{
+			savedata.data.maxlevel = 1;
 		}
 		if (savedata.data.controlscheme == null)
 		{
@@ -351,6 +357,7 @@ class Main extends Sprite {
 					}
 					Room = characterselect.Room;
 					savedata.data.characterselected = playerspick;
+					level = characterselect.level;
 					showgame();
 				}
 			}
@@ -469,7 +476,9 @@ class Main extends Sprite {
 		game.online = online;
 		game.Room = Room;
 		game.GameFlags = GameFlags;
+		game.level = level-1;
 		game.start();
+		
 	}
 	private function showtitlescreen()
 	{
