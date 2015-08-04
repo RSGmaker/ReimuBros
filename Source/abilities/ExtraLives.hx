@@ -9,7 +9,7 @@ class ExtraLives extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Gains a life for collecting\npoint items";
+		description = "Gains a life every 22\npoint items";
 	}
 	override public function init() 
 	{

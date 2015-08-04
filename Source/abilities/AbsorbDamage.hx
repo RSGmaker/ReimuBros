@@ -9,7 +9,7 @@ class AbsorbDamage extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Extra HP";
+		description = "Gets an extra hit when her\nbar is full";
 	}
 	override public function init() 
 	{
