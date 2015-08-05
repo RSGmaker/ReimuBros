@@ -3974,7 +3974,7 @@ class GameView extends Sprite
 			MSGText.width = MSGText.textWidth + 4;
 			MSGText.height = MSGText.textHeight + 4;
 			MSG.graphics.beginFill(0xFFFFFF, 0.7);
-			MSG.graphics.drawRect(0, 0, MSGText.width+6, MSGText.textHeight+6);
+			MSG.graphics.drawRect(0, 0, MSGText.width+6, MSGText.height+6);
 			MSG.graphics.endFill();
 			MSG.graphics.beginFill(0x000044, 0.8);
 			MSG.graphics.drawRect(3, 3, MSGText.width, MSGText.height);
