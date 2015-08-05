@@ -31,7 +31,7 @@ class MasterSpark extends Entity
 		whiteray = new Shape();
 		ray.addChild(whiteray);
 		
-		game.addChild(ray);
+		game.gamestage.addChild(ray);
 		hue = 0;
 		started = false;
 		
@@ -97,7 +97,7 @@ class MasterSpark extends Entity
 		whiteray.graphics.drawRect(0, 20, 800, 120);
 		whiteray.graphics.endFill();
 		var T:GameView = game;
-		var B = getBounds(T);
+		var B = getBounds(T.gamestage);
 		var P = game.myplayer;
 		if (Size >= 1)
 		{

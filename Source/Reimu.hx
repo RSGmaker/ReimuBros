@@ -89,7 +89,7 @@ class Reimu extends Enemy
 		}
 		Ldir = dir;
 		animate();
-		if (game.Hoster && getBounds(game).intersects(target.getBounds(game)))
+		if (game.Hoster && getBounds(game.gamestage).intersects(target.getBounds(game.gamestage)))
 		{
 			game.SendEvent("Collect", -target.UID);
 			target = null;

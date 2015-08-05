@@ -199,7 +199,7 @@ class Player extends Entity
 		format.color = 0xFFFFFF;
 		nameplatetext.mouseEnabled = false;
 		nameplatetext.setTextFormat(format);
-		game.addChild(nameplate);
+		game.gamestage.addChild(nameplate);
 		frame = game.frame;
 		playing = -1;
 		killed = false;
@@ -555,7 +555,8 @@ class Player extends Entity
 				danger = game.CollisionDetectTouchDangerous(this);
 				enemy = game.CollisionDetectTouchEnemy(this);
 			}
-		var eItem = game.CollisionDetectPointItem(x + W, y + (feetposition - H));
+		//var eItem = game.CollisionDetectPointItem(x + W, y + (feetposition - H));
+		var eItem = game.CollisionDetectTouchItem(this);
 		if (eItem != null && eItem.collectable)
 		{
 			if (!(flags.get(CanHide) && cooldown <= 0))
@@ -647,7 +648,13 @@ class Player extends Entity
 				var D:Dynamic = { };
 				D.x = 400;
 				D.y = 0;
-				D.lives = lives - 1;
+				cancel = false;
+				ability.onloselife();
+				if (!cancel)
+				{
+					lives--;
+				}
+				D.lives = lives;
 				game.SendEvent("PlayerRespawn", D);
 			}
 			}
@@ -754,7 +761,7 @@ class Player extends Entity
 				}
 			}
 			nameplatetext.setTextFormat(format);
-			var B = getBounds(game);
+			var B = getBounds(game.gamestage);
 			nameplatetext.width = nameplatetext.textWidth+8;
 			nameplate.x = B.left - (Math.floor(nameplatetext.textWidth) >> 1) + (Math.floor(B.width) >> 1);
 			nameplate.y = B.top - 20;
@@ -784,7 +791,7 @@ class Player extends Entity
 					nameplatetext.text = interact.interacttext;
 				}
 				nameplatetext.setTextFormat(format);
-				var B = getBounds(game);
+				var B = getBounds(game.gamestage);
 				nameplate.x = B.left - (Math.floor(nameplatetext.textWidth) >> 1) + (Math.floor(B.width) >> 1);
 				nameplate.y = B.top - 20;
 				

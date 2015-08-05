@@ -43,7 +43,7 @@ class OneWeekGirl extends PlayerAbility
 		hp = 0;
 		player.warncooldown = true;
 		shape = new Shape();
-		game.addChild(shape);
+		game.gamestage.addChild(shape);
 		//shape.y = player.feetposition;
 		//player.addChild(shape);
 		

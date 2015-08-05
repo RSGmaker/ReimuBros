@@ -132,11 +132,11 @@ class Entity extends Sprite
 	{
 		if (hitbox == null)
 		{
-			return getBounds(game);
+			return getBounds(game.gamestage);
 		}
 		else
 		{
-			var rct = getBounds(game);
+			var rct = getBounds(game.gamestage);
 			var R = new Rectangle(hitbox.left + rct.left, hitbox.top + rct.top, hitbox.width, hitbox.right);
 			return R;
 		}
@@ -176,9 +176,9 @@ class Entity extends Sprite
 	public function rotateentity(rot:Float)
 	{
 		{
-		var B = getBounds(game);
+		var B = getBounds(game.gamestage);
 		rotation = rot;
-		var B2 = getBounds(game);
+		var B2 = getBounds(game.gamestage);
 		x += B.left - B2.left;
 		y += B.top - B2.top;
 		}
@@ -230,7 +230,7 @@ class Entity extends Sprite
 		}
 		else
 		{
-			var B = getBounds(game);
+			var B = getBounds(game.gamestage);
 			ground = game.CollisionDetectPoint(B.left + middle, B.bottom+2/* + (height + 2)*/);
 		}
 		if (ground != null)
