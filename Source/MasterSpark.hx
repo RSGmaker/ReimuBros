@@ -76,7 +76,7 @@ class MasterSpark extends Entity
 		if (Size < 0)
 		{
 			Size = 0;
-			game.removeChild(ray);
+			game.gamestage.removeChild(ray);
 			ray = null;
 			alive = false;
 			game.yuukaactive = false;

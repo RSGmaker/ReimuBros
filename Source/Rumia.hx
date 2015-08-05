@@ -146,7 +146,7 @@ class Rumia extends Enemy
 				visible = false;
 				if (darkness != null)
 		{
-			game.removeChild(darkness);
+			game.gamestage.removeChild(darkness);
 			darkness = null;
 		}
 			}
@@ -156,7 +156,7 @@ class Rumia extends Enemy
 	{
 		if (darkness != null)
 		{
-			game.removeChild(darkness);
+			game.gamestage.removeChild(darkness);
 			darkness = null;
 		}
 		y += 15;

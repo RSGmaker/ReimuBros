@@ -56,7 +56,7 @@ class Scarlet extends Enemy
 			Ldir = data.Ldir;
 			if (who == "remilia")
 			{
-				Hspeed *= (Ldir * (mxspd / 2));
+				Hspeed = (Ldir * (mxspd / 2));
 			}
 			rename = who;
 			transformed = false;
