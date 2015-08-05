@@ -1,4 +1,5 @@
 package;
+import abilities.AbsorbDamage;
 import openfl.geom.Rectangle;
 import openfl.display.BitmapData;
 
@@ -17,13 +18,15 @@ class Block extends Entity
 	public var poisonvisual:PoisonCloud;
 	public var hb:Rectangle;
 	public var oanimation:Array<BitmapData>;
+	public var LeftBlock:Block;
+	public var RightBlock:Block;
 	public function new(ani:String) 
 	{
 		super(null);
 		this.visible = false;
-		poisonvisual = new PoisonCloud();
+		poisonvisual = new PoisonCloud(this);
 		poisonvisual.alpha = 0;
-		game.gamestage.addChild(poisonvisual);
+		game.entitylayer.addChild(poisonvisual);
 		Visual = new Entity(ani);
 		Visual.visible = false;
 		addChild(Visual);
@@ -143,6 +146,24 @@ class Block extends Entity
 			}
 		}
 	}
+	//returns a row of blocks,crossgaps: allows it to search an entire row instead of a side,currentsolid:false prevents returning nonsolids,includeinvalid:when true returns blocks not meant to be used(eg;the hidden blocks within the gaps)
+	public function getrow(crossgaps:Bool = false, currentlysolid:Bool = false, includeinvalid = false):Array<Block>
+	{
+		var B = LeftBlock;
+		while (B.LeftBlock != null && (!(!B.solid && B.respawn<0) || crossgaps))
+		{
+			B = B.LeftBlock;
+		}
+		var L = new Array<Block>();
+		L[0] = B;
+		while (B.RightBlock != null)
+		{
+			B = B.RightBlock;
+			if (B.solid || (B.respawn<0 && includeinvalid) || (B.respawn>=0 && !currentlysolid))
+			L[L.length] = B;
+		}
+		return L;
+	}
 	public override function update()
 	{
 		if (!started)
@@ -157,6 +178,10 @@ class Block extends Entity
 			UID += (y / 32) * 1000;
 			UID = -UID;
 			started = true;
+			var B:Dynamic = game.CollisionDetectPoint(x - 16, y);
+			LeftBlock = B;
+			B = game.CollisionDetectPoint(x + 48, y);
+			RightBlock = B;
 		}
 		if (respawn > 0)
 		{
@@ -178,6 +203,7 @@ class Block extends Entity
 		{
 			poisonvisual.update();
 		}
+		poisonvisual.visible = poisonvisual.alpha > 0;
 		Flames.visible = dangerous;
 		Flames.update();
 		this.visible = solid;
