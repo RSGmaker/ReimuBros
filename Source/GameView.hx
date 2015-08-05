@@ -192,6 +192,8 @@ class GameView extends Sprite
 	//list of players and their scores in multiplayer
 	public var scoreboard:TextField;
 	public var SC:Sprite;
+	public var MSG:Sprite;
+	public var MSGText:TextField;
 	
 	public var Room:String;
 	public var status:String;
@@ -632,8 +634,8 @@ class GameView extends Sprite
 		scoreboard = new TextField();
 		scoreboard.cacheAsBitmap = true;
 		scoreboard.text = "";
-		scoreboard.x = 3;
-		scoreboard.y = 3;
+		scoreboard.x = 0;
+		scoreboard.y = 0;
 		//scoreboard.x = 300;
 		//scoreboard.y = 10;
 		scoreboard.blendMode = openfl.display.BlendMode.INVERT;
@@ -643,7 +645,13 @@ class GameView extends Sprite
 		SC.y = 10;
 		SC.addChild(scoreboard);
 		addChild(SC);
-		
+		MSG = new Sprite();
+		SC.addChild(MSG);
+		MSGText = new TextField();
+		MSGText.x = 3;
+		MSGText.y = 3;
+		MSG.addChild(MSGText);
+		MSGText.blendMode = openfl.display.BlendMode.INVERT;
 		//addChild(scoreboard);
 		
 		//the miko sticks in the corners of the screen.
@@ -1861,6 +1869,12 @@ class GameView extends Sprite
 			if (data.level > level)
 			{
 				level = data.level;
+				var L = level - 1;
+				if (L < 0)
+				{
+					L = 0;
+				}
+				rank = Math.floor(L / 30);
 				PlayMusic();
 			}
 			level = data.level;
@@ -3905,16 +3919,17 @@ class GameView extends Sprite
 			CombinedScoreALL = myplayer.score;
 			S = myplayer.playername + ": " + myplayer.score + "\nHighscore: " + HighScore;
 		}
+		var messag = "";
 		if (messages.length > 0)
 		{
-			SC.scaleX = 1.5;
-			SC.scaleY = 1.5;
+			MSGText.scaleX = 1.5;
+			MSGText.scaleY = 1.5;
 			messagetime--;
-			S = messages[0];
+			messag = messages[0];
 			var i = 1;
 			while (i < 6 && i < messages.length)
 			{
-				S = S + "\n" + messages[i];
+				messag = messag + "\n" + messages[i];
 				i++;
 			}
 			if (messagetime < 1)
@@ -3937,15 +3952,19 @@ class GameView extends Sprite
 		scoreboard.text = S;
 		scoreboard.width = scoreboard.textWidth+4;
 		scoreboard.height = scoreboard.textHeight + 4;
-		SC.graphics.clear();
+		MSGText.text = messag;
+		MSG.graphics.clear();
+		MSG.x = scoreboard.width;
 		if (messages.length > 0)
 		{
-		SC.graphics.beginFill(0xFFFFFF, 0.7);
-		SC.graphics.drawRect(0, 0, scoreboard.width+6, scoreboard.height+6);
-		SC.graphics.endFill();
-		SC.graphics.beginFill(0x000044, 0.8);
-		SC.graphics.drawRect(3, 3, scoreboard.width, scoreboard.height);
-		SC.graphics.endFill();
+			MSGText.width = MSGText.textWidth + 4;
+			MSGText.height = MSGText.textHeight + 4;
+			MSG.graphics.beginFill(0xFFFFFF, 0.7);
+			MSG.graphics.drawRect(0, 0, MSGText.width+6, MSGText.textHeight+6);
+			MSG.graphics.endFill();
+			MSG.graphics.beginFill(0x000044, 0.8);
+			MSG.graphics.drawRect(3, 3, MSGText.width, MSGText.height);
+			MSG.graphics.endFill();
 		}
 		frame += 1;
 		//this is more efficient out of the update loop(espescially on slower machines)
@@ -4985,6 +5004,7 @@ class GameView extends Sprite
 			{
 				AddToArrayMultiple(enemytypes, new Kogasa(), 1);
 			}
+			AddToArrayMultiple(enemytypes, new Scarlet(), 300);
 		}
 		if (RoundType == TypeofRound.Nue)
 		{
