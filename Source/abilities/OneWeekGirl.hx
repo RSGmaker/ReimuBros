@@ -44,14 +44,18 @@ class OneWeekGirl extends PlayerAbility
 		player.warncooldown = true;
 		shape = new Shape();
 		game.gamestage.addChild(shape);
-		//shape.y = player.feetposition;
-		//player.addChild(shape);
 		
+	}
+	override public function lostability() 
+	{
+		super.lostability();
+		game.gamestage.removeChild(shape);
 	}
 	override public function onframe() 
 	{
 		super.onframe();
 		cooldown--;
+		cooldown -= 50;
 		if (speedboost > -1)
 		{
 			speedboost--;
