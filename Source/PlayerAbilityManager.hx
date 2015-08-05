@@ -58,7 +58,7 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.DestructiveJump(null), names:["flandre"] };
 		L[L.length] = { type:new abilities.ExtraLives(null), names:["ringo"] };
 		L[L.length] = { type:new abilities.BounceEntities(null), names:["kyouko"] };
-		L[L.length] = { type:new abilities.TileDanmaku(null), names:["elly"] };
+		//L[L.length] = { type:new abilities.TileDanmaku(null), names:["elly"] };
 		L[L.length] = { type:new abilities.InstantCollect(null), names:["shou"] };
 		L[L.length] = { type:new abilities.AngelOfDeath(null), names:["sariel"] };
 		L[L.length] = { type:new abilities.Fairplay(null), names:["shikieiki"] };
@@ -80,7 +80,7 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.PoisonBlocks(null), names:["medicine"] };
 		L[L.length] = { type:new abilities.IceBall(null), names:["cirno"] };
 		L[L.length] = { type:new abilities.SummonBlackHole(null), names:["suika"] };
-		
+		L[L.length] = { type:new abilities.BoomerangScythe(null), names:["elly"] };
 		
 		
 		L[L.length] = { type:new abilities.BasicShot(null), names:["benben","yatsuhashi"] };
