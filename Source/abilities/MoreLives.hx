@@ -6,11 +6,12 @@ package abilities;
  */
 class MoreLives extends PlayerAbility
 {
-
+	var toggle:Bool;
 	public function new(player:Player) 
 	{
 		super(player);
 		description = "Starts with double the lives";
+		toggle = false;
 	}
 	override public function init() 
 	{
@@ -21,5 +22,13 @@ class MoreLives extends PlayerAbility
 	{
 		super.oncontinue();
 		player.lives += 3;
+	}
+	override public function onloselife()
+	{
+		if (toggle)
+		{
+			player.cancel = true;
+		}
+		toggle = !toggle;
 	}
 }

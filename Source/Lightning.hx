@@ -31,7 +31,7 @@ class Lightning extends Entity
 		}
 		super.update();
 		var T:GameView = game;
-		var B = getBounds(T);
+		var B = getBounds(T.gamestage);
 		//nerf lightning size a bit
 		B.right -= 120;
 		B.left += 50;

@@ -138,7 +138,7 @@ class TwuckHunter extends Enemy
 		Ldir = dir;
 		animate();
 		var D:Dynamic = target;
-		if (!hastwuck && game.Hoster && getBounds(game).intersects(target.getBounds(game)) && D.holder==null/* Math.abs(x - target.x) < 800 && Math.abs((y+10) - target.y) < 600*/)
+		if (!hastwuck && game.Hoster && getBounds(game.gamestage).intersects(target.getBounds(game.gamestage)) && D.holder==null/* Math.abs(x - target.x) < 800 && Math.abs((y+10) - target.y) < 600*/)
 		{
 			//game.SendEvent("Collect", -target.UID);
 			D = { };

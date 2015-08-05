@@ -43,7 +43,7 @@ class Rumia extends Enemy
 			darkness.y -= darkness.height / 2;
 			darkness.x += x + width / 2;
 			darkness.y += y + height / 2;
-			game.addChild(darkness);
+			game.gamestage.addChild(darkness);
 			started = true;
 			
 		}

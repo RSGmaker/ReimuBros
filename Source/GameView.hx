@@ -276,6 +276,9 @@ class GameView extends Sprite
 	public var flashrate:Float;
 	public var flashalphadirection:Bool;
 	
+	public var entitylayer:Sprite;
+	public var gamestage:Sprite;
+	
 	
 	public var spawnrate:Float = 1.0;
 	var ZaWarudo:Sprite = null;
@@ -305,6 +308,8 @@ class GameView extends Sprite
 		ImposterList = new Array<String>();
 		//netlog = Main._this.DEBUG;
 		messages = new Array<String>();
+		entitylayer = new Sprite();
+		gamestage = new Sprite();
 	}
 	
 	public function FlashColor(color:Int,maxalpha:Float,startalpha:Float,rate:Float)
@@ -477,6 +482,7 @@ class GameView extends Sprite
 			
 		SoundManager.PlayJingle("startgame").addEventListener(Event.SOUND_COMPLETE,function(e:Event):Void {PlayMusic();});
 		}
+		addChild(gamestage);
 		collisiondata = new Array<Dynamic>();
 		collisiondangerousdata = new Array<Dynamic>();
 		successstreak = 0;
@@ -504,8 +510,10 @@ class GameView extends Sprite
 		
 		
 		Background.alpha = 0;
-		addChild(OBackground);
-		addChild(Background);
+		gamestage.addChild(OBackground);
+		gamestage.addChild(Background);
+		entitylayer = new Sprite();
+		gamestage.addChild(entitylayer);
 		HighScore = Main._this.savedata.data.highscore;
 		ufos = 0;
 		Players = new Map<String,Player>();
@@ -642,20 +650,20 @@ class GameView extends Sprite
 		var B = new Bitmap(AL.GetAnimation("barrier")[0]);
 		B.x = -20-40;
 		B.y = 430;
-		addChild(B);
+		gamestage.addChild(B);
 		
 		B = new Bitmap(AL.GetAnimation("barrierF")[0]);
 		B.x = 820-160+40;
 		B.y = 430;
-		addChild(B);
+		gamestage.addChild(B);
 		B = new Bitmap(AL.GetAnimation("barrier")[0]);
 		B.x = -20-40;
 		B.y = -40;
-		addChild(B);
+		gamestage.addChild(B);
 		B = new Bitmap(AL.GetAnimation("barrierF")[0]);
 		B.x = 820-160+40;
 		B.y = -40;
-		addChild(B);
+		gamestage.addChild(B);
 		
 		
 		direction = 1;
@@ -730,6 +738,20 @@ class GameView extends Sprite
 		Dpad.y = 600;
 		//addChild(Dpad);
 		gui.addChild(Dpad);
+		
+		var B = new MenuButton("Pause",70);
+		B.x += 680;
+		B.y = 620;
+		gui.addChild(B);
+		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					menu = !menu;
+					if (!online)
+			{
+				//paused = !paused;
+				paused = menu;
+			}
+				 } 
+				);
 		
 		colorflash = new Shape();
 		//addChild(colorflash);
@@ -1034,7 +1056,8 @@ class GameView extends Sprite
 			activeInteractables[activeInteractables.length] = E;
 		}
 		entities[entities.length] = E;
-		addChild(E);
+		//addChild(E);
+		entitylayer.addChild(E);
 	}
 	private function RemoveEntityItem(I:Entity) {
 		var D:Dynamic = I;
@@ -1051,8 +1074,9 @@ class GameView extends Sprite
 		{
 			activeInteractables.remove(I);
 		}
-		removeChild(I);
+		//removeChild(I);
 		entities.remove(I);
+		entitylayer.removeChild(I);
 	}
 	//retuns solid object at point
 	public function CollisionDetectPoint(X:Float,Y:Float):Entity {
@@ -1156,7 +1180,7 @@ class GameView extends Sprite
 	}
 	public function CollisionDetectTouchDangerous(target:Entity,hitbox:Bool=false):Entity {
 		var i = 0;
-		var R = target.getBounds(this);
+		var R = target.getBounds(gamestage);
 		if (hitbox)
 		{
 			R = target.GetHitbox();
@@ -1188,14 +1212,14 @@ class GameView extends Sprite
 	}
 	public function CollisionDetectTouchInteractable(target:Entity):Entity {
 		var i = 0;
-		var R = target.getBounds(this);
+		var R = target.getBounds(gamestage);
 		while (i < activeInteractables.length)
 		{
 			var E = activeInteractables[i];
 			
 			if (E.interactable && E.alive && E.readyinteract && !E.killed && E.type != "Block")
 			{
-				if (R.intersects(E.getBounds(this))/*containsPoint(new Point(X,Y))*/)
+				if (R.intersects(E.getBounds(gamestage))/*containsPoint(new Point(X,Y))*/)
 				{
 					return E;
 				}
@@ -1207,7 +1231,7 @@ class GameView extends Sprite
 	}
 	public function CollisionDetectTouchEnemy(target:Entity,hitbox:Bool=false):Enemy {
 		var i = 0;
-		var R = target.getBounds(this);
+		var R = target.getBounds(gamestage);
 		if (hitbox)
 		{
 			R = target.GetHitbox();
@@ -1218,7 +1242,7 @@ class GameView extends Sprite
 			
 			if (!E.killed)
 			{
-				if (R.intersects(E.getBounds(this)))
+				if (R.intersects(E.getBounds(gamestage)))
 				{
 					return E;
 				}
@@ -1230,14 +1254,14 @@ class GameView extends Sprite
 	}
 	public function CollisionDetectTouchItem(target:Entity):EntityItem {
 		var i = 0;
-		var R = target.getBounds(this);
+		var R = target.getBounds(gamestage);
 		while (i < activeItems.length)
 		{
 			var E = activeItems[i];
 			
 			if (!E.killed)
 			{
-				if (R.intersects(E.getBounds(this)))
+				if (R.intersects(E.getBounds(gamestage)))
 				{
 					return E;
 				}
@@ -1592,10 +1616,10 @@ class GameView extends Sprite
 			boss = null;
 			minipowspawns = 0;
 			RoundType = R;
-			this.x = 0;
-			this.y = 0;
-			this.scaleX = 1;
-			this.scaleY = 1;
+			gamestage.x = 0;
+			gamestage.y = 0;
+			gamestage.scaleX = 1;
+			gamestage.scaleY = 1;
 			successstreak++;
 			if (myplayer.score > HighScore && GameFlags.getactiveflags().length==0)
 				{
@@ -2155,7 +2179,7 @@ class GameView extends Sprite
 				}
 				if (E.subtype == "UFO")
 				{
-					//D.fuel = 0;
+					D.fuel = 0;
 				}
 				if (E.type == "MasterSpark")
 				{
@@ -2567,28 +2591,28 @@ class GameView extends Sprite
 			{
 			if (Math.random() > 0.5)
 			{
-				if (this.scaleY == 1)
+				if (gamestage.scaleY == 1)
 				{
-					this.scaleY = -1;
-					this.y = 600;
+					gamestage.scaleY = -1;
+					gamestage.y = 600;
 				}
 				else
 				{
-					this.scaleY = 1;
-					this.y = 0;
+					gamestage.scaleY = 1;
+					gamestage.y = 0;
 				}
 			}
 			else
 			{
-				if (this.scaleX == 1)
+				if (gamestage.scaleX == 1)
 				{
-					this.scaleX = -1;
-					this.x = 800;
+					gamestage.scaleX = -1;
+					gamestage.x = 800;
 				}
 				else
 				{
-					this.scaleX = 1;
-					this.x = 0;
+					gamestage.scaleX = 1;
+					gamestage.x = 0;
 				}
 			}
 			}
@@ -3874,8 +3898,7 @@ class GameView extends Sprite
 		{
 			CombinedScore = (myplayer.score - myplayer.spentscore);
 			CombinedScoreALL = myplayer.score;
-			var HS = Math.max(HighScore,myplayer.score);
-			S = myplayer.playername + ": " + myplayer.score + "\nHighscore: " + HS;
+			S = myplayer.playername + ": " + myplayer.score + "\nHighscore: " + HighScore;
 		}
 		if (messages.length > 0)
 		{
@@ -4246,7 +4269,7 @@ class GameView extends Sprite
 		var i = 0;
 		if (MSE)
 		{
-			if (stage.mouseY < 600)
+			if (stage.mouseY < 600 && !menu)
 			{
 				var C = control.copy();
 			control[0] = stage.mouseY < 100;
@@ -4789,6 +4812,7 @@ class GameView extends Sprite
 			RoundType = E[(Math.floor(Math.random() * E.length))];
 			
 		}
+		//RoundType = TypeofRound.Seija;
 		
 		
 		

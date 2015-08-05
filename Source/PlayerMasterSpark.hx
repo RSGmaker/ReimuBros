@@ -137,7 +137,7 @@ class PlayerMasterSpark extends Entity
 		whiteray.graphics.beginFill(0xffffff);
 		whiteray.graphics.drawCircle(80, 80, 60);
 		whiteray.graphics.endFill();*/
-		var B = getBounds(game);
+		var B = getBounds(game.gamestage);
 		var P = game.myplayer;
 		if (Size >= 1)
 		{

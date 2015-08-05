@@ -94,6 +94,10 @@ class PlayerAbility
 	{
 		
 	}
+	public function onloselife()
+	{
+		
+	}
 	
 	
 	//make each characters abilities

@@ -97,11 +97,11 @@ class DanmakuEntity extends Entity
 	{
 		if (hitbox == null)
 		{
-			return getBounds(GameView._this);
+			return getBounds(GameView._this.gamestage);
 		}
 		else
 		{
-			var rct = getBounds(GameView._this);
+			var rct = getBounds(GameView._this.gamestage);
 			var R = new Rectangle(hitbox.left + rct.left, hitbox.top + rct.top, hitbox.width, hitbox.right);
 			return R;
 		}

@@ -91,6 +91,7 @@ class PlayerAbilityManager
 		while (i < abilities.length)
 		{
 			abilities[i].player = player;
+			abilities[i].game = GameView._this;
 			abilities[i].init();
 			i++;
 		}
@@ -186,6 +187,15 @@ class PlayerAbilityManager
 			i++;
 		}
 	}
+	public function onloselife()
+	{
+		var i = 0;
+		while (i < abilities.length)
+		{
+			abilities[i].onloselife();
+			i++;
+		}
+	}
 	public function lostability()
 	{
 		var i = 0;
@@ -210,6 +220,7 @@ class PlayerAbilityManager
 	{
 		abilities = GetAbilities(player);
 	}
+	
 	
 	//static functions
 	public static var ListAbilities:Array<Dynamic>;

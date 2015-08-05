@@ -23,7 +23,7 @@ class Block extends Entity
 		this.visible = false;
 		poisonvisual = new PoisonCloud();
 		poisonvisual.alpha = 0;
-		GameView._this.addChild(poisonvisual);
+		game.gamestage.addChild(poisonvisual);
 		Visual = new Entity(ani);
 		Visual.visible = false;
 		addChild(Visual);
