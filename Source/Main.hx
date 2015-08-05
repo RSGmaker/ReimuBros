@@ -373,7 +373,10 @@ class Main extends Sprite {
 		else if (game != null)
 		{
 			//seems to fix some minor input issues.
-			stage.focus = this;
+			if (stage.focus != this)
+			{
+				stage.focus = this;
+			}
 			
 			if (game.status == "quitting")
 			{
