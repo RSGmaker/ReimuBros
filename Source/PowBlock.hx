@@ -1,4 +1,5 @@
 package;
+import openfl.geom.Rectangle;
 
 /**
  * ...
@@ -15,6 +16,10 @@ class PowBlock extends Entity
 		HP = 4;
 		bonked = -1000;
 		UID = -100 - GameView._this.entities.length;
+	}
+	override public function GetHitbox():Rectangle 
+	{
+		return new Rectangle(x, y, 64, 32);
 	}
 	public override function update()
 	{
