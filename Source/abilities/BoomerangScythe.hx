@@ -36,7 +36,6 @@ class BoomerangScythe extends PlayerAbility
 			D.dir = player.Ldir;
 			D.Vspeed = 0;
 			D.HP = 999999;
-			//D.gravX = -0.3;
 			D.gravX = -0.5;
 			D.image_speed = 2;
 			if (player.Ldir >= 0)
@@ -50,8 +49,6 @@ class BoomerangScythe extends PlayerAbility
 			}
 			
 			D.gravY = 0;
-			//D.wrap = true;
-			//D.bounces = true;
 			game.SendEvent("PlayerDanmaku", D);
 		}
 	}
