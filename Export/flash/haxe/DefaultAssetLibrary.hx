@@ -612,6 +612,38 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Sprites/satori0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/satoriflipped0.png", __ASSET__assets_sprites_satoriflipped0_png);
 		type.set ("assets/Sprites/satoriflipped0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe0.png", __ASSET__assets_sprites_scythe0_png);
+		type.set ("assets/Sprites/scythe0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe1.png", __ASSET__assets_sprites_scythe1_png);
+		type.set ("assets/Sprites/scythe1.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe10.png", __ASSET__assets_sprites_scythe10_png);
+		type.set ("assets/Sprites/scythe10.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe11.png", __ASSET__assets_sprites_scythe11_png);
+		type.set ("assets/Sprites/scythe11.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe12.png", __ASSET__assets_sprites_scythe12_png);
+		type.set ("assets/Sprites/scythe12.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe13.png", __ASSET__assets_sprites_scythe13_png);
+		type.set ("assets/Sprites/scythe13.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe14.png", __ASSET__assets_sprites_scythe14_png);
+		type.set ("assets/Sprites/scythe14.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe15.png", __ASSET__assets_sprites_scythe15_png);
+		type.set ("assets/Sprites/scythe15.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe2.png", __ASSET__assets_sprites_scythe2_png);
+		type.set ("assets/Sprites/scythe2.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe3.png", __ASSET__assets_sprites_scythe3_png);
+		type.set ("assets/Sprites/scythe3.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe4.png", __ASSET__assets_sprites_scythe4_png);
+		type.set ("assets/Sprites/scythe4.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe5.png", __ASSET__assets_sprites_scythe5_png);
+		type.set ("assets/Sprites/scythe5.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe6.png", __ASSET__assets_sprites_scythe6_png);
+		type.set ("assets/Sprites/scythe6.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe7.png", __ASSET__assets_sprites_scythe7_png);
+		type.set ("assets/Sprites/scythe7.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe8.png", __ASSET__assets_sprites_scythe8_png);
+		type.set ("assets/Sprites/scythe8.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/scythe9.png", __ASSET__assets_sprites_scythe9_png);
+		type.set ("assets/Sprites/scythe9.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/seiga0.png", __ASSET__assets_sprites_seiga0_png);
 		type.set ("assets/Sprites/seiga0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/seija0.png", __ASSET__assets_sprites_seija0_png);
@@ -1915,6 +1947,70 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe1.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe10.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe11.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe12.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe13.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe14.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe15.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe2.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe3.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe4.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe5.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe6.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe7.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe8.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/scythe9.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "assets/Sprites/seiga0.png";
 		path.set (id, id);
 		
@@ -2275,6 +2371,22 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#else
 		
 		#if openfl
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -3493,6 +3605,54 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("assets/Sprites/satoriflipped0.png", __ASSET__assets_sprites_satoriflipped0_png);
 		type.set ("assets/Sprites/satoriflipped0.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe0.png", __ASSET__assets_sprites_scythe0_png);
+		type.set ("assets/Sprites/scythe0.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe1.png", __ASSET__assets_sprites_scythe1_png);
+		type.set ("assets/Sprites/scythe1.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe10.png", __ASSET__assets_sprites_scythe10_png);
+		type.set ("assets/Sprites/scythe10.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe11.png", __ASSET__assets_sprites_scythe11_png);
+		type.set ("assets/Sprites/scythe11.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe12.png", __ASSET__assets_sprites_scythe12_png);
+		type.set ("assets/Sprites/scythe12.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe13.png", __ASSET__assets_sprites_scythe13_png);
+		type.set ("assets/Sprites/scythe13.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe14.png", __ASSET__assets_sprites_scythe14_png);
+		type.set ("assets/Sprites/scythe14.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe15.png", __ASSET__assets_sprites_scythe15_png);
+		type.set ("assets/Sprites/scythe15.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe2.png", __ASSET__assets_sprites_scythe2_png);
+		type.set ("assets/Sprites/scythe2.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe3.png", __ASSET__assets_sprites_scythe3_png);
+		type.set ("assets/Sprites/scythe3.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe4.png", __ASSET__assets_sprites_scythe4_png);
+		type.set ("assets/Sprites/scythe4.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe5.png", __ASSET__assets_sprites_scythe5_png);
+		type.set ("assets/Sprites/scythe5.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe6.png", __ASSET__assets_sprites_scythe6_png);
+		type.set ("assets/Sprites/scythe6.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe7.png", __ASSET__assets_sprites_scythe7_png);
+		type.set ("assets/Sprites/scythe7.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe8.png", __ASSET__assets_sprites_scythe8_png);
+		type.set ("assets/Sprites/scythe8.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/scythe9.png", __ASSET__assets_sprites_scythe9_png);
+		type.set ("assets/Sprites/scythe9.png", AssetType.IMAGE);
 		
 		className.set ("assets/Sprites/seiga0.png", __ASSET__assets_sprites_seiga0_png);
 		type.set ("assets/Sprites/seiga0.png", AssetType.IMAGE);
@@ -4726,6 +4886,22 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_sariel0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_satori0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_satoriflipped0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe1_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe10_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe11_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe12_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe13_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe14_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe15_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe3_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe4_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe5_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe6_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe7_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe8_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_scythe9_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_seiga0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_seija0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_seiran0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -4816,6 +4992,22 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 #elseif html5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -5475,6 +5667,22 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("Assets/Sprites/sariel0.png") #if display private #end class __ASSET__assets_sprites_sariel0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/satori0.png") #if display private #end class __ASSET__assets_sprites_satori0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/satoriflipped0.png") #if display private #end class __ASSET__assets_sprites_satoriflipped0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe0.png") #if display private #end class __ASSET__assets_sprites_scythe0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe1.png") #if display private #end class __ASSET__assets_sprites_scythe1_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe10.png") #if display private #end class __ASSET__assets_sprites_scythe10_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe11.png") #if display private #end class __ASSET__assets_sprites_scythe11_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe12.png") #if display private #end class __ASSET__assets_sprites_scythe12_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe13.png") #if display private #end class __ASSET__assets_sprites_scythe13_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe14.png") #if display private #end class __ASSET__assets_sprites_scythe14_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe15.png") #if display private #end class __ASSET__assets_sprites_scythe15_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe2.png") #if display private #end class __ASSET__assets_sprites_scythe2_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe3.png") #if display private #end class __ASSET__assets_sprites_scythe3_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe4.png") #if display private #end class __ASSET__assets_sprites_scythe4_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe5.png") #if display private #end class __ASSET__assets_sprites_scythe5_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe6.png") #if display private #end class __ASSET__assets_sprites_scythe6_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe7.png") #if display private #end class __ASSET__assets_sprites_scythe7_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe8.png") #if display private #end class __ASSET__assets_sprites_scythe8_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/scythe9.png") #if display private #end class __ASSET__assets_sprites_scythe9_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/seiga0.png") #if display private #end class __ASSET__assets_sprites_seiga0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/seija0.png") #if display private #end class __ASSET__assets_sprites_seija0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/seiran0.png") #if display private #end class __ASSET__assets_sprites_seiran0_png extends lime.graphics.Image {}

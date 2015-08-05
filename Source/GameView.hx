@@ -2460,9 +2460,14 @@ class GameView extends Sprite
 			{
 				O.rolls = data.rolls;
 			}
-			
-			
 			O.image.image_speed = 1;
+			if (data.image_speed != null)
+			{
+				O.image.image_speed = data.image_speed;
+			}
+			
+			
+			
 			O.allowwrap = data.wrap;
 			if (O.Hspeed >= 0)
 			{
