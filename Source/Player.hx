@@ -555,8 +555,7 @@ class Player extends Entity
 				danger = game.CollisionDetectTouchDangerous(this);
 				enemy = game.CollisionDetectTouchEnemy(this);
 			}
-		//var eItem = game.CollisionDetectPointItem(x + W, y + (feetposition - H));
-		var eItem = game.CollisionDetectTouchItem(this);
+		var eItem = game.CollisionDetectPointItem(x + W, y + (feetposition - 1));
 		if (eItem != null && eItem.collectable)
 		{
 			if (!(flags.get(CanHide) && cooldown <= 0))
