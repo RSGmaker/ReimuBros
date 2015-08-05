@@ -9,8 +9,10 @@ import openfl.display.BitmapData;
  */
 class Block extends Entity
 {
-	public var Visual:Entity;
-	public var Flames:Entity;
+	//public var Visual:Entity;
+	//public var Flames:Entity;
+	public var Visual:Animation;
+	public var Flames:Animation;
 	public var started:Bool;
 	public var charred:Bool;
 	public var respawn:Int;
@@ -18,8 +20,11 @@ class Block extends Entity
 	public var poisonvisual:PoisonCloud;
 	public var hb:Rectangle;
 	public var oanimation:Array<BitmapData>;
+	public var icyanimation:Array<BitmapData>;
+	public var charanimation:Array<BitmapData>;
 	public var LeftBlock:Block;
 	public var RightBlock:Block;
+	
 	public function new(ani:String) 
 	{
 		super(null);
@@ -27,17 +32,19 @@ class Block extends Entity
 		poisonvisual = new PoisonCloud(this);
 		poisonvisual.alpha = 0;
 		game.entitylayer.addChild(poisonvisual);
-		Visual = new Entity(ani);
+		icyanimation = game.AL.GetAnimation("icyblock");
+		charanimation = game.AL.GetAnimation("charblock");
+		Visual = new Animation(game.AL.GetAnimation(ani));
 		Visual.visible = false;
 		addChild(Visual);
-		Flames = new Entity("flames");
+		Flames = new Animation(game.AL.GetAnimation("flames"));
 		Flames.visible = false;
-		Flames.image.image_speed = 0.5;
+		Flames.image_speed = 0.5;
 		addChild(Flames);
 		type = "Block";
 		started = false;
 		respawn = -1;
-		oanimation = Visual.image.animation;
+		oanimation = Visual.animation;
 		
 	}
 	override public function GetHitbox():Rectangle 
@@ -66,7 +73,7 @@ class Block extends Entity
 		if (icy || poison)
 		{
 			icy = false;
-			Visual.image.ChangeAnimation(oanimation);
+			Visual.ChangeAnimation(oanimation);
 		}
 		respawn = 800;
 		}
@@ -80,7 +87,7 @@ class Block extends Entity
 			icy = true;
 			poison = false;
 			charred = false;
-			Visual.ChangeAnimation("icyblock");
+			Visual.ChangeAnimation(icyanimation);
 		}
 	}
 	public function Freeze()
@@ -89,7 +96,7 @@ class Block extends Entity
 		{
 			dangerous = false;
 			icy = true;
-			Visual.ChangeAnimation("icyblock");
+			Visual.ChangeAnimation(icyanimation);
 			if (solid)
 			{
 				//respawn = 1500;
@@ -102,7 +109,7 @@ class Block extends Entity
 		if (icy)
 		{
 			icy = false;
-			Visual.image.ChangeAnimation(oanimation);
+			Visual.ChangeAnimation(oanimation);
 		}
 	}
 	public function Clean()
@@ -113,7 +120,7 @@ class Block extends Entity
 			icy = false;
 			charred = false;
 			poison = false;
-			Visual.image.ChangeAnimation(oanimation);
+			Visual.ChangeAnimation(oanimation);
 		}
 		if (respawn > -1)
 		{
@@ -139,7 +146,7 @@ class Block extends Entity
 			dangerous = false;
 			icy = false;
 			charred = true;
-			Visual.ChangeAnimation("charblock");
+			Visual.ChangeAnimation(charanimation);
 			if (solid)
 			{
 				respawn = -1;
@@ -205,7 +212,8 @@ class Block extends Entity
 		}
 		poisonvisual.visible = poisonvisual.alpha > 0;
 		Flames.visible = dangerous;
-		Flames.update();
+		Flames.animate();
+		//Flames.update();
 		this.visible = solid;
 		Visual.visible = solid;
 		if (!solid)
