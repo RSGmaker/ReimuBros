@@ -86,13 +86,13 @@ class UFO extends Enemy
 		{
 			SendCustomEvent(null);
 		}
-		if (x < -4 && movement<0)
+		if (x < -width && movement<0)
 		{
 			x = 900;
 		}
 		if (x > 900 && movement>0)
 		{
-			x = -4;
+			x = -width;
 		}
 		if (fuel > 0)
 		{
