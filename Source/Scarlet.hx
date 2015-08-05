@@ -87,44 +87,60 @@ class Scarlet extends Enemy
 		{
 			if (transformed) 
 			{
-				if (!target.alive)
+				var T = game.myplayer;
+				if (Math.abs(T.y - y) < 60 && Math.abs(T.x - x) < 140)
 				{
-					var A = game.GetPlayers();
-					target = A[Std.int((79993 * UID)) % A.length];
+					var D:Dynamic = { };
+					D.x = x;
+					D.y = y;
+							
+					if (x < target.x)
+					{
+						Ldir = 1;
+					}
+					if (x > target.x)
+					{
+						Ldir = -1;
+					}
+					D.Ldir = Ldir;
+					SendCustomEvent(D);
+				}
+				//var X = Ldir << 1;
+				var block = game.CollisionDetectPoint(x, y + 80);
+				if (block == null)
+				{
+					y += 6;
+					Hspeed = Hspeed *= 0.8;
 				}
 				else
 				{
-					var P:flash.geom.Point = new flash.geom.Point(target.x - x, target.y - y);
-					P.normalize(3);
-					x += P.x;
-					y += P.y;
-					if (target == game.myplayer && Math.abs(target.y - y) < 60/* && target.y < y*/)
+					//X = X + (Ldir);
+				}
+				//x += X;
+				if (Hspeed < mxspd && Ldir==1)
+				{
+					Hspeed += accel;
+					if (Hspeed > mxspd)
 					{
-						if (Math.abs(target.x - x) < 200)
-						{
-							var D:Dynamic = { };
-							D.x = x;
-							D.y = y;
-							
-							if (x < target.x)
-							{
-								Ldir = 1;
-							}
-							if (x > target.x)
-							{
-								Ldir = -1;
-							}
-							D.Ldir = Ldir;
-							SendCustomEvent(D);
-							//game.SendEvent("CustomEvent", D);
-							/*if (who == "remilia")
-							{
-								Hspeed *= (Ldir * (mxspd / 2));
-							}
-							rename = who;
-							transformed = false;*/
-						}
+						Hspeed = mxspd;
 					}
+				}
+				if (Hspeed > -mxspd && Ldir==-1)
+				{
+					Hspeed -= accel;
+					if (Hspeed < -mxspd)
+					{
+						Hspeed = -mxspd;
+					}
+				}
+				x += Hspeed;
+				if (x < -width)
+				{
+					x = 800;
+				}
+				if (x > 800)
+				{
+					x = -width;
 				}
 				animate();
 				updateanimation(rename);
