@@ -143,10 +143,13 @@ class Keine extends Enemy
 	}
 	public override function bump()
 	{
-		//
 		if (!ex)
 		{
-			Hspeed = -Hspeed;
+			Hspeed = mxspd+4+rank;
+			if (Ldir > 0)
+			{
+				Hspeed = -Hspeed;
+			}
 		}
 		else
 		{
