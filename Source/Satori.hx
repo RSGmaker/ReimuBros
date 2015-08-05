@@ -34,6 +34,11 @@ class Satori extends Enemy
 	
 	override public function attack():Bool 
 	{
+		if (rename == "koishi")
+		{
+			alpha = 0.2;
+			wait = 0;
+		}
 		return alpha >= 1;
 	}
 	public override function increaserank()
@@ -59,6 +64,10 @@ class Satori extends Enemy
 			{
 				rename = "koishi";
 			}
+			else
+			{
+				fallaccel += 0.3;
+			}
 			started = true;
 			var A = game.GetPlayers();
 			target = A[Std.int(99999 * UID) % A.length];
@@ -72,22 +81,23 @@ class Satori extends Enemy
 		{
 			if (rename == "satori")
 			{
-				if (target.controller[2] && Ldir >= 0)
+				/*if (target.controller[2] && Ldir >= 0)
 				{
 					Ldir = -1;
 				}
 				else if (target.controller[3] && Ldir <= 0)
 				{
 					Ldir = 1;
-				}
-				if (target.controller[0] && ground != null && Vspeed == 0)
+				}*/
+				if (game.myplayer.controller[0] && ground != null && Vspeed == 0)
 				{
-					Vspeed = -7;
+					//Vspeed = -7;
+					Vspeed = -10;
 				}
 			}
 			if (rename == "koishi")
 			{
-				if (target.controller[3] && Ldir >= 0)
+				/*if (target.controller[3] && Ldir >= 0)
 				{
 					Ldir = -1;
 					alpha = 1;
@@ -102,12 +112,12 @@ class Satori extends Enemy
 					//turn invisible and invincible
 					alpha = 0.2;
 					wait = 0;
-				}
+				}*/
 			}
 		}
 		if (!killed)
 		{
-			if (target == game.myplayer && game.ControlEvent)
+			/*if (target == game.myplayer && game.ControlEvent)
 			{
 			var D:Dynamic = { };
 			D.Hspeed = Hspeed;
@@ -116,7 +126,7 @@ class Satori extends Enemy
 			D.x = x;
 			D.y = y;
 			SendCustomEvent(D);
-			}
+			}*/
 		var dir = Ldir;
 		if (flipped > 0)
 		{
@@ -162,8 +172,13 @@ class Satori extends Enemy
 			}
 		}
 		}
+		var lground = ground;
 		updphysics();
 		updateanimation(rename);
+		if (lground == null && ground != null && rename == "koishi"/* && y < 300*/)
+		{
+			Ldir = -Ldir;
+		}
 		
 		if (ground != null)
 		{
