@@ -3744,6 +3744,20 @@ class GameView extends Sprite
 				 } 
 				);
 				charselect.addChild(B);
+				
+				B = new MenuButton("Continue");
+				B.x += 670;
+				B.y += 12;
+				B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					menu = false;
+					if (!online)
+					{
+						paused = menu;
+					}
+					
+				 } 
+				);
+				charselect.addChild(B);
 				gui.addChild(charselect);
 			}
 		}
@@ -5004,7 +5018,6 @@ class GameView extends Sprite
 			{
 				AddToArrayMultiple(enemytypes, new Kogasa(), 1);
 			}
-			AddToArrayMultiple(enemytypes, new Scarlet(), 300);
 		}
 		if (RoundType == TypeofRound.Nue)
 		{
