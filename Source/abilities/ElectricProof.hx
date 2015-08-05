@@ -10,7 +10,7 @@ class ElectricProof extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Insulated";
+		description = "Lightning-proof";
 	}
 	override public function init() 
 	{
