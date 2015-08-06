@@ -1038,11 +1038,11 @@ class GameView extends Sprite
 				player.alive = false;
 				if (player.nameplate != null)
 				{
-					game.gamestage.removeChild(player.nameplate);
+					gamestage.removeChild(player.nameplate);
 				}
 				Players.remove(P);
 				entities.remove(player);
-				removeChild(player);
+				entitylayer.removeChild(player);
 			}
 			
 		}
