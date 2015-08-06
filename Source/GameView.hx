@@ -3213,9 +3213,9 @@ class GameView extends Sprite
 		}
 		switch (event.keyCode) {
 			
-		case Keyboard.Q:
+		/*case Keyboard.Q:
 			SendEvent("Quitting", null);
-			status = "quitting";
+			status = "quitting";*/
 		case Keyboard.F1:
 			if (Hoster && Main._this.DEBUG)
 			{
