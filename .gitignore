@@ -9,6 +9,7 @@ Desktop.ini
 $RECYCLE.BIN/
 
 Export/
+Export
 
 # Windows Installer files
 *.cab
@@ -51,3 +52,4 @@ Export/flash/haxe/DefaultAssetLibrary.hx
 *.build
 Export/flash/haxe/final.hxml
 *.hxml
+Assets/Key.txt
