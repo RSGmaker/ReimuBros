@@ -458,6 +458,10 @@ class Main extends Sprite {
 			if (codes.indexOf(code) + 1 == 0)
 			{
 				playername = characterselect.Nameinput.text;
+				if (playername.length > 25)
+				{
+					playername = playername.substr(0, 25);
+				}
 			}
 			}
 			

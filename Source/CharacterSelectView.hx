@@ -441,6 +441,7 @@ class CharacterSelectView extends Sprite
 		Nameinput = new TextField();
 		Nameinput.width = 280;
 		Nameinput.height = 30;
+		Nameinput.maxChars = 40;
 		tmp = new TextFormat();
 		tmp.font = "Arial";
 		tmp.size = 22;
