@@ -761,6 +761,19 @@ class GameView extends Sprite
 				 } 
 				);
 		
+				var B = new MenuButton("Interact",70);
+		B.x += 680;
+		B.y = 880;
+		gui.addChild(B);
+		B.addEventListener( MouseEvent.MOUSE_DOWN, function( ev ) {
+					control[4] = true;
+				 } 
+				);
+			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					control[4] = false;
+				 } 
+				);
+		
 		colorflash = new Shape();
 		//addChild(colorflash);
 		gui.addChild(colorflash);
