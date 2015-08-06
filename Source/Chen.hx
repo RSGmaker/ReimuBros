@@ -43,6 +43,18 @@ class Chen extends Enemy
 		subtype = "chen";
 	}
 	
+	override public function attack():Bool 
+	{
+		//return super.attack();
+		alive = false;
+		killed = true;
+		{
+			var D:Dynamic = game.myplayer;
+			D.score += pointvalue;
+		}
+		return true;
+	}
+	
 	public override function enrage()
 	{
 		trace("enraged chen??? wut?");

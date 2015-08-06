@@ -43,6 +43,13 @@ class UFO extends Enemy
 		movement = -2;
 	}
 	
+	override public function attack():Bool 
+	{
+		//return super.attack();
+		fuel = 0;
+		return false;
+	}
+	
 	public override function enrage()
 	{
 		trace("enraged UFO??? wut?");
