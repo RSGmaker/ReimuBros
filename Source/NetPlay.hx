@@ -4,6 +4,7 @@ package;
 import flash.net.NetConnection;
 import flash.events.NetStatusEvent;
 import flash.net.GroupSpecifier;
+import lime.Assets;
 import haxe.Timer;
 
 /**
@@ -17,7 +18,8 @@ class NetPlay
 	public var groupstarted:Bool;
 	public var group:flash.net.NetGroup;
 	public var started:Bool;
-	public inline static var _cumulus:         String                      = '***REMOVED***';
+	//Your rtmfp url, we use the cirrus service, if you need your own urlkey get it at:https://www.rtmfp.net/cgi-bin/cirrusdevkey
+	public var _cumulus:String="";
 	public var ElapsedTime:Float;
 	public var StartTime:Float;
 	public var Connections:Array<Dynamic>;
@@ -40,6 +42,15 @@ class NetPlay
 		Test = "???";
 		Room = "Lobby";
 		Queue = new Array<Dynamic>();
+		if (Assets.exists("assets/Key.txt"))
+		{
+			//use a cirrus rtmfp service (requires a key), if you've cloned/copied this source code, get a key from:https://www.rtmfp.net/cgi-bin/cirrusdevkey and put it in assets/key.txt
+			_cumulus = "rtmfp://p2p.rtmfp.net/"+Assets.getText("assets/Key.txt")+"/";
+		}
+		else if (_cumulus == "")
+		{
+			trace("netplay is missing an rtmfp url,netplay cannot function without it");
+		}
 	}
 	public function end()
 	{
