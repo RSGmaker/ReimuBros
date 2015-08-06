@@ -1038,7 +1038,7 @@ class GameView extends Sprite
 				player.alive = false;
 				if (player.nameplate != null)
 				{
-					removeChild(player.nameplate);
+					game.gamestage.removeChild(player.nameplate);
 				}
 				Players.remove(P);
 				entities.remove(player);
@@ -3914,6 +3914,8 @@ class GameView extends Sprite
 		while (i < PL.length)
 		{
 			var E = PL[i];
+			if (!E.inactive)
+			{
 			if (S == "")
 			{
 				S = E.playername + ": " + E.score;
@@ -3921,6 +3923,7 @@ class GameView extends Sprite
 			else
 			{
 				S = S + "\n" + E.playername + ": " + E.score;
+			}
 			}
 			i++;
 		}
@@ -4327,7 +4330,7 @@ class GameView extends Sprite
 				}
 				if (Dpad.y > stage.mouseY)
 				{
-					Dpad.y = stage.mouseY-1;
+					Dpad.y = Math.max(stage.mouseY-1,600);
 				}
 				if (stage.mouseX < 384 && stage.mouseY < Dpad.y+384)
 				{

@@ -145,6 +145,8 @@ class Player extends Entity
 	public static inline var base_fallaccel = 1.0+0.1;
 	public static inline var base_jumpspd = -19 - 0.5;
 	
+	public var inactive:Bool;
+	
 	public var evt_onframe:Dynamic;
 	public function new(charname:String,controller:Array<Bool>) 
 	{
@@ -658,26 +660,29 @@ class Player extends Entity
 			}
 			}
 		}
+		inactive = false;
 		if (game.myplayer != this)
 		{
-		if (game.frame-frame > 600)
+		if (game.frame-frame > 60)
 		{
 			//hide inactive players
-			alpha = 0.5;
+			inactive = true;
+			nameplate.visible = false;
+			alpha = 0;
 			
-			blendMode = flash.display.BlendMode.SCREEN;
+			//blendMode = flash.display.BlendMode.SCREEN;
 		}
 		else if (blendMode == flash.display.BlendMode.SCREEN)
 		{
 			alpha = 1;
-			blendMode = flash.display.BlendMode.NORMAL;
+			//blendMode = flash.display.BlendMode.NORMAL;
 		}
 		
 		}
 		
 		if (((playername != "" && game.online) || (warncooldown/* && cooldown==0*/ && cooldown>-90)) && visible)
 		{
-			nameplate.visible = true;
+			nameplate.visible = !inactive;
 			if (playername != "PlayerName")
 			{
 				nameplatetext.text = "" + playername;

@@ -269,6 +269,7 @@ class NetPlay
 								M.init(i.char);
 							}
 						}
+					M.frame = game.frame;
 					M.controller[0] = i.con[0];
 					M.controller[1] = i.con[1];
 					M.controller[2] = i.con[2];
