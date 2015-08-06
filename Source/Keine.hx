@@ -29,6 +29,7 @@ class Keine extends Enemy
 		{
 			bump();
 			invincibility = 10;
+			Hspeed = 0;
 			return false;
 		}
 		return true;

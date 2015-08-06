@@ -1053,7 +1053,7 @@ class GameView extends Sprite
 	}
 	private function AddEnemy(E:Enemy) {
 		AddObject(E);
-		if (E.respawn)
+		//if (E.respawn)
 		{
 			activeEnemies[activeEnemies.length] = E;
 		}
@@ -4322,7 +4322,7 @@ class GameView extends Sprite
 						ControlEvent = true;
 					}
 			}
-			else
+			else if (stage.mouseY>=600)
 			{
 				if (Dpad.y + 384 < stage.mouseY)
 				{
