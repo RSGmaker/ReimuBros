@@ -320,7 +320,7 @@ class CharacterSelectView extends Sprite
 					filterArr[0] = AA;
 					filterArr[1] = AB;
 					leveltitle.filters = filterArr;
-					addChild(leveltitle);
+					GUI.addChild(leveltitle);
 					
 					var B = AddButton("+ ");
 					var B2 = AddButton(" - ");
@@ -330,7 +330,7 @@ class CharacterSelectView extends Sprite
 					{
 						B.visible = false;
 					}
-					addChild(B);
+					GUI.addChild(B);
 					B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 						if (level + 5 <= Main._this.savedata.data.maxlevel)
 						{
@@ -353,7 +353,7 @@ class CharacterSelectView extends Sprite
 					B2.x = 550;
 					B2.y = 190;
 					B2.visible = false;
-					addChild(B2);
+					GUI.addChild(B2);
 					B2.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 						if (level > 1)
 						{
