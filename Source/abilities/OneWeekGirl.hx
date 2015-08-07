@@ -55,7 +55,6 @@ class OneWeekGirl extends PlayerAbility
 	{
 		super.onframe();
 		cooldown--;
-		cooldown -= 50;
 		if (speedboost > -1)
 		{
 			speedboost--;
