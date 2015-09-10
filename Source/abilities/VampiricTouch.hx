@@ -15,7 +15,8 @@ class VampiricTouch extends PlayerAbility
 	{
 		super.init();
 		//number of points needed to collect
-		player.maxcooldown = 20;
+		//player.maxcooldown = 20;
+		player.maxcooldown = 30;
 		player.cooldown = player.maxcooldown;
 		player.warncooldown = true;
 	}

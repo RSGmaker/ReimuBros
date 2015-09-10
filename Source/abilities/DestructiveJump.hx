@@ -14,7 +14,7 @@ class DestructiveJump extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 1600;
+		player.maxcooldown = 2400;
 		player.warncooldown = true;
 	}
 	override public function onframe() 

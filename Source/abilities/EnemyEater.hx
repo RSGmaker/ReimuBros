@@ -17,7 +17,8 @@ class EnemyEater extends PlayerAbility
 	{
 		super.init();
 		//player.maxcooldown = 390;
-		maxhunger = 780;
+		//maxhunger = 780;
+		maxhunger = 1170;
 		hunger = maxhunger;
 	}
 	override public function onframe() 

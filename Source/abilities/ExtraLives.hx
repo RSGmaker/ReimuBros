@@ -9,13 +9,14 @@ class ExtraLives extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Gains a life every 22\npoint items";
+		description = "Gains a life every 25\npoint items";
 	}
 	override public function init() 
 	{
 		super.init();
 		//number of points needed to collect
-		player.maxcooldown = 22;
+		//player.maxcooldown = 22;
+		player.maxcooldown = 25;
 		player.cooldown = player.maxcooldown;
 		player.warncooldown = true;
 	}

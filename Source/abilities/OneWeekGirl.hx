@@ -36,7 +36,8 @@ class OneWeekGirl extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 6000;
+		//player.maxcooldown = 6000;
+		player.maxcooldown = 9000;
 		//player.maxcooldown = 200;
 		cooldown = player.maxcooldown;
 		speedboost = -1;

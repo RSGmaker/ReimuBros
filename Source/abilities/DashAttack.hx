@@ -14,7 +14,7 @@ class DashAttack extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 600;
+		player.maxcooldown = 900;
 		player.warncooldown = true;
 	}
 	override public function onframe() 

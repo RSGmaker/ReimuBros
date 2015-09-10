@@ -15,7 +15,7 @@ class Earthquake extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 1800;
+		player.maxcooldown = 2700;
 		player.warncooldown = true;
 	}
 	override public function onframe() 

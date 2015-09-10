@@ -15,7 +15,8 @@ class MasterSpark extends PlayerAbility
 	{
 		super.init();
 		//player.maxcooldown = 6000;
-		player.maxcooldown = 25;
+		//player.maxcooldown = 25;
+		player.maxcooldown = 35;
 		player.warncooldown = true;
 	}
 	override public function onframe() 

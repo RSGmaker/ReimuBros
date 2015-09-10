@@ -14,7 +14,9 @@ class WorldFreezer extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 7200+2000;
+		//player.maxcooldown = 7200+2000;
+		//player.maxcooldown = 9200;
+		player.maxcooldown = 13800;
 		player.warncooldown = true;
 	}
 	override public function onframe() 

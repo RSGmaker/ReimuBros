@@ -15,7 +15,7 @@ class BounceEntities extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 1200;
+		player.maxcooldown = 1800;
 		player.warncooldown = true;
 	}
 	override public function onframe() 
