@@ -6,7 +6,7 @@ package;
  */
 class Scarlet extends Enemy
 {
-
+	//slowed
 	public var accel:Float;
 	
 	public var mxspd:Float;
@@ -19,14 +19,14 @@ class Scarlet extends Enemy
 	public function new() 
 	{
 		super("Scarlet");
-		accel = 0.5;
-		deccel = 0.1;
-		mxspd = 6;
+		accel = 0.25;
+		deccel = 0.05;
+		mxspd = 3;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
 		rename = "bat";
-		image.image_speed = 0.2;
+		image.image_speed = 0.1;
 		scaleX = 0.7;
 		scaleY = 0.7;
 		pointvalue = 1000;
@@ -34,8 +34,8 @@ class Scarlet extends Enemy
 	
 	public override function increaserank()
 	{
-			accel += 0.1;
-			mxspd += 0.5;
+			accel += 0.05;
+			mxspd += 0.25;
 			pointvalue += 200;
 	}
 	/*function distance(p1,p2)
@@ -78,7 +78,7 @@ class Scarlet extends Enemy
 			else
 			{
 				who = "flandre";
-				mxspd-=2.5;
+				mxspd-=1.25;
 			}
 			var A = game.GetPlayers();
 			target = A[Std.int(99999 * UID) % A.length];
@@ -109,7 +109,7 @@ class Scarlet extends Enemy
 				var block = game.CollisionDetectPoint(x, y + 80);
 				if (block == null)
 				{
-					y += 6;
+					y += 3;
 					Hspeed = Hspeed *= 0.8;
 				}
 				else
@@ -192,7 +192,7 @@ class Scarlet extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -10;
+				D.Vspeed = -5;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -209,7 +209,7 @@ class Scarlet extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -4;
+					Vspeed = -2;
 				}
 			}
 			
@@ -224,7 +224,7 @@ class Scarlet extends Enemy
 	}
 	else
 	{
-		y += 15;
+		y += 7.5;
 	if (y > 600)
 	{
 	alive = false;
@@ -243,11 +243,11 @@ class Scarlet extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 30 * 4;
+				flipped = 60 * 4;
 			}
 			else
 			{
-				flipped = 30 * 7;
+				flipped = 60 * 7;
 			}
 		}
 		else

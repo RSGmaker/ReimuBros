@@ -19,9 +19,9 @@ class Satori extends Enemy
 	public function new() 
 	{
 		super("satori");
-		accel = 0.5;
-		deccel = 0.1;
-		mxspd = 4;
+		accel = 0.25;
+		deccel = 0.05;
+		mxspd = 2;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -43,8 +43,8 @@ class Satori extends Enemy
 	}
 	public override function increaserank()
 	{
-			accel += 0.1;
-			mxspd += 0.5;
+			accel += 0.05;
+			mxspd += 0.25;
 			pointvalue += 200;
 	}
 	override public function CustomEvent(data:Dynamic) 
@@ -66,7 +66,7 @@ class Satori extends Enemy
 			}
 			else
 			{
-				fallaccel += 0.3;
+				fallaccel += 0.15;
 			}
 			started = true;
 			var A = game.GetPlayers();
@@ -92,7 +92,7 @@ class Satori extends Enemy
 				if (game.myplayer.controller[0] && ground != null && Vspeed == 0)
 				{
 					//Vspeed = -7;
-					Vspeed = -10;
+					Vspeed = -7;
 				}
 			}
 			if (rename == "koishi")
@@ -144,7 +144,7 @@ class Satori extends Enemy
 		}
 		if (alpha < 1)
 		{
-			if (wait < 90)
+			if (wait < 180)
 			{
 				wait++;
 			}
@@ -191,7 +191,7 @@ class Satori extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -10;
+				D.Vspeed = -5;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -200,7 +200,7 @@ class Satori extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -4;
+					Vspeed = -2;
 				}
 			}
 			
@@ -214,7 +214,7 @@ class Satori extends Enemy
 	}
 	else
 	{
-		y += 15;
+		y += 7.5;
 	if (y > 600)
 	{
 	alive = false;
@@ -232,11 +232,11 @@ class Satori extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 30 * 4;
+				flipped = 60 * 4;
 			}
 			else
 			{
-				flipped = 30 * 7;
+				flipped = 60 * 7;
 			}
 		}
 		else

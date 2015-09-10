@@ -26,7 +26,7 @@ class Bullet extends Entity
 			if (GameView._this.RoundType == GameView.TypeofRound.Table)
 			{
 				ChangeAnimation("table");
-				image.image_speed = 1;
+				image.image_speed = 0.5;
 			}
 			started = true;
 		}

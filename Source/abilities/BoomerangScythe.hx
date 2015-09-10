@@ -14,7 +14,7 @@ class BoomerangScythe extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 430;
+		player.maxcooldown = 860;
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -36,15 +36,15 @@ class BoomerangScythe extends PlayerAbility
 			D.dir = player.Ldir;
 			D.Vspeed = 0;
 			D.HP = 999999;
-			D.gravX = -0.5;
-			D.image_speed = 2;
+			D.gravX = -0.25;
+			D.image_speed = 1;
 			if (player.Ldir >= 0)
 			{
-				D.Hspeed = 18;
+				D.Hspeed = 9;
 			}
 			else
 			{
-				D.Hspeed = -18;
+				D.Hspeed = -9;
 				D.gravX = -D.gravX;
 			}
 			

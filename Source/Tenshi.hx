@@ -1,4 +1,5 @@
 package;
+import Animation;
 
 /**
  * ...
@@ -6,7 +7,7 @@ package;
  */
 class Tenshi extends Enemy
 {
-
+	//slowed
 	public var accel:Float;
 	
 	public var mxspd:Float;
@@ -25,9 +26,9 @@ class Tenshi extends Enemy
 		addChild(rock);
 		super("tenshi");
 		rename = "tenshi";
-		accel = 0.5;
-		deccel = 0.1;
-		mxspd = 3;
+		accel = 0.25;
+		deccel = 0.05;
+		mxspd = 1.5;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -39,8 +40,8 @@ class Tenshi extends Enemy
 	
 	public override function increaserank()
 	{
-			accel += 0.1;
-			mxspd += 0.5;
+			accel += 0.05;
+			mxspd += 0.25;
 			pointvalue += 100;
 	}
 	override public function kick() 
@@ -135,7 +136,7 @@ class Tenshi extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -10;
+				D.Vspeed = -5;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -144,7 +145,7 @@ class Tenshi extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -4;
+					Vspeed = -2;
 				}
 			}
 			
@@ -160,7 +161,7 @@ class Tenshi extends Enemy
 	{
 		if (!kicked)
 		{
-			y += 15;
+			y += 7.5;
 			if (y > 600)
 			{
 				alive = false;
@@ -169,7 +170,7 @@ class Tenshi extends Enemy
 		else
 		{
 			var dir = Ldir;
-			mxspd = 15;
+			mxspd = 7.5;
 			if (y > 408 && wrapped)
 			{
 				alive = false;
@@ -218,11 +219,11 @@ class Tenshi extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 30 * 4;
+				flipped = 60 * 4;
 			}
 			else
 			{
-				flipped = 30 * 7;
+				flipped = 60 * 7;
 			}
 		}
 		else

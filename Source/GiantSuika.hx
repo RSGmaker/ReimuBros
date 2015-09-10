@@ -6,7 +6,7 @@ package;
  */
 class GiantSuika extends Entity
 {
-
+	//slowed
 	public var falling:Bool;
 	public var active:Bool;
 	public var step:Int;
@@ -31,7 +31,7 @@ class GiantSuika extends Entity
 			if (timetostep > 0)
 			{
 				timetostep--;
-				step = 14;
+				step = 28;
 				y = 0;
 				if (x > 800)
 				{
@@ -42,20 +42,20 @@ class GiantSuika extends Entity
 			{
 				if (step > 0)
 				{
-					x+=8;
-					if (step > 6)
+					x+=4;
+					if (step > 12)
 					{
-						y-=3;
+						y-=1.5;
 					}
 					else
 					{
-						y+=3;
+						y+=1.5;
 					}
 					step--;
 				}
 				else
 				{
-					timetostep = 120;
+					timetostep = 240;
 					y = 0;
 				}
 			}
@@ -63,8 +63,8 @@ class GiantSuika extends Entity
 			else
 			{
 				var Y = y;
-				rotateentity(rotation + 4);
-				y = Y + 32;
+				rotateentity(rotation + 2);
+				y = Y + 16;
 				if (rotation > 90)
 				{
 					active = false;
@@ -102,7 +102,7 @@ class GiantSuika extends Entity
 		rotation = 0;
 		y = 0;
 		step = 0;
-		timetostep = 120;
+		timetostep = 240;
 		if (game.RoundType == GameView.TypeofRound.Cirno)
 		{
 			ChangeAnimation("giantcirno");

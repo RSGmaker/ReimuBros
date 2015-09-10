@@ -17,9 +17,9 @@ class Ambush extends PlayerAbility
 		super.onheadbonk();
 		player.Vspeed = 0;
 		player.y = player.headbonk.y - player.feetposition;
-		if (player.invincibility < 15)
+		if (player.invincibility < 30)
 		{
-			player.invincibility = 15;
+			player.invincibility = 30;
 		}
 	}
 	

@@ -6,6 +6,7 @@ package abilities;
  */
 class AbsorbDamage extends PlayerAbility
 {
+	//slowed
 	public function new(player:Player) 
 	{
 		super(player);
@@ -14,7 +15,7 @@ class AbsorbDamage extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 1300;
+		player.maxcooldown = 2600;
 		player.warncooldown = true;
 		player.cooldowntext = "Extra HP!";
 	}
@@ -30,7 +31,7 @@ class AbsorbDamage extends PlayerAbility
 		{
 			player.cooldown = player.maxcooldown;
 			player.cancel = true;
-			player.invincibility = 180;
+			player.invincibility = 360;
 		}
 	}
 	override public function onuse() 

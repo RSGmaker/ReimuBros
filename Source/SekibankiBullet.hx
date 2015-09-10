@@ -1,4 +1,5 @@
 package;
+import Animation;
 
 /**
  * ...
@@ -6,6 +7,7 @@ package;
  */
 class SekibankiBullet extends PlayerBullet
 {
+	//slowed
 	public var faulty:Bool;
 	public var flames:Animation;
 	public var dist:Float;
@@ -23,7 +25,7 @@ class SekibankiBullet extends PlayerBullet
 		
 		flames.y -= 7;
 		flames.x += 5;
-		flames.image_speed = 1;
+		flames.image_speed = 0.5;
 		explosion = new Animation(game.AL.GetAnimation("explosion"));
 		dist = 0;
 		explosion.visible = false;
@@ -50,10 +52,10 @@ class SekibankiBullet extends PlayerBullet
 			dist += Math.abs(Vspeed);
 			if (dist > 200 && gravX == 0)
 			{
-				gravX = 0.1;
+				gravX = 0.05;
 				if (x > 400)
 				{
-					gravX = -0.1;
+					gravX = -0.05;
 				}
 			}
 			if (dist > 300 && !breaking)
@@ -81,12 +83,12 @@ class SekibankiBullet extends PlayerBullet
 			dist += Math.abs(Vspeed);
 			if (dist > 200)
 			{
-				gravY = 0.0000001;
+				gravY = 0.00000005;
 			}
 			if (dist > 4000 && Vspeed<0)
 			{
 				y = -100;
-				Vspeed = 10;
+				Vspeed = 5;
 				rotateentity(180);
 			}
 		}

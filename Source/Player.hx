@@ -39,7 +39,8 @@ class Player extends Entity
 	public var playing:Int;
 	public var note:Int = 0;
 	public var midi:Array<Int> = null;
-	public var tempo:Int = 40;
+	//public var tempo:Int = 40;
+	public var tempo:Int = 25;
 	//a temp variable abilities can use to cancel events.
 	public var cancel:Bool;
 	private var filterArr:Array<flash.filters.BitmapFilter>;
@@ -138,12 +139,23 @@ class Player extends Entity
 	
 	public var glow:flash.filters.GlowFilter;
 	
-	public static inline var base_deccel = 0.5+0.4;
+	/*public static inline var base_deccel = 0.9;
 	public static inline var base_accel = 0.7 + base_deccel;
 	//public static inline var base_mxspd = 7+1.55;
-	public static inline var base_mxspd = 7+1.55-0.9;
-	public static inline var base_fallaccel = 1.0+0.1;
-	public static inline var base_jumpspd = -19 - 0.5;
+	public static inline var base_mxspd = 7.65;
+	public static inline var base_fallaccel = 1.1;
+	public static inline var base_jumpspd = -19.5;*/
+	
+	public static inline var base_deccel = 0.45;
+	public static inline var base_accel = 0.35 + base_deccel;
+	//public static inline var base_mxspd = 7+1.55;
+	//public static inline var base_mxspd = 3.825;
+	public static inline var base_mxspd = 3.2;
+	//public static inline var base_fallaccel = 0.55;
+	public static inline var base_fallaccel = 0.3;
+	//public static inline var base_jumpspd = -9.75;
+	//public static inline var base_jumpspd = -14;
+	public static inline var base_jumpspd = -10;
 	
 	public var inactive:Bool;
 	
@@ -410,13 +422,15 @@ class Player extends Entity
 				if (superpower)
 				{
 					//tempo = 40;
-					tempo = Math.floor(mxspd * 3);
+					//tempo = Math.floor(mxspd * 3);
+					tempo = Math.floor(mxspd * 6);
 					midi = HammerSong;
 				}
 				else if (invincibility>0)
 				{
 					//tempo = 50;
-					tempo = Math.floor(mxspd * 3);
+					//tempo = Math.floor(mxspd * 3);
+					tempo = Math.floor(mxspd * 6);
 					midi = StarSong;
 				}
 			}
@@ -434,7 +448,8 @@ class Player extends Entity
 			//if (!superpower)
 			if (midi == null)
 			{
-				tempo = 40;
+				//tempo = 40;
+				tempo = 25;
 				note = 0;
 				//midi = null;
 			if (game.GameFlags.get(Main.Drumstep))
@@ -494,7 +509,7 @@ class Player extends Entity
 			}
 			else
 			{
-				y -= 2;
+				y -= 2.5;
 			}
 		}
 		}
@@ -638,10 +653,10 @@ class Player extends Entity
 			}
 			if (lives > -1)
 			{
-			Vspeed += 0.5;
-			if (Vspeed > 20)
+			Vspeed += 0.2;
+			if (Vspeed > 8)
 			{
-				Vspeed = 20;
+				Vspeed = 8;
 			}
 			y += Vspeed;
 			if (y > 600 && this == game.myplayer)

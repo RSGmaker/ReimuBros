@@ -14,7 +14,7 @@ class StarBulletY extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 660;
+		player.maxcooldown = 1320;
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -28,7 +28,7 @@ class StarBulletY extends PlayerAbility
 		if (player.isme && player.cooldown <= 0)
 		{
 			player.cooldown = player.maxcooldown;
-			var spd = 8;
+			var spd = 4;
 			var D:Dynamic = { };
 			D.x = player.x;
 			D.y = player.y + 30;
@@ -49,7 +49,7 @@ class StarBulletY extends PlayerAbility
 			D.wrap = false;
 			game.SendEvent("PlayerDanmaku", D);
 			var i = 0;
-			D.Vspeed = 1;
+			D.Vspeed = 0.5;
 			while (i < 4)
 			{
 				D.Vspeed += 1;

@@ -15,7 +15,7 @@ class BecomeInvisible extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 900;
+		player.maxcooldown = 1800;
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -28,20 +28,20 @@ class BecomeInvisible extends PlayerAbility
 		else
 		{
 			player.cooldown++;
-			if (player.invincibility < 5)
+			if (player.invincibility < 10)
 			{
-				player.invincibility = 5;
+				player.invincibility = 10;
 			}
 		}
 		if (active && player.cooldown >= player.maxcooldown)
 		{
-			player.maxcooldown = 900;
+			player.maxcooldown = 1800;
 			player.cooldown = player.maxcooldown;
 			active = false;
 			player.alpha = 1;
-			if (player.invincibility < 30)
+			if (player.invincibility < 60)
 			{
-				player.invincibility = 30;
+				player.invincibility = 60;
 			}
 		}
 	}
@@ -53,8 +53,8 @@ class BecomeInvisible extends PlayerAbility
 			player.cooldown = 0;
 			player.alpha = 0.5;
 			active = true;
-			player.maxcooldown = 300;
-			player.invincibility = 5;
+			player.maxcooldown = 600;
+			player.invincibility = 10;
 		}
 	}
 }

@@ -15,6 +15,7 @@ class SoundManager
 	public var activeaudio:Array<Dynamic>;
 	private var muted:Bool;
 	public var music:SoundChannel;
+	public var intro:SoundChannel;
 	private var sndvol:Float;
 	private var musicvol:Float;
 	private var _song:String;
@@ -68,6 +69,10 @@ class SoundManager
 		{
 			music.soundTransform = new SoundTransform(0, 0);
 		}
+		if (intro != null)
+		{
+			intro.soundTransform = new SoundTransform(0, 0);
+		}
 		var S = _Play(path, 0, 0, musicvol);
 		jingle = S;
 		S.addEventListener(Event.SOUND_COMPLETE, jingleend);
@@ -94,6 +99,7 @@ class SoundManager
 		if (A != null)
 		{
 			_this.playingintro = true;
+			_this.intro = A;
 			if (_this.music != null)
 			{
 				_this.music.stop();
@@ -106,6 +112,7 @@ class SoundManager
 			A.addEventListener(Event.SOUND_COMPLETE, function(e:Event):Void {
 				_this._PlayMusic(path);
 				_this.playingintro = false;
+				_this.intro = null;
 			});
 			return A;
 		}
@@ -130,7 +137,12 @@ class SoundManager
 			music = null;
 		}
 		_songposition = -1.0;
-		music = _Play(path,0,999999999,musicvol);
+		var vol = musicvol;
+		if (jingle != null)
+		{
+			vol = 0;
+		}
+		music = _Play(path,0,999999999,vol);
 		_song = path;
 		return music;
 		}
@@ -187,8 +199,13 @@ class SoundManager
 		{
 			music.soundTransform = new SoundTransform(musicvol, 0);
 		}
+		if (intro != null && !muted)
+		{
+			intro.soundTransform = new SoundTransform(musicvol, 0);
+		}
 		jingle = null;
 		removeactiveaudio(D);
+		
 		if (music == null && nextsong != null)
 		{
 			PlayMusic(nextsong);
@@ -234,6 +251,7 @@ class SoundManager
 		music = null;
 		_song = null;
 		jingle = null;
+		intro = null;
 		playingintro = false;
 	}
 	public function SetSoundVolume(volume:Float) {

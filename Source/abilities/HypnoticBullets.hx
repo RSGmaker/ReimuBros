@@ -14,7 +14,7 @@ class HypnoticBullets extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 350;
+		player.maxcooldown = 700;
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -39,11 +39,11 @@ class HypnoticBullets extends PlayerAbility
 			D.HP = 1;
 			if (player.Ldir >= 0)
 			{
-				D.Hspeed = 10.5;
+				D.Hspeed = 5.25;
 			}
 			else
 			{
-				D.Hspeed = -10.5;
+				D.Hspeed = -5.25;
 			}
 			D.gravX = 0;
 			D.gravY = 0;

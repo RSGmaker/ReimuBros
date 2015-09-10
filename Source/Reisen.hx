@@ -6,7 +6,7 @@ package;
  */
 class Reisen extends Enemy
 {
-	
+	//slowed
 	public var accel:Float;
 	
 	public var mxspd:Float;
@@ -15,9 +15,9 @@ class Reisen extends Enemy
 	public function new() 
 	{
 		super("udongein");
-		accel = 0.5;
-		deccel = 0.1;
-		mxspd = 4;
+		accel = 0.25;
+		deccel = 0.05;
+		mxspd = 2;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -29,8 +29,8 @@ class Reisen extends Enemy
 	}
 	public override function increaserank()
 	{
-			accel += 0.1;
-			mxspd += 0.5;
+			accel += 0.05;
+			mxspd += 0.25;
 			pointvalue += 100;
 	}
 	override public function attack():Bool 
@@ -59,14 +59,14 @@ class Reisen extends Enemy
 		{
 			if (alpha < 1)
 			{
-				alpha += 0.15;
+				alpha += 0.075;
 			}
 		}
 		if (dissappearing)
 		{
 			if (alpha > 0)
 			{
-				alpha -= 0.15;
+				alpha -= 0.075;
 			}
 			if (alpha <= 0)
 			{
@@ -163,7 +163,7 @@ class Reisen extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -10;
+				D.Vspeed = -5;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -172,7 +172,7 @@ class Reisen extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -4;
+					Vspeed = -2;
 				}
 			}
 			
@@ -186,7 +186,7 @@ class Reisen extends Enemy
 	}
 	else
 	{
-		y += 15;
+		y += 7.5;
 	if (y > 600)
 	{
 	alive = false;
@@ -212,11 +212,11 @@ class Reisen extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 30 * 4;
+				flipped = 60 * 4;
 			}
 			else
 			{
-				flipped = 30 * 7;
+				flipped = 60 * 7;
 			}
 		}
 		else

@@ -6,7 +6,7 @@ package;
  */
 class Kogasa extends Enemy
 {
-
+	//slowed
 	public var accel:Float;
 	
 	public var mxspd:Float;
@@ -18,17 +18,17 @@ class Kogasa extends Enemy
 	public function new() 
 	{
 		super("kogasa");
-		accel = 1;
-		deccel = 0.1;
-		mxspd = 4;
+		accel = 0.5;
+		deccel = 0.05;
+		mxspd = 2;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
 		scaleX = 0.7;
 		scaleY = 0.7;
-		surprisetime = 40;
-		shottime = 9;
-		mxspd += 4;
+		surprisetime = 80;
+		shottime = 18;
+		mxspd += 2;
 		pointvalue = 1000;
 	}
 	
@@ -55,12 +55,12 @@ class Kogasa extends Enemy
 					var D:Dynamic = { };
 					D.UID = UID;
 					game.SendEvent("ChenDanmaku", D);
-					shottime = 10;
+					shottime = 20;
 				}
 			}
 			if (surprisetime <= 0)
 			{
-				mxspd -= 4;
+				mxspd -= 2;
 			}
 		}
 		if (!killed)
@@ -110,7 +110,7 @@ class Kogasa extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -10;
+				D.Vspeed = -5;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -119,7 +119,7 @@ class Kogasa extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -4;
+					Vspeed = -2;
 				}
 			}
 			
@@ -133,7 +133,7 @@ class Kogasa extends Enemy
 	}
 	else
 	{
-		y += 15;
+		y += 7.5;
 	if (y > 600)
 	{
 	alive = false;
@@ -146,11 +146,11 @@ class Kogasa extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 30 * 4;
+				flipped = 60 * 4;
 			}
 			else
 			{
-				flipped = 30 * 7;
+				flipped = 60 * 7;
 			}
 		}
 		else

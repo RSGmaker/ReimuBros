@@ -6,6 +6,7 @@ package;
  */
 class Reimu extends Enemy
 {
+	//slowed
 	public var accel:Float;
 	
 	public var mxspd:Float;
@@ -15,9 +16,9 @@ class Reimu extends Enemy
 	public function new() 
 	{
 		super("reimu");
-		accel = 0.25;
-		deccel = 0.1;
-		mxspd = 4.5;
+		accel = 0.125;
+		deccel = 0.05;
+		mxspd = 2.25;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -28,8 +29,8 @@ class Reimu extends Enemy
 	}
 	public override function increaserank()
 	{
-			accel += 0.1;
-			mxspd += 0.5;
+			accel += 0.05;
+			mxspd += 0.25;
 			pointvalue += 500;
 	}
 	
@@ -124,14 +125,14 @@ class Reimu extends Enemy
 				{
 					if (game.CollisionDetectPoint(x + (Math.floor(width) >> 1) + 96, y - (192 - 96)) != null)
 					{
-						Vspeed = -15;
+						Vspeed = -12;
 					}
 				}
 				if (Hspeed < 0)
 				{
 					if (game.CollisionDetectPoint(x + (Math.floor(width) >> 1) - 96, y - (192 - 96)) != null)
 					{
-						Vspeed = -15;
+						Vspeed = -12;
 					}
 				}
 			}
@@ -150,7 +151,7 @@ class Reimu extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -10;
+				D.Vspeed = -5;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -159,7 +160,7 @@ class Reimu extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -4;
+					Vspeed = -2;
 				}
 			}
 			
@@ -172,7 +173,7 @@ class Reimu extends Enemy
 	}
 	else
 	{
-		y += 15;
+		y += 7.5;
 	if (y > 600)
 	{
 	alive = false;
@@ -186,11 +187,11 @@ class Reimu extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 30 * 4;
+				flipped = 60 * 4;
 			}
 			else
 			{
-				flipped = 30 * 7;
+				flipped = 60 * 7;
 			}
 		}
 		else

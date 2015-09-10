@@ -9,6 +9,7 @@ import openfl.geom.Rectangle;
  */
 class BlackHole extends Entity
 {
+	//slowed
 	public var thrownby:Player;
 	public var visual:Bitmap;
 	public var timeleft:Int;
@@ -18,7 +19,7 @@ class BlackHole extends Entity
 		visual = new Bitmap(game.AL.GetAnimation("blackhole")[0]);
 		visual.x -= visual.width/2;
 		visual.y -= visual.height/2;
-		timeleft = 550;
+		timeleft = 1100;
 		scaleX = 0.05;
 		scaleY = 0.05;
 		addChild(visual);
@@ -41,7 +42,7 @@ class BlackHole extends Entity
 		super.update();
 		//visual.x = -(visual.width / 2);
 		//visual.y = visual.x
-		rotation += 20;
+		rotation += 10;
 		var i = 0;
 		var L = game.activeEnemies;
 		timeleft--;
@@ -53,7 +54,7 @@ class BlackHole extends Entity
 			}
 			else
 			{
-				scaleX -= 0.05;
+				scaleX -= 0.025;
 				scaleY = scaleX;
 			}
 		}
@@ -61,7 +62,7 @@ class BlackHole extends Entity
 		{
 			if (scaleX < 1)
 			{
-				scaleX += 0.05;
+				scaleX += 0.025;
 				scaleY = scaleX;
 			}
 		}
@@ -87,7 +88,7 @@ class BlackHole extends Entity
 				else
 				{
 					//S.normalize(16);
-					S.normalize(P);
+					S.normalize(P/2);
 					//E.Hspeed = 0;
 					//E.Vspeed = 0;
 					E.x += S.x;

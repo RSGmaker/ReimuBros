@@ -6,6 +6,7 @@ package;
  */
 class Yuuka extends Entity
 {
+	//slowed
 	public var started:Bool;
 	public var dir:Int;
 	public var Time:Int;
@@ -13,7 +14,7 @@ class Yuuka extends Entity
 	public function new() 
 	{
 		super("evilyuuka");
-		Time = 150;
+		Time = 300;
 		OY = 0;
 		type = "Yuuka";
 	}
@@ -36,14 +37,14 @@ class Yuuka extends Entity
 			}
 		}
 		Time--;
-		var spd = 3;
+		var spd = 1.5;
 		if (dir == 1)
 		{
 			if (Time > 0)
 			{
 				if (rotation < 45)
 				{
-					rotateentity(rotation + 5);
+					rotateentity(rotation + 2.5);
 					x += spd;
 				}
 			}
@@ -52,7 +53,7 @@ class Yuuka extends Entity
 				x -= spd;
 				if (x < -width)
 				{
-					if (Time < -150)
+					if (Time < -300)
 					{
 						if (GameView._this.Hoster && alive)
 						{
@@ -68,12 +69,12 @@ class Yuuka extends Entity
 		}
 		if (dir == -1)
 		{
-			spd = 7;
+			spd = 3.5;
 			if (Time > 0)
 			{
 				if (rotation > -45)
 				{
-					rotateentity(rotation - 5);
+					rotateentity(rotation - 2.5);
 					x -= spd;
 				}
 			}
@@ -82,7 +83,7 @@ class Yuuka extends Entity
 				x += spd;
 				if (x > 800)
 				{
-					if (Time < -150)
+					if (Time < -300)
 					{
 						if (GameView._this.Hoster && alive)
 						{

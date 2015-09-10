@@ -6,7 +6,7 @@ package;
  */
 class EntityItem extends Entity
 {
-
+	//slowed
 	public var charname:String;
 	public var collectable:Bool;
 	public var despawnatbottom:Bool;
@@ -17,7 +17,7 @@ class EntityItem extends Entity
 		charname = ani;
 		touchable = true;
 		type = "Item";
-		deccel = 0.1;
+		deccel = 0.05;
 		Ldir = 1;
 		collectable = true;
 		despawnatbottom = true;
@@ -41,11 +41,11 @@ class EntityItem extends Entity
 		}
 		if (Ldir == 1)
 		{
-			Hspeed = 4;
+			Hspeed = 2;
 		}
 		if (Ldir == -1)
 		{
-			Hspeed = -4;
+			Hspeed = -2;
 		}
 		}
 		updphysics();

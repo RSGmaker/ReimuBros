@@ -17,7 +17,7 @@ class HeadCannon extends PlayerAbility
 	{
 		super.init();
 		//player.maxcooldown = 340;
-		player.maxcooldown = 280;
+		player.maxcooldown = 560;
 		player.warncooldown = true;
 	}
 	override public function onframe() 

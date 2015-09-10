@@ -7,6 +7,7 @@ package;
  */
 class Mystia extends Enemy
 {
+	//slowed
 	public var accel:Float;
 	
 	public var mxspd:Float;
@@ -18,17 +19,17 @@ class Mystia extends Enemy
 	public function new() 
 	{
 		super("Mystia");
-		accel = 0.8;
-		deccel = 0.1;
-		mxspd = 6;
+		accel = 0.4;
+		deccel = 0.05;
+		mxspd = 3;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
 		frames = 0;
-		image.image_speed = 0.4;
+		image.image_speed = 0.2;
 		rng = null;
 		//mntime = 1;
-		mntime = 40;
+		mntime = 80;
 		pointvalue = 200;
 		rename = "EMystia";
 		subtype = "mystia";
@@ -36,9 +37,9 @@ class Mystia extends Enemy
 	
 	public override function increaserank()
 	{
-			accel += 0.15;
-			mxspd += 1;
-			if (mntime < 80)
+			accel += 0.75;
+			mxspd += 0.5;
+			if (mntime < 160)
 			{
 				mntime += 5;
 			}
@@ -103,15 +104,16 @@ class Mystia extends Enemy
 			{
 				if (frames == 0)
 				{
-					rng.seed += rng.twist(rng.seed, 1, 30)[0];
+					///rng.seed += rng.twist(rng.seed, 1, 30)[0];
 					//frames = mntime + (rng.seed % 30);
 					frames = mntime;
 				}
 				Hspeed = 0;
 				frames += 1;
-				if (frames > 90)
+				//if (frames > 90)
+				if (frames > 180)
 				{
-					rng.seed += rng.twist(rng.seed, 1, 800)[0];
+					///rng.seed += rng.twist(rng.seed, 1, 800)[0];
 					//Vspeed = -4 - ((rng.seed % 800)*0.01);
 					Vspeed = -7;
 				}
@@ -132,7 +134,7 @@ class Mystia extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -10;
+				D.Vspeed = -5;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -141,7 +143,7 @@ class Mystia extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -4;
+					Vspeed = -2;
 				}
 			}
 			
@@ -155,7 +157,7 @@ class Mystia extends Enemy
 	}
 	else
 	{
-		y += 15;
+		y += 7.5;
 	if (y > 600)
 	{
 	alive = false;
@@ -168,11 +170,11 @@ class Mystia extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 30 * 5;
+				flipped = 60 * 5;
 			}
 			else
 			{
-				flipped = 30 * 7;
+				flipped = 60 * 7;
 			}
 		}
 		else

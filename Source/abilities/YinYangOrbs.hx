@@ -14,7 +14,7 @@ class YinYangOrbs extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 380;
+		player.maxcooldown = 760;
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -34,18 +34,18 @@ class YinYangOrbs extends PlayerAbility
 			D.type = "yinyangorb";
 			D.scale = 0.4;
 			D.dir = player.Ldir;
-			D.Vspeed = 2;
+			D.Vspeed = 1;
 			D.HP = 6;
 			if (player.Ldir >= 0)
 			{
-				D.Hspeed = 10.5;
+				D.Hspeed = 5.25;
 			}
 			else
 			{
-				D.Hspeed = -10.5;
+				D.Hspeed = -5.25;
 			}
 			D.gravX = 0;
-			D.gravY = 0.4;
+			D.gravY = 0.2;
 			D.wrap = true;
 			D.bounces = true;
 			game.SendEvent("PlayerDanmaku", D);

@@ -6,22 +6,22 @@ package;
  */
 class Yinyangorb extends Enemy
 {
-
+	//slowed
 	public var accel:Float;
 	
 	public var mxspd:Float;
 	public function new() 
 	{
 		super("yinyangorb");
-		accel = 0.4;
-		deccel = 0.1;
-		mxspd = 5;
+		accel = 0.2;
+		deccel = 0.05;
+		mxspd = 2.5;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
 		pointvalue = 100;
-		fallaccel *= 0.5;
-		image.image_speed = 1;
+		fallaccel *= 0.25;
+		image.image_speed = 0.5;
 		needtokill = false;
 		reward = false;
 	}
@@ -73,7 +73,7 @@ class Yinyangorb extends Enemy
 		}
 		if (ground != null && Vspeed == 0 && flipped <= 0)
 		{
-			Vspeed = -8;
+			Vspeed = -4;
 		}
 		updphysics();
 		updateanimation();
@@ -90,7 +90,7 @@ class Yinyangorb extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -10;
+				D.Vspeed = -5;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -99,7 +99,7 @@ class Yinyangorb extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -4;
+					Vspeed = -2;
 				}
 			}
 			
@@ -114,7 +114,7 @@ class Yinyangorb extends Enemy
 	}
 	else
 	{
-		y += 15;
+		y += 7.5;
 	if (y > 600)
 	{
 	alive = false;

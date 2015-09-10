@@ -20,9 +20,9 @@ class Utsuho extends Enemy
 	public function new() 
 	{
 		super("utsuho");
-		accel = 0.5;
-		deccel = 0.1;
-		mxspd = 3;
+		accel = 0.25;
+		deccel = 0.05;
+		mxspd = 1.5;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -36,7 +36,7 @@ class Utsuho extends Enemy
 		HP--;
 		if (HP > 0)
 		{
-			invincibility = 10;
+			invincibility = 20;
 		}
 		return HP < 1;
 	}
@@ -59,8 +59,8 @@ class Utsuho extends Enemy
 			var seed:UInt = Math.floor((UID * 100000)+spawns);
 			rng.twist(seed, 1, 100000);
 			
-			rng.seed += rng.twist(rng.seed, 1, 700)[0];
-			timetofire = 250 + (rng.seed % 700);
+			rng.seed += rng.twist(rng.seed, 1, 1400)[0];
+			timetofire = 500 + (rng.seed % 1400);
 		}
 		if (!killed)
 		{
@@ -98,7 +98,7 @@ class Utsuho extends Enemy
 		if (flipped <= 0)
 		{
 			timetofire--;
-			if (timetofire < 140)
+			if (timetofire < 280)
 			{
 				Hspeed = 0;
 				visuallyEnraged = !visuallyEnraged;
@@ -110,12 +110,12 @@ class Utsuho extends Enemy
 						D.x = x;
 						D.y = y-30;
 						D.Vspeed = 0;
-						D.Hspeed = Ldir * 2;
+						D.Hspeed = Ldir * 1;
 						game.SendEvent("unyucannon", D);
 					}
 					Ldir = -Ldir;
-					rng.seed += rng.twist(rng.seed, 1, 700)[0];
-					timetofire = 250 + (rng.seed % 700);
+					rng.seed += rng.twist(rng.seed, 1, 1400)[0];
+					timetofire = 500 + (rng.seed % 1400);
 				}
 			}
 			else
@@ -137,7 +137,7 @@ class Utsuho extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -10;
+				D.Vspeed = -5;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -146,7 +146,7 @@ class Utsuho extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -4;
+					Vspeed = -2;
 				}
 			}
 			
@@ -160,7 +160,7 @@ class Utsuho extends Enemy
 	}
 	else
 	{
-		y += 15;
+		y += 7.5;
 	if (y > 600)
 	{
 	alive = false;
@@ -169,8 +169,8 @@ class Utsuho extends Enemy
 	}
 	public override function bump()
 	{
-		rng.seed += rng.twist(rng.seed, 1, 700)[0];
-		timetofire = 250 + (rng.seed % 700);
+		rng.seed += rng.twist(rng.seed, 1, 1400)[0];
+		timetofire = 500 + (rng.seed % 1400);
 		HP--;
 		if (HP < 1)
 		{
@@ -178,11 +178,11 @@ class Utsuho extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 30 * 4;
+				flipped = 60 * 4;
 			}
 			else
 			{
-				flipped = 30 * 7;
+				flipped = 60 * 7;
 			}
 		}
 		else

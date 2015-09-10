@@ -9,7 +9,7 @@ import openfl.geom.Point;
  */
 class MasterSpark extends Entity
 {
-
+	//slowed
 	public var ray:Sprite;
 	public var colorray:Shape;
 	public var whiteray:Shape;
@@ -36,7 +36,7 @@ class MasterSpark extends Entity
 		started = false;
 		
 		Size = 0.1;
-		Time = 210;
+		Time = 420;
 		type = "MasterSpark";
 	}
 	override public function update():Void 
@@ -52,13 +52,13 @@ class MasterSpark extends Entity
 		}
 		Time--;
 		ray.scaleY = Size;
-		if (Time > 60)
+		if (Time > 120)
 		{
-			Size+= 0.1;
+			Size+= 0.05;
 		}
 		else
 		{
-			Size -= 0.04;
+			Size -= 0.02;
 		}
 		if (Size > 1)
 		{
@@ -82,7 +82,7 @@ class MasterSpark extends Entity
 			game.yuukaactive = false;
 		}
 		colorray.graphics.clear();
-		hue += 10;
+		hue += 5;
 		if (hue >= 360)
 		{
 			hue -= 360;

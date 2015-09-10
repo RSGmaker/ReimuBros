@@ -24,9 +24,9 @@ class Nue extends Enemy
 	public function new() 
 	{
 		super("Nue");
-		accel = 0.5;
-		deccel = 0.1;
-		mxspd = 5;
+		accel = 0.25;
+		deccel = 0.05;
+		mxspd = 2.5;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -152,7 +152,7 @@ class Nue extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed * 0.5;
-				D.Vspeed = -10;
+				D.Vspeed = -5;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -161,7 +161,7 @@ class Nue extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -4;
+					Vspeed = -2;
 					HP = 0;
 				}
 			}
@@ -176,7 +176,7 @@ class Nue extends Enemy
 	}
 	else
 	{
-		y += 15;
+		y += 7.5;
 	if (y > 600)
 	{
 	alive = false;
@@ -209,11 +209,11 @@ class Nue extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 30 * 4;
+				flipped = 60 * 4;
 			}
 			else
 			{
-				flipped = 30 * 7;
+				flipped = 60 * 7;
 			}
 		}
 		else

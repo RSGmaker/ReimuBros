@@ -36,7 +36,7 @@ class OneWeekGirl extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 3000;
+		player.maxcooldown = 6000;
 		//player.maxcooldown = 200;
 		cooldown = player.maxcooldown;
 		speedboost = -1;
@@ -62,9 +62,9 @@ class OneWeekGirl extends PlayerAbility
 			{
 				speedboost = -1;
 				//remove speedboost
-				player.mxspd -= 2;
-				player.accel -= 0.3;
-				player.deccel -= 0.1;
+				player.mxspd -= 1;
+				player.accel -= 0.15;
+				player.deccel -= 0.05;
 			}
 		}
 		if (pointboost > -1)
@@ -90,13 +90,13 @@ class OneWeekGirl extends PlayerAbility
 			if (speedboost > 0)
 			{
 				shape.graphics.beginFill(0xFF0000, 1);
-				shape.graphics.drawRect(0, 0, speedboost >> 6, 3);
+				shape.graphics.drawRect(0, 0, speedboost >> 7, 3);
 				shape.graphics.endFill();
 			}
 			if (pointboost > 0)
 			{
 				shape.graphics.beginFill(0xAAAAAA, 1);
-				shape.graphics.drawRect(0, 5, pointboost >> 6, 3);
+				shape.graphics.drawRect(0, 5, pointboost >> 7, 3);
 				shape.graphics.endFill();
 			}
 			var S = hp + player.allmyons.length;
@@ -115,7 +115,7 @@ class OneWeekGirl extends PlayerAbility
 		{
 			hp--;
 			player.cancel = true;
-			player.invincibility = 90;
+			player.invincibility = 180;
 		}
 	}
 	override public function onuse() 
@@ -125,15 +125,15 @@ class OneWeekGirl extends PlayerAbility
 		{
 			var R = Math.random();
 			cooldown = player.maxcooldown;
-			showtext = 90;
+			showtext = 180;
 			if (R < 0.14)
 			{
 				player.cooldowntext = "Speed up(fire)";
 				if (speedboost < 0)
 				{
-					player.mxspd += 2;
-					player.accel += 0.3;
-					player.deccel += 0.1;
+					player.mxspd += 1;
+					player.accel += 0.15;
+					player.deccel += 0.05;
 					speedboost = player.maxcooldown + (player.maxcooldown >> 1);
 				}
 			}

@@ -7,7 +7,7 @@ import danmaku.DanmakuBullet;
  */
 class Boss extends Enemy
 {
-
+	//slowed
 	public var accel:Float;
 	
 	public var mxspd:Float;
@@ -44,17 +44,17 @@ class Boss extends Enemy
 		super(bosstype);
 		rename = "cirno";
 		subtype = "boss";
-		accel = 1;
-		deccel = 0.1;
-		mxspd = 4;
+		accel = 0.5;
+		deccel = 0.05;
+		mxspd = 2;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
 		scaleX = 0.7;
 		scaleY = 0.7;
-		surprisetime = 40;
-		shottime = 9;
-		mxspd += 4;
+		surprisetime = 80;
+		shottime = 18;
+		mxspd += 2;
 		//flash.filters.GradientGlowFilter
 		filterArr = new Array<flash.filters.BitmapFilter>();
 		glow = new Array<flash.filters.GlowFilter>();
@@ -93,9 +93,9 @@ class Boss extends Enemy
 	
 	public override function increaserank()
 	{
-			accel += 0.1;
-			mxspd += 0.5;
-			pointvalue += 50;
+			accel += 0.05;
+			mxspd += 0.25;
+			pointvalue += 100;
 	}
 	public function outofminions()
 	{
@@ -141,12 +141,12 @@ class Boss extends Enemy
 				var O = new DanmakuBullet("icebullet");
 				O.x = cx;
 				O.y = cy;
-				O.Vspeed = 4;
+				O.Vspeed = 2;
 				O.visuallyrotates = true;
 				O.changeangle(DegreeToRadian(180 + (rng.random() * 20)));
 				O.shotby = this;
 
-				O.rotrate = -0.019;
+				O.rotrate = -0.0095;
 				O.rotdelay = 5;
 				O.spiral = 1 - 0.01;
 				O.currot = O.getangle();
@@ -155,28 +155,28 @@ class Boss extends Enemy
 				O = new DanmakuBullet("icebullet");
 				O.x = cx;
 				O.y = cy;
-				O.Vspeed = 4;
+				O.Vspeed = 2;
 				O.visuallyrotates = true;
 				O.changeangle(DegreeToRadian(0 - (rng.random() * 20)));
 				O.shotby = this;
 					
-				O.rotrate = 0.019;
+				O.rotrate = 0.0095;
 				O.rotdelay = 5;
 				O.spiral = 1 - 0.01;
 				O.currot = O.getangle();
 				game.AddObject(O);
 					
-				shottime = 10;
+				shottime = 20;
 			}
 		}
 		if (game.rank > 0 || true)
 		{
-		if (frame % 350 < 25)
+		if (frame % 700 < 50)
 		{
 			visuallyEnraged = !visuallyEnraged;
 		}
 		
-		if (frame % 350 == 25)
+		if (frame % 700 == 50)
 		{
 			visuallyEnraged = false;
 			var i = 0;
@@ -186,7 +186,7 @@ class Boss extends Enemy
 				var O = new DanmakuBullet("icebullet");
 				O.x = X;
 				O.y = cy;
-				O.Vspeed = 4;
+				O.Vspeed = 2;
 				O.visuallyrotates = true;
 				O.changeangle(1.57);
 				O.shotby = this;
@@ -225,7 +225,7 @@ class Boss extends Enemy
 		
 		if (flipped < 1 || phase < totalphases)
 		{
-			invincibility = 10;
+			invincibility = 20;
 		}
 		if (invincibility > 0)
 		{
@@ -242,16 +242,17 @@ class Boss extends Enemy
 		Hspeed = 0;
 		Vspeed = 0;
 		var P:flash.geom.Point = new flash.geom.Point(cx - tx, cy - ty);
-		if (P.length <= 4)
+		if (P.length <= 2)
 		{
 			x = tx - (cx - x);
 			y = ty - (cy - y);
 		}
 		else
 		{
-			P.normalize(4);
+			P.normalize(2);
 			Hspeed = -P.x;
-			y -= P.y;
+			Vspeed = -P.y;
+			//y -= P.y;
 		}
 		
 		dodanmaku();
@@ -289,7 +290,15 @@ class Boss extends Enemy
 				Hspeed = -mxspd;
 			}
 		}
-		updphysics();
+		if (!firingdanmaku)
+		{
+			updphysics();
+		}
+		else
+		{
+			x += Hspeed;
+			y += Vspeed;
+		}
 		updateanimation(rename);
 		
 		if (ground != null)
@@ -303,7 +312,7 @@ class Boss extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -10;
+				D.Vspeed = -5;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -312,7 +321,7 @@ class Boss extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -4;
+					Vspeed = -2;
 				}
 			}
 			
@@ -332,7 +341,7 @@ class Boss extends Enemy
 	}
 	else
 	{
-		y += 15;
+		y += 7.5;
 	if (y > 600)
 	{
 	alive = false;

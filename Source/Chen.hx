@@ -9,7 +9,7 @@ import openfl.geom.Rectangle;
  */
 class Chen extends Enemy
 {
-
+	//slowed
 	public var ascend:Bool;
 	public var iter:Int;
 	public var rng:MersenneTwister;
@@ -21,7 +21,7 @@ class Chen extends Enemy
 	{
 		super("Chen");
 		//chen doesnt use hspeed or vspeed system
-		deccel = 100;
+		deccel = 50;
 		//mxspd = 4;
 		Ldir = 1;
 		flipped = -1;
@@ -31,11 +31,11 @@ class Chen extends Enemy
 		ascend = true;
 		rng = null;
 		//iter = 30;
-		iter = 15;
+		iter = 30;
 		reward = false;
 		pointvalue = 400;
 		rot = 0;
-		image.image_speed = 1;
+		image.image_speed = 0.5;
 		respawn = false;
 		rename = "E" + charname;
 		danmaku = -1000;
@@ -71,14 +71,14 @@ class Chen extends Enemy
 			{
 				rename = "ERan";
 			}
-			reducetime = rank * 30;
+			reducetime = rank * 60;
 			if (game.RoundType == GameView.TypeofRound.Yukari)
 			{
-				reducetime += 200;
+				reducetime += 400;
 			}
 			if (game.RoundType == GameView.TypeofRound.Yukari || rank>0)
 			{
-				danmaku = 15+rng.twist(rng.seed, 1, 540-reducetime)[0];
+				danmaku = 30+rng.twist(rng.seed, 1, 1080-reducetime)[0];
 			}
 			if (game.RoundType == GameView.TypeofRound.Table)
 			{
@@ -88,7 +88,7 @@ class Chen extends Enemy
 		rot += 0.25;
 		if (danmaku == -1000 && rank > 0)
 		{
-			danmaku = 15+rng.twist(rng.seed, 1, 540-reducetime)[0];
+			danmaku = 30+rng.twist(rng.seed, 1, 1080-reducetime)[0];
 		}
 		if (danmaku > -1000/* && game.Hoster*/)
 		{
@@ -101,7 +101,7 @@ class Chen extends Enemy
 					game.SendEvent("ChenDanmaku", D);
 				}
 				visuallyEnraged = false;
-				danmaku = 15+rng.twist(rng.seed, 1, 540-reducetime)[0];
+				danmaku = 30+rng.twist(rng.seed, 1, 1080-reducetime)[0];
 			}
 			else
 			{
@@ -115,19 +115,19 @@ class Chen extends Enemy
 		animate();
 		dangerous = true;
 		killable = false;
-		x += (4 * Ldir);
+		x += (2 * Ldir);
 		if (ascend)
 		{
-			y -= 3;
+			y -= 1.5;
 		}
 		else
 		{
-			y += 3;
+			y += 1.5;
 		}
 		iter -= 1;
 		if (iter <= 0)
 		{
-			iter = 30;
+			iter = 60;
 			ascend = !ascend;
 		}
 		{
@@ -147,7 +147,7 @@ class Chen extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -10;
+				D.Vspeed = -5;
 				game.SendEvent("Bump", D);
 				}
 			}

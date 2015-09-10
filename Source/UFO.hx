@@ -8,7 +8,7 @@ import openfl.geom.Rectangle;
  */
 class UFO extends Enemy
 {
-
+	//slowed
 	public var ascend:Bool;
 	public var iter:Int;
 	public var rng:MersenneTwister;
@@ -30,7 +30,7 @@ class UFO extends Enemy
 		
 		ascend = true;
 		rng = null;
-		iter = 30;
+		iter = 60;
 		reward = false;
 		pointvalue = 400;
 		rot = 0;
@@ -40,7 +40,7 @@ class UFO extends Enemy
 		
 		hitbox = HB;
 		needtokill = false;
-		movement = -2;
+		movement = -1;
 	}
 	
 	override public function attack():Bool 
@@ -79,8 +79,8 @@ class UFO extends Enemy
 			{
 				ufotype = "Blue";
 			}
-			iter = 30 + rng.twist(0, 1, 240)[0];
-			fuel = 90 + rng.twist(0, 1, 900 + (rank * 150))[0];
+			iter = 60 + rng.twist(0, 1, 480)[0];
+			fuel = 180 + rng.twist(0, 1, 1800 + (rank * 300))[0];
 			reducetime = rank * 30;
 		}
 		rename = ufotype + "ufo";
@@ -109,11 +109,11 @@ class UFO extends Enemy
 		if (iter > 0)
 		{
 			iter --;
-			if (iter < 12)
+			if (iter < 24)
 			{
 				visuallyEnraged = !visuallyEnraged;
 			}
-			if (iter < 4)
+			if (iter < 8)
 			{
 				visuallyEnraged = true;
 			}
@@ -121,7 +121,7 @@ class UFO extends Enemy
 		else
 		{
 			{
-				iter = 30 + rng.twist(0, 1, 270 - reducetime)[0];
+				iter = 60 + rng.twist(0, 1, 540 - reducetime)[0];
 				visuallyEnraged = false;
 			}
 			if (game.Hoster)
@@ -136,13 +136,13 @@ class UFO extends Enemy
 		{
 			if (y < 10)
 			{
-				y++;
+				y+=0.5;
 			}
 		}
 		}
 		else
 		{
-			y--;
+			y-=0.5;
 			visuallyEnraged = false;
 			if (y < -200)
 			{
@@ -169,7 +169,7 @@ class UFO extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -10;
+				D.Vspeed = -5;
 				game.SendEvent("Bump", D);
 				}
 			}

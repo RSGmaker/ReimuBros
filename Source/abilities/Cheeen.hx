@@ -14,7 +14,7 @@ class Cheeen extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 1400;
+		player.maxcooldown = 2800;
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -32,16 +32,16 @@ class Cheeen extends PlayerAbility
 			D.x = player.x;
 			D.y = player.y + 30;
 			D.type = "EChen";
-			D.scale = 0.8;
+			D.scale = 0.4;
 			D.dir = player.Ldir;
 			D.Vspeed = 0;
 			if (player.Ldir >= 0)
 			{
-				D.Hspeed = 12;
+				D.Hspeed = 6;
 			}
 			else
 			{
-				D.Hspeed = -12;
+				D.Hspeed = -6;
 			}
 			D.gravX = 0;
 			D.gravY = 0;

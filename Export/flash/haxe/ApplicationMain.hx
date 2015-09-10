@@ -154,7 +154,15 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
+		urls.push ("assets/Audio/Mp3/theme2intro.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
 		urls.push ("assets/Audio/Mp3/theme3.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("assets/Audio/Mp3/theme3intro.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
@@ -1640,7 +1648,7 @@ class ApplicationMain {
 			company: "RSGmaker",
 			depthBuffer: false,
 			file: "ReimuBros",
-			fps: Std.int (30),
+			fps: Std.int (60),
 			fullscreen: false,
 			hardware: true,
 			height: Std.int (600),
@@ -1650,7 +1658,7 @@ class ApplicationMain {
 			stencilBuffer: true,
 			title: "ReimuBros",
 			version: "1.6.0",
-			vsync: true,
+			vsync: false,
 			width: Std.int (800),
 			
 		}

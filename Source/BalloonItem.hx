@@ -6,14 +6,14 @@ package;
  */
 class BalloonItem extends EntityItem
 {
-
+	//slowed
 	public var drift:Int;
 	public var dir:Int;
 	public function new() 
 	{
 		super("balloon");
 		fallaccel = 0;
-		drift = 45;
+		drift = 90;
 		dir = 0;
 		despawnatbottom = false;
 		custommotion = true;
@@ -25,11 +25,11 @@ class BalloonItem extends EntityItem
 		player.score += 100 * (GameView._this.rank+1);
 		if (player.Vspeed >= 0)
 		{
-			player.Vspeed -= 12;
+			player.Vspeed -= 6;
 		}
 		else
 		{
-			player.Vspeed -= 8;
+			player.Vspeed -= 4;
 		}
 		SoundManager.Play("collectcoin");
 	}
@@ -50,23 +50,23 @@ class BalloonItem extends EntityItem
 		if (drift < 0)
 		{
 			dir = -dir;
-			drift = 90;
+			drift = 180;
 		}
 		if (dir > 0)
 		{
-			if (Hspeed < 2)
+			if (Hspeed < 1)
 			{
-				Hspeed += 0.2;
+				Hspeed += 0.1;
 			}
 		}
 		if (dir < 0)
 		{
-			if (Hspeed > -2)
+			if (Hspeed > -1)
 			{
-				Hspeed -= 0.2;
+				Hspeed -= 0.1;
 			}
 		}
-		y -= 1.5;
+		y -= 0.75;
 		if (y < -height)
 		{
 			alive = false;

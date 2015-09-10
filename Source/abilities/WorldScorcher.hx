@@ -14,7 +14,7 @@ class WorldScorcher extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 3600+1000;
+		player.maxcooldown = 7200+2000;
 		player.warncooldown = true;
 	}
 	override public function onframe() 

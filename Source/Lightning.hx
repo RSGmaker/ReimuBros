@@ -10,20 +10,20 @@ import openfl.geom.Point;
  */
 class Lightning extends Entity
 {
-
+	//slowed
 	public var Time:Int;
 	public function new() 
 	{
 		super("lightning");
 		type = "Lightning";
-		Time = 25;
+		Time = 50;
 		y = -100;
 	}
 	override public function update():Void 
 	{
-		if (Time > 20)
+		if (Time > 40)
 		{
-			alpha = 1-((Time-20)*0.25);
+			alpha = 1-((Time-40)*0.125);
 		}
 		else
 		{

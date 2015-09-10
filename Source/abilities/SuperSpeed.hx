@@ -15,15 +15,15 @@ class SuperSpeed extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.deccel -= 0.1;
-		player.fallaccel -= 0.1;
-		player.mxspd += 2;
+		player.deccel -= 0.05;
+		player.fallaccel -= 0.05;
+		player.mxspd += 1;
 	}
 	override public function lostability() 
 	{
 		super.lostability();
-		player.deccel += 0.1;
-		player.fallaccel += 0.1;
-		player.mxspd -= 2;
+		player.deccel += 0.05;
+		player.fallaccel += 0.05;
+		player.mxspd -= 1;
 	}
 }

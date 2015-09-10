@@ -10,6 +10,6 @@
 	<assets path="Assets" rename="assets" exclude="*.mp3" unless="flash" />
 	<assets path="Assets" rename="assets" exclude="*.ogg" if="flash" />
 	<icon path="Assets/openfl.svg" />
-	<window width="800" height="600" fps="30" hardware="true" vsync="true"/>
+	<window width="800" height="600" fps="60" hardware="true" vsync="false"/>
 	
 </project>

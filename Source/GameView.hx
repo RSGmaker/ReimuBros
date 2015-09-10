@@ -54,6 +54,8 @@ class GameView extends Sprite
 	private var text:String;
 	//the text at the top of the screen when playing.
 	public var TF:TextField;
+	
+	public var fps:TextField;
 	//our player's controls
 	private var control:Array<Bool>;
 	public var myplayer:Player;
@@ -94,6 +96,8 @@ class GameView extends Sprite
 	public var Sealed:Int;
 	public var messages:Array<String>;
 	public var messagetime:Int;
+	
+	public var framedelay:Float=0.5;
 	
 	public var charselect:CharacterSelect;
 	public var collisiondata:Array<Dynamic>;
@@ -220,7 +224,8 @@ class GameView extends Sprite
 	//what event is active
 	public var RoundType:TypeofRound;
 	
-	public static var onetickperminutechance:Float = 1.0 / (1800.0);
+	//public static var onetickperminutechance:Float = 1.0 / (1800.0);
+	public static var onetickperminutechance:Float = 0.5 / (1800.0);
 	public static var onetickperminutechance2:Float = onetickperminutechance * 2;
 	//events per minute.
 	public var epm:Float;
@@ -617,6 +622,13 @@ class GameView extends Sprite
 		TF.visible = true;
 		
 		TF.cacheAsBitmap = true;
+		
+		fps = new TextField();
+		fps.setTextFormat(tmp);
+		fps.x = 0;
+		fps.y = 584;
+		fps.visible = true;
+
 		tmp = new TextFormat();
 		tmp.font = "Arial";
 		tmp.size = 66;
@@ -686,6 +698,7 @@ class GameView extends Sprite
 		
 		AddPlayer(myplayer);
 		addChild(TF);
+		addChild(fps);
 		
 		stage.color = 0x009977;
 		stage.scaleMode = StageScaleMode.SHOW_ALL;
@@ -1325,6 +1338,7 @@ class GameView extends Sprite
 	//this massive function handles most major events, doing it this way keeps the clients synced.
 	//this could be broken up into smaller functions
 	public function ProcessEvent(evt:String, ID:String, data:Dynamic) {
+		//slowed
 		if (ID == "Unknown" || ID == GetNetworkID() || ID == null)
 		{
 			ID = "Myself";
@@ -1395,12 +1409,12 @@ class GameView extends Sprite
 							P.myMyon = null;
 						}
 					}
-					P.invincibility = 90;
+					P.invincibility = 180;
 				}
 				else
 				{
 					P.killed = true;
-					P.Vspeed = -9;
+					P.Vspeed = -4.5;
 					SoundManager.Play("died");
 				}
 				}
@@ -1482,21 +1496,7 @@ class GameView extends Sprite
 				}
 				if (me && D.charname == "Imposter")
 				{
-					//if an unlockable character(aka imposter) is killed, unlock the character.
 					unlockcharacter(D.rename);
-					/*if (!D.hidden)
-					{
-
-					Main._this.savedata.data.unlock[D.unlock] = true;
-					if (D.alternate)
-					{
-						Main._this.savedata.data.alts[D.unlock] = true;
-					}
-					}
-					else
-					{
-						Main._this.savedata.data.hidden[D.unlock] = true;
-					}*/
 				}
 				if (totalenemies != 1)
 				{
@@ -1514,7 +1514,7 @@ class GameView extends Sprite
 						SoundManager.Play("killenemy");
 					}
 					//delay end of level music
-					SpawnTimer = 60;
+					SpawnTimer = 120;
 				}
 				if (!me)
 				{
@@ -1545,7 +1545,7 @@ class GameView extends Sprite
 				}
 				else
 				{
-					//need a breakpoint here to investigate.
+					//you can put a breakpoint here to detect invalid spawn messages.
 					E = null;
 				}
 			}
@@ -1603,7 +1603,7 @@ class GameView extends Sprite
 				else
 				{
 					//E.bonked = 10;
-					E.bonked = 8;
+					E.bonked = 16;
 					E.bonkedby = P;
 				
 					SoundManager.Play("bonk");
@@ -1818,7 +1818,7 @@ class GameView extends Sprite
 				else
 				{
 					SoundManager.Play("respawn");
-					P.invincibility = 150;
+					P.invincibility = 300;
 					P.ability.onrespawn();
 				}
 				if (!me)
@@ -1949,13 +1949,13 @@ class GameView extends Sprite
 			{
 				//ask hoster to resend current enemy states.
 				SendEvent("EnemySync", null);
-				syncdelay = 60;
+				syncdelay = 120;
 			}
 			if (data.activeItems != activeItems.length && syncdelay<1)
 			{
 				//ask hoster to resend current item states.
 				SendEvent("ItemSync", null);
-				syncdelay = 60;
+				syncdelay = 120;
 			}
 		}
 		if (evt == "EnemySync" && Hoster && syncdelay<1)
@@ -2042,7 +2042,7 @@ class GameView extends Sprite
 					SendEvent("RequestItems", missing);
 				}
 			}
-			syncdelay = 60;
+			syncdelay = 120;
 		}
 		if ((evt == "EnemyReport" || evt == "ItemReport") && !Hoster)
 		{
@@ -2114,7 +2114,7 @@ class GameView extends Sprite
 				i += 1;
 			}
 			SendEvent("ItemList", dat);
-			syncdelay = 60;
+			syncdelay = 120;
 		}
 		//pick up item event
 		if (evt == "Collect")
@@ -2170,7 +2170,7 @@ class GameView extends Sprite
 				var E = entities[i];
 				if (E.type == "Block" && E.y == data)
 				{
-					E.bonked = 8;
+					E.bonked = 16;
 					E.bonkedby = GetPlayer(ID);
 				}
 				i++;
@@ -2253,7 +2253,7 @@ class GameView extends Sprite
 				var E = entities[i];
 				if (E.type == "Block")
 				{
-					E.bonked = 8;
+					E.bonked = 16;
 					E.bonkedby = GetPlayer(ID);
 				}
 				i++;
@@ -2342,7 +2342,7 @@ class GameView extends Sprite
 				{
 					var D:Dynamic = entities[i];
 					D.Clean();
-					FlashColor(0xFFFFFF, 0.4, 0, 0.1);
+					FlashColor(0xFFFFFF, 0.4, 0, 0.05);
 				}
 				i++;
 			}
@@ -2365,7 +2365,7 @@ class GameView extends Sprite
 				}
 				i += 1;
 			}
-			FlashColor(0xFF0000, 0.4, 0, 0.1);
+			FlashColor(0xFF0000, 0.4, 0, 0.05);
 		}
 		if (evt == "UFOStrike" && !myplayer.flags.get(Player.FriendlyUFO))
 		{
@@ -2379,26 +2379,26 @@ class GameView extends Sprite
 				var O = new Bullet();
 				O.x = D.x;
 				O.y = D.y;
-				O.Hspeed = -2;
-				O.Vspeed = 4;
+				O.Hspeed = -1;
+				O.Vspeed = 2;
 				AddObject(O);
 				O = new Bullet();
 				O.x = D.x;
 				O.y = D.y;
-				O.Hspeed = -3;
-				O.Vspeed = 4;
+				O.Hspeed = -1.5;
+				O.Vspeed = 2;
 				AddObject(O);
 				O = new Bullet();
 				O.x = D.x;
 				O.y = D.y;
-				O.Hspeed = 2;
-				O.Vspeed = 4;
+				O.Hspeed = 1;
+				O.Vspeed = 2;
 				AddObject(O);
 				O = new Bullet();
 				O.x = D.x;
 				O.y = D.y;
-				O.Hspeed = 3;
-				O.Vspeed = 4;
+				O.Hspeed = 1.5;
+				O.Vspeed = 2;
 				AddObject(O);
 			}
 			if (D.ufotype == "Green")
@@ -2408,13 +2408,13 @@ class GameView extends Sprite
 				O.x = D.x-10;
 				O.y = D.y;
 				O.Hspeed = 0;
-				O.Vspeed = 4;
+				O.Vspeed = 2;
 				AddObject(O);
 				O = new Bullet();
 				O.x = D.x+10;
 				O.y = D.y;
 				O.Hspeed = 0;
-				O.Vspeed = 4;
+				O.Vspeed = 2;
 				AddObject(O);
 			}
 			if (D.ufotype == "Blue")
@@ -2424,19 +2424,19 @@ class GameView extends Sprite
 				O.x = D.x;
 				O.y = D.y;
 				O.Hspeed = 0;
-				O.Vspeed = 4;
+				O.Vspeed = 2;
 				AddObject(O);
 				O = new Bullet();
 				O.x = D.x;
 				O.y = D.y;
-				O.Hspeed = 2;
-				O.Vspeed = 4;
+				O.Hspeed = 1;
+				O.Vspeed = 2;
 				AddObject(O);
 				O = new Bullet();
 				O.x = D.x;
 				O.y = D.y;
-				O.Hspeed = -2;
-				O.Vspeed = 4;
+				O.Hspeed = -1;
+				O.Vspeed = 2;
 				AddObject(O);
 			}
 		}
@@ -2487,7 +2487,7 @@ class GameView extends Sprite
 			{
 				O.rolls = data.rolls;
 			}
-			O.image.image_speed = 1;
+			O.image.image_speed = 0.5;
 			if (data.image_speed != null)
 			{
 				O.image.image_speed = data.image_speed;
@@ -2516,7 +2516,7 @@ class GameView extends Sprite
 			O.Hspeed = 0;
 			O.Vspeed = 0;
 			O.gravX = 0;
-			O.gravY = -1;
+			O.gravY = -0.25;
 			O.scaleX = P.scaleX;
 			O.scaleY = P.scaleX;
 			O.tossedBy = P;
@@ -2538,7 +2538,7 @@ class GameView extends Sprite
 				O.bouncedrain = data.bouncedrain;
 			}*/
 			
-			O.image.image_speed = 1;
+			O.image.image_speed = 0.5;
 			O.allowwrap = data.wrap;
 			P.charname = "sekibankiheadless";
 			if (P.Ldir>0)
@@ -2564,31 +2564,31 @@ class GameView extends Sprite
 			var O = new Bullet();
 				O.x = D.x;
 				O.y = D.y;
-				O.Hspeed = -2;
-				O.Vspeed = 2;
+				O.Hspeed = -1;
+				O.Vspeed = 1;
 				AddObject(O);
 				O = new Bullet();
 				O.x = D.x;
 				O.y = D.y;
 				O.Hspeed = 0;
-				O.Vspeed = 4;
-				AddObject(O);
-				O = new Bullet();
-				O.x = D.x;
-				O.y = D.y;
-				O.Hspeed = 2;
 				O.Vspeed = 2;
 				AddObject(O);
 				O = new Bullet();
 				O.x = D.x;
 				O.y = D.y;
-				O.Hspeed = 4;
+				O.Hspeed = 1;
+				O.Vspeed = 1;
+				AddObject(O);
+				O = new Bullet();
+				O.x = D.x;
+				O.y = D.y;
+				O.Hspeed = 2;
 				O.Vspeed = 0;
 				AddObject(O);
 				O = new Bullet();
 				O.x = D.x;
 				O.y = D.y;
-				O.Hspeed = -4;
+				O.Hspeed = -2;
 				O.Vspeed = 0;
 				AddObject(O);
 				
@@ -2596,20 +2596,20 @@ class GameView extends Sprite
 				O = new Bullet();
 				O.x = D.x;
 				O.y = D.y;
-				O.Hspeed = -2;
-				O.Vspeed = -2;
+				O.Hspeed = -1;
+				O.Vspeed = -1;
 				AddObject(O);
 				O = new Bullet();
 				O.x = D.x;
 				O.y = D.y;
 				O.Hspeed = 0;
-				O.Vspeed = -4;
+				O.Vspeed = -2;
 				AddObject(O);
 				O = new Bullet();
 				O.x = D.x;
 				O.y = D.y;
-				O.Hspeed = 2;
-				O.Vspeed = -2;
+				O.Hspeed = 1;
+				O.Vspeed = -1;
 				AddObject(O);
 				O = new Bullet();
 				
@@ -2660,14 +2660,14 @@ class GameView extends Sprite
 			O.y = D.y;
 			if (D.Ldir > 0)
 			{
-				O.Hspeed = 2;
+				O.Hspeed = 1;
 			}
 			else
 			{
-				O.Hspeed = -2;
+				O.Hspeed = -1;
 			}
-			O.image.image_speed = 0.7;
-			O.Vspeed = -10;
+			O.image.image_speed = 0.35;
+			O.Vspeed = -5;
 			if (Math.random() > 0.9)
 			{
 				O.ChangeAnimation("table");
@@ -2676,21 +2676,8 @@ class GameView extends Sprite
 			{
 				O.ChangeAnimation("hammer");
 			}
-			O.gravY = 0.3;
+			O.gravY = 0.15;
 			AddObject(O);
-		}
-		if (evt == "Tableflip")
-		{
-			var E:Dynamic = EntityFromUID(data.UID);
-			if (data.TUID != null)
-			{
-				E.tossedBy = P;
-			}
-			E.image.image_speed = data.image_speed;
-			E.Vspeed = -7;
-			E.gravY = 0.8;
-			E.dangerous = data.dangerous;
-			E.Hspeed = data.Hspeed;
 		}
 		if (evt == "Spawntables")
 		{
@@ -2822,7 +2809,7 @@ class GameView extends Sprite
 				}
 				i += 1;
 			}
-			FlashColor(0x9999FF, 0.4, 0, 0.1);
+			FlashColor(0x9999FF, 0.4, 0, 0.05);
 		}
 		if (evt == "Kick")
 		{
@@ -2980,6 +2967,7 @@ class GameView extends Sprite
 			P.ChangeAnimation("dio"+P.charname);
 			P.Hspeed = 0;
 			P.Vspeed = 0;
+			//might be based on actual time ignore it for double fps'ing
 			pausetime = 5.000;
 			ZaWarudoCaster = P;
 		}
@@ -3114,7 +3102,7 @@ class GameView extends Sprite
 	{
 		{
 				var i = 0;
-				var sp = 5;
+				var sp = 2.5;
 				while (i < activeEnemies.length)
 				{
 					var E = activeEnemies[i];
@@ -3816,7 +3804,11 @@ class GameView extends Sprite
 		var currentTime = Timer.stamp ();
 		var T = currentTime - ltime;
 		missingTime += T;
+		framedelay *= 0.90;
+		framedelay += (T / 10);
+		//framedelay = (framedelay + T) / 60;
 		TF.blendMode = openfl.display.BlendMode.INVERT;
+		///fps.blendMode = openfl.display.BlendMode.INVERT;
 		if (online)
 		{
 			
@@ -3838,6 +3830,7 @@ class GameView extends Sprite
 			{
 				TF.text = "Client: " + Room + "\nLevel: " + level +"\nLives: " + Math.max(myplayer.lives,0)+"\nEnemies: "+totalenemies;
 			}
+			
 			if (netlog && Hoster)
 			{
 				var A = sentmessagelog.keys();
@@ -3864,21 +3857,27 @@ class GameView extends Sprite
 		{
 			TF.text = TF.text + "\nEPM: " + Math.round(epm) + " max: " + maxspawns+"\nspawnrate: "+spawnrate;
 		}
+		//fps.text = "FPS:" + Math.round(0.016667 / framedelay);
+		//fps.text = "FPS:" + Math.round(framedelay * 216000);
+		fps.text = "FPS:" + Math.round(1 / framedelay);
 		TF.textColor = 0xFFFFFF;
+		fps.textColor = 0xFFFFFF;
 		if (missingTime > 3 /* && !online*/)
 		{
 			missingTime = 0.041;
 		}
 		updategame(event);
-		missingTime -= 0.0334;
+		//missingTime -= 0.0334;
+		missingTime -= 0.165;
 		if (missingTime < 0)
 		{
 			missingTime = 0;
 		}
-		while (missingTime > 0.04)
+		//while (missingTime > 0.04)
+		while (missingTime > 0.165)
 		{
 			updategame(event);
-			missingTime -= 0.0334;
+			missingTime -= 0.165;
 		}
 		var cameraenabled = false;
 		if (cameraenabled)
@@ -4003,10 +4002,10 @@ class GameView extends Sprite
 		if (online)
 		{
 			//if there are no messages just run update character, this will keep a constant stream of messages going allowing newcomers to detect the group better
-			var F = 45;
+			var F = 90;
 			if (Hoster)
 			{
-				F = 15;
+				F = 30;
 			}
 			if (ControlEvent || (NP.Queue.length == 0 && frame % F == 0) && status != "quitting")
 			{
@@ -4019,7 +4018,7 @@ class GameView extends Sprite
 				//D.visible = myplayer.visible;
 				D.con = myplayer.controller;
 				//if (frame % F == 0)
-				if (frame % 45 == 0)
+				if (frame % 90 == 0)
 				{
 					D.ID = myplayer.UID;
 					D.char = myplayer.charname;
@@ -4092,7 +4091,7 @@ class GameView extends Sprite
 		}
 		if (Background.alpha < 1)
 		{
-			Background.alpha += 0.03;
+			Background.alpha += 0.015;
 		}
 		if (platformformation != currentformation)
 		{
@@ -4132,6 +4131,7 @@ class GameView extends Sprite
 			SpawnTimer -= 1;
 			if (activeEnemies.length < 1 && spawns>0)
 			{
+				//i thought about slowing this, but the total is double so this should be ok as is.
 				SpawnTimer -= 2;
 			}
 			if (totalenemies == 1 && Hoster)

@@ -110,8 +110,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Audio/Mp3/theme12intro.mp3", AssetType.MUSIC);
 		className.set ("assets/Audio/Mp3/theme2.mp3", __ASSET__assets_audio_mp3_theme2_mp3);
 		type.set ("assets/Audio/Mp3/theme2.mp3", AssetType.MUSIC);
+		className.set ("assets/Audio/Mp3/theme2intro.mp3", __ASSET__assets_audio_mp3_theme2intro_mp3);
+		type.set ("assets/Audio/Mp3/theme2intro.mp3", AssetType.MUSIC);
 		className.set ("assets/Audio/Mp3/theme3.mp3", __ASSET__assets_audio_mp3_theme3_mp3);
 		type.set ("assets/Audio/Mp3/theme3.mp3", AssetType.MUSIC);
+		className.set ("assets/Audio/Mp3/theme3intro.mp3", __ASSET__assets_audio_mp3_theme3intro_mp3);
+		type.set ("assets/Audio/Mp3/theme3intro.mp3", AssetType.MUSIC);
 		className.set ("assets/Audio/Mp3/theme4.mp3", __ASSET__assets_audio_mp3_theme4_mp3);
 		type.set ("assets/Audio/Mp3/theme4.mp3", AssetType.MUSIC);
 		className.set ("assets/Audio/Mp3/theme5.mp3", __ASSET__assets_audio_mp3_theme5_mp3);
@@ -945,7 +949,15 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.MUSIC);
+		id = "assets/Audio/Mp3/theme2intro.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
 		id = "assets/Audio/Mp3/theme3.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "assets/Audio/Mp3/theme3intro.mp3";
 		path.set (id, id);
 		
 		type.set (id, AssetType.MUSIC);
@@ -2764,6 +2776,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
@@ -2860,8 +2874,14 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("assets/Audio/Mp3/theme2.mp3", __ASSET__assets_audio_mp3_theme2_mp3);
 		type.set ("assets/Audio/Mp3/theme2.mp3", AssetType.MUSIC);
 		
+		className.set ("assets/Audio/Mp3/theme2intro.mp3", __ASSET__assets_audio_mp3_theme2intro_mp3);
+		type.set ("assets/Audio/Mp3/theme2intro.mp3", AssetType.MUSIC);
+		
 		className.set ("assets/Audio/Mp3/theme3.mp3", __ASSET__assets_audio_mp3_theme3_mp3);
 		type.set ("assets/Audio/Mp3/theme3.mp3", AssetType.MUSIC);
+		
+		className.set ("assets/Audio/Mp3/theme3intro.mp3", __ASSET__assets_audio_mp3_theme3intro_mp3);
+		type.set ("assets/Audio/Mp3/theme3intro.mp3", AssetType.MUSIC);
 		
 		className.set ("assets/Audio/Mp3/theme4.mp3", __ASSET__assets_audio_mp3_theme4_mp3);
 		type.set ("assets/Audio/Mp3/theme4.mp3", AssetType.MUSIC);
@@ -4645,7 +4665,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_theme12_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_theme12intro_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_theme2_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_theme2intro_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_theme3_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_theme3intro_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_theme4_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_theme5_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_theme6_mp3 extends flash.media.Sound { }
@@ -5391,6 +5413,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
 #else
 
 
@@ -5428,7 +5452,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:file("Assets/Audio/Mp3/theme12.mp3") #if display private #end class __ASSET__assets_audio_mp3_theme12_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/theme12intro.mp3") #if display private #end class __ASSET__assets_audio_mp3_theme12intro_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/theme2.mp3") #if display private #end class __ASSET__assets_audio_mp3_theme2_mp3 extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Mp3/theme2intro.mp3") #if display private #end class __ASSET__assets_audio_mp3_theme2intro_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/theme3.mp3") #if display private #end class __ASSET__assets_audio_mp3_theme3_mp3 extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Mp3/theme3intro.mp3") #if display private #end class __ASSET__assets_audio_mp3_theme3intro_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/theme4.mp3") #if display private #end class __ASSET__assets_audio_mp3_theme4_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/theme5.mp3") #if display private #end class __ASSET__assets_audio_mp3_theme5_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/theme6.mp3") #if display private #end class __ASSET__assets_audio_mp3_theme6_mp3 extends lime.utils.ByteArray {}

@@ -6,7 +6,7 @@ package;
  */
 class Cirno extends Enemy
 {
-
+	//slowed
 	public var accel:Float;
 	
 	public var mxspd:Float;
@@ -26,16 +26,16 @@ class Cirno extends Enemy
 	public function new() 
 	{
 		super("Cirno");
-		accel = 0.5;
-		deccel = 0.1;
-		mxspd = 4;
+		accel = 0.25;
+		deccel = 0.05;
+		mxspd = 2;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
 		selfdestruct = false;
 		reward = false;
 		pointvalue = 150;
-		mxtimer = 90;
+		mxtimer = 180;
 		respawn = false;
 		rename = "ECirno";
 		needtokill = false;
@@ -68,19 +68,19 @@ class Cirno extends Enemy
 		{
 			rng = new MersenneTwister();
 			var seed:UInt = Math.floor(UID * 100000);
-			timer = (60) + rng.twist(seed, 1, 30 * 30)[0];
+			timer = (120) + rng.twist(seed, 1, 60 * 30)[0];
 			if (game.RoundType == GameView.TypeofRound.FireCirno || rng.twist(rng.seed, 1, 100)[0] > 90)
 			{
 				flaming = true;
 				rename = "firecirno";
-				mxtimer = 120;
+				mxtimer = 240;
 			}
 			else if (game.RoundType == GameView.TypeofRound.ElectricCirno || (game.level>30 && rng.twist(rng.seed, 1, 100)[0] > 97))
 			{
 				electric = true;
 				flaming = true;
 				rename = "electriccirno";
-				mxtimer = 180;
+				mxtimer = 360;
 			}
 			countdown = mxtimer;
 		}
@@ -129,7 +129,7 @@ class Cirno extends Enemy
 		}
 		else
 		{
-			countdown = 90;
+			countdown = 180;
 			visuallyEnraged = false;
 		}
 		if (!killed)
@@ -174,7 +174,7 @@ class Cirno extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -10;
+				D.Vspeed = -5;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -183,7 +183,7 @@ class Cirno extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -4;
+					Vspeed = -2;
 				}
 			}
 			
@@ -198,7 +198,7 @@ class Cirno extends Enemy
 	}
 	else
 	{
-		y += 15;
+		y += 7.5;
 	if (y > 600)
 	{
 	alive = false;
@@ -207,8 +207,8 @@ class Cirno extends Enemy
 		}
 		else
 		{
-			scaleX -= 0.2;
-			scaleY -= 0.2;
+			scaleX -= 0.1;
+			scaleY -= 0.1;
 			if (scaleX <= 0)
 			{
 				if (alive && killedby != null)

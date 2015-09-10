@@ -6,13 +6,13 @@ package;
  */
 class UnzanFist extends Bullet
 {
-
+	//slowed
 	public function new() 
 	{
 		super();
 		ChangeAnimation("unzanfist");
-		Vspeed = 1.1;
-		gravY = -0.0047;
+		Vspeed = 0.55;
+		gravY = -0.00235;
 	}
 	override public function update() 
 	{
@@ -21,16 +21,16 @@ class UnzanFist extends Bullet
 		if (gravY<0 && y>-80)
 		{
 			Vspeed = 0;
-			gravY = 0.1;
+			gravY = 0.05;
 		}
 		if (gravY == 0.1 && Vspeed > 3)
 		{
 			//gravY = 0.23;
-			gravY = 0.4;
+			gravY = 0.2;
 		}
-		if (Vspeed > 32)
+		if (Vspeed > 16)
 		{
-			Vspeed = 32;
+			Vspeed = 16;
 		}
 	}
 }

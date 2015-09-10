@@ -14,7 +14,7 @@ class DashAttack extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 300;
+		player.maxcooldown = 600;
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -32,8 +32,8 @@ class DashAttack extends PlayerAbility
 				player.cooldown = player.maxcooldown;
 				player.superpower = false;
 				player.warncooldown = true;
-				player.mxspd -= 33;
-				player.invincibility = 20;
+				player.mxspd -= 16.5;
+				player.invincibility = 40;
 				player.Hspeed = player.Ldir * player.mxspd;
 			}
 		}
@@ -44,9 +44,9 @@ class DashAttack extends PlayerAbility
 		if (player.cooldown <= 0 && !player.superpower)
 		{
 			player.superpower = true;
-			player.mxspd += 33;
+			player.mxspd += 16.5;
 			player.Hspeed = player.Ldir * player.mxspd;
-			player.cooldown = 6;
+			player.cooldown = 12;
 			player.warncooldown = false;
 		}
 	}
