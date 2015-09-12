@@ -73,11 +73,7 @@ class Yinyangorb extends Enemy
 		}
 		if (ground != null && Vspeed == 0 && flipped <= 0)
 		{
-<<<<<<< HEAD
-			Vspeed = -3.5;
-=======
 			Vspeed = -8;
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		}
 		updphysics();
 		updateanimation();

@@ -36,12 +36,7 @@ class OneWeekGirl extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-<<<<<<< HEAD
-		//player.maxcooldown = 6000;
-		player.maxcooldown = 9000;
-=======
 		player.maxcooldown = 3000;
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		//player.maxcooldown = 200;
 		cooldown = player.maxcooldown;
 		speedboost = -1;

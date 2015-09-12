@@ -1518,11 +1518,7 @@ class GameView extends Sprite
 						SoundManager.Play("killenemy");
 					}
 					//delay end of level music
-<<<<<<< HEAD
-					SpawnTimer = 240;
-=======
 					SpawnTimer = 60;
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 				}
 				if (!me)
 				{
@@ -1611,14 +1607,9 @@ class GameView extends Sprite
 				else
 				{
 					//E.bonked = 10;
-<<<<<<< HEAD
 					//E.bonked = 16;
 					//E.bonkedby = P;
 					E.Bonk(P);
-=======
-					E.bonked = 8;
-					E.bonkedby = P;
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 				
 					SoundManager.Play("bonk");
 				}
@@ -2184,14 +2175,9 @@ class GameView extends Sprite
 				var E = entities[i];
 				if (E.type == "Block" && E.y == data)
 				{
-<<<<<<< HEAD
 					//E.bonked = 16;
 					//E.bonkedby = GetPlayer(ID);
 					E.Bonk(GetPlayer(ID));
-=======
-					E.bonked = 8;
-					E.bonkedby = GetPlayer(ID);
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 				}
 				i++;
 			}
@@ -2273,14 +2259,9 @@ class GameView extends Sprite
 				var E = entities[i];
 				if (E.type == "Block")
 				{
-<<<<<<< HEAD
 					//E.bonked = 16;
 					//E.bonkedby = GetPlayer(ID);
 					E.Bonk(GetPlayer(ID));
-=======
-					E.bonked = 8;
-					E.bonkedby = GetPlayer(ID);
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 				}
 				i++;
 			}
@@ -3848,12 +3829,6 @@ class GameView extends Sprite
 		var currentTime = Timer.stamp ();
 		var T = currentTime - ltime;
 		missingTime += T;
-<<<<<<< HEAD
-		framedelay *= 0.95;
-		framedelay += (T / 20);
-		//framedelay = (framedelay + T) / 60;
-=======
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		TF.blendMode = openfl.display.BlendMode.INVERT;
 		if (online)
 		{
@@ -4041,17 +4016,10 @@ class GameView extends Sprite
 		if (online)
 		{
 			//if there are no messages just run update character, this will keep a constant stream of messages going allowing newcomers to detect the group better
-<<<<<<< HEAD
-			var F = 210;
-			if (Hoster)
-			{
-				F = 120;
-=======
 			var F = 45;
 			if (Hoster)
 			{
 				F = 15;
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 			}
 			if (ControlEvent || (NP.Queue.length == 0 && frame % F == 0) && status != "quitting")
 			{
@@ -4064,11 +4032,7 @@ class GameView extends Sprite
 				//D.visible = myplayer.visible;
 				D.con = myplayer.controller;
 				//if (frame % F == 0)
-<<<<<<< HEAD
-				if (frame % 210 == 0)
-=======
 				if (frame % 45 == 0)
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 				{
 					D.ID = myplayer.UID;
 					D.char = myplayer.charname;

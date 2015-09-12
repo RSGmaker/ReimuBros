@@ -17,12 +17,7 @@ class AngelOfDeath extends PlayerAbility
 		super.onframe();
 		if (player.isme)
 		{
-<<<<<<< HEAD
-			//if (Math.random() < 0.00125)
-			if (Math.random() < 0.0008)
-=======
 			if (Math.random() < 0.0025)
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 			{
 				var game = player.game;
 				var enemy = game.activeEnemies[Math.floor(game.activeEnemies.length * Math.random())];

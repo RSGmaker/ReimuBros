@@ -18,15 +18,9 @@ class Mystia extends Enemy
 	public function new() 
 	{
 		super("Mystia");
-<<<<<<< HEAD
-		accel = 0.4;
-		deccel = 0.05;
-		mxspd = 3.5;
-=======
 		accel = 0.8;
 		deccel = 0.1;
 		mxspd = 6;
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		Ldir = 1;
 		killed = false;
 		flipped = -1;

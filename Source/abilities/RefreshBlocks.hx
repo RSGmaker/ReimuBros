@@ -14,11 +14,7 @@ class RefreshBlocks extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-<<<<<<< HEAD
-		player.maxcooldown = 1290;
-=======
 		player.maxcooldown = 430;
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		player.warncooldown = true;
 	}
 	override public function onframe() 

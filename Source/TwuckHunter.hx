@@ -30,15 +30,9 @@ class TwuckHunter extends Enemy
 			mokou = true;
 			rename = "Emokou";
 		}
-<<<<<<< HEAD
-		accel = 0.120;
-		deccel = 0.04;
-		mxspd = 2;
-=======
 		accel = 0.25;
 		deccel = 0.1;
 		mxspd = 4.5;
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		Ldir = 1;
 		killed = false;
 		flipped = -1;

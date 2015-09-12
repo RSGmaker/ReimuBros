@@ -17,12 +17,7 @@ class EnemyEater extends PlayerAbility
 	{
 		super.init();
 		//player.maxcooldown = 390;
-<<<<<<< HEAD
-		//maxhunger = 780;
-		maxhunger = 1170;
-=======
 		maxhunger = 390;
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		hunger = maxhunger;
 	}
 	override public function onframe() 

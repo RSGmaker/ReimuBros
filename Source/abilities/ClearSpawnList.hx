@@ -15,13 +15,7 @@ class ClearSpawnList extends PlayerAbility
 	{
 		super.init();
 		//player.maxcooldown = 3600+1000;
-<<<<<<< HEAD
-		//player.maxcooldown = 7200+3000;
-		//player.maxcooldown = 10200;
-		player.maxcooldown = 15300;
-=======
 		player.maxcooldown = 3600+1500;
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		player.warncooldown = true;
 	}
 	override public function onframe() 

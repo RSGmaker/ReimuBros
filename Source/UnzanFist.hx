@@ -11,14 +11,8 @@ class UnzanFist extends Bullet
 	{
 		super();
 		ChangeAnimation("unzanfist");
-<<<<<<< HEAD
-		Vspeed = 0.55;
-		//gravY = -0.00235;
-		gravY = -0.0012;
-=======
 		Vspeed = 1.1;
 		gravY = -0.0047;
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 	}
 	override public function update() 
 	{

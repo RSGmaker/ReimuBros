@@ -14,11 +14,7 @@ class ExKeine extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-<<<<<<< HEAD
-		player.maxcooldown = 5400;
-=======
 		player.maxcooldown = 1800;
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -44,11 +40,7 @@ class ExKeine extends PlayerAbility
 		{
 			if (player.superpower)
 			{
-<<<<<<< HEAD
-				player.maxcooldown = 5400;
-=======
 				player.maxcooldown = 1800;
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 				player.cooldown = player.maxcooldown;
 				player.charname = "keine";
 				player.accel -= 0.15;
@@ -73,12 +65,7 @@ class ExKeine extends PlayerAbility
 		if (player.cooldown <= 0 && !player.superpower)
 		{
 			player.superpower = true;
-<<<<<<< HEAD
-			player.maxcooldown = 720;
-			//player.maxcooldown = 1080;
-=======
 			player.maxcooldown = 360;
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 			player.cooldown = 0;
 			player.charname = "exkeine";
 			player.accel += 0.3;

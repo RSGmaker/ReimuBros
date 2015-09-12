@@ -14,12 +14,7 @@ class LightDashAttack extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-<<<<<<< HEAD
-		//player.maxcooldown = 360;
-		player.maxcooldown = 540;
-=======
 		player.maxcooldown = 180;
->>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		player.warncooldown = true;
 	}
 	override public function onframe() 
