@@ -402,7 +402,7 @@ class Player extends Entity
 				Hspeed = mxspd;
 			}
 			}
-			else if (frames % 4==1 && ground != null)
+			else if (frames % 2==1 && ground != null)
 			{
 				//play skidding noise
 				var P = new Particle("cloud");
@@ -411,10 +411,10 @@ class Player extends Entity
 				P.Hspeed = Hspeed * -0.5;
 				P.scaleX = 0.20;
 				P.scaleY = 0.20;
-				P.alphaRate = -0.05;
+				P.alphaRate = -0.1;
 				//P.alpha = 0.6;
-				P.scaleRate = 0.03;
-				P.HP = 20;
+				P.scaleRate = 0.06;
+				P.HP = 10;
 				game.AddObject(P);
 				SoundManager.Play("step3");
 			}
@@ -440,7 +440,7 @@ class Player extends Entity
 				Hspeed = -mxspd;
 			}
 			}
-			else if (frames % 4==1 && ground != null)
+			else if (frames % 2==1 && ground != null)
 			{
 				//play skidding noise
 				var P = new Particle("cloud");
@@ -449,10 +449,10 @@ class Player extends Entity
 				P.Hspeed = Hspeed * -0.5;
 				P.scaleX = 0.20;
 				P.scaleY = 0.20;
-				P.alphaRate = -0.05;
+				P.alphaRate = -0.1;
 				//P.alpha = 0.6;
-				P.scaleRate = 0.03;
-				P.HP = 20;
+				P.scaleRate = 0.06;
+				P.HP = 10;
 				game.AddObject(P);
 				SoundManager.Play("step3");
 			}
