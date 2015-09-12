@@ -96,7 +96,8 @@ class Imposter extends Enemy
 				have = Main._this.savedata.data.alts[unlock];
 			}
 			}
-			if (((rng.twist(rng.seed, 1, 100)[0]) > 75 || rename=="youmu" || rename=="reimu" || rename == "marisa" || rename == "orin") && spawns<=1 && game.Hoster)
+			//if (((rng.twist(rng.seed, 1, 100)[0]) > 75 || rename=="youmu" || rename=="reimu" || rename == "marisa" || rename == "orin") && spawns<=1 && game.Hoster)
+			if (((rng.twist(rng.seed, 1, 100)[0]) > 83 || rename=="youmu" || rename=="reimu" || rename == "marisa" || rename == "orin") && spawns<=1 && game.Hoster)
 			{
 				var D:Dynamic = { };
 					D.UID = UID;

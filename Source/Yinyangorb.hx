@@ -73,7 +73,7 @@ class Yinyangorb extends Enemy
 		}
 		if (ground != null && Vspeed == 0 && flipped <= 0)
 		{
-			Vspeed = -4;
+			Vspeed = -3.5;
 		}
 		updphysics();
 		updateanimation();

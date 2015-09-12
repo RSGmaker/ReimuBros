@@ -81,6 +81,7 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.IceBall(null), names:["cirno"] };
 		L[L.length] = { type:new abilities.SummonBlackHole(null), names:["suika"] };
 		L[L.length] = { type:new abilities.BoomerangScythe(null), names:["elly"] };
+		L[L.length] = { type:new abilities.TreasureHunter(null), names:["nazrin"] };
 		
 		
 		L[L.length] = { type:new abilities.BasicShot(null), names:["benben","yatsuhashi"] };

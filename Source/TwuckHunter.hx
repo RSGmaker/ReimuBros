@@ -31,9 +31,9 @@ class TwuckHunter extends Enemy
 			mokou = true;
 			rename = "Emokou";
 		}
-		accel = 0.125;
-		deccel = 0.05;
-		mxspd = 2.25;
+		accel = 0.120;
+		deccel = 0.04;
+		mxspd = 2;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;

@@ -25,6 +25,8 @@ import openfl.events.MouseEvent;
 import openfl.media.Sound;
 import openfl.media.SoundChannel;
 import openfl.media.SoundTransform;
+
+//import com.sociodox.theminer.TheMiner;
 //import flash.system.Security;
 //import flash.ui.GameInput;
 //import flash.events.
@@ -59,7 +61,7 @@ class Main extends Sprite {
 	public var DEBUG:Bool = false;
 	#end
 	//info displayed in titlescreen
-	public var gameversion:String = "1.6.0";
+	public var gameversion:String = "1.6.1 60fpsBeta";
 	public var controlscheme:Array<UInt>;
 	//message shown to player should the host of that session make them leave
 	public var statusmessage:String = "";
@@ -116,6 +118,11 @@ class Main extends Sprite {
 	public var GameFlags:FlagManager;
 	public function new () {
 		super ();
+		if (DEBUG)
+		{
+			//Haxe doesn't support this external files easily.
+			//stage.addChild(new TheMiner());  
+		}
 		stage.quality = flash.display.StageQuality.LOW;
 		AL = new Animationloader();
 		_this = this;

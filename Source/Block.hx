@@ -27,6 +27,7 @@ class Block extends Entity
 	public var charanimation:Array<BitmapData>;
 	public var LeftBlock:Block;
 	public var RightBlock:Block;
+	public var searched:Bool;
 	
 	public function new(ani:String) 
 	{
@@ -115,6 +116,11 @@ class Block extends Entity
 			Visual.ChangeAnimation(oanimation);
 		}
 	}
+	public function Reset()
+	{
+		Clean();
+		searched = false;
+	}
 	public function Clean()
 	{
 		dangerous = false;
@@ -156,6 +162,7 @@ class Block extends Entity
 			}
 		}
 	}
+	
 	//returns a row of blocks,crossgaps: allows it to search an entire row instead of a side,currentsolid:false prevents returning nonsolids,includeinvalid:when true returns blocks not meant to be used(eg;the hidden blocks within the gaps)
 	public function getrow(crossgaps:Bool = false, currentlysolid:Bool = false, includeinvalid = false):Array<Block>
 	{

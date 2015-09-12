@@ -15,6 +15,6 @@ class MoreZombieFairies extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.zombiefairychance += 0.06;
+		player.zombiefairychance += 0.05;
 	}
 }

@@ -342,6 +342,14 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/cloud0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/clownpiece0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/CSBack0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -710,6 +718,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/hecatia0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/hina0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -735,6 +747,10 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/ikuikudance0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/junko0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -1138,6 +1154,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/sagume0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/sakuya0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -1422,6 +1442,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/train0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/trophy0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -1455,6 +1479,10 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/wakasagihime0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/warning0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -1547,6 +1575,14 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/yukari0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/yukaribullet0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/yukariflipped0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		

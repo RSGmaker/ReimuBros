@@ -102,6 +102,9 @@ class GameView extends Sprite
 	public var charselect:CharacterSelect;
 	public var collisiondata:Array<Dynamic>;
 	public var collisiondangerousdata:Array<Dynamic>;
+	//true after first enemy of level spawns.
+	public var enemyspawn:Bool;
+	public var gamestarted:Bool = false;
 	
 	public function GetPlayers():Array<Player>
 	{
@@ -372,7 +375,7 @@ class GameView extends Sprite
 		{
 			L[L.length] = "chen";
 			L[L.length] = "ran";
-			L[L.length] = "yukari";
+			/*L[L.length] = "yukari";*/
 		}
 		else
 		{
@@ -402,7 +405,7 @@ class GameView extends Sprite
 			{
 				L = L.concat(["iku", "tenshi", "hatate", "kokoro"]);
 				
-				L = L.concat(["sumireko", "seiran", "ringo", "doremy"]);
+				L = L.concat(["sumireko", "seiran", "ringo", "doremy","sagume","clownpiece","junko","hecatia"]);
 				
 				L = L.concat(["reisen", "toyohime", "yorihime"]);
 			}
@@ -530,7 +533,7 @@ class GameView extends Sprite
 		activeEnemies = new Array<Enemy>();
 		activeItems = new Array<EntityItem>();
 		activeInteractables = new Array<Entity>();
-		SpawnTimer = 30 * 5;
+		SpawnTimer = 60 * 5;
 		MSE = false;
 		
 		//level = 0;
@@ -790,6 +793,7 @@ class GameView extends Sprite
 		colorflash = new Shape();
 		//addChild(colorflash);
 		gui.addChild(colorflash);
+		level++;
 	}
 	//sets down platforms and puts holes in the platforms
 	public function setformation()
@@ -1514,7 +1518,7 @@ class GameView extends Sprite
 						SoundManager.Play("killenemy");
 					}
 					//delay end of level music
-					SpawnTimer = 120;
+					SpawnTimer = 240;
 				}
 				if (!me)
 				{
@@ -1603,8 +1607,9 @@ class GameView extends Sprite
 				else
 				{
 					//E.bonked = 10;
-					E.bonked = 16;
-					E.bonkedby = P;
+					//E.bonked = 16;
+					//E.bonkedby = P;
+					E.Bonk(P);
 				
 					SoundManager.Play("bonk");
 				}
@@ -1675,7 +1680,7 @@ class GameView extends Sprite
 				var D:Dynamic = E;
 				if (E.type == "Block" && RoundType != TypeofRound.Cirno && RoundType != TypeofRound.FireCirno && RoundType != TypeofRound.ElectricCirno)
 				{
-					D.Clean();
+					D.Reset();
 				}
 				if (E.type == "Enemy")
 				{
@@ -2170,8 +2175,9 @@ class GameView extends Sprite
 				var E = entities[i];
 				if (E.type == "Block" && E.y == data)
 				{
-					E.bonked = 16;
-					E.bonkedby = GetPlayer(ID);
+					//E.bonked = 16;
+					//E.bonkedby = GetPlayer(ID);
+					E.Bonk(GetPlayer(ID));
 				}
 				i++;
 			}
@@ -2253,8 +2259,9 @@ class GameView extends Sprite
 				var E = entities[i];
 				if (E.type == "Block")
 				{
-					E.bonked = 16;
-					E.bonkedby = GetPlayer(ID);
+					//E.bonked = 16;
+					//E.bonkedby = GetPlayer(ID);
+					E.Bonk(GetPlayer(ID));
 				}
 				i++;
 			}
@@ -2274,7 +2281,7 @@ class GameView extends Sprite
 				thegiant.tipover();
 				if (myplayer == P)
 				{
-					unlockcharacter("suika");
+					unlockcharacter(thegiant.unlock);
 				}
 			}
 		}
@@ -3277,7 +3284,8 @@ class GameView extends Sprite
 			if (Hoster && Main._this.DEBUG)
 			{
 				//SendYuuka();
-				var B = new BossCirno();
+				//var B = new BossCirno();
+				var B = new BossYukari();
 				AddEnemy(B);
 				//AddObject(B);
 			}
@@ -3402,7 +3410,7 @@ class GameView extends Sprite
 	}
 	public function ResetSpawnTimer()
 	{
-		SpawnTimer = Std.int((30 * (2 + (Math.random() * 5)))*spawnrate);
+		SpawnTimer = Std.int((60 * (2 + (Math.random() * 5)))*spawnrate);
 	}
 	public function SpawnEntityFromData(D:Dynamic):Dynamic
 	{
@@ -3511,6 +3519,11 @@ class GameView extends Sprite
 					if (D.type == "bosscirno")
 					{
 						E = new BossCirno();
+						type = "Enemy";
+					}
+					if (D.type == "bossyukari")
+					{
+						E = new BossYukari();
 						type = "Enemy";
 					}
 					if (D.type == "tenshi")
@@ -3804,8 +3817,8 @@ class GameView extends Sprite
 		var currentTime = Timer.stamp ();
 		var T = currentTime - ltime;
 		missingTime += T;
-		framedelay *= 0.90;
-		framedelay += (T / 10);
+		framedelay *= 0.95;
+		framedelay += (T / 20);
 		//framedelay = (framedelay + T) / 60;
 		TF.blendMode = openfl.display.BlendMode.INVERT;
 		///fps.blendMode = openfl.display.BlendMode.INVERT;
@@ -4002,10 +4015,10 @@ class GameView extends Sprite
 		if (online)
 		{
 			//if there are no messages just run update character, this will keep a constant stream of messages going allowing newcomers to detect the group better
-			var F = 90;
+			var F = 210;
 			if (Hoster)
 			{
-				F = 30;
+				F = 120;
 			}
 			if (ControlEvent || (NP.Queue.length == 0 && frame % F == 0) && status != "quitting")
 			{
@@ -4018,7 +4031,7 @@ class GameView extends Sprite
 				//D.visible = myplayer.visible;
 				D.con = myplayer.controller;
 				//if (frame % F == 0)
-				if (frame % 90 == 0)
+				if (frame % 210 == 0)
 				{
 					D.ID = myplayer.UID;
 					D.char = myplayer.charname;
@@ -4129,7 +4142,7 @@ class GameView extends Sprite
 			totalenemies = (SpawnList.length);
 			totalenemies += getenemycount();
 			SpawnTimer -= 1;
-			if (activeEnemies.length < 1 && spawns>0)
+			if ((activeEnemies.length < 1 || totalenemies < 1) && spawns>0 && enemyspawn)
 			{
 				//i thought about slowing this, but the total is double so this should be ok as is.
 				SpawnTimer -= 2;
@@ -4391,7 +4404,7 @@ class GameView extends Sprite
 			{
 				R = rept;
 			}
-			if (Sealed<1 && R>0 && frame & 2 > 0 && Math.random()<R)
+			if (Sealed<1 && R>0 && enemyspawn && frame & 2 > 0 && Math.random()<R)
 			{
 				//var evt = Math.random();
 				var E = "";
@@ -4410,7 +4423,7 @@ class GameView extends Sprite
 					//E = "MiniPowBlock";
 					//E = "MrGhosty";
 					//E = "Reimu";
-					//E = "UnzanFist";
+					E = "UnzanFist";
 				}
 				if (E == "Gap")
 				{
@@ -4631,6 +4644,7 @@ class GameView extends Sprite
 			if (!SpawnList.isEmpty())
 			{
 				var E = SpawnList.pop();
+				enemyspawn = true;
 				var data:Dynamic = { };
 				data.UID = E.UID;
 				if (data.UID == 0)
@@ -4670,12 +4684,18 @@ class GameView extends Sprite
 				{
 					ResetSpawnTimer();
 					SpawnTimer = SpawnTimer >> 1;
-				level += 1;
+					if (gamestarted)
+					{
+						level += 1;
+					}
 				var tmp = 0;
 				if (Hoster)
 				{
+					powblock.HP = 4;
+					SendStatus();
 					//if (level % 5 == 1)
-					if (RoundType != TypeofRound.Normal/* && successstreak>0*/)
+					/*
+					if (RoundType != TypeofRound.Normal)
 					{
 						var D:Dynamic = { };
 				D.type = "Bomb";
@@ -4694,8 +4714,9 @@ class GameView extends Sprite
 				spawnedChar = false;
 				SendEvent("SpawnItem", D);
 				
-					}
+					}*/
 				}
+				enemyspawn = false;
 				CalculateLevelData();
 				var data:Dynamic = { };
 				data.level = level;
@@ -4748,6 +4769,7 @@ class GameView extends Sprite
 	}
 	private function CalculateLevelData()
 	{
+		gamestarted = true;
 		var L = level - 1;
 		if (L < 0)
 		{
@@ -4763,6 +4785,8 @@ class GameView extends Sprite
 		var lvl = ((level - 1) % 5);
 		lvl++;
 		points += lvl;
+		
+		points *= 1.25;
 		epm = 0;
 		var R = 0.2 + (Math.random() * 0.2);
 		R = R * points;
@@ -4782,7 +4806,7 @@ class GameView extends Sprite
 		}
 		points -= R;
 		//calculate percentage of budget will be spent on events(a.k.a. obstacles).
-		R = 0.5 + (Math.random() * 0.2);//; (points * 0.7);
+		R = 0.4 + (Math.random() * 0.2);//; (points * 0.7);
 		R = R * points;
 		AR = R;
 		while (AR > 1)
@@ -4804,7 +4828,7 @@ class GameView extends Sprite
 		while (A.hasNext())
 		{
 			A.next();
-			P++;
+			P+=1;
 		}
 		var EVT = Math.random();
 		if (level == 9)
@@ -4815,6 +4839,7 @@ class GameView extends Sprite
 		}
 		RoundType = TypeofRound.Normal;
 		enemytypes = new Array<Enemy>();
+		//points *= 1.35;
 		maxspawns = Math.ceil(points) + (P) + 1;
 		
 		Obstacles = new Array<String>();
@@ -4946,6 +4971,7 @@ class GameView extends Sprite
 		{
 			Obstacles[Obstacles.length] = "Gap";
 			AddToArrayMultiple(enemytypes, new Imposter(), 2);
+			epm *= 0.75;
 		}
 		if (RoundType == TypeofRound.Balloon)
 		{
@@ -4968,7 +4994,7 @@ class GameView extends Sprite
 			{
 				epm += 2;
 			}
-			SpawnTimer = 120 + (maxspawns * 15);
+			SpawnTimer = 240 + (maxspawns * 30);
 			if (GameFlags.get(Main.EventRoundsOnly))
 			{
 			if (GameFlags.get(Main.CirnoEvent))
@@ -5077,6 +5103,10 @@ class GameView extends Sprite
 		if (RoundType == TypeofRound.Cirno)
 		{
 			//SpawnList.add(new BossCirno());
+		}
+		if (RoundType == TypeofRound.Yukari)
+		{
+			SpawnList.add(new BossYukari());
 		}
 		populatespawnlist();
 		/*var tmp = 0;

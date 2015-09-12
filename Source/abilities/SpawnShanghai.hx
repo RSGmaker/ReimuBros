@@ -17,6 +17,6 @@ class SpawnShanghai extends PlayerAbility
 		super.init();
 		player.zombiefairytype = "shanghai";
 		player.zombiefairyscale = 0.6;
-		player.zombiefairychance += 0.06;
+		player.zombiefairychance += 0.05;
 	}
 }

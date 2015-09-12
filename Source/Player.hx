@@ -16,6 +16,8 @@ class Player extends Entity
 	public var accel:Float;
 	public var Haccel:Float;
 	public var Hdeccel:Float;
+	public var Iaccel:Float;
+	public var Ideccel:Float;
 	//public var deccel:Float;
 	public var mxspd:Float;
 	public var controller:Array<Bool>;
@@ -35,19 +37,21 @@ class Player extends Entity
 	public var format:TextFormat;
 	//the last frame this player has been active
 	public var frame:Int;
+	//number of frames this player has been on your client stage.
+	public var frames:Int = 0;
 	//how long this player has been playing
 	public var playing:Int;
 	public var note:Int = 0;
 	public var midi:Array<Int> = null;
 	//public var tempo:Int = 40;
-	public var tempo:Int = 25;
+	public var tempo:Int = 30;
 	//a temp variable abilities can use to cancel events.
 	public var cancel:Bool;
 	private var filterArr:Array<flash.filters.BitmapFilter>;
 	//public var myMyon:MyonItem;
 
 	//list of character in order of savedata
-	public static var characters:Array<String> = ["reimu", "marisa", "patchouli", "remilia", "sanae", "sakuya", "suwako", "yuyuko", "tenshi", "iku", "aya", "alice", "youmu", "shikieiki", "flandre", "satori", "koishi", "momiji", "nitori", "udongein", "komachi", "yuuka", "mokou", "meiling", "parsee", "kokoro", "kogasa", "kasen", "utsuho", "suika", "kaguya", "eirin", "nazrin", "orin", "hina", "byakuren", "chiyuri", "ellen", "elly", "gengetsu", "kana", "kotohime", "elis", "louise", "mai", "meira", "mugetsu", "orange", "rika", "rikako", "sara", "yuki", "yumeko", "yumemi", "akyu", "futo", "kagerou", "keine", "kosuzu", "lunachild", "mamizou", "medicine", "minoriko", "murasa", "seiga", "sekibanki", "shanghai", "shinmyoumaru", "shizuha", "shou", "sunnymilk", "tokiko", "wriggle", "yoshika", "starsaphire", "lily", "letty", "makairesident-a", "lilith", "ayana", "matenshi", "noroiko", "mystia", "lunasa", "lyrica", "merlin", "maribel", "renko", "miko", "reisen", "ruukoto", "tojiko", "toyohime", "yorihime", "wakasagihime", "yatsuhashi", "mima", "konngara","tewi","kanako","ringo","doremy","seiran","sumireko","rin","raiko","shingyoku","hatate","daiyousei","kurumi","yuugi","benben","ichirin","kyouko","yamame","koakuma","shinki","rengeteki","sariel","yukari", "seija", "rumia","cirno","nue","chen","ran"];
+	public static var characters:Array<String> = ["reimu", "marisa", "patchouli", "remilia", "sanae", "sakuya", "suwako", "yuyuko", "tenshi", "iku", "aya", "alice", "youmu", "shikieiki", "flandre", "satori", "koishi", "momiji", "nitori", "udongein", "komachi", "yuuka", "mokou", "meiling", "parsee", "kokoro", "kogasa", "kasen", "utsuho", "suika", "kaguya", "eirin", "nazrin", "orin", "hina", "byakuren", "chiyuri", "ellen", "elly", "gengetsu", "kana", "kotohime", "elis", "louise", "mai", "meira", "mugetsu", "orange", "rika", "rikako", "sara", "yuki", "yumeko", "yumemi", "akyu", "futo", "kagerou", "keine", "kosuzu", "lunachild", "mamizou", "medicine", "minoriko", "murasa", "seiga", "sekibanki", "shanghai", "shinmyoumaru", "shizuha", "shou", "sunnymilk", "tokiko", "wriggle", "yoshika", "starsaphire", "lily", "letty", "makairesident-a", "lilith", "ayana", "matenshi", "noroiko", "mystia", "lunasa", "lyrica", "merlin", "maribel", "renko", "miko", "reisen", "ruukoto", "tojiko", "toyohime", "yorihime", "wakasagihime", "yatsuhashi", "mima", "konngara","tewi","kanako","ringo","doremy","seiran","sumireko","rin","raiko","shingyoku","hatate","daiyousei","kurumi","yuugi","benben","ichirin","kyouko","yamame","koakuma","shinki","rengeteki","sariel","yukari", "seija", "rumia","cirno","nue","chen","ran","clownpiece","hecatia","junko","sagume"];
 	
 	//list of characters sorted by game(from touhou wiki's character format)
 	public static var charorder:Array<String> = ["reimu", "marisa", "rumia", "daiyousei", "cirno", "meiling", "koakuma", "patchouli", "sakuya", "remilia", "flandre", "rin",
@@ -62,7 +66,7 @@ class Player extends Entity
 	"kyouko", "yoshika", "seiga", "tojiko", "futo", "miko", "mamizou",
 	"wakasagihime", "sekibanki", "kagerou", "benben", "yatsuhashi", "seija", "shinmyoumaru", "raiko",
 	"sumireko",
-	"seiran", "ringo", "doremy",
+	"seiran", "ringo", "doremy","sagume","clownpiece","junko","hecatia",
 	"lunachild", "starsaphire", "sunnymilk", "reisen", "toyohime", "yorihime", "kasen", "kosuzu","tokiko","akyu","maribel","renko",
 	"shingyoku","elis", "sariel", "mima", "konngara",
 	"rika","noroiko", "meira", "matenshi",
@@ -116,12 +120,14 @@ class Player extends Entity
 	
 	
 	
-	public var zombiefairychance = 0.04;
+	//public var zombiefairychance = 0.04;
+	public var zombiefairychance = 0.02;
 	public var zombiefairytype = "zombiefairy";
 	public var zombiefairyscale = 1.0;
 	public var Ofallaccel = 0.0;
 	//fallaccel when floating
 	public var fallaccel2 = 0.0;
+	public var fallaccel3 = 0.0;
 	public var jumpspd = 0.0;
 	
 	//when active causes the player to kill anything they touch
@@ -137,6 +143,9 @@ class Player extends Entity
 	//public var cooldowntext = "READY";
 	public var cooldowntext:String;
 	
+	//for new "footstep" mechanic.
+	public var elavation:Float;
+	
 	public var glow:flash.filters.GlowFilter;
 	
 	/*public static inline var base_deccel = 0.9;
@@ -146,8 +155,10 @@ class Player extends Entity
 	public static inline var base_fallaccel = 1.1;
 	public static inline var base_jumpspd = -19.5;*/
 	
-	public static inline var base_deccel = 0.45;
-	public static inline var base_accel = 0.35 + base_deccel;
+	//public static inline var base_deccel = 0.22;
+	public static inline var base_deccel = 0.3;
+	//public static inline var base_accel = 0.17 + base_deccel;
+	public static inline var base_accel = 0.18 + base_deccel;
 	//public static inline var base_mxspd = 7+1.55;
 	//public static inline var base_mxspd = 3.825;
 	public static inline var base_mxspd = 3.2;
@@ -155,7 +166,8 @@ class Player extends Entity
 	public static inline var base_fallaccel = 0.3;
 	//public static inline var base_jumpspd = -9.75;
 	//public static inline var base_jumpspd = -14;
-	public static inline var base_jumpspd = -10;
+	//public static inline var base_jumpspd = -10;
+	public static inline var base_jumpspd = -11.5;
 	
 	public var inactive:Bool;
 	
@@ -163,6 +175,7 @@ class Player extends Entity
 	public function new(charname:String,controller:Array<Bool>) 
 	{
 		super(charname);
+		elavation = 0;
 		type = "Player";
 		this.controller = controller;
 		Ldir = 1;
@@ -250,9 +263,10 @@ class Player extends Entity
 		
 		deccel = base_deccel;
 		accel = base_accel;
-		Haccel = accel * 0.35;
-		Hdeccel = deccel * 0.35;
-		
+		Haccel = accel * 0.8;
+		Hdeccel = deccel * 0.8;
+		Iaccel = accel * 0.35;
+		Ideccel = deccel * 0.35;
 		
 		mxspd = base_mxspd;
 		fallaccel = base_fallaccel;
@@ -297,6 +311,7 @@ class Player extends Entity
 		
 		Ofallaccel = fallaccel;
 		fallaccel2 = fallaccel / 16;
+		fallaccel3 = fallaccel / 3;
 	}
 	
 	public static var myplayer(get, null):Player;
@@ -313,7 +328,7 @@ class Player extends Entity
 	
 	public override function update()
 	{
-		
+		frames++;
 		if (!killed && lives>-1)
 		{
 			if (!started)
@@ -349,9 +364,14 @@ class Player extends Entity
 				myMyon = null;
 			}
 			var DCL = deccel;
-			if (ground != null && ground.icy && !ignoreice)
+			
+			if (ground == null)
 			{
 				deccel = Hdeccel;
+			}
+			else if ((ground != null && ground.icy && !ignoreice))
+			{
+				deccel = Ideccel;
 			}
 			updphysics();
 			ability.onframe();
@@ -376,11 +396,17 @@ class Player extends Entity
 			{
 				this.rotation = 0;
 			}
-		if (Hspeed < mxspd && controller[3])
+		if (Hspeed < mxspd && controller[3] && !controller[2])
 		{
-			if (ground != null && ground.icy  && !ignoreice)
+			if (Hspeed >= 0)
+			{
+			if (ground == null)
 			{
 				Hspeed += Haccel;
+			}
+			else if ((ground != null && ground.icy  && !ignoreice))
+			{
+				Hspeed += Iaccel;
 			}
 			else
 			{
@@ -390,12 +416,35 @@ class Player extends Entity
 			{
 				Hspeed = mxspd;
 			}
+			}
+			else if (frames % 4==1 && ground != null)
+			{
+				//play skidding noise
+				var P = new Particle("cloud");
+				P.x = x+(Math.floor(width) >> 1);
+				P.y = y + feetposition - 3;
+				P.Hspeed = Hspeed * -0.5;
+				P.scaleX = 0.20;
+				P.scaleY = 0.20;
+				P.alphaRate = -0.05;
+				//P.alpha = 0.6;
+				P.scaleRate = 0.03;
+				P.HP = 20;
+				game.AddObject(P);
+				SoundManager.Play("step3");
+			}
 		}
-		if (Hspeed > -mxspd && controller[2])
+		if (Hspeed > -mxspd && controller[2] && !controller[3])
 		{
-			if (ground != null && ground.icy  && !ignoreice)
+			if (Hspeed <= 0)
+			{
+			if (ground == null)
 			{
 				Hspeed -= Haccel;
+			}
+			else if ((ground != null && ground.icy  && !ignoreice) || ground == null)
+			{
+				Hspeed -= Iaccel;
 			}
 			else
 			{
@@ -405,6 +454,33 @@ class Player extends Entity
 			{
 				Hspeed = -mxspd;
 			}
+			}
+			else if (frames % 4==1 && ground != null)
+			{
+				//play skidding noise
+				var P = new Particle("cloud");
+				P.x = x+(Math.floor(width) >> 1);
+				P.y = y + feetposition - 3;
+				P.Hspeed = Hspeed * -0.5;
+				P.scaleX = 0.20;
+				P.scaleY = 0.20;
+				P.alphaRate = -0.05;
+				//P.alpha = 0.6;
+				P.scaleRate = 0.03;
+				P.HP = 20;
+				game.AddObject(P);
+				SoundManager.Play("step3");
+			}
+		}
+		if (elavation < 0)
+		{
+			elavation += 0.5;
+			feetposition += 0.5;
+		}
+		if (elavation > 0)
+		{
+			elavation -= 0.5;
+			feetposition -= 0.5;
 		}
 		
 		if (ground != null && Vspeed == 0)
@@ -449,7 +525,7 @@ class Player extends Entity
 			if (midi == null)
 			{
 				//tempo = 40;
-				tempo = 25;
+				tempo = 30;
 				note = 0;
 				//midi = null;
 			if (game.GameFlags.get(Main.Drumstep))
@@ -509,7 +585,13 @@ class Player extends Entity
 			}
 			else
 			{
-				y -= 2.5;
+				//y -= 2.5;
+				if (elavation > -0.1 && elavation<0.1)
+				{
+					feetposition += 2.5;
+					elavation = 2.5;
+					y -= 2.5;
+				}
 			}
 		}
 		}
@@ -522,7 +604,11 @@ class Player extends Entity
 		{
 			ChangeAnimation(charname+"F");
 		}*/
-		
+		if (!controller[0] && Vspeed < 0)
+		{
+			//Vspeed += fallaccel2+fallaccel2;
+			Vspeed += fallaccel3;
+		}
 		
 		if (ground != null)
 		{
@@ -678,19 +764,19 @@ class Player extends Entity
 		inactive = false;
 		if (game.myplayer != this)
 		{
-		if (game.frame-frame > 60)
+		if (game.frame-frame > 300)
 		{
 			//hide inactive players
 			inactive = true;
 			nameplate.visible = false;
 			alpha = 0;
 			
-			//blendMode = flash.display.BlendMode.SCREEN;
+			blendMode = flash.display.BlendMode.SCREEN;
 		}
 		else if (blendMode == flash.display.BlendMode.SCREEN)
 		{
 			alpha = 1;
-			//blendMode = flash.display.BlendMode.NORMAL;
+			blendMode = flash.display.BlendMode.NORMAL;
 		}
 		
 		}

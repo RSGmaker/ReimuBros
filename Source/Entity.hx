@@ -130,6 +130,12 @@ class Entity extends Sprite
 		D.data = data;
 		game.SendEvent("CustomEvent", D);
 	}
+	public function Bonk(player:Player)
+	{
+		//bonked = 16;
+		bonked = 12;
+		bonkedby = player;
+	}
 	public function GetHitbox():Rectangle
 	{
 		if (hitbox == null)

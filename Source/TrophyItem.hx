@@ -40,7 +40,7 @@ class TrophyItem extends CarryItem
 		super.update();
 		if (!started)
 		{
-			if (UID < 0.2 && game.level>15)
+			if (UID < 0.22 && game.level>15 && game.RoundType.getName() == "Normal")
 			{
 				ChangeAnimation("truck");
 				twuck = true;

@@ -21,7 +21,7 @@ class Mystia extends Enemy
 		super("Mystia");
 		accel = 0.4;
 		deccel = 0.05;
-		mxspd = 3;
+		mxspd = 3.5;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -115,7 +115,8 @@ class Mystia extends Enemy
 				{
 					///rng.seed += rng.twist(rng.seed, 1, 800)[0];
 					//Vspeed = -4 - ((rng.seed % 800)*0.01);
-					Vspeed = -7;
+					//Vspeed = -7;
+					Vspeed = -6;
 				}
 			}
 			

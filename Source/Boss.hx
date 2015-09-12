@@ -39,10 +39,10 @@ class Boss extends Enemy
 	//public var unlock:String;
 	
 	
-	public function new(bosstype:String="bosscirno") 
+	public function new(bosstype:String="bosscirno",char:String="cirno") 
 	{
 		super(bosstype);
-		rename = "cirno";
+		rename = char;
 		subtype = "boss";
 		accel = 0.5;
 		deccel = 0.05;
@@ -104,10 +104,12 @@ class Boss extends Enemy
 			var D:Dynamic = { };
 			var data:Dynamic = { };
 			D.UID = UID;
+			
 			D.data = data;
 			data.firing = !firingdanmaku;
 			data.seed = rng.seed;
 			data.phase = phase;
+			data.type = "phase";
 			game.SendEvent("CustomEvent", D);
 			game.populatespawnlist();
 		}
@@ -115,11 +117,14 @@ class Boss extends Enemy
 	override public function CustomEvent(data:Dynamic) 
 	{
 		super.CustomEvent(data);
-		firingdanmaku = data.firing;
-		rng.seed = data.seed;
-		phase = data.phase;
-		frame = 0;
-		visuallyEnraged = false;
+		if (data.type == "phase")
+		{
+			firingdanmaku = data.firing;
+			rng.seed = data.seed;
+			phase = data.phase;
+			frame = 0;
+			visuallyEnraged = false;
+		}
 	}
 	public function defeated(P:Player)
 	{
@@ -378,6 +383,7 @@ class Boss extends Enemy
 					var data:Dynamic = { };
 					D.UID = UID;
 					D.data = data;
+					data.type = "phase";
 					data.firing = !firingdanmaku;
 					data.seed = rng.seed;
 					data.phase = phase;

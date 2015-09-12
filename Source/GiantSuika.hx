@@ -11,9 +11,11 @@ class GiantSuika extends Entity
 	public var active:Bool;
 	public var step:Int;
 	public var timetostep:Int;
+	public var unlock:String;
 	public function new()
 	{
 		super("giantsuika");
+		unlock = "suika";
 	}
 	public override function update():Void 
 	{
@@ -106,10 +108,12 @@ class GiantSuika extends Entity
 		if (game.RoundType == GameView.TypeofRound.Cirno)
 		{
 			ChangeAnimation("giantcirno");
+			unlock = "cirno";
 		}
 		else
 		{
 			ChangeAnimation("giantsuika");
+			unlock = "suika";
 		}
 		x = -width;
 	}

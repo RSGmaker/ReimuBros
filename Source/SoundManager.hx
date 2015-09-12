@@ -65,13 +65,13 @@ class SoundManager
 	{
 		if (jingle == null)
 		{
-		if (music != null)
+		if (music != null && !muted)
 		{
-			music.soundTransform = new SoundTransform(0, 0);
+			music.soundTransform = new SoundTransform(musicvol/3, 0);
 		}
-		if (intro != null)
+		if (intro != null && !muted)
 		{
-			intro.soundTransform = new SoundTransform(0, 0);
+			intro.soundTransform = new SoundTransform(musicvol/3, 0);
 		}
 		var S = _Play(path, 0, 0, musicvol);
 		jingle = S;
@@ -140,7 +140,8 @@ class SoundManager
 		var vol = musicvol;
 		if (jingle != null)
 		{
-			vol = 0;
+			//vol = 0;
+			vol = vol/3;
 		}
 		music = _Play(path,0,999999999,vol);
 		_song = path;
