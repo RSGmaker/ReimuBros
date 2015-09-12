@@ -17,9 +17,9 @@ class Seija extends Enemy
 	public function new() 
 	{
 		super("seija");
-		accel = 0.3;
-		deccel = 0.05;
-		mxspd = 3;
+		accel = 0.6;
+		deccel = 0.1;
+		mxspd = 6;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -40,8 +40,8 @@ class Seija extends Enemy
 		{
 			rng = new MersenneTwister();
 			var seed:UInt = Math.floor(UID * 100000);
-			timer = (120) + rng.twist(seed, 1, 60 * 8)[0];
-			countdown = 180;
+			timer = (60) + rng.twist(seed, 1, 30 * 8)[0];
+			countdown = 90;
 		}
 		
 		if (!killed)
@@ -73,9 +73,9 @@ class Seija extends Enemy
 				{
 					game.SendEvent("FLIP!", null);
 				}
-				timer = (120) + rng.twist(rng.seed, 1, 60 * 8)[0];
+				timer = (60) + rng.twist(rng.seed, 1, 30 * 8)[0];
 				flipping = false;
-				countdown = 180;
+				countdown = 90;
 			}
 			Hspeed = 0;
 		}
@@ -175,7 +175,7 @@ class Seija extends Enemy
 	}
 	else
 	{
-		y += 7.5;
+		y += 15;
 	if (y > 600)
 	{
 	alive = false;
@@ -192,11 +192,11 @@ class Seija extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 60 * 4;
+				flipped = 30 * 4;
 			}
 			else
 			{
-				flipped = 60 * 7;
+				flipped = 30 * 7;
 			}
 		}
 		else

@@ -3,7 +3,6 @@ import openfl.display.Sprite;
 import openfl.geom.Matrix;
 import openfl.geom.Rectangle;
 import openfl.geom.Point;
-import Animation;
 /**
  * ...
  * @author RSGmaker
@@ -11,7 +10,6 @@ import Animation;
 //class Entity extends Animation
 class Entity extends Sprite
 {
-	//slowed
 	//public var sprite:Animation;
 	public var Hspeed:Float;
 	public var Vspeed:Float;
@@ -102,7 +100,7 @@ class Entity extends Sprite
 			image = new Animation(game.AL.GetAnimation(ani));
 			addChild(image);
 		}
-		fallaccel = 0.25;
+		fallaccel = 0.7;
 		Hspeed = 0;
 		Vspeed = 0;
 		type = "Unknown";
@@ -225,7 +223,7 @@ class Entity extends Sprite
 		{
 			dir = -1;
 		}
-		if (Vspeed < 6)
+		if (Vspeed < 12)
 		{
 			{
 				Vspeed += fallaccel;
@@ -252,7 +250,7 @@ class Entity extends Sprite
 			var D:Dynamic = ground;
 			if (type != "Player" && ground.type == "Block" && D.poison)
 			{
-				Hspeed *= 0.90;
+				Hspeed *= 0.80;
 			}
 		}
 		headbonk = null;

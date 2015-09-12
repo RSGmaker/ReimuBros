@@ -15,7 +15,7 @@ class MusicSelector extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 20;
+		player.maxcooldown = 10;
 		player.warncooldown = true;
 		song = 1;
 		player.flags.set(Player.MusicSelector, true);

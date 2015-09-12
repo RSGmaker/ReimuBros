@@ -14,7 +14,11 @@ class DestructiveJump extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
+<<<<<<< HEAD
 		player.maxcooldown = 2400;
+=======
+		player.maxcooldown = 800;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -33,7 +37,7 @@ class DestructiveJump extends PlayerAbility
 		{
 			player.cooldown = player.maxcooldown;
 			player.superpower = true;
-			player.Vspeed = -15;
+			player.Vspeed = -30;
 		}
 	}
 	override public function onheadbonk() 

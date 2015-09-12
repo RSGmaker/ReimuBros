@@ -6,7 +6,6 @@ package;
  */
 class TwuckHunter extends Enemy
 {
-	//slowed
 	public var accel:Float;
 	
 	public var mxspd:Float;
@@ -31,9 +30,15 @@ class TwuckHunter extends Enemy
 			mokou = true;
 			rename = "Emokou";
 		}
+<<<<<<< HEAD
 		accel = 0.120;
 		deccel = 0.04;
 		mxspd = 2;
+=======
+		accel = 0.25;
+		deccel = 0.1;
+		mxspd = 4.5;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -47,8 +52,8 @@ class TwuckHunter extends Enemy
 	}
 	public override function increaserank()
 	{
-			accel += 0.05;
-			mxspd += 0.25;
+			accel += 0.1;
+			mxspd += 0.5;
 			pointvalue += 500;
 	}
 	
@@ -69,7 +74,7 @@ class TwuckHunter extends Enemy
 			}
 			else
 			{
-				mxspd += 0.25;
+				mxspd += 0.5;
 			}
 		}
 		if (!killed)
@@ -175,14 +180,14 @@ class TwuckHunter extends Enemy
 				{
 					if (game.CollisionDetectPoint(x + (Math.floor(width) >> 1) + 96, y - (192 - 96)) != null)
 					{
-						Vspeed = -9;
+						Vspeed = -15;
 					}
 				}
 				if (Hspeed < 0)
 				{
 					if (game.CollisionDetectPoint(x + (Math.floor(width) >> 1) - 96, y - (192 - 96)) != null)
 					{
-						Vspeed = -9;
+						Vspeed = -15;
 					}
 				}
 			}
@@ -191,7 +196,7 @@ class TwuckHunter extends Enemy
 				//intercept jumping players
 				if (Math.abs(x - target.x) < 20 && target.y > y-110)
 				{
-					Vspeed = -9;
+					Vspeed = -15;
 				}
 			}
 		}
@@ -223,7 +228,7 @@ class TwuckHunter extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -5;
+				D.Vspeed = -10;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -232,7 +237,7 @@ class TwuckHunter extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -2;
+					Vspeed = -4;
 				}
 			}
 			
@@ -250,7 +255,7 @@ class TwuckHunter extends Enemy
 	}
 	else
 	{
-		y += 7.5;
+		y += 15;
 	if (y > 600)
 	{
 	alive = false;
@@ -269,15 +274,15 @@ class TwuckHunter extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 60 * 4;
+				flipped = 30 * 4;
 			}
 			else
 			{
-				flipped = 60 * 7;
+				flipped = 30 * 7;
 			}
 			if (mokou)
 			{
-				flipped -= 90;
+				flipped -= 45;
 			}
 		}
 		else

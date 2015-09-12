@@ -14,7 +14,11 @@ class IceBall extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
+<<<<<<< HEAD
 		player.maxcooldown = 1140;
+=======
+		player.maxcooldown = 380;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -34,18 +38,18 @@ class IceBall extends PlayerAbility
 			D.type = "icecube";
 			D.scale = 0.6;
 			D.dir = player.Ldir;
-			D.Vspeed = 1;
+			D.Vspeed = 2;
 			D.HP = 4;
 			if (player.Ldir >= 0)
 			{
-				D.Hspeed = 4.5;
+				D.Hspeed = 9;
 			}
 			else
 			{
-				D.Hspeed = -4.5;
+				D.Hspeed = -9;
 			}
 			D.gravX = 0;
-			D.gravY = 0.3;
+			D.gravY = 0.6;
 			D.wrap = true;
 			D.rolls = true;
 			//D.bounces = true;

@@ -6,7 +6,6 @@ package;
  */
 class Table extends Entity
 {
-	//slowed
 	public var started:Bool;
 	public var startx:Float;
 	public var starty:Float;
@@ -22,23 +21,9 @@ class Table extends Entity
 		type = "Table";
 		image.image_speed = 0;
 		tossedBy = null;
-		respawn = 480;
+		respawn = 240;
 		interactable = true;
 		interacttext = "Throw";
-	}
-	override public function CustomEvent(data:Dynamic) 
-	{
-		super.CustomEvent(data);
-		var E:Dynamic = game.EntityFromUID(data.UID);
-		if (data.TUID != null)
-		{
-			E.tossedBy = game.EntityFromUID(data.TUID);
-		}
-		E.image.image_speed = data.image_speed;
-		E.Vspeed = -3.5;
-		E.gravY = 0.2;
-		E.dangerous = data.dangerous;
-		E.Hspeed = data.Hspeed;
 	}
 	public override function interact(P:Player)
 	{
@@ -50,16 +35,15 @@ class Table extends Entity
 			D.TUID = P.UID;
 			if (P.Ldir < 0)
 			{
-				D.Hspeed = -5;
-				D.image_speed = 0.5;
+				D.Hspeed = -10;
+				D.image_speed = 1;
 			}
 			else
 			{
-				D.Hspeed = 5;
-				D.image_speed = -0.5;
+				D.Hspeed = 10;
+				D.image_speed = -1;
 			}
-			//game.SendEvent("Tableflip", D);
-			SendCustomEvent(D);
+			game.SendEvent("Tableflip", D);
 		}
 	}
 	public override function update()
@@ -93,16 +77,15 @@ class Table extends Entity
 				D.TUID = null;
 				if (enemy.Hspeed < 0)
 				{
-					D.Hspeed = -5;
-					D.image_speed = 0.5;
+					D.Hspeed = -10;
+					D.image_speed = 1;
 				}
 				else
 				{
-					D.Hspeed = 5;
-					D.image_speed = -0.5;
+					D.Hspeed = 10;
+					D.image_speed = -1;
 				}
-				//game.SendEvent("Tableflip", D);
-				SendCustomEvent(D);
+				game.SendEvent("Tableflip", D);
 			}
 		}
 		else
@@ -130,15 +113,15 @@ class Table extends Entity
 			tossedBy = null;
 			Hspeed = 0;
 			Vspeed = 0;
-			image.image_index = -0.05;
-			image.image_speed = 0.05;
+			image.image_index = -0.1;
+			image.image_speed = 0.1;
 			animate();
 			image.image_speed = 0;
 			gravX = 0;
 			gravY = 0;
 			x = startx;
 			y = starty;
-			respawn = 480;
+			respawn = 240;
 		}
 		}
 		else

@@ -20,8 +20,12 @@ class SuwakoHoop extends PlayerAbility
 		player.warncooldown = true;
 		
 		//player.maxcooldown = 460;
+<<<<<<< HEAD
 		//player.maxcooldown = 820;
 		player.maxcooldown = 1230;
+=======
+		player.maxcooldown = 410;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 	}
 	override public function onframe() 
 	{
@@ -43,8 +47,8 @@ class SuwakoHoop extends PlayerAbility
 			
 			//D.HP = 22;
 			D.HP = 18;
-			D.Vspeed = -3;
-			D.Hspeed = 10;
+			D.Vspeed = -6;
+			D.Hspeed = 20;
 			if (player.Ldir >= 0)
 			{
 				//D.Hspeed = 10.5;

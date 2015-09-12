@@ -7,7 +7,6 @@ package;
  */
 class Mystia extends Enemy
 {
-	//slowed
 	public var accel:Float;
 	
 	public var mxspd:Float;
@@ -19,17 +18,23 @@ class Mystia extends Enemy
 	public function new() 
 	{
 		super("Mystia");
+<<<<<<< HEAD
 		accel = 0.4;
 		deccel = 0.05;
 		mxspd = 3.5;
+=======
+		accel = 0.8;
+		deccel = 0.1;
+		mxspd = 6;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
 		frames = 0;
-		image.image_speed = 0.2;
+		image.image_speed = 0.4;
 		rng = null;
 		//mntime = 1;
-		mntime = 80;
+		mntime = 40;
 		pointvalue = 200;
 		rename = "EMystia";
 		subtype = "mystia";
@@ -37,9 +42,9 @@ class Mystia extends Enemy
 	
 	public override function increaserank()
 	{
-			accel += 0.75;
-			mxspd += 0.5;
-			if (mntime < 160)
+			accel += 0.15;
+			mxspd += 1;
+			if (mntime < 80)
 			{
 				mntime += 5;
 			}
@@ -104,16 +109,15 @@ class Mystia extends Enemy
 			{
 				if (frames == 0)
 				{
-					///rng.seed += rng.twist(rng.seed, 1, 30)[0];
+					rng.seed += rng.twist(rng.seed, 1, 30)[0];
 					//frames = mntime + (rng.seed % 30);
 					frames = mntime;
 				}
 				Hspeed = 0;
 				frames += 1;
-				//if (frames > 90)
-				if (frames > 180)
+				if (frames > 90)
 				{
-					///rng.seed += rng.twist(rng.seed, 1, 800)[0];
+					rng.seed += rng.twist(rng.seed, 1, 800)[0];
 					//Vspeed = -4 - ((rng.seed % 800)*0.01);
 					//Vspeed = -7;
 					Vspeed = -6;
@@ -135,7 +139,7 @@ class Mystia extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -5;
+				D.Vspeed = -10;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -144,7 +148,7 @@ class Mystia extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -2;
+					Vspeed = -4;
 				}
 			}
 			
@@ -158,7 +162,7 @@ class Mystia extends Enemy
 	}
 	else
 	{
-		y += 7.5;
+		y += 15;
 	if (y > 600)
 	{
 	alive = false;
@@ -171,11 +175,11 @@ class Mystia extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 60 * 5;
+				flipped = 30 * 5;
 			}
 			else
 			{
-				flipped = 60 * 7;
+				flipped = 30 * 7;
 			}
 		}
 		else

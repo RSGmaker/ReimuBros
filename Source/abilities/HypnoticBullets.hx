@@ -14,7 +14,11 @@ class HypnoticBullets extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
+<<<<<<< HEAD
 		player.maxcooldown = 1050;
+=======
+		player.maxcooldown = 350;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -39,11 +43,11 @@ class HypnoticBullets extends PlayerAbility
 			D.HP = 1;
 			if (player.Ldir >= 0)
 			{
-				D.Hspeed = 5.25;
+				D.Hspeed = 10.5;
 			}
 			else
 			{
-				D.Hspeed = -5.25;
+				D.Hspeed = -10.5;
 			}
 			D.gravX = 0;
 			D.gravY = 0;

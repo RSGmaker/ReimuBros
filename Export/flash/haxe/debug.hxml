@@ -16,6 +16,6 @@
 -swf-lib Export/flash/obj/assets.swf
 -swf-version 11.2
 -swf Export/flash/bin/ReimuBros.swf
--swf-header 800:600:60:FFFFFF
+-swf-header 800:600:30:FFFFFF
 -cp Export/flash/haxe
 -debug

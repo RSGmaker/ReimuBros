@@ -2,7 +2,6 @@ package;
 import abilities.AbsorbDamage;
 import openfl.geom.Rectangle;
 import openfl.display.BitmapData;
-import Animation;
 
 /**
  * ...
@@ -10,8 +9,6 @@ import Animation;
  */
 class Block extends Entity
 {
-	//slowed
-	//slowed bonked is 16(8 original)
 	//public var Visual:Entity;
 	//public var Flames:Entity;
 	public var Visual:Animation;
@@ -43,7 +40,7 @@ class Block extends Entity
 		addChild(Visual);
 		Flames = new Animation(game.AL.GetAnimation("flames"));
 		Flames.visible = false;
-		Flames.image_speed = 0.25;
+		Flames.image_speed = 0.5;
 		addChild(Flames);
 		type = "Block";
 		started = false;
@@ -66,7 +63,7 @@ class Block extends Entity
 			poisonvisual.reset();
 			poisonvisual.alpha = 0;
 			poison = true;
-			respawn = 1600;
+			respawn = 800;
 		}
 	}
 	public function Burn()
@@ -79,7 +76,7 @@ class Block extends Entity
 			icy = false;
 			Visual.ChangeAnimation(oanimation);
 		}
-		respawn = 1600;
+		respawn = 800;
 		}
 	}
 	//freeze even if charred(used at start of cirno event)
@@ -210,11 +207,11 @@ class Block extends Entity
 		}
 		if (poison && poisonvisual.alpha<1)
 		{
-			poisonvisual.alpha += 0.05;
+			poisonvisual.alpha += 0.1;
 		}
 		else if (!poison && poisonvisual.alpha > 0)
 		{
-			poisonvisual.alpha -= 0.025;
+			poisonvisual.alpha -= 0.05;
 		}
 		if (poisonvisual.alpha > 0)
 		{
@@ -237,7 +234,7 @@ class Block extends Entity
 		}
 		if (bonked > 0)
 		{
-			Visual.y -= 1.25;
+			Visual.y -= 2.5;
 			bonked -= 1;
 			Defrost();
 		}
@@ -246,7 +243,7 @@ class Block extends Entity
 			
 			if (Visual.y < 0)
 			{
-				Visual.y += 1.25;
+				Visual.y += 2.5;
 				bonked -= 1;
 			}
 			else

@@ -16,7 +16,7 @@ class CanHide extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		charge = 300;
+		charge = 150;
 		player.flags.set(Player.CanHide, true);
 	}
 	override public function onframe() 
@@ -29,21 +29,21 @@ class CanHide extends PlayerAbility
 			{
 				if (player.Hspeed != 0 || player.Vspeed != 0)
 				{
-					charge = 50;
+					charge = 25;
 				}
 				player.alpha = 1;
 			}
 		}
 		else
 		{
-			if (player.invincibility < 10)
+			if (player.invincibility < 5)
 			{
-				player.invincibility = 10;
+				player.invincibility = 5;
 			}
 			player.alpha = 0.5;
 			if (player.Hspeed != 0 || player.Vspeed != 0)
 			{
-				charge = 50;
+				charge = 25;
 			}
 		}
 	}

@@ -14,7 +14,11 @@ class BoomerangScythe extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
+<<<<<<< HEAD
 		player.maxcooldown = 1290;
+=======
+		player.maxcooldown = 430;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -36,15 +40,15 @@ class BoomerangScythe extends PlayerAbility
 			D.dir = player.Ldir;
 			D.Vspeed = 0;
 			D.HP = 999999;
-			D.gravX = -0.25;
-			D.image_speed = 1;
+			D.gravX = -0.5;
+			D.image_speed = 2;
 			if (player.Ldir >= 0)
 			{
-				D.Hspeed = 9;
+				D.Hspeed = 18;
 			}
 			else
 			{
-				D.Hspeed = -9;
+				D.Hspeed = -18;
 				D.gravX = -D.gravX;
 			}
 			

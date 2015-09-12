@@ -15,7 +15,6 @@ import openfl.display.Graphics;
  */
 class PoisonCloud extends Sprite
 {
-	//slowed
 	public var msk:Shape;
 	public var msk2:Shape;
 	public var texture1:Bitmap;
@@ -81,8 +80,8 @@ class PoisonCloud extends Sprite
 		texture2.y = -32;
 		
 		
-		texture1movement = Point.polar(0.25, Math.random() * 6.28);
-		texture2movement = Point.polar(0.25, Math.random() * 6.28);
+		texture1movement = Point.polar(0.5, Math.random() * 6.28);
+		texture2movement = Point.polar(0.5, Math.random() * 6.28);
 		
 	}
 	public function loop(texture:DisplayObject)

@@ -6,16 +6,16 @@ package;
  */
 class Nazrin extends Enemy
 {
-	//slowed
+
 	public var accel:Float;
 	
 	public var mxspd:Float;
 	public function new() 
 	{
 		super("nazrin");
-		accel = 0.2;
-		deccel = 0.05;
-		mxspd = 2.5;
+		accel = 0.4;
+		deccel = 0.1;
+		mxspd = 5;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -25,8 +25,8 @@ class Nazrin extends Enemy
 	}
 	public override function increaserank()
 	{
-			accel += 0.05;
-			mxspd += 0.25;
+			accel += 0.1;
+			mxspd += 0.5;
 			pointvalue += 300;
 	}
 	override public function update():Void 
@@ -79,14 +79,14 @@ class Nazrin extends Enemy
 				{
 					if (game.CollisionDetectPoint(x + (Math.floor(width) >> 1) + 96, y - (192 - 96)) != null)
 					{
-						Vspeed = -9;
+						Vspeed = -15;
 					}
 				}
 				if (Hspeed < 0)
 				{
 					if (game.CollisionDetectPoint(x + (Math.floor(width) >> 1) - 96, y - (192 - 96)) != null)
 					{
-						Vspeed = -9;
+						Vspeed = -15;
 					}
 				}
 			}
@@ -105,7 +105,7 @@ class Nazrin extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -5;
+				D.Vspeed = -10;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -114,7 +114,7 @@ class Nazrin extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -2;
+					Vspeed = -4;
 				}
 			}
 			
@@ -129,7 +129,7 @@ class Nazrin extends Enemy
 	}
 	else
 	{
-		y += 7.5;
+		y += 15;
 	if (y > 600)
 	{
 	alive = false;
@@ -143,11 +143,11 @@ class Nazrin extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 60 * 4;
+				flipped = 30 * 4;
 			}
 			else
 			{
-				flipped = 60 * 7;
+				flipped = 30 * 7;
 			}
 		}
 		else

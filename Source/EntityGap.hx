@@ -6,7 +6,7 @@ package;
  */
 class EntityGap extends Entity
 {
-	//slowed
+
 	public var frames:Int;
 	public var SY:Float;
 	public function new() 
@@ -17,7 +17,6 @@ class EntityGap extends Entity
 		frames = 0;
 		scaleY = 0;
 		SY = 0.01666666666666666666666666666667;
-		SY = SY / 2;
 		if (Player.myplayer.flags.get(Player.GapManipulator))
 		{
 			interactable = true;
@@ -41,11 +40,11 @@ class EntityGap extends Entity
 		{
 			Ldir = -1;
 		}
-		if (frames < 120)
+		if (frames < 60)
 		{
 			scaleY += SY;
 		}
-		if (frames == 300)
+		if (frames == 150)
 		{
 			SoundManager.Play("fireballspawn");
 			readyinteract = false;
@@ -89,7 +88,7 @@ class EntityGap extends Entity
 			}
 			}
 		}
-		if (frames > 360)
+		if (frames > 180)
 		{
 			scaleY -= (SY + SY);
 			if (scaleY <= 0)

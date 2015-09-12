@@ -17,8 +17,12 @@ class EnemyEater extends PlayerAbility
 	{
 		super.init();
 		//player.maxcooldown = 390;
+<<<<<<< HEAD
 		//maxhunger = 780;
 		maxhunger = 1170;
+=======
+		maxhunger = 390;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		hunger = maxhunger;
 	}
 	override public function onframe() 
@@ -33,10 +37,10 @@ class EnemyEater extends PlayerAbility
 			player.cooldown = maxhunger - hunger;
 			if (player.mxspd <= Player.base_mxspd)
 			{
-				player.deccel = Player.base_deccel + 0.025;
-				player.accel = Player.base_accel + 0.05;
-				player.mxspd = Player.base_mxspd + 0.5;
-				player.fallaccel = Player.base_fallaccel + 0.05;
+				player.deccel = Player.base_deccel + 0.05;
+				player.accel = Player.base_accel + 0.1;
+				player.mxspd = Player.base_mxspd + 1;
+				player.fallaccel = Player.base_fallaccel + 0.1;
 			}
 		}
 		else
@@ -47,9 +51,9 @@ class EnemyEater extends PlayerAbility
 			player.cooldowntext = "Hungry...";
 			if (player.mxspd >= Player.base_mxspd)
 			{
-				player.deccel = Player.base_deccel - 0.025;
-				player.accel = Player.base_accel - 0.05;
-				player.mxspd = Player.base_mxspd - 0.5;
+				player.deccel = Player.base_deccel - 0.05;
+				player.accel = Player.base_accel - 0.1;
+				player.mxspd = Player.base_mxspd - 1;
 				player.fallaccel = Player.base_fallaccel;
 			}
 		}

@@ -14,7 +14,11 @@ class StarBulletG extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
+<<<<<<< HEAD
 		player.maxcooldown = 1200;
+=======
+		player.maxcooldown = 400;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -37,11 +41,11 @@ class StarBulletG extends PlayerAbility
 			D.Vspeed = player.Vspeed;
 			if (player.Ldir >= 0)
 			{
-				D.Hspeed = 5;
+				D.Hspeed = 10;
 			}
 			else
 			{
-				D.Hspeed = -5;
+				D.Hspeed = -10;
 			}
 			D.gravX = 0;
 			D.gravY = 0;

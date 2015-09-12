@@ -35,7 +35,6 @@ import openfl.media.SoundTransform;
  */
 class CharacterSelectView extends Sprite
 {
-	//slowed
 	/*
 	public var NextButton:Sprite;
 	public var PrevButton:Sprite;
@@ -125,8 +124,8 @@ class CharacterSelectView extends Sprite
 		following = false;
 		Vspeed = 0;
 		Hspeed = 0;
-		timer = 120;
-		gamespeed = 1;
+		timer = 60;
+		gamespeed = 2;
 		points = 0;
 		minigamestarted = false;
 		highscore = 0;
@@ -233,7 +232,7 @@ class CharacterSelectView extends Sprite
 					}
 					entities = new Array<MiniEntity>();
 					points = 0;
-					timer = 120;
+					timer = 60;
 					
 					if (following)
 					{
@@ -587,8 +586,7 @@ class CharacterSelectView extends Sprite
 						}
 					}
 				}
-				//timetospawn = Math.floor(60 + (300 * Math.random()));
-				timetospawn = Math.floor(60 + (210 * Math.random()));
+				timetospawn = Math.floor(30 + (150 * Math.random()));
 			}
 		}
 		
@@ -667,7 +665,7 @@ class CharacterSelectView extends Sprite
 		timer--;
 		if (timer < 0 && minigamestarted)
 		{
-			var T:Float = 120;
+			var T:Float = 60;
 			
 			var P:Float = 3;
 			while (P < points)
@@ -761,7 +759,7 @@ class CharacterSelectView extends Sprite
 			i++;
 			
 		}
-		gamespeed = 1 + (points * 0.01);
+		gamespeed = 2 + (points * 0.02);
 		var tmp = new TextFormat();
 		tmp.font = "Arial";
 		tmp.size = 22;
@@ -776,16 +774,16 @@ class CharacterSelectView extends Sprite
 			var G = 500 - charpreview.height;
 			if (Vspeed == 0 && char.y+5 >= G && MY < 250)
 			{
-				Vspeed = -15;
+				Vspeed = -20;
 			}
-			Vspeed += 0.4;
+			Vspeed += 0.8;
 			char.y += Vspeed;
 			if (char.y >= G)
 			{
 				Vspeed = 0;
 				char.y = G;
 			}
-			var spd = 4;
+			var spd = 8;
 			
 			if (PX < MX)
 			{
@@ -796,7 +794,7 @@ class CharacterSelectView extends Sprite
 				}
 				else
 				{
-					Hspeed += 0.35;
+					Hspeed += 0.7;
 					if (Hspeed > spd)
 					{
 						Hspeed = spd;
@@ -812,7 +810,7 @@ class CharacterSelectView extends Sprite
 				}
 				else
 				{
-					Hspeed -= 0.35;
+					Hspeed -= 0.7;
 					if (Hspeed < -spd)
 					{
 						Hspeed = -spd;
@@ -827,8 +825,7 @@ class CharacterSelectView extends Sprite
 				if (travel > 10 && Vspeed==0)
 				{
 					travel = 0;
-					//Vspeed = -1.25;
-					Vspeed = -2;
+					Vspeed = -2.5;
 					if (minigamestarted)
 					{
 						var S = "step" + Math.ceil(Math.random()*3);

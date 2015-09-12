@@ -6,7 +6,7 @@ package;
  */
 class Imposter extends Enemy
 {
-	//slowed
+
 	public var accel:Float;
 	
 	public var mxspd:Float;
@@ -30,9 +30,9 @@ class Imposter extends Enemy
 	public function new() 
 	{
 		super("Imposter");
-		accel = 0.25;
-		deccel = 0.05;
-		mxspd = 2.5;
+		accel = 0.5;
+		deccel = 0.1;
+		mxspd = 5;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -42,9 +42,9 @@ class Imposter extends Enemy
 		frames = 0;
 		alternate = false;
 		pointvalue = 500;
-		mxcountdown = 70;
+		mxcountdown = 35;
 		countdown = mxcountdown;
-		mxtimer = 600;
+		mxtimer = 300;
 	}
 	
 	public override function increaserank()
@@ -53,16 +53,16 @@ class Imposter extends Enemy
 			mxspd += 0.5;
 			pointvalue += 300;
 			mxcountdown -= 5;
-			mxtimer -= 120;
-			if (mxcountdown < 30)
+			mxtimer -= 60;
+			if (mxcountdown < 15)
 			{
-				mxcountdown = 30;
+				mxcountdown = 15;
 			}
-			if (mxtimer < 300)
+			if (mxtimer < 150)
 			{
-				mxtimer = 300;
+				mxtimer = 150;
 			}
-			timer -= 60;
+			timer -= 30;
 			if (timer < 0)
 			{
 				timer = 0;
@@ -75,7 +75,7 @@ class Imposter extends Enemy
 			rng = new MersenneTwister();
 			var seed:UInt = Math.floor(UID * 100000);
 			rng.seed = seed;
-			timer = 120 + mxcountdown + (rng.twist(rng.seed, 1, mxtimer)[0]);
+			timer = 60 + mxcountdown + (rng.twist(rng.seed, 1, mxtimer)[0]);
 			{
 				var tmp = game.GetImposterList();
 				unlock = rng.twist(rng.seed, 1, tmp.length)[0];
@@ -136,7 +136,7 @@ class Imposter extends Enemy
 				else
 				{
 					countdown = mxcountdown;
-					timer = 120 + mxcountdown + (rng.twist(rng.seed, 1, mxtimer)[0]);
+					timer = 60 + mxcountdown + (rng.twist(rng.seed, 1, mxtimer)[0]);
 					if (game.Hoster)
 					{
 						var P = nearestplayer();
@@ -148,8 +148,8 @@ class Imposter extends Enemy
 						D.gravY = 0;
 						D.image = "bullet";
 						var degradian = Math.atan2((P.y + (30))-y, P.x-x);
-						D.Hspeed = Math.cos(degradian) * 3;
-						D.Vspeed = Math.sin(degradian) * 3;
+						D.Hspeed = Math.cos(degradian) * 6;
+						D.Vspeed = Math.sin(degradian) * 6;
 						game.SendEvent("ShootBullet", D);
 					}
 				}
@@ -247,7 +247,7 @@ class Imposter extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -5;
+				D.Vspeed = -10;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -256,7 +256,7 @@ class Imposter extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -2;
+					Vspeed = -4;
 					HP = 0;
 				}
 			}
@@ -271,7 +271,7 @@ class Imposter extends Enemy
 	}
 	else
 	{
-		y += 7.5;
+		y += 15;
 	if (y > 600)
 	{
 	alive = false;
@@ -290,11 +290,11 @@ class Imposter extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 60 * 4;
+				flipped = 30 * 4;
 			}
 			else
 			{
-				flipped = 60 * 7;
+				flipped = 30 * 7;
 			}
 		}
 		else

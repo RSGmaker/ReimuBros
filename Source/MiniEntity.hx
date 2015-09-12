@@ -8,7 +8,7 @@ import openfl.display.Sprite;
  */
 class MiniEntity extends Sprite
 {
-	//slowed
+
 	public var Hspeed:Float;
 	public var Vspeed:Float;
 	public var dangerous:Bool;
@@ -20,7 +20,6 @@ class MiniEntity extends Sprite
 	public var bounced:Bool;
 	public var behavior:Int;
 	public var frame:Int;
-	public var bounceheight:Int;
 	public function new(x:Float,y:Float,bitmap:BitmapData,speed:Float,dangerous:Bool,pointvalue:Int) 
 	{
 		super();
@@ -74,11 +73,11 @@ class MiniEntity extends Sprite
 				if (Math.abs(x - 400) < 10)
 				{
 					frame++;
-					if (frame > 30)
+					if (frame > 15)
 					{
 						x += (width * scaleX);
 						scaleX *= -1;
-						Hspeed *= -1.5;
+						Hspeed *= -3;
 						behavior = 0;
 					}
 					else
@@ -99,17 +98,17 @@ class MiniEntity extends Sprite
 					scaleX = 1.35;
 					scaleY = 1.35;
 				}
-				if (frame < 90)
+				if (frame < 45)
 				{
-					y-=1;
+					y-=2;
 				}
-				else if (frame < 180)
+				else if (frame < 90)
 				{
 					
 				}
-				else if (frame < 270)
+				else if (frame < 135)
 				{
-					y+=1;
+					y+=2;
 				}
 				else
 				{
@@ -121,25 +120,25 @@ class MiniEntity extends Sprite
 				//looks back briefly
 				if (frame == 0)
 				{
-					frame = Math.floor(600 * Math.random());
+					frame = Math.floor(300 * Math.random());
 				}
-				else if (frame < 600)
+				else if (frame < 300)
 				{
 				}
-				else if (frame < 601)
+				else if (frame < 301)
 				{
 					x -= Hspeed;
-					x += ((width * scaleX)/2);
+					x += (width * scaleX);
 					scaleX *= -1;
 				}
-				else if (frame < 630)
+				else if (frame < 315)
 				{
 					x -= Hspeed;
 				}
-				else if (frame < 631)
+				else if (frame < 316)
 				{
 					x -= Hspeed;
-					x += ((width * scaleX)/2);
+					x += (width * scaleX);
 					scaleX *= -1;
 				}
 			}
@@ -156,34 +155,15 @@ class MiniEntity extends Sprite
 			{
 				if (!bounced)
 				{
-					bounceheight -= 1;
-					y -= 0.75;
-					if (bounceheight < -1)
-					{
-						bounced = true;
-					}
-				}
-				else
-				{
-					bounceheight += 1;
-					y += 0.75;
-					if (bounceheight > -1)
-					{
-						bounced = false;
-						timetobounce = 9;
-					}
-				}
-				/*if (!bounced)
-				{
 					bounced = true;
-					y -= 2;
+					y -= 1;
 				}
 				else
 				{
-					y += 2;
+					y += 1;
 					bounced = false;
 					timetobounce = 6;
-				}*/
+				}
 				/*if (timetobounce == -1)
 				{
 					y -= 1;

@@ -15,7 +15,11 @@ class TileDanmaku extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
+<<<<<<< HEAD
 		player.maxcooldown = 300;
+=======
+		player.maxcooldown = 100;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -48,11 +52,11 @@ class TileDanmaku extends PlayerAbility
 			D.Vspeed = 0;
 			if (player.Ldir >= 0)
 			{
-				D.Hspeed = 5;
+				D.Hspeed = 10;
 			}
 			else
 			{
-				D.Hspeed = -5;
+				D.Hspeed = -10;
 			}
 			D.gravX = 0;
 			D.gravY = 0;

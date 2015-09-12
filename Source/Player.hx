@@ -43,8 +43,12 @@ class Player extends Entity
 	public var playing:Int;
 	public var note:Int = 0;
 	public var midi:Array<Int> = null;
+<<<<<<< HEAD
 	//public var tempo:Int = 40;
 	public var tempo:Int = 30;
+=======
+	public var tempo:Int = 40;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 	//a temp variable abilities can use to cancel events.
 	public var cancel:Bool;
 	private var filterArr:Array<flash.filters.BitmapFilter>;
@@ -148,9 +152,10 @@ class Player extends Entity
 	
 	public var glow:flash.filters.GlowFilter;
 	
-	/*public static inline var base_deccel = 0.9;
+	public static inline var base_deccel = 0.5+0.4;
 	public static inline var base_accel = 0.7 + base_deccel;
 	//public static inline var base_mxspd = 7+1.55;
+<<<<<<< HEAD
 	public static inline var base_mxspd = 7.65;
 	public static inline var base_fallaccel = 1.1;
 	public static inline var base_jumpspd = -19.5;*/
@@ -168,6 +173,11 @@ class Player extends Entity
 	//public static inline var base_jumpspd = -14;
 	//public static inline var base_jumpspd = -10;
 	public static inline var base_jumpspd = -11.5;
+=======
+	public static inline var base_mxspd = 7+1.55-0.9;
+	public static inline var base_fallaccel = 1.0+0.1;
+	public static inline var base_jumpspd = -19 - 0.5;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 	
 	public var inactive:Bool;
 	
@@ -498,15 +508,13 @@ class Player extends Entity
 				if (superpower)
 				{
 					//tempo = 40;
-					//tempo = Math.floor(mxspd * 3);
-					tempo = Math.floor(mxspd * 6);
+					tempo = Math.floor(mxspd * 3);
 					midi = HammerSong;
 				}
 				else if (invincibility>0)
 				{
 					//tempo = 50;
-					//tempo = Math.floor(mxspd * 3);
-					tempo = Math.floor(mxspd * 6);
+					tempo = Math.floor(mxspd * 3);
 					midi = StarSong;
 				}
 			}
@@ -524,8 +532,12 @@ class Player extends Entity
 			//if (!superpower)
 			if (midi == null)
 			{
+<<<<<<< HEAD
 				//tempo = 40;
 				tempo = 30;
+=======
+				tempo = 40;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 				note = 0;
 				//midi = null;
 			if (game.GameFlags.get(Main.Drumstep))
@@ -585,6 +597,7 @@ class Player extends Entity
 			}
 			else
 			{
+<<<<<<< HEAD
 				//y -= 2.5;
 				if (elavation > -0.1 && elavation<0.1)
 				{
@@ -592,6 +605,9 @@ class Player extends Entity
 					elavation = 2.5;
 					y -= 2.5;
 				}
+=======
+				y -= 2;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 			}
 		}
 		}
@@ -739,10 +755,10 @@ class Player extends Entity
 			}
 			if (lives > -1)
 			{
-			Vspeed += 0.2;
-			if (Vspeed > 8)
+			Vspeed += 0.5;
+			if (Vspeed > 20)
 			{
-				Vspeed = 8;
+				Vspeed = 20;
 			}
 			y += Vspeed;
 			if (y > 600 && this == game.myplayer)

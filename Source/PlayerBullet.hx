@@ -6,7 +6,6 @@ package;
  */
 class PlayerBullet extends Entity
 {
-	//slowed
 	public var gravX:Float = 0;
 	public var gravY:Float = 0;
 	public var started:Bool=false;
@@ -35,7 +34,7 @@ class PlayerBullet extends Entity
 			if (game.RoundType == GameView.TypeofRound.Table)
 			{
 				ChangeAnimation("table");
-				image.image_speed = 0.5;
+				image.image_speed = 1;
 			}
 			started = true;
 		}
@@ -101,7 +100,7 @@ class PlayerBullet extends Entity
 				else
 				{
 					Vspeed *= -0.5;
-					Vspeed -= 2;
+					Vspeed -= 3;
 					if (bouncedrain)
 					{
 						HP--;
@@ -115,7 +114,7 @@ class PlayerBullet extends Entity
 			if (block != null || y<0)
 			{
 				Vspeed *= -0.5;
-				Vspeed += 1.5;
+				Vspeed += 3;
 				if (bouncedrain)
 				{
 					HP--;

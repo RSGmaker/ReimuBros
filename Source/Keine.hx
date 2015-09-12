@@ -6,7 +6,7 @@ package;
  */
 class Keine extends Enemy
 {
-	//slowed
+
 	public var accel:Float;
 	
 	public var mxspd:Float;
@@ -14,9 +14,9 @@ class Keine extends Enemy
 	public function new() 
 	{
 		super("Keine");
-		accel = 0.15;
-		deccel = 0.05;
-		mxspd = 1.5;
+		accel = 0.3;
+		deccel = 0.1;
+		mxspd = 3;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -28,7 +28,7 @@ class Keine extends Enemy
 		if (!ex)
 		{
 			bump();
-			invincibility = 20;
+			invincibility = 10;
 			Hspeed = 0;
 			return false;
 		}
@@ -38,8 +38,8 @@ class Keine extends Enemy
 	}
 	public override function increaserank()
 	{
-		accel += 0.02;
-		mxspd += 0.25;
+		accel += 0.04;
+		mxspd += 0.5;
 		pointvalue += 150;
 	}
 	public override function update()
@@ -59,8 +59,8 @@ class Keine extends Enemy
 		
 		if (ex)
 		{
-			MXS += 2+rank;
-			acl += 0.05;
+			MXS += 4+rank;
+			acl += 0.1;
 			charname = charname + "ex";
 		}
 		if (!killed)
@@ -111,7 +111,7 @@ class Keine extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -5;
+				D.Vspeed = -10;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -120,7 +120,7 @@ class Keine extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -2;
+					Vspeed = -4;
 				}
 			}
 			
@@ -134,7 +134,7 @@ class Keine extends Enemy
 	}
 	else
 	{
-		y += 7.5;
+		y += 15;
 	if (y > 600)
 	{
 	alive = false;
@@ -146,7 +146,7 @@ class Keine extends Enemy
 	{
 		if (!ex)
 		{
-			Hspeed = mxspd+2+rank;
+			Hspeed = mxspd+4+rank;
 			if (Ldir > 0)
 			{
 				Hspeed = -Hspeed;
@@ -166,11 +166,11 @@ class Keine extends Enemy
 			{
 			if (enraged)
 			{
-				flipped = 60 * 5;
+				flipped = 30 * 5;
 			}
 			else
 			{
-				flipped = 60 * 8;
+				flipped = 30 * 8;
 			}
 			}
 		}

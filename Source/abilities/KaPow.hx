@@ -14,8 +14,12 @@ class KaPow extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
+<<<<<<< HEAD
 		//player.maxcooldown = 7200;
 		player.maxcooldown = 10800;
+=======
+		player.maxcooldown = 3600;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		player.warncooldown = true;
 	}
 	override public function onframe() 

@@ -6,7 +6,6 @@ package;
  */
 class CarryItem extends EntityItem
 {
-	//slowed
 	public var holder:Entity;
 	public var OffsetX:Float;
 	public var OffsetY:Float;
@@ -24,7 +23,7 @@ class CarryItem extends EntityItem
 		centering = 0;
 		DestroyOnRoundEnd = true;
 		Dropable = true;
-		maxdespawntime = 600;
+		maxdespawntime = 300;
 		despawntime = -1000;
 	}
 	override public function Collect(player:Player) 

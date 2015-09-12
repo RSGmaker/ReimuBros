@@ -6,7 +6,7 @@ package;
  */
 class Tewi extends Enemy
 {
-	//slowed
+
 	public var accel:Float;
 	
 	public var mxspd:Float;
@@ -17,9 +17,9 @@ class Tewi extends Enemy
 	public function new() 
 	{
 		super("tewi");
-		accel = 0.2;
-		deccel = 0.05;
-		mxspd = 2;
+		accel = 0.4;
+		deccel = 0.1;
+		mxspd = 4;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -34,10 +34,10 @@ class Tewi extends Enemy
 			accel += 0.1;
 			mxspd += 0.5;
 			pointvalue += 100;
-			mntime += 60;
-			if (mntime > 200)
+			mntime += 30;
+			if (mntime > 100)
 			{
-				mntime = 200;
+				mntime = 100;
 			}
 	}
 	public override function update()
@@ -51,7 +51,7 @@ class Tewi extends Enemy
 		{
 			rng = new MersenneTwister();
 			var seed:UInt = Math.floor(UID * 100000);
-			timer = (90) + rng.twist(seed, 1, 7 * 60)[0];
+			timer = (45) + rng.twist(seed, 1, 7 * 30)[0];
 			timer -= mntime;
 		}
 		if (game.Hoster && flipped <= 0)
@@ -62,7 +62,7 @@ class Tewi extends Enemy
 			}
 			else
 			{
-				timer = (90) + rng.twist(rng.seed, 1, 7 * 60)[0];
+				timer = (45) + rng.twist(rng.seed, 1, 7 * 30)[0];
 				timer -= mntime;
 				var D:Dynamic = { };
 				D.UID = UID;
@@ -116,7 +116,7 @@ class Tewi extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -5;
+				D.Vspeed = -10;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -125,7 +125,7 @@ class Tewi extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -2;
+					Vspeed = -4;
 				}
 			}
 			
@@ -139,7 +139,7 @@ class Tewi extends Enemy
 	}
 	else
 	{
-		y += 7.5;
+		y += 15;
 	if (y > 600)
 	{
 	alive = false;
@@ -152,11 +152,11 @@ class Tewi extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 60 * 4;
+				flipped = 30 * 4;
 			}
 			else
 			{
-				flipped = 60 * 7;
+				flipped = 30 * 7;
 			}
 		}
 		else

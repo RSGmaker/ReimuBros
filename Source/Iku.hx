@@ -6,7 +6,7 @@ package;
  */
 class Iku extends Enemy
 {
-	//slowed
+
 	public var accel:Float;
 	
 	public var mxspd:Float;
@@ -26,9 +26,9 @@ class Iku extends Enemy
 	public function new() 
 	{
 		super("Iku");
-		accel = 0.25;
-		deccel = 0.05;
-		mxspd = 2;
+		accel = 0.5;
+		deccel = 0.1;
+		mxspd = 4;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -57,12 +57,7 @@ class Iku extends Enemy
 			rng = new MersenneTwister();
 			var seed:UInt = Math.floor(UID * 100000);
 			timer = (60) + rng.twist(seed, 1, 30 * 30)[0];
-			
 			mxtimer = 150;
-			
-			timer += timer;
-			mxtimer += mxtimer;
-			
 			countdown = mxtimer;
 		}
 		if (timer <= 0)
@@ -85,7 +80,7 @@ class Iku extends Enemy
 			rename = "ikuikudance";
 			countdown -= 1;
 			visuallyEnraged = !visuallyEnraged;
-			if (countdown < 61)
+			if (countdown < 31)
 			{
 				if (countdown % 5 == 0)
 				{

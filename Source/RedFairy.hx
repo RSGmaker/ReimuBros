@@ -6,7 +6,7 @@ package;
  */
 class RedFairy extends Enemy
 {
-	//slowed
+
 	public var accel:Float;
 	
 	public var mxspd:Float;
@@ -16,9 +16,9 @@ class RedFairy extends Enemy
 	public function new() 
 	{
 		super("RedFairy");
-		accel = 0.25;
-		deccel = 0.05;
-		mxspd = 2;
+		accel = 0.5;
+		deccel = 0.1;
+		mxspd = 4;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -26,8 +26,8 @@ class RedFairy extends Enemy
 	
 	public override function increaserank()
 	{
-			accel += 0.01;
-			mxspd += 0.25;
+			accel += 0.1;
+			mxspd += 0.5;
 			pointvalue += 50;
 	}
 	public override function update()
@@ -83,7 +83,7 @@ class RedFairy extends Enemy
 				D.x = x;
 				D.y = y;
 				D.Hspeed = Hspeed;
-				D.Vspeed = -5;
+				D.Vspeed = -10;
 				game.SendEvent("Bump", D);
 				}
 			}
@@ -92,7 +92,7 @@ class RedFairy extends Enemy
 				if (flipped>0 && flipped < 60)
 				{
 					//bounce to indicate about to recover
-					Vspeed = -2;
+					Vspeed = -4;
 				}
 			}
 			
@@ -106,7 +106,7 @@ class RedFairy extends Enemy
 	}
 	else
 	{
-		y += 7.5;
+		y += 15;
 	if (y > 600)
 	{
 	alive = false;
@@ -119,11 +119,11 @@ class RedFairy extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 60 * 4;
+				flipped = 30 * 4;
 			}
 			else
 			{
-				flipped = 60 * 7;
+				flipped = 30 * 7;
 			}
 		}
 		else

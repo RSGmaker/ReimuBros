@@ -15,7 +15,11 @@ class StageSeal extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
+<<<<<<< HEAD
 		player.maxcooldown = 6000;
+=======
+		player.maxcooldown = 2000;
+>>>>>>> parent of 6ed4253... Updated framerate to 60 fps
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -30,7 +34,7 @@ class StageSeal extends PlayerAbility
 			player.cooldown++;
 			if (player.cooldown >= player.maxcooldown)
 			{
-				player.maxcooldown = 4000;
+				player.maxcooldown = 2000;
 				player.cooldown = player.maxcooldown;
 				active = false;
 			}
@@ -42,7 +46,7 @@ class StageSeal extends PlayerAbility
 		if (player.isme && player.cooldown <= 0 && !active)
 		{
 			//player.cooldown = player.maxcooldown;
-			player.maxcooldown = 2000;
+			player.maxcooldown = 1000;
 			active = true;
 			player.cooldown = 0;
 			var D:Dynamic = { };

@@ -19,7 +19,7 @@ class Floating extends PlayerAbility
 		super.onbeginframe();
 		if (player.ground != null)
 		{
-			duration = 180;
+			duration = 90;
 			reset = true;
 			active = false;
 		}
