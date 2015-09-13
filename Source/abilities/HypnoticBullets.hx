@@ -14,7 +14,7 @@ class HypnoticBullets extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 350;
+		player.maxcooldown = 525;
 		player.warncooldown = true;
 	}
 	override public function onframe() 

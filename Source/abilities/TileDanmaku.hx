@@ -15,7 +15,7 @@ class TileDanmaku extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 100;
+		player.maxcooldown = 150;
 		player.warncooldown = true;
 	}
 	override public function onframe() 

@@ -14,7 +14,7 @@ class Cheeen extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 1400;
+		player.maxcooldown = 2100;
 		player.warncooldown = true;
 	}
 	override public function onframe() 

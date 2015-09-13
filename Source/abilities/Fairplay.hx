@@ -15,7 +15,7 @@ class Fairplay extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 1000;
+		player.maxcooldown = 1500;
 		player.warncooldown = true;
 	}
 	override public function onframe() 

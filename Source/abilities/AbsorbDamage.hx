@@ -14,7 +14,7 @@ class AbsorbDamage extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 1300;
+		player.maxcooldown = 1950;
 		player.warncooldown = true;
 		player.cooldowntext = "Extra HP!";
 	}

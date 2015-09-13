@@ -14,7 +14,7 @@ class StarBulletY extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 660;
+		player.maxcooldown = 990;
 		player.warncooldown = true;
 	}
 	override public function onframe() 

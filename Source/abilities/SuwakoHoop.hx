@@ -20,7 +20,7 @@ class SuwakoHoop extends PlayerAbility
 		player.warncooldown = true;
 		
 		//player.maxcooldown = 460;
-		player.maxcooldown = 410;
+		player.maxcooldown = 615;
 	}
 	override public function onframe() 
 	{

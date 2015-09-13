@@ -17,7 +17,7 @@ class AngelOfDeath extends PlayerAbility
 		super.onframe();
 		if (player.isme)
 		{
-			if (Math.random() < 0.0025)
+			if (Math.random() < 0.0032)
 			{
 				var game = player.game;
 				var enemy = game.activeEnemies[Math.floor(game.activeEnemies.length * Math.random())];

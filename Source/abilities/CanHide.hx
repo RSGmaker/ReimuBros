@@ -29,7 +29,7 @@ class CanHide extends PlayerAbility
 			{
 				if (player.Hspeed != 0 || player.Vspeed != 0)
 				{
-					charge = 25;
+					charge = 30;
 				}
 				player.alpha = 1;
 			}
@@ -43,7 +43,7 @@ class CanHide extends PlayerAbility
 			player.alpha = 0.5;
 			if (player.Hspeed != 0 || player.Vspeed != 0)
 			{
-				charge = 25;
+				charge = 30;
 			}
 		}
 	}

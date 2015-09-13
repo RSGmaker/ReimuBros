@@ -15,7 +15,7 @@ class BecomeInvisible extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 900;
+		player.maxcooldown = 1350;
 		player.warncooldown = true;
 	}
 	override public function onframe() 

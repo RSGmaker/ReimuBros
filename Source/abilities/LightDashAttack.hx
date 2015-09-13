@@ -14,7 +14,7 @@ class LightDashAttack extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 180;
+		player.maxcooldown = 270;
 		player.warncooldown = true;
 	}
 	override public function onframe() 

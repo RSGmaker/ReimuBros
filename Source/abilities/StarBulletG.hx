@@ -14,7 +14,7 @@ class StarBulletG extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 400;
+		player.maxcooldown = 600;
 		player.warncooldown = true;
 	}
 	override public function onframe() 

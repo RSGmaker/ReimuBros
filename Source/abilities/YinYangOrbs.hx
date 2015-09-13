@@ -14,7 +14,7 @@ class YinYangOrbs extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 380;
+		player.maxcooldown = 570;
 		player.warncooldown = true;
 	}
 	override public function onframe() 
