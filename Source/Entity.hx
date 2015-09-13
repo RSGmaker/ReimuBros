@@ -131,7 +131,7 @@ class Entity extends Sprite
 	public function Bonk(player:Player)
 	{
 		//bonked = 16;
-		bonked = 12;
+		bonked = 6;
 		bonkedby = player;
 	}
 	public function GetHitbox():Rectangle
