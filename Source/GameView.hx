@@ -1488,19 +1488,6 @@ class GameView extends Sprite
 				{
 					//if an unlockable character(aka imposter) is killed, unlock the character.
 					unlockcharacter(D.rename);
-					/*if (!D.hidden)
-					{
-
-					Main._this.savedata.data.unlock[D.unlock] = true;
-					if (D.alternate)
-					{
-						Main._this.savedata.data.alts[D.unlock] = true;
-					}
-					}
-					else
-					{
-						Main._this.savedata.data.hidden[D.unlock] = true;
-					}*/
 				}
 				if (totalenemies != 1)
 				{
@@ -3422,7 +3409,7 @@ class GameView extends Sprite
 	}
 	public function ResetSpawnTimer()
 	{
-		SpawnTimer = Std.int((60 * (2 + (Math.random() * 5)))*spawnrate);
+		SpawnTimer = Std.int((30 * (2 + (Math.random() * 5)))*spawnrate);
 	}
 	public function SpawnEntityFromData(D:Dynamic):Dynamic
 	{
@@ -4786,7 +4773,7 @@ class GameView extends Sprite
 		lvl++;
 		points += lvl;
 		
-		points *= 1.25;
+		points *= 1.35;
 		epm = 0;
 		var R = 0.2 + (Math.random() * 0.2);
 		R = R * points;
