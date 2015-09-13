@@ -43,9 +43,9 @@ class ExKeine extends PlayerAbility
 				player.maxcooldown = 2700;
 				player.cooldown = player.maxcooldown;
 				player.charname = "keine";
-				player.accel -= 0.15;
-				player.deccel -= 0.05;
-				player.mxspd -= 2.5;
+				player.accel -= 0.3;
+				player.deccel -= 0.1;
+				player.mxspd -= 5;
 				if (player.Hspeed >= 0)
 				{
 					player.ChangeAnimation(player.charname);
