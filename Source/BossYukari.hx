@@ -10,7 +10,7 @@ class BossYukari extends Boss
 {
 	private var FA:Array<flash.filters.BitmapFilter>;
 	private var glw:Array<flash.filters.GlowFilter>;
-	public var maxtraintime:Int = 1200;
+	public var maxtraintime:Int = 600;
 	public function new() 
 	{
 		super("bossyukari", "yukari");
@@ -61,7 +61,7 @@ class BossYukari extends Boss
 			var P = new Particle("warning");
 			P.x = X;
 			P.y = data.y + 48;
-			P.HP = 270;
+			P.HP = 135;
 			P.filters = FA;
 			game.AddObject(P);
 		}
@@ -109,7 +109,8 @@ class BossYukari extends Boss
 				game.AddObject(O);*/
 				var X = -5000;
 				var Y = 0;
-				var spd = 15;
+				//var spd = 15;
+				var spd = 30;
 				if (Math.random() > 0.5)
 				{
 					X = 800 + -X + 300;
@@ -131,12 +132,12 @@ class BossYukari extends Boss
 		}
 		if (game.rank > 0 || true)
 		{
-		if (frame % 700 < 50)
+		if (frame % 350 < 25)
 		{
 			visuallyEnraged = !visuallyEnraged;
 		}
 		
-		if (frame % 700 == 50)
+		if (frame % 350 == 25)
 		{
 			visuallyEnraged = false;
 			var i = 0;
