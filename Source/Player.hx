@@ -43,7 +43,7 @@ class Player extends Entity
 	public var playing:Int;
 	public var note:Int = 0;
 	public var midi:Array<Int> = null;
-	public var tempo:Int = 40;
+	public var tempo:Int = 35;
 	//a temp variable abilities can use to cancel events.
 	public var cancel:Bool;
 	private var filterArr:Array<flash.filters.BitmapFilter>;
@@ -150,9 +150,11 @@ class Player extends Entity
 	public static inline var base_deccel = 0.5+0.4;
 	public static inline var base_accel = 0.7 + base_deccel;
 	//public static inline var base_mxspd = 7+1.55;
-	public static inline var base_mxspd = 7+1.55-0.9;
+	//public static inline var base_mxspd = 7+1.55-0.9;
 	public static inline var base_fallaccel = 1.0+0.1;
-	public static inline var base_jumpspd = -19 - 0.5;
+	//public static inline var base_jumpspd = -19 - 0.5;
+	public static inline var base_jumpspd = -21;
+	public static inline var base_mxspd = 6.00;
 	
 	public var inactive:Bool;
 	
@@ -507,7 +509,7 @@ class Player extends Entity
 			//if (!superpower)
 			if (midi == null)
 			{
-				tempo = 40;
+				tempo = 35;
 				note = 0;
 				//midi = null;
 			if (game.GameFlags.get(Main.Drumstep))
