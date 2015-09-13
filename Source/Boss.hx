@@ -256,7 +256,8 @@ class Boss extends Enemy
 		{
 			P.normalize(4);
 			Hspeed = -P.x;
-			y -= P.y;
+			Vspeed = -P.y;
+			//y -= P.y;
 		}
 		
 		dodanmaku();
@@ -294,7 +295,15 @@ class Boss extends Enemy
 				Hspeed = -mxspd;
 			}
 		}
-		updphysics();
+		if (!firingdanmaku)
+		{
+			updphysics();
+		}
+		else
+		{
+			x += Hspeed;
+			y += Vspeed;
+		}
 		updateanimation(rename);
 		
 		if (ground != null)
