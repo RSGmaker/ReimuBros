@@ -71,14 +71,16 @@ class Chen extends Enemy
 			{
 				rename = "ERan";
 			}
-			reducetime = rank * 30;
+			//reducetime = rank * 30;
+			reducetime = rank * 20;
 			if (game.RoundType == GameView.TypeofRound.Yukari)
 			{
-				reducetime += 200;
+				reducetime += 150;
 			}
 			if (game.RoundType == GameView.TypeofRound.Yukari || rank>0)
 			{
-				danmaku = 15+rng.twist(rng.seed, 1, 540-reducetime)[0];
+				//danmaku = 15+rng.twist(rng.seed, 1, 540-reducetime)[0];
+				danmaku = 15+rng.twist(rng.seed, 1, 740-reducetime)[0];
 			}
 			if (game.RoundType == GameView.TypeofRound.Table)
 			{
@@ -88,7 +90,7 @@ class Chen extends Enemy
 		rot += 0.25;
 		if (danmaku == -1000 && rank > 0)
 		{
-			danmaku = 15+rng.twist(rng.seed, 1, 540-reducetime)[0];
+			danmaku = 15+rng.twist(rng.seed, 1, 740-reducetime)[0];
 		}
 		if (danmaku > -1000/* && game.Hoster*/)
 		{
@@ -101,7 +103,7 @@ class Chen extends Enemy
 					game.SendEvent("ChenDanmaku", D);
 				}
 				visuallyEnraged = false;
-				danmaku = 15+rng.twist(rng.seed, 1, 540-reducetime)[0];
+				danmaku = 15+rng.twist(rng.seed, 1, 740-reducetime)[0];
 			}
 			else
 			{
