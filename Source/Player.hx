@@ -48,6 +48,8 @@ class Player extends Entity
 	public var cancel:Bool;
 	private var filterArr:Array<flash.filters.BitmapFilter>;
 	//public var myMyon:MyonItem;
+	
+	public var equipment:EntityItem;
 
 	//list of character in order of savedata
 	public static var characters:Array<String> = ["reimu", "marisa", "patchouli", "remilia", "sanae", "sakuya", "suwako", "yuyuko", "tenshi", "iku", "aya", "alice", "youmu", "shikieiki", "flandre", "satori", "koishi", "momiji", "nitori", "udongein", "komachi", "yuuka", "mokou", "meiling", "parsee", "kokoro", "kogasa", "kasen", "utsuho", "suika", "kaguya", "eirin", "nazrin", "orin", "hina", "byakuren", "chiyuri", "ellen", "elly", "gengetsu", "kana", "kotohime", "elis", "louise", "mai", "meira", "mugetsu", "orange", "rika", "rikako", "sara", "yuki", "yumeko", "yumemi", "akyu", "futo", "kagerou", "keine", "kosuzu", "lunachild", "mamizou", "medicine", "minoriko", "murasa", "seiga", "sekibanki", "shanghai", "shinmyoumaru", "shizuha", "shou", "sunnymilk", "tokiko", "wriggle", "yoshika", "starsaphire", "lily", "letty", "makairesident-a", "lilith", "ayana", "matenshi", "noroiko", "mystia", "lunasa", "lyrica", "merlin", "maribel", "renko", "miko", "reisen", "ruukoto", "tojiko", "toyohime", "yorihime", "wakasagihime", "yatsuhashi", "mima", "konngara","tewi","kanako","ringo","doremy","seiran","sumireko","rin","raiko","shingyoku","hatate","daiyousei","kurumi","yuugi","benben","ichirin","kyouko","yamame","koakuma","shinki","rengeteki","sariel","yukari", "seija", "rumia","cirno","nue","chen","ran","clownpiece","hecatia","junko","sagume"];
@@ -147,7 +149,8 @@ class Player extends Entity
 	
 	public var glow:flash.filters.GlowFilter;
 	
-	public static inline var base_deccel = 0.5+0.4;
+	//public static inline var base_deccel = 0.5+0.4;
+	public static inline var base_deccel = 0.5+0.5;
 	public static inline var base_accel = 0.7 + base_deccel;
 	//public static inline var base_mxspd = 7+1.55;
 	//public static inline var base_mxspd = 7+1.55-0.9;
@@ -252,8 +255,8 @@ class Player extends Entity
 		accel = base_accel;
 		Haccel = accel * 0.8;
 		Hdeccel = deccel * 0.8;
-		Iaccel = accel * 0.35;
-		Ideccel = deccel * 0.35;
+		Iaccel = accel * 0.5;
+		Ideccel = deccel * 0.5;
 		
 		mxspd = base_mxspd;
 		fallaccel = base_fallaccel;
@@ -706,7 +709,7 @@ class Player extends Entity
 			}
 			else
 			{
-				if ((enemy.charname == "Mystia" && flags.get(EatMystia)) || superpower || (flags.get(JumpMan) && y<enemy.y && Vspeed>0))
+				if (((enemy.charname == "Mystia" && flags.get(EatMystia)) || superpower || (flags.get(JumpMan) && y<enemy.y && Vspeed>0)) && enemy.invincibility <= 0)
 				{
 					game.SendEvent("Kill", enemy.UID);
 				}
@@ -716,6 +719,8 @@ class Player extends Entity
 		}
 		else
 		{
+			//unequip stuff when dead.
+			equipment = null;
 			if (rotation == 0)
 			{
 				this.rotation = 90;
@@ -881,6 +886,7 @@ class Player extends Entity
 				}
 				nameplatetext.setTextFormat(format);
 				var B = getBounds(game.gamestage);
+				nameplatetext.width = nameplatetext.textWidth+8;
 				nameplate.x = B.left - (Math.floor(nameplatetext.textWidth) >> 1) + (Math.floor(B.width) >> 1);
 				nameplate.y = B.top - 20;
 				
