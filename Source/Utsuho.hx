@@ -15,6 +15,8 @@ class Utsuho extends Enemy
 	
 	public var timetofire:Int;
 	
+	public var rename:String;
+	
 	//public var HP:Int;
 	
 	public function new() 
@@ -30,6 +32,7 @@ class Utsuho extends Enemy
 		scaleY = 0.7;
 		HP = 2;
 		pointvalue = 300;
+		rename = "okuu";
 	}
 	override public function attack():Bool 
 	{
@@ -123,8 +126,16 @@ class Utsuho extends Enemy
 				visuallyEnraged = false;
 			}
 		}
+		if (HP > 1)
+		{
+			rename = "okuu";
+		}
+		else
+		{
+			rename = "utsuho";
+		}
 		updphysics();
-		updateanimation("okuu");
+		updateanimation(rename);
 		
 		if (ground != null)
 		{
