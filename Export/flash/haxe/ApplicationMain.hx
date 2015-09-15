@@ -226,6 +226,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/anchor0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/aya0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -298,6 +302,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/bluelaser0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/Blueufo0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -311,6 +319,10 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/byakuren0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/camera0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -590,6 +602,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/flag0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/flames0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -711,6 +727,18 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/hecatia0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/hecatiae0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/hecatiaeflipped0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/hecatiam0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -854,6 +882,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/lbullet0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/letty0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -910,6 +942,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/marisaflipped0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/matenshi0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -958,6 +994,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/minihakkero0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/minoriko0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -979,6 +1019,14 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/murasa0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/murasabullet0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/murasaflipped0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -1035,6 +1083,14 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/parsee0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/parseebullet0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/parseeflipped0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -1163,6 +1219,10 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/sanaeALT0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/sanaeflipped0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -1303,6 +1363,10 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/skull0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/spellcard0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -1467,6 +1531,10 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/utsuhobullet0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/utsuhoflipped0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		

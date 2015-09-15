@@ -1,5 +1,6 @@
 package;
 
+import abilities.AbsorbDamage;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.Graphics;
@@ -7,6 +8,7 @@ import openfl.display.Shape;
 import openfl.display.Sprite;
 import openfl.Assets;
 import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import openfl.geom.Transform;
 import openfl.Lib;
 import openfl.text.Font;
@@ -47,6 +49,11 @@ enum TypeofRound {
 		Characters;
 		NoWrap;
 		Unzan;
+		SanaeBoss;
+		CirnoBoss;
+		ParseeBoss;
+		MurasaBoss;
+		Marisa;
 	}
 class GameView extends Sprite
 {
@@ -101,6 +108,10 @@ class GameView extends Sprite
 	//true after first enemy of level spawns.
 	public var enemyspawn:Bool;
 	public var gamestarted:Bool = false;
+	public var progressbar:Sprite;
+	public var lastprogress:Float;
+	public var leveltitle:TextField;
+	public var lifeicon:Bitmap;
 	
 	public function GetPlayers():Array<Player>
 	{
@@ -285,6 +296,7 @@ class GameView extends Sprite
 	public var gamestage:Sprite;
 	
 	
+	
 	public var spawnrate:Float = 1.0;
 	var ZaWarudo:Sprite = null;
 	var ZaWarudoCaster:Player = null;
@@ -338,7 +350,7 @@ class GameView extends Sprite
 
 		var generalstage = stage % 6;
 		var L = new Array<String>();
-		if (RoundType == TypeofRound.Cirno || RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.ElectricCirno)
+		if (RoundType == TypeofRound.Cirno || RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.ElectricCirno || RoundType == TypeofRound.CirnoBoss)
 		{
 			L[L.length] = "cirno";
 			L[L.length] = "cirno";
@@ -385,7 +397,7 @@ class GameView extends Sprite
 			//shrine
 			if (generalstage == 0)
 			{
-				L = L.concat(["reimu", "marisa", "sanae", "kanako", "suwako", "alice", "shanghai"/*, "suika"*/]);
+				L = L.concat(["reimu", "marisa", /*"sanae", */"kanako", "suwako", "alice", "shanghai"/*, "suika"*/]);
 				L = L.concat(["sara", "louise", "yuki", "mai", "ayana", "yumeko", "shinki", "makairesident-a", "lilith", "orange", "kurumi", "elly", "rengeteki"/*, "yuuka"*/, "mugetsu", "gengetsu", "ellen", "kotohime", "kana", "rikako", "chiyuri", "yumemi", "ruukoto", "rika", "noroiko", "meira", "matenshi", "shingyoku", "elis", "sariel", "mima", "konngara"]);
 				L = L.concat(["lily", "lyrica", "lunasa", "merlin","youmu", "yuyuko"]);
 			}
@@ -407,7 +419,7 @@ class GameView extends Sprite
 			//underground
 			if (generalstage == 3)
 			{
-				L = L.concat([/*"kisume", */"yamame", "parsee", "yuugi", /*"satori", "koishi",*/ "orin", "utsuho"]);
+				L = L.concat([/*"kisume", */"yamame", /*"parsee", */"yuugi", /*"satori", "koishi",*/ "orin", "utsuho"]);
 				L = L.concat(["shizuha", "minoriko", "hina", "nitori", "momiji"/*, "sanae", "kanako", "suwako"*/]);
 			}
 			//palanquin ship
@@ -617,7 +629,12 @@ class GameView extends Sprite
 		TF.setTextFormat(tmp);
 		TF.x = 200;
 		TF.y = 10;
+		TF.width = 50;
+		TF.height = 20;
+		/*TF.visible = false;
+		#if debug
 		TF.visible = true;
+		#end*/
 		
 		TF.cacheAsBitmap = true;
 		tmp = new TextFormat();
@@ -688,6 +705,16 @@ class GameView extends Sprite
 		
 		
 		AddPlayer(myplayer);
+		
+		lifeicon = new Bitmap();
+		lifeicon.x = 163;
+		lifeicon.y = 5;
+		lifeicon.scaleX = 0.6;
+		lifeicon.scaleY = 0.6;
+		lifeicon.scrollRect = new Rectangle(0, 0, 100, 60);
+		updatelifeicon();
+		
+		addChild(lifeicon);
 		addChild(TF);
 		
 		stage.color = 0x009977;
@@ -720,7 +747,8 @@ class GameView extends Sprite
 		
 		gui = new Sprite();
 		addChild(gui);
-		
+		colorflash = new Shape();
+		gui.addChild(colorflash);
 		BGCRight = new Bitmap(Assets.getBitmapData("assets/bgcolor.png"));
 		BGCRight.x = 800;
 		BGCRight.y = 0;
@@ -777,10 +805,69 @@ class GameView extends Sprite
 				 } 
 				);
 		
-		colorflash = new Shape();
+		
 		//addChild(colorflash);
-		gui.addChild(colorflash);
+		var filterArr:Array<flash.filters.BitmapFilter>;
+		//var glow:flash.filters.GlowFilter;
+		filterArr = new Array();
+		//glow = new flash.filters.GlowFilter();
+		var AB = new flash.filters.GlowFilter();
+		AB.blurX = 20;
+		AB.blurY = 20;
+			//if (game.myplayer == null)
+		{
+			AB.color = 0xFFFFFF;
+		}
+			
+		AB.strength = 1.25;
+		
+		filterArr[filters.length] = AB;
+		
+		
+		progressbar = new Sprite();
+		progressbar.mouseEnabled = false;
+		progressbar.x = 610;
+		progressbar.y = 2;
+		progressbar.filters = filterArr;
+		
+		var AA = new flash.filters.DropShadowFilter();
+		AA.alpha = 1;
+		AA.distance = 3;
+		AA.alpha = 25;
+		AA.color = 0;
+		filterArr = new Array();
+		filterArr[filters.length] = AA;
+		
+		var flag = new Bitmap(AL.GetAnimation("flag")[0]);
+		progressbar.addChild(flag);
+		leveltitle = new TextField();
+		leveltitle.y = 20;
+		leveltitle.x = 5;
+		leveltitle.y += progressbar.y;
+		leveltitle.x += progressbar.x;
+		leveltitle.textColor = 0xFFFFFF;
+		//leveltitle.blendMode = openfl.display.BlendMode.INVERT;
+		leveltitle.filters = filterArr;
+		//leveltitle.cacheAsBitmap = true;
+		//progressbar.addChild(leveltitle);
+		gui.addChild(leveltitle);
+		//lifeicon = new Bitmap(myplayer.image.bitmapData);
+		
+		lifeicon.cacheAsBitmap = true;
+		gui.addChild(progressbar);
+		
+		//gui.addChild(lifeicon);
 		level++;
+	}
+	public function updatelifeicon()
+	{
+		//var BD = AL.GetAnimation(playerspick)[0];
+		var BD = AL.GetAnimation(myplayer.charname)[0];
+		if (lifeicon.bitmapData != BD)
+		{
+			lifeicon.bitmapData = BD;
+			//lifeicon.x = (TF.x - lifeicon.width)+30;
+		}
 	}
 	//sets down platforms and puts holes in the platforms
 	public function setformation()
@@ -1621,7 +1708,7 @@ class GameView extends Sprite
 				{
 					ProcessEvent("NoWrap", "Myself", null);
 				}
-				if (R == TypeofRound.Cirno || R == TypeofRound.FireCirno || R == TypeofRound.ElectricCirno)
+				if (R == TypeofRound.Cirno || R == TypeofRound.FireCirno || R == TypeofRound.ElectricCirno || R == TypeofRound.CirnoBoss)
 				{
 					ProcessEvent("FreezeWorld", "Myself", null);
 				}
@@ -1665,7 +1752,7 @@ class GameView extends Sprite
 				
 				var E = entities[i];
 				var D:Dynamic = E;
-				if (E.type == "Block" && RoundType != TypeofRound.Cirno && RoundType != TypeofRound.FireCirno && RoundType != TypeofRound.ElectricCirno)
+				if (E.type == "Block" && RoundType != TypeofRound.Cirno && RoundType != TypeofRound.FireCirno && RoundType != TypeofRound.ElectricCirno && RoundType != TypeofRound.CirnoBoss)
 				{
 					D.Reset();
 				}
@@ -1732,6 +1819,39 @@ class GameView extends Sprite
 				{
 					E.catchup();
 				}
+			}
+		}
+		if (evt == "Camera")
+		{
+			var i = 0;
+			FlashColor(0xFFFF77, 0.4, 0, 0.1);
+			while (i < entities.length)
+			{
+				var E = entities[i];
+				if (E.type == "Bullet" && (RoundType != TypeofRound.NoWrap))
+				{
+					E.killed = true;
+					E.alive = false;
+					if (Hoster)
+					{
+						var D:Dynamic = { };
+							
+						D.type = "Point";
+						D.UID = Math.random();
+						if (Math.random() > 0.5)
+						{
+							D.Ldir = -1;
+						}
+						else
+						{
+							D.Ldir = 1;
+						}
+						D.x = E.x;
+						D.y = E.y;
+						SendEvent("SpawnItem", D);
+					}
+				}
+				i++;
 			}
 		}
 		if (evt == "Fairplay")
@@ -1904,7 +2024,7 @@ class GameView extends Sprite
 				{
 					ProcessEvent("NoWrap", "Myself", null);
 				}
-				if (R == TypeofRound.Cirno || R == TypeofRound.FireCirno || R == TypeofRound.ElectricCirno)
+				if (R == TypeofRound.Cirno || R == TypeofRound.FireCirno || R == TypeofRound.ElectricCirno || R == TypeofRound.CirnoBoss)
 				{
 					ProcessEvent("FreezeWorld", "Myself", null);
 				}
@@ -2849,6 +2969,29 @@ class GameView extends Sprite
 				thegiant.activate();
 			}
 		}
+		if (evt == "AttachItem")
+		{
+			var E = EntityFromUID(data.UID);
+			if (E != null)
+			{
+				var D:Dynamic = { };
+				D.type = data.item;
+				D.UID = data.UID + 10;
+				/*if (E.myMyon != null)
+				{
+					D.UID += 1;
+				}*/
+				D.x = E.x;
+				D.y = E.y;
+				if (E.type != "Player")
+				{
+					D.holder = data.UID;
+				}
+				{
+					ProcessEvent("SpawnItem", "Myself", D);
+				}
+			}
+		}
 		if (evt == "AttachMyon" || evt=="AttachZombieFairy")
 		{
 			var E = EntityFromUID(data.UID);
@@ -3093,6 +3236,21 @@ class GameView extends Sprite
 			D.UID = Math.random();
 			SendEvent("SpawnEnemy", D);
 		}
+		if (evt == "LaserBeam")
+		{
+			var L = new LaserBeam();
+			L.x = data.x;
+			L.y = data.y;
+			if (data.user != null)
+			{
+				var D:Dynamic = EntityFromUID(data.user);
+				var P:Player = D;
+				L.user = P;
+			}
+			L.antiplayer = data.antiplayer;
+			L.antienemy = data.antienemy;
+			AddObject(L);
+		}
 		if (evt == "CustomEvent")
 		{
 			var E = EntityFromUID(data.UID);
@@ -3256,7 +3414,31 @@ class GameView extends Sprite
 			if (Hoster && Main._this.DEBUG)
 			{
 				SendGap();
+				/*var D:Dynamic = { };
+				D.type = "UFO";
+				D.UID = Math.random();
+				if (Math.random() > 0.5)
+				{
+					D.x = Math.random() * 800;
+					D.Ldir = -1;
+				}
+				else
+				{
+					D.x = Math.random() * 800;
+					D.Ldir = 1;
+				}
+				D.y = -100;
+				D.alive = true;
+				D.Hspeed = 0;
+				D.Vspeed = 0;
+				D.enraged = false;
+				D.visible = true;
+				D.rank = rank;
+				D.spawns = 0;
+				ufos++;
+				SendEvent("SpawnEnemy", D);*/
 			}
+
 		case Keyboard.F4:
 			if (Hoster && Main._this.DEBUG)
 			{
@@ -3282,9 +3464,15 @@ class GameView extends Sprite
 		case Keyboard.F7:
 			if (Hoster && Main._this.DEBUG)
 			{
+				ept = 0;
+				rept = 0;
 				//SendYuuka();
 				//var B = new BossCirno();
-				var B = new BossYukari();
+				//var B = new BossYukari();
+				
+				var B = new BossSanae();
+				//var B = new BossParsee();
+				//var B = new BossMurasa();
 				AddEnemy(B);
 				//AddObject(B);
 			}
@@ -3515,6 +3703,11 @@ class GameView extends Sprite
 						E = new Meiling();
 						type = "Enemy";
 					}
+					if (D.type == "Hecatia")
+					{
+						E = new Hecatia();
+						type = "Enemy";
+					}
 					if (D.type == "bosscirno")
 					{
 						E = new BossCirno();
@@ -3523,6 +3716,21 @@ class GameView extends Sprite
 					if (D.type == "bossyukari")
 					{
 						E = new BossYukari();
+						type = "Enemy";
+					}
+					if (D.type == "bosssanae")
+					{
+						E = new BossSanae();
+						type = "Enemy";
+					}
+					if (D.type == "bossparsee")
+					{
+						E = new BossParsee();
+						type = "Enemy";
+					}
+					if (D.type == "bossmurasa")
+					{
+						E = new BossMurasa();
 						type = "Enemy";
 					}
 					if (D.type == "tenshi")
@@ -3553,6 +3761,11 @@ class GameView extends Sprite
 					if (D.type == "Reimu")
 					{
 						E = new Reimu();
+						type = "Enemy";
+					}
+					if (D.type == "marisa")
+					{
+						E = new Marisa();
 						type = "Enemy";
 					}
 					if (D.type == "Yinyangorb")
@@ -3602,6 +3815,21 @@ class GameView extends Sprite
 					if (D.type == "Balloon")
 					{
 						E = new BalloonItem();
+						type = "Item";
+					}
+					if (D.type == "MiniHakkero")
+					{
+						E = new MiniHakkero();
+						type = "Item";
+					}
+					if (D.type == "Camera")
+					{
+						E = new CameraItem();
+						type = "Item";
+					}
+					if (D.type == "SpellCard")
+					{
+						E = new SpellCardItem();
 						type = "Item";
 					}
 					if (D.type == "Myon" || D.type == "myon")
@@ -3716,6 +3944,8 @@ class GameView extends Sprite
 		var S = GetLevelTitle(level);
 		var M = messages.length;
 		ShowMessage(S);
+		leveltitle.text = S;
+		leveltitle.width = leveltitle.textWidth+8;
 		if (M == 0)
 		{
 			messagetime = 300;
@@ -3829,14 +4059,14 @@ class GameView extends Sprite
 					A.next();
 					if (A.hasNext())
 					{
-						TF.text = "Host: " + Room + "\nLevel: " + level +"\nLives: " + Math.max(myplayer.lives,0)+"\nEnemies: "+totalenemies;
+						//TF.text = "Host: " + Room + "\nLevel: " + level +"\nLives: " + Math.max(myplayer.lives,0)+"\nEnemies: "+totalenemies;
 						ok = false;
 					}
 				}
 			}
 			if (ok)
 			{
-				TF.text = "Client: " + Room + "\nLevel: " + level +"\nLives: " + Math.max(myplayer.lives,0)+"\nEnemies: "+totalenemies;
+				//TF.text = "Client: " + Room + "\nLevel: " + level +"\nLives: " + Math.max(myplayer.lives,0)+"\nEnemies: "+totalenemies;
 			}
 			if (netlog && Hoster)
 			{
@@ -3858,12 +4088,15 @@ class GameView extends Sprite
 		}
 		else
 		{
-			TF.text = "Level: " + level +"\nLives: " + Math.max(myplayer.lives,0)+"\nEnemies: "+totalenemies;
+			//TF.text = "Level: " + level +"\nLives: " + Math.max(myplayer.lives,0)+"\nEnemies: "+totalenemies;
 		}
 		if (Main._this.DEBUG && Hoster)
 		{
-			TF.text = TF.text + "\nEPM: " + Math.round(epm) + " max: " + maxspawns+"\nspawnrate: "+spawnrate;
+			//TF.text = TF.text + "\nEPM: " + Math.round(epm) + " max: " + maxspawns+"\nspawnrate: "+spawnrate;
 		}
+		TF.scaleX = 2;
+		TF.scaleY = 2;
+		TF.text = "x " + myplayer.lives;
 		TF.textColor = 0xFFFFFF;
 		if (missingTime > 3 /* && !online*/)
 		{
@@ -4085,6 +4318,92 @@ class GameView extends Sprite
 			}
 			return ret;
 	}
+	private function updateprogressbar()
+	{
+		if (!progressbar.visible)
+		{
+			return;
+		}
+		var prct = 0.5;
+		if (boss == null)
+		{
+			if (maxspawns == 0)
+			{
+				if (gamestarted)
+				{
+					prct = 1;
+				}
+				else
+				{
+					prct = 0;
+				}
+			}
+			else
+			{
+				if (roundstarted)
+				{
+					prct = (maxspawns - totalenemies) / maxspawns;
+				}
+				else
+				{
+					prct = 1;
+				}
+			}
+		}
+		else
+		{
+			prct = (boss.phase) / boss.totalphases;
+		}
+		if (prct < 0)
+		{
+			prct = 0;
+		}
+		if (prct > 1)
+		{
+			prct = 1;
+		}
+		var G = progressbar.graphics;
+		var C = 0x22EE66;
+		if (prct > lastprogress)
+		{
+			C = 0xAAFFCC;
+		}
+		if (prct >= 1)
+		{
+			lastprogress = 1;
+			C = 0xFFFFFF;
+		}
+		if (prct != lastprogress)
+		{
+			if (prct > lastprogress)
+			{
+				lastprogress += 0.0075;
+				if (lastprogress > prct)
+				{
+					lastprogress = prct;
+				}
+				prct = lastprogress;
+			}
+			else
+			{
+				lastprogress = prct;
+			}
+		}
+		var X = 100 * prct;
+		X = 100 - X;
+		G.clear();
+		//G.beginFill(0, 0.4);
+		//G.beginFill(0x00FFFF, 1);
+		G.beginFill(0x000000, 1);
+		G.drawRoundRect(12, 5, 106, 15,5);
+		G.endFill();
+		//G.beginFill(0x99CC22, 1);
+		G.beginFill(C, 1);
+		G.drawRoundRect(X+15, 8, 100-X, 9,5);
+		//G.drawRoundRect(20, 20, X, 9,5);
+		G.endFill();
+		
+	}
 	private function updategame (event:Event):Void {
 		if (missingTime < 0.01)
 		{
@@ -4106,6 +4425,8 @@ class GameView extends Sprite
 		{
 			syncdelay--;
 		}
+		updatelifeicon();
+		updateprogressbar();
 		collisiondata = new Array<Dynamic>();
 		collisiondangerousdata = new Array<Dynamic>();
 		var col = 0;
@@ -4253,28 +4574,7 @@ class GameView extends Sprite
 			}
 			if (!E.alive)
 			{
-				if (E.type == "Enemy")
-				{
-					var D:Dynamic = E;
-					RemoveEnemy(E);
-					if (Hoster)
-					{
-						totalenemies = (SpawnList.length);
-						totalenemies += getenemycount();
-					}
-					else if (D.needtokill)
-					{
-						totalenemies--;
-					}
-				}
-				else if (E.type == "Item")
-				{
-					RemoveEntityItem(E);
-				}
-				else
-				{
-					RemoveObject(E);
-				}
+				
 				
 				if (E.type == "Enemy")
 				{
@@ -4316,6 +4616,28 @@ class GameView extends Sprite
 						}
 					}
 					
+				}
+				if (E.type == "Enemy")
+				{
+					var D:Dynamic = E;
+					RemoveEnemy(E);
+					if (Hoster)
+					{
+						totalenemies = (SpawnList.length);
+						totalenemies += getenemycount();
+					}
+					else if (D.needtokill && D.killed)
+					{
+						totalenemies--;
+					}
+				}
+				else if (E.type == "Item")
+				{
+					RemoveEntityItem(E);
+				}
+				else
+				{
+					RemoveObject(E);
 				}
 			}
 			i += 1;
@@ -4387,7 +4709,7 @@ class GameView extends Sprite
 			if (totalenemies > 0)
 			{
 			var R = ept;
-			if (spawns > (maxspawns + (maxspawns)))
+			if ((spawns > (maxspawns + (maxspawns))) && boss == null)
 			{
 				R = rept;
 			}
@@ -4399,8 +4721,8 @@ class GameView extends Sprite
 				{
 					E = Obstacles[Math.floor(Obstacles.length * Math.random())];
 				}
-				
-				if (true && Math.random() > 0.5)
+				#if debug
+				if (Math.random() > 0.5)
 				{
 					//E = "Balloon";
 					//E = "Yuuka";
@@ -4410,8 +4732,9 @@ class GameView extends Sprite
 					//E = "MiniPowBlock";
 					//E = "MrGhosty";
 					//E = "Reimu";
-					E = "UnzanFist";
+					//E = "UnzanFist";
 				}
+				#end
 				if (E == "Gap")
 				{
 					SendGap();
@@ -4757,7 +5080,12 @@ class GameView extends Sprite
 	private function CalculateLevelData()
 	{
 		gamestarted = true;
+		boss = null;
+		
 		var L = level - 1;
+		var stage = Math.floor((L) / 5);
+
+		var generalstage = stage % 6;
 		if (L < 0)
 		{
 			L = 0;
@@ -4773,7 +5101,8 @@ class GameView extends Sprite
 		lvl++;
 		points += lvl;
 		
-		points *= 1.35;
+		//points *= 1.35;
+		//points *= 1.2;
 		epm = 0;
 		var R = 0.2 + (Math.random() * 0.2);
 		R = R * points;
@@ -4818,7 +5147,13 @@ class GameView extends Sprite
 			P+=1;
 		}
 		var EVT = Math.random();
-		if (level == 9)
+		var LV:Int = level;
+		while (LV >= 30)
+		{
+			LV -= 30;
+		}
+		//if (level == 9)
+		if (LV == 9)
 		{
 			//double chance of event
 			//EVT *= 0.25;
@@ -4831,6 +5166,7 @@ class GameView extends Sprite
 		
 		Obstacles = new Array<String>();
 		var T = level % 5;
+		
 		if (T == 0/* && successstreak > 2*/)
 		{
 			EVT = 0;
@@ -4856,6 +5192,7 @@ class GameView extends Sprite
 				if (level > 5 || GameFlags.get(Main.EventRoundsOnly))
 				{
 					E[E.length] = TypeofRound.Seija;
+					E[E.length] = TypeofRound.Marisa;
 				}
 				if (level > 15 || GameFlags.get(Main.EventRoundsOnly))
 				{
@@ -4870,6 +5207,21 @@ class GameView extends Sprite
 				{
 					E[E.length] = TypeofRound.ElectricCirno;
 				}
+				if ((level > 30) || GameFlags.get(Main.EventRoundsOnly))
+				{
+					if (generalstage == 0)
+					{
+						E[E.length] = TypeofRound.SanaeBoss;
+					}
+					else if (generalstage == 3)
+					{
+						E[E.length] = TypeofRound.ParseeBoss;
+					}
+					else if (generalstage == 4)
+					{
+						E[E.length] = TypeofRound.MurasaBoss;
+					}
+				}
 			}
 			else
 			{
@@ -4877,8 +5229,14 @@ class GameView extends Sprite
 			}
 			RoundType = E[(Math.floor(Math.random() * E.length))];
 			
+			if (level > 30 && LV == 9)
+			{
+				RoundType = TypeofRound.CirnoBoss;
+			}
 		}
+		//RoundType = TypeofRound.ParseeBoss;
 		//RoundType = TypeofRound.Seija;
+		//RoundType = TypeofRound.Marisa;
 		
 		
 		
@@ -4965,7 +5323,7 @@ class GameView extends Sprite
 			AddToArrayMultiple(Obstacles, "Balloon", Math.round(Obstacles.length * 2));
 			epm *= 2.5;
 		}
-		if (RoundType == TypeofRound.Cirno || RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.ElectricCirno)
+		if (RoundType == TypeofRound.Cirno || RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.ElectricCirno || RoundType == TypeofRound.CirnoBoss)
 		{
 			AddToArrayMultiple(Obstacles, "Cirno", 8);
 			if (RoundType == TypeofRound.Cirno)
@@ -4981,7 +5339,7 @@ class GameView extends Sprite
 			{
 				epm += 2;
 			}
-			SpawnTimer = 240 + (maxspawns * 30);
+			//SpawnTimer = 240 + (maxspawns * 30);
 			if (GameFlags.get(Main.EventRoundsOnly))
 			{
 			if (GameFlags.get(Main.CirnoEvent))
@@ -4990,7 +5348,7 @@ class GameView extends Sprite
 			}
 			else
 			{
-				if (!(RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.ElectricCirno))
+				if (!(RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.ElectricCirno || RoundType == TypeofRound.CirnoBoss))
 				{
 					maxspawns = 9;
 				}
@@ -5009,9 +5367,10 @@ class GameView extends Sprite
 				AddToArrayMultiple(enemytypes, new Seija(), 62);
 				AddToArrayMultiple(enemytypes, new Imposter(), 3);
 			}
-		if (RoundType == TypeofRound.Normal || RoundType == TypeofRound.Rumia || RoundType == TypeofRound.Seija || RoundType == TypeofRound.Nue || RoundType == TypeofRound.Table || RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.Balloon || RoundType == TypeofRound.ElectricCirno || RoundType == TypeofRound.NoWrap)
+		if (RoundType == TypeofRound.Normal || RoundType == TypeofRound.Rumia || RoundType == TypeofRound.Seija || RoundType == TypeofRound.Nue || RoundType == TypeofRound.Table || RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.Balloon || RoundType == TypeofRound.ElectricCirno || RoundType == TypeofRound.NoWrap || RoundType == TypeofRound.SanaeBoss || RoundType == TypeofRound.ParseeBoss || RoundType == TypeofRound.MurasaBoss)
 		{
 			AddToArrayMultiple(enemytypes, new RedFairy(), 60);
+			
 			if (level > 3)
 			{
 				AddToArrayMultiple(enemytypes, new Keine(), 20);
@@ -5035,9 +5394,17 @@ class GameView extends Sprite
 				AddToArrayMultiple(enemytypes, new Reisen(), 15);
 				AddToArrayMultiple(enemytypes, new Imposter(), 1);
 			}
+			if (level > 30)
+			{
+				AddToArrayMultiple(enemytypes, new Marisa(), 6);
+			}
 			if (level > 35)
 			{
 				AddToArrayMultiple(enemytypes, new Scarlet(), 3);
+			}
+			if (level > 40)
+			{
+				AddToArrayMultiple(enemytypes, new Hecatia(), 3);
 			}
 			if (level > 45)
 			{
@@ -5047,6 +5414,11 @@ class GameView extends Sprite
 			{
 				AddToArrayMultiple(enemytypes, new Kogasa(), 1);
 			}
+		}
+		if (RoundType == TypeofRound.Marisa)
+		{
+			AddToArrayMultiple(Obstacles, "Yuuka", 5);
+			AddToArrayMultiple(enemytypes, new Marisa(), 600);
 		}
 		if (RoundType == TypeofRound.Nue)
 		{
@@ -5087,13 +5459,34 @@ class GameView extends Sprite
 			}
 			C -= 35000;
 		}
-		if (RoundType == TypeofRound.Cirno)
+		var bosstime = true;
+		if (RoundType == TypeofRound.CirnoBoss)
 		{
-			//SpawnList.add(new BossCirno());
+			SpawnList.add(new BossCirno());
 		}
 		if (RoundType == TypeofRound.Yukari)
 		{
 			SpawnList.add(new BossYukari());
+		}
+		else if (RoundType == TypeofRound.SanaeBoss)
+		{
+			SpawnList.add(new BossSanae());
+		}
+		else if (RoundType == TypeofRound.ParseeBoss)
+		{
+			SpawnList.add(new BossParsee());
+		}
+		else if (RoundType == TypeofRound.MurasaBoss)
+		{
+			SpawnList.add(new BossMurasa());
+		}
+		else
+		{
+			bosstime = false;
+		}
+		if (bosstime)
+		{
+			maxspawns = Std.int(maxspawns * 0.6);
 		}
 		populatespawnlist();
 		/*var tmp = 0;

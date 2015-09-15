@@ -10,7 +10,7 @@ class TreasureHunter extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "May find hidden trophies\ninside blocks\n(resets each level)";
+		description = "May find hidden items\ninside blocks\n(resets each level)";
 	}
 	override public function onheadbonk() 
 	{
@@ -23,10 +23,13 @@ class TreasureHunter extends PlayerAbility
 			if (headbonk != null && headbonk.type == "Block")
 			{
 				var B:Block = headbonk;
-				if (!B.searched && !game.trophyactive && Math.random()>0.98)
+				//if (!B.searched && !game.trophyactive && Math.random()>0.98)
+				if (!B.searched && !game.trophyactive && Math.random()>0.97)
 				{
 					var D:Dynamic = { };
-					D.type = "Trophy";
+					var items:Array<String> = ["Trophy","MiniHakkero", "Camera","SpellCard"];
+					//D.type = "Trophy";
+					D.type = items[Std.int(Math.random() * items.length)];
 					D.UID = Math.random();
 					D.x = B.x;
 					D.y = B.y-64;
