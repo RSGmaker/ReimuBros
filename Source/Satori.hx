@@ -66,7 +66,7 @@ class Satori extends Enemy
 			}
 			else
 			{
-				fallaccel += 0.3;
+				//fallaccel += 0.3;
 			}
 			started = true;
 			var A = game.GetPlayers();
@@ -92,7 +92,8 @@ class Satori extends Enemy
 				if (game.myplayer.controller[0] && ground != null && Vspeed == 0)
 				{
 					//Vspeed = -7;
-					Vspeed = -10;
+					//Vspeed = -10;
+					Vspeed = -5;
 				}
 			}
 			if (rename == "koishi")
