@@ -1,5 +1,6 @@
 package danmaku;
 import lime.math.Vector2;
+import openfl.geom.Rectangle;
 
 /**
  * ...
@@ -20,6 +21,9 @@ class DanmakuBullet extends DanmakuEntity
 	public var rotdelay:Int;
 	//if bullet scores points, the points should go to this player.
 	public var shotby:Entity;
+	public var timelimit:Int;
+	
+	
 	public function new(ani:String="bullet") 
 	{
 		//super(ani, false);
@@ -46,6 +50,9 @@ class DanmakuBullet extends DanmakuEntity
 	{
 		frame++;
 		var C = currot;
+		var WW:Int = Std.int(width);
+		var HH:Int = Std.int(height);
+		hitbox = new Rectangle(WW >> 2, HH >> 2, WW >> 1, HH >> 1);
 		super.update();
 		if (frame == 1)
 		{
@@ -54,6 +61,15 @@ class DanmakuBullet extends DanmakuEntity
 			/*currot = Math.atan2(Hspeed, Vspeed);
 			//speedrate = Math.max(Math.abs(Hspeed),Math.abs(Vspeed));
 			speedrate = (Math.abs(Hspeed) + Math.abs(Vspeed)) * 0.7;*/
+		}
+		if (timelimit > 0)
+		{
+			timelimit--;
+			if (timelimit < 1)
+			{
+				alive = false;
+				killed = true;
+			}
 		}
 		if (rotrate != 0)
 		{

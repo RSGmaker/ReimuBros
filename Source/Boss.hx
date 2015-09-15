@@ -111,7 +111,7 @@ class Boss extends Enemy
 			data.phase = phase;
 			data.type = "phase";
 			game.SendEvent("CustomEvent", D);
-			game.populatespawnlist();
+			//game.populatespawnlist();
 		}
 	}
 	override public function CustomEvent(data:Dynamic) 
@@ -368,9 +368,10 @@ class Boss extends Enemy
 	}
 	public override function bump()
 	{
-		phase++;
+		
 		if (!firingdanmaku)
 		{
+			phase++;
 			if (phase >= totalphases)
 			{
 				flipped = 30 * 10;
@@ -379,6 +380,7 @@ class Boss extends Enemy
 			{
 				if (game.Hoster)
 				{
+					game.populatespawnlist();
 					var D:Dynamic = { };
 					var data:Dynamic = { };
 					D.UID = UID;

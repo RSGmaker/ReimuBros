@@ -47,6 +47,7 @@ class BossYukari extends Boss
 			{
 				xx -= 360;
 			}
+			//B.dangerous = true;
 			B.Hspeed = data.speed;
 			B.Vspeed = 0;
 			B.ChangeAnimation("train");
