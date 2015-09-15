@@ -66,7 +66,7 @@ class Block extends Entity
 			respawn = 800;
 		}
 	}
-	public function Burn()
+	public function Burn(time:Int=750)
 	{
 		if (solid && !charred)
 		{
@@ -76,7 +76,7 @@ class Block extends Entity
 			icy = false;
 			Visual.ChangeAnimation(oanimation);
 		}
-		respawn = 800;
+		respawn = time;
 		}
 	}
 	//freeze even if charred(used at start of cirno event)
