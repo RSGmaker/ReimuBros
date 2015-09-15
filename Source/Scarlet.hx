@@ -21,7 +21,7 @@ class Scarlet extends Enemy
 		super("Scarlet");
 		accel = 0.5;
 		deccel = 0.1;
-		mxspd = 6;
+		mxspd = 6.0;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -30,13 +30,14 @@ class Scarlet extends Enemy
 		scaleX = 0.7;
 		scaleY = 0.7;
 		pointvalue = 1000;
+		HP = 2;
 	}
 	
 	public override function increaserank()
 	{
 			accel += 0.1;
-			mxspd += 0.5;
-			pointvalue += 200;
+			mxspd += 0.01;
+			pointvalue += 150;
 	}
 	/*function distance(p1,p2)
 	{
@@ -60,6 +61,7 @@ class Scarlet extends Enemy
 			}
 			rename = who;
 			transformed = false;
+			HP = 1;
 		}
 	}
 	override public function attack():Bool 
@@ -82,6 +84,11 @@ class Scarlet extends Enemy
 			}
 			var A = game.GetPlayers();
 			target = A[Std.int(99999 * UID) % A.length];
+			if (HP < 2)
+			{
+				rename = who;
+				transformed = false;
+			}
 		}
 		if (!killed)
 		{
@@ -134,16 +141,24 @@ class Scarlet extends Enemy
 					}
 				}
 				x += Hspeed;
+				var W = false;
 				if (x < -width)
 				{
 					x = 800;
+					W = true;
 				}
 				if (x > 800)
 				{
 					x = -width;
+					W = true;
 				}
 				animate();
 				updateanimation(rename);
+				if (y > 408 && W)
+				{
+					alive = false;
+					visible = false;
+				}
 			}
 			else
 			{
