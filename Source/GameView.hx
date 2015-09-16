@@ -711,7 +711,7 @@ class GameView extends Sprite
 		lifeicon.y = 5;
 		lifeicon.scaleX = 0.6;
 		lifeicon.scaleY = 0.6;
-		lifeicon.scrollRect = new Rectangle(0, 0, 100, 60);
+		//lifeicon.scrollRect = new Rectangle(0, 0, 100, 60);
 		updatelifeicon();
 		
 		addChild(lifeicon);
@@ -788,6 +788,10 @@ class GameView extends Sprite
 			{
 				//paused = !paused;
 				paused = menu;
+			}
+			//if (!menu)
+			{
+				Main._this.savedata.data.characterselected = playerspick;
 			}
 				 } 
 				);
@@ -866,6 +870,8 @@ class GameView extends Sprite
 		if (lifeicon.bitmapData != BD)
 		{
 			lifeicon.bitmapData = BD;
+			lifeicon.scrollRect = new Rectangle(0, 0, 100, BD.height - (BD.height / 4));
+			lifeicon.y = (5+10) - (BD.height / 8);
 			//lifeicon.x = (TF.x - lifeicon.width)+30;
 		}
 	}
@@ -3520,6 +3526,10 @@ class GameView extends Sprite
 				//paused = !paused;
 				paused = menu;
 			}
+			//if (!menu)
+			{
+				Main._this.savedata.data.characterselected = playerspick;
+			}
 		}
 		ControlEvent = true;
 	}
@@ -4010,6 +4020,7 @@ class GameView extends Sprite
 					{
 						paused = menu;
 					}
+					Main._this.savedata.data.characterselected = playerspick;
 					
 				 } 
 				);
@@ -4304,6 +4315,13 @@ class GameView extends Sprite
 		addChild(Dpad);
 		addChild(colorflash);*/
 		ltime = currentTime;
+	}
+	public function LoseFocus() {
+		if (!online)
+		{
+			menu = true;
+			paused = menu;
+		}
 	}
 	public function SendStatus() {
 		settotalenemies();
