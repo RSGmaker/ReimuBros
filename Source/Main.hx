@@ -65,6 +65,7 @@ class Main extends Sprite {
 	public var controlscheme:Array<UInt>;
 	//message shown to player should the host of that session make them leave
 	public var statusmessage:String = "";
+	public var defaultcontrols:Array<UInt> = [Keyboard.UP, Keyboard.DOWN, Keyboard.LEFT, Keyboard.RIGHT, Keyboard.SPACE, Keyboard.ENTER];
 	
 	public var lastsession:Dynamic;
 	public var session:Dynamic;
@@ -151,21 +152,39 @@ class Main extends Sprite {
 		{
 			savedata.data.maxlevel = 1;
 		}
+		
 		if (savedata.data.controlscheme == null)
 		{
 			controlscheme = new Array<UInt>();
-			controlscheme[0] = Keyboard.UP;
+			/*controlscheme[0] = Keyboard.UP;
 			controlscheme[1] = Keyboard.DOWN;
 			controlscheme[2] = Keyboard.LEFT;
 			controlscheme[3] = Keyboard.RIGHT;
 			controlscheme[4] = Keyboard.SPACE;
 			controlscheme[5] = Keyboard.ENTER;
-			savedata.data.controlscheme = controlscheme;
+			savedata.data.controlscheme = controlscheme;*/
 		}
 		else
 		{
 			controlscheme = savedata.data.controlscheme;
+			
 		}
+		var i = 0;
+		var fix = false;
+		while (i < defaultcontrols.length)
+		{
+			if (controlscheme[i] == 0)
+			{
+				controlscheme[i] = defaultcontrols[i];
+				fix = true;
+			}
+			i++;
+		}
+		if (fix)
+		{
+			savedata.data.controlscheme = controlscheme;
+		}
+		//savedata.data.controlscheme = null;
 		SoundManager._this.SetSoundVolume(savedata.data.soundvolume);
 		SoundManager._this.SetMusicVolume(savedata.data.musicvolume);
 		//initialize the character unlock data
@@ -201,7 +220,15 @@ class Main extends Sprite {
 		stage.addEventListener (Event.ENTER_FRAME, this_onEnterFrame);
 		stage.addEventListener (KeyboardEvent.KEY_UP, stage_onKeyUp);
 		stage.addEventListener (KeyboardEvent.KEY_DOWN, stage_onKeyDown);
+		stage.addEventListener (Event.DEACTIVATE, stage_deactivate);
 		showtitlescreen();
+	}
+	private function stage_deactivate(event:Event):Void
+	{
+		if (game != null)
+		{
+			game.LoseFocus();
+		}
 	}
 	//do special key functions, and pass on key info to active view.
 	private function stage_onKeyUp (event:KeyboardEvent):Void {
