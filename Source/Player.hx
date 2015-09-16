@@ -150,8 +150,8 @@ class Player extends Entity
 	public var glow:flash.filters.GlowFilter;
 	
 	//public static inline var base_deccel = 0.5+0.4;
-	public static inline var base_deccel = 0.5+0.5;
-	public static inline var base_accel = 0.7 + base_deccel;
+	public static inline var base_deccel = 0.5+0.55;
+	public static inline var base_accel = 0.8 + base_deccel;
 	//public static inline var base_mxspd = 7+1.55;
 	//public static inline var base_mxspd = 7+1.55-0.9;
 	public static inline var base_fallaccel = 1.0+0.1;
