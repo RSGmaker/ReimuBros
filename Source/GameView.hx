@@ -497,7 +497,7 @@ class GameView extends Sprite
 		
 		{
 			
-		SoundManager.PlayJingle("startgame").addEventListener(Event.SOUND_COMPLETE,function(e:Event):Void {PlayMusic();});
+		SoundManager.PlayJingle("startgame").addEventListener(Event.SOUND_COMPLETE,function(e:Event):Void {PlayMusic(true);});
 		}
 		addChild(gamestage);
 		collisiondata = new Array<Dynamic>();
@@ -1059,7 +1059,7 @@ class GameView extends Sprite
 		}
 		return "Myself";
 	}
-	private function PlayMusic():Void
+	private function PlayMusic(showlevel:Bool):Void
 	{
 		OBackground.bitmapData = Background.bitmapData;
 		var L = Math.floor((level-1) / 5);
@@ -1076,7 +1076,10 @@ class GameView extends Sprite
 			Background.alpha = 0;
 			
 		L = Math.floor((level - 1) / 5);
-		ShowLevel();
+		if (showlevel)
+		{
+			ShowLevel();
+		}
 		if (GameFlags.get(Main.AltMusic) || (playerspick == "benben" || playerspick == "yatsuhashi"))
 		{
 			L += 6;
@@ -1697,7 +1700,10 @@ class GameView extends Sprite
 		if (evt == "NextLevel")
 		{
 			var R = TypeofRound.createByIndex(data.RoundType);
-			
+			if (!Hoster)
+			{
+				maxspawns = 0;
+			}
 			if (RoundType != R)
 			{
 				if (R == TypeofRound.Table)
@@ -1745,7 +1751,7 @@ class GameView extends Sprite
 			rank = Math.floor(L / 30);
 			//ShowLevel();
 			//call playmusic() as it will change song if its new
-			SoundManager.PlayJingle("nextlevel").addEventListener(Event.SOUND_COMPLETE, function(e:Event):Void { PlayMusic(); } );
+			SoundManager.PlayJingle("nextlevel").addEventListener(Event.SOUND_COMPLETE, function(e:Event):Void { PlayMusic(Hoster); } );
 			var i = 0;
 			while (i < entities.length)
 			{
@@ -2000,10 +2006,17 @@ class GameView extends Sprite
 					L = 0;
 				}
 				rank = Math.floor(L / 30);
-				PlayMusic();
+				PlayMusic(true);
+				
 			}
 			level = data.level;
 			totalenemies = data.totalenemies;
+			if (!Hoster && totalenemies > maxspawns)
+			{
+				maxspawns = totalenemies;
+				//SpawnList.clear();
+				//populatespawnlist();
+			}
 			sessionID = data.sessionID;
 			if (Main._this.lastsession != null && sessionID == Main._this.lastsession.sessionID)
 			{
@@ -3390,7 +3403,7 @@ class GameView extends Sprite
 					level++;
 					if (((level - 1) % 5)+1 == 1)
 					{
-						PlayMusic();
+						PlayMusic(Hoster);
 						messagetime = 0;
 					}
 				}
@@ -4293,9 +4306,10 @@ class GameView extends Sprite
 		ltime = currentTime;
 	}
 	public function SendStatus() {
+		settotalenemies();
 		var D:Dynamic = { };
 					D.level = level;
-					D.totalenemies = (activeEnemies.length + SpawnList.length);
+					D.totalenemies = totalenemies;
 					D.activeEnemies = (activeEnemies.length);
 					D.HP = powblock.HP;
 					D.activeItems = activeItems.length;
@@ -4303,6 +4317,11 @@ class GameView extends Sprite
 					D.GameFlags = GameFlags.data;
 					D.sessionID = sessionID;
 					SendEvent("Status", D);
+	}
+	public function settotalenemies()
+	{
+		totalenemies = (SpawnList.length);
+		totalenemies += getenemycount();
 	}
 	public function getenemycount():Int
 	{
@@ -4324,10 +4343,11 @@ class GameView extends Sprite
 		{
 			return;
 		}
+		var RS = roundstarted;
 		var prct = 0.5;
 		if (boss == null)
 		{
-			if (maxspawns == 0)
+			if (maxspawns == 0 && Hoster)
 			{
 				if (gamestarted)
 				{
@@ -4340,7 +4360,7 @@ class GameView extends Sprite
 			}
 			else
 			{
-				if (roundstarted)
+				if (roundstarted || !Hoster)
 				{
 					prct = (maxspawns - totalenemies) / maxspawns;
 				}
@@ -4388,6 +4408,11 @@ class GameView extends Sprite
 			{
 				lastprogress = prct;
 			}
+		}
+		//if (isNaN(prct))
+		if (!(prct>=0 && prct<=1))
+		{
+			prct = 1;
 		}
 		var X = 100 * prct;
 		X = 100 - X;
@@ -4448,8 +4473,7 @@ class GameView extends Sprite
 		}
 		if (Hoster)
 		{
-			totalenemies = (SpawnList.length);
-			totalenemies += getenemycount();
+			settotalenemies();
 			SpawnTimer -= 1;
 			if ((activeEnemies.length < 1 || totalenemies < 1) && spawns>0 && enemyspawn)
 			{
@@ -4623,12 +4647,11 @@ class GameView extends Sprite
 					RemoveEnemy(E);
 					if (Hoster)
 					{
-						totalenemies = (SpawnList.length);
-						totalenemies += getenemycount();
+						settotalenemies();
 					}
 					else if (D.needtokill && D.killed)
 					{
-						totalenemies--;
+						//totalenemies--;
 					}
 				}
 				else if (E.type == "Item")
@@ -5046,8 +5069,7 @@ class GameView extends Sprite
 					//SendEvent("Spawntables", null);
 				}
 				
-				totalenemies = (SpawnList.length);
-				totalenemies += getenemycount();
+				settotalenemies();
 				
 				SendEvent("TotalEnemies", totalenemies);
 				}
@@ -5505,6 +5527,14 @@ class GameView extends Sprite
 	}
 	public function populatespawnlist()
 	{
+		if (enemytypes == null || enemytypes.length < 1)
+		{
+			if (enemytypes == null)
+			{
+				enemytypes = new Array<Enemy>();
+			}
+			enemytypes[enemytypes.length] = new RedFairy();
+		}
 		if (enemytypes != null && enemytypes.length > 0)
 		{
 			var tmp = 0;

@@ -210,6 +210,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Key.txt");
+		types.push (lime.Assets.AssetType.TEXT);
+		
+		
 		urls.push ("assets/Sprites/1up0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		

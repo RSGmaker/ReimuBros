@@ -27,6 +27,20 @@ class PlayerBullet extends Entity
 		type = "PlayerBullet";
 		UID = -1;
 	}
+	override public function CustomEvent(data:Dynamic) 
+	{
+		super.CustomEvent(data);
+		if (data.type == "hit")
+		{
+			//var E = game.EntityFromUID(data.UID);
+			//if (E != null)
+			{
+				
+				game.ProcessEvent("Kill",tossedBy.ID, data.UID);
+			}
+			HP = data.HP;
+		}
+	}
 	public override function update()
 	{
 		if (!started)
@@ -151,9 +165,14 @@ class PlayerBullet extends Entity
 				{
 					if (tossedBy == game.myplayer)
 					{
-						game.SendEvent("Kill", danger.UID);
+						var D:Dynamic = { };
+						D.UID = danger.UID;
+						D.type = "hit";
+						D.HP = HP - 1;
+						SendCustomEvent(D);
+						//game.SendEvent("Kill", danger.UID);
 					}
-					HP--;
+					//HP--;
 				}
 			}
 			if (HP <= 0)
