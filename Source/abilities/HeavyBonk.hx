@@ -18,6 +18,8 @@ class HeavyBonk extends PlayerAbility
 		if (player.isme)
 		{
 			var headbonk = player.headbonk;
+			if (headbonk.type == "Block")
+			{
 			var T = game.CollisionDetectPoint(headbonk.x - 32, headbonk.y);
 			if (T != null)
 			{
@@ -27,6 +29,7 @@ class HeavyBonk extends PlayerAbility
 			if (T != null)
 			{
 				game.SendEvent("Headbonk", T.UID);
+			}
 			}
 		}
 	}
