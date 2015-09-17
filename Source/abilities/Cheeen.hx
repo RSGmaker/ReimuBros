@@ -48,7 +48,7 @@ class Cheeen extends PlayerAbility
 			D.wrap = true;
 			D.wrapdrain = true;
 			D.HP = 17;
-			game.SendEvent("PlayerDanmaku", D);
+			game.SendPlayerDanmaku(D);
 		}
 	}
 }

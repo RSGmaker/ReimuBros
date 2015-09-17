@@ -49,7 +49,7 @@ class IceBall extends PlayerAbility
 			D.wrap = true;
 			D.rolls = true;
 			//D.bounces = true;
-			game.SendEvent("PlayerDanmaku", D);
+			game.SendPlayerDanmaku(D);
 		}
 	}
 }

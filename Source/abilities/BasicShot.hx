@@ -46,16 +46,16 @@ class BasicShot extends PlayerAbility
 			D.gravX = 0;
 			D.gravY = 0;
 			D.wrap = false;
-			game.SendEvent("PlayerDanmaku", D);
+			game.SendPlayerDanmaku(D);
 			D.Vspeed = 1;
 			var i = 0;
 			while (i < 1)
 			{
 				D.Vspeed += 1;
 				D.Hspeed -= D.dir;
-				game.SendEvent("PlayerDanmaku", D);
+				game.SendPlayerDanmaku(D);
 				D.Vspeed *= -1;
-				game.SendEvent("PlayerDanmaku", D);
+				game.SendPlayerDanmaku(D);
 				D.Vspeed *= -1;
 				i++;
 			}

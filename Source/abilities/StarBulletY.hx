@@ -47,16 +47,16 @@ class StarBulletY extends PlayerAbility
 			D.gravX = 0;
 			D.gravY = 0;
 			D.wrap = false;
-			game.SendEvent("PlayerDanmaku", D);
+			game.SendPlayerDanmaku(D);
 			var i = 0;
 			D.Vspeed = 1;
 			while (i < 4)
 			{
 				D.Vspeed += 1;
 				D.Hspeed -= D.dir;
-				game.SendEvent("PlayerDanmaku", D);
+				game.SendPlayerDanmaku(D);
 				D.Vspeed *= -1;
-				game.SendEvent("PlayerDanmaku", D);
+				game.SendPlayerDanmaku(D);
 				D.Vspeed *= -1;
 				i++;
 			}

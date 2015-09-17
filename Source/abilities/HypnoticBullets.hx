@@ -50,9 +50,9 @@ class HypnoticBullets extends PlayerAbility
 			D.bumps = true;
 			//D.wrap = true;
 			//D.bounces = true;
-			game.SendEvent("PlayerDanmaku", D);
+			game.SendPlayerDanmaku(D);
 			D.y -= 20;
-			game.SendEvent("PlayerDanmaku", D);
+			game.SendPlayerDanmaku(D);
 		}
 	}
 }

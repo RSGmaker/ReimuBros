@@ -88,23 +88,6 @@ class SpellCardItem extends CarryItem
 		{
 			//fire a beam.
 			ammo--;
-			//var L = new LaserBeam();
-			//var X = P.x;
-			/*var D:Dynamic = { };
-			D.x = x;
-			if (P.Ldir < 0)
-			{
-				D.x -= 800;
-			}
-			else
-			{
-				D.x += 13;
-			}
-			D.y = y;
-			D.user = P.UID;
-			D.antiplayer = false;
-			D.antienemy = true;
-			game.SendEvent("LaserBeam",D);*/
 			var spd = 8;
 			var D:Dynamic = { };
 			D.x = P.x;
@@ -124,7 +107,7 @@ class SpellCardItem extends CarryItem
 			D.gravX = 0;
 			D.gravY = 0;
 			D.wrap = false;
-			game.SendEvent("PlayerDanmaku", D);
+			game.SendPlayerDanmaku(D);
 			var i = 0;
 			D.Vspeed = 1;
 			//var P:flash.geom.Point = new flash.geom.Point(0, 0);
@@ -132,9 +115,9 @@ class SpellCardItem extends CarryItem
 			{
 				D.Vspeed += 1;
 				D.Hspeed -= D.dir;
-				game.SendEvent("PlayerDanmaku", D);
+				game.SendPlayerDanmaku(D);
 				D.Vspeed *= -1;
-				game.SendEvent("PlayerDanmaku", D);
+				game.SendPlayerDanmaku(D);
 				D.Vspeed *= -1;
 				i++;
 			}
@@ -148,23 +131,23 @@ class SpellCardItem extends CarryItem
 			}
 			D.Hspeed = -D.Hspeed;
 			D.Vspeed = 0;
-			game.SendEvent("PlayerDanmaku", D);
+			game.SendPlayerDanmaku(D);
 			i = 0;
 			while (i < 4)
 			{
 				D.Vspeed += 1;
 				D.Hspeed -= -D.dir;
-				game.SendEvent("PlayerDanmaku", D);
+				game.SendPlayerDanmaku(D);
 				D.Vspeed *= -1;
-				game.SendEvent("PlayerDanmaku", D);
+				game.SendPlayerDanmaku(D);
 				D.Vspeed *= -1;
 				i++;
 			}
 			D.Hspeed = 0;
 			D.Vspeed = 8;
-			game.SendEvent("PlayerDanmaku", D);
+			game.SendPlayerDanmaku(D);
 			D.Vspeed = -8;
-			game.SendEvent("PlayerDanmaku", D);
+			game.SendPlayerDanmaku(D);
 		}
 		if (ammo <= 0)
 		{

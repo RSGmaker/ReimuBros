@@ -48,7 +48,7 @@ class YinYangOrbs extends PlayerAbility
 			D.gravY = 0.4;
 			D.wrap = true;
 			D.bounces = true;
-			game.SendEvent("PlayerDanmaku", D);
+			game.SendPlayerDanmaku(D);
 		}
 	}
 }

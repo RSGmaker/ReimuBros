@@ -59,7 +59,7 @@ class SuwakoHoop extends PlayerAbility
 			D.bounces = true;
 			D.topbounce = true;
 			D.bouncedrain = true;
-			game.SendEvent("PlayerDanmaku", D);
+			game.SendPlayerDanmaku(D);
 		}
 	}
 }

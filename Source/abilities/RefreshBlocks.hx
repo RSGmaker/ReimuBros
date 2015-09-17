@@ -9,7 +9,7 @@ class RefreshBlocks extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Refreshes all blocks";
+		description = "Purifies all blocks";
 	}
 	override public function init() 
 	{

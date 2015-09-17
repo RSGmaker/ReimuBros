@@ -46,7 +46,7 @@ class StarBulletG extends PlayerAbility
 			D.gravX = 0;
 			D.gravY = 0;
 			D.wrap = false;
-			game.SendEvent("PlayerDanmaku", D);
+			game.SendPlayerDanmaku(D);
 		}
 	}
 }
