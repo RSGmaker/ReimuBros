@@ -34,6 +34,10 @@ class ApplicationMain {
 		var types = [];
 		
 		
+		urls.push ("assets/Audio/Mp3/anchor.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
 		urls.push ("assets/Audio/Mp3/bonk.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
@@ -902,10 +906,6 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("assets/Sprites/lilith0.png");
-		types.push (lime.Assets.AssetType.IMAGE);
-		
-		
 		urls.push ("assets/Sprites/lily0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -914,11 +914,11 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("assets/Sprites/lunachild0.png");
+		urls.push ("assets/Sprites/lunasa0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("assets/Sprites/lunasa0.png");
+		urls.push ("assets/Sprites/luna_child0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -1150,15 +1150,15 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("assets/Sprites/redfairy0.png");
-		types.push (lime.Assets.AssetType.IMAGE);
-		
-		
-		urls.push ("assets/Sprites/redfairyflipped0.png");
-		types.push (lime.Assets.AssetType.IMAGE);
-		
-		
 		urls.push ("assets/Sprites/Redufo0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/red_fairy0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/red_fairyflipped0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -1346,6 +1346,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/senkou0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/shanghai0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -1394,7 +1398,7 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("assets/Sprites/starsaphire0.png");
+		urls.push ("assets/Sprites/star_sapphire0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -1406,7 +1410,7 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("assets/Sprites/sunnymilk0.png");
+		urls.push ("assets/Sprites/sunny_milk0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
