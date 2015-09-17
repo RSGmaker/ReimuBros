@@ -27,7 +27,7 @@ class BossParsee extends Boss
 		var Y = 0;
 		var R = Math.floor((3 * Math.random())+1) * 160;
 		Y += R;
-		jealousTarget = Y;
+		/*jealousTarget = Y;
 		jealousX = 20;
 		jealousDir = 1;
 		if (rng.quick(100)>50)
@@ -38,7 +38,33 @@ class BossParsee extends Boss
 		//jealousyX = cx;
 		jealousY = 0;
 		jealousDelay = 0;
-		jealous = true;
+		jealous = true;*/
+		var D:Dynamic = { };
+		//D.Y = 0;
+		D.X = 20;
+		D.target = R;
+		D.Dir = 1;
+		if (rng.quick(100)>50)
+		{
+			D.X = 800 - jealousX - 80;
+			D.Dir = -1;
+		}
+		D.type = "jealous";
+		SendCustomEvent(D);
+	}
+	override public function CustomEvent(data:Dynamic) 
+	{
+		super.CustomEvent(data);
+		if (data.type == "jealous")
+		{
+			jealousTarget = data.target;
+			jealousX = data.X;
+			//jealousY = data.Y;
+			jealousY = 0;
+			jealousDir = data.Dir;
+			jealousDelay = 0;
+			jealous = true;
+		}
 	}
 	override public function dodanmaku() 
 	{
@@ -48,7 +74,10 @@ class BossParsee extends Boss
 			shottime--;
 			if (shottime <= 0)
 			{
-				greeneyedjealousy();
+				if (game.Hoster)
+				{
+					greeneyedjealousy();
+				}
 				shottime = jealoustime+cooldown;
 				limit = jealoustime;
 			}
