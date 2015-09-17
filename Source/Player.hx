@@ -73,7 +73,9 @@ class Player extends Entity
 	"rika","noroiko", "meira", "matenshi",
 	"ellen", "kotohime", "kana", "rikako", "chiyuri", "yumemi", "ruukoto",
 	"orange", "kurumi", "elly", "rengeteki"/*, "yuuka"*/, "mugetsu", "gengetsu",
-	"sara","louise"/*,"alice"*/,"yuki","mai","ayana","yumeko","shinki","makairesident-a","lilith"];
+	"sara", "louise"/*,"alice"*/, "yuki", "mai", "ayana", "yumeko", "shinki", "makairesident-a", "lilith",
+	
+	"RedFairy"];
 	//yukari:idk maybe a rare event that has something to do with the chen gaps.
 	//rumia rare round event where rumias spawn(they have a large darkness around them making it hard to see, beating the round unlocks rumia for all players)
 	//seija rare event only seijas spawn and the view flips during the round.
@@ -736,17 +738,20 @@ class Player extends Entity
 			y += Vspeed;
 			if (y > 600 && this == game.myplayer)
 			{
-				var D:Dynamic = { };
-				D.x = 400;
-				D.y = 0;
-				cancel = false;
-				ability.onloselife();
-				if (!cancel)
+				if (!game.GameFlags.get(Main.AllStar))
 				{
-					lives--;
+					var D:Dynamic = { };
+					D.x = 400;
+					D.y = 0;
+					cancel = false;
+					ability.onloselife();
+					if (!cancel)
+					{
+						lives--;
+					}
+					D.lives = lives;
+					game.SendEvent("PlayerRespawn", D);
 				}
-				D.lives = lives;
-				game.SendEvent("PlayerRespawn", D);
 			}
 			}
 		}

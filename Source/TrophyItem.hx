@@ -10,6 +10,7 @@ class TrophyItem extends CarryItem
 	public var started:Bool;
 	public var twuck:Bool;
 	public var spawned:Bool;
+	public var preventdespawn:Bool;
 	public function new() 
 	{
 		super("trophy");
@@ -21,6 +22,10 @@ class TrophyItem extends CarryItem
 	{
 		//prevent someone camping on pow block from grabbing it.
 		//if (player.y < y || x != 400)
+		if (game.GameFlags.get(Main.TruckHoarder))
+		{
+			game.spawnpaused = false;
+		}
 		if (player.y < y || Math.abs(400-x) > 64)
 		{
 			super.Collect(player);
@@ -40,10 +45,14 @@ class TrophyItem extends CarryItem
 		super.update();
 		if (!started)
 		{
-			if (UID < 0.22 && game.level>15 && game.RoundType.getName() == "Normal")
+			if ((UID < 0.22 && game.level>15 && game.RoundType.getName() == "Normal") || game.GameFlags.get(Main.TruckHoarder))
 			{
 				ChangeAnimation("truck");
 				twuck = true;
+				if (game.GameFlags.get(Main.TruckHoarder))
+				{
+					preventdespawn = true;
+				}
 			}
 			started = true;
 		}
@@ -51,9 +60,13 @@ class TrophyItem extends CarryItem
 		{
 			despawntime = maxdespawntime;
 		}
+		if (preventdespawn)
+		{
+			despawntime = maxdespawntime;
+		}
 		if (holder != null && holder.type == "Player" && holder == game.myplayer)
 		{
-			if (holder.ground != null && holder.ground.type == "PowBlock")
+			if (holder.ground == null || holder.ground.type == "PowBlock")
 			{
 				timer++;
 				if (timer > 120)
@@ -85,6 +98,12 @@ class TrophyItem extends CarryItem
 				{
 					game.unlockcharacter("mokou");
 					game.unlockcharacter("kaguya");
+					if (!Main._this.savedata.data.challenges[2])
+					{
+						game.ShowMessage("Truck Hoarder challenge");
+						game.ShowMessage("is now available!");
+						Main._this.savedata.data.challenges[2] = true;
+					}
 				}
 			}
 		}

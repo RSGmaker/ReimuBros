@@ -20,6 +20,11 @@ class CameraItem extends CarryItem
 		OffsetX = 12;
 		OffsetY = 37;
 		ammo = maxammo;
+		if (game.RoundType == GameView.TypeofRound.Danmaku)
+		{
+			ammo = 2;
+			maxammo = 2;
+		}
 	}
 	override public function Collect(player:Player) 
 	{
@@ -47,6 +52,10 @@ class CameraItem extends CarryItem
 			{
 				var D:Dynamic = player.equipment;
 				var M:CameraItem = D;
+				if (M.maxammo < maxammo)
+				{
+					M.maxammo = maxammo;
+				}
 				if (M.ammo < maxammo)
 				{
 					M.ammo = maxammo;

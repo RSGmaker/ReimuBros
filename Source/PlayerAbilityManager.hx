@@ -84,6 +84,7 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.TreasureHunter(null), names:["nazrin"] };
 		
 		
+		L[L.length] = { type:new abilities.NoAbility(null), names:["RedFairy"] };
 		L[L.length] = { type:new abilities.BasicShot(null), names:["benben","yatsuhashi"] };
 	}
 	public function init()

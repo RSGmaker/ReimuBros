@@ -70,7 +70,22 @@ class Main extends Sprite {
 	public var lastsession:Dynamic;
 	public var session:Dynamic;
 	
-	public var level:Int;
+	public var roomprefix:String = "main";
+	
+	public var level:Int=1;
+	
+	public var cheating:Bool;
+	
+	public var levelselect:Bool;
+	
+	public var levelincrement:Int = 1;
+	
+	public var cancontinue:Bool = true;
+	
+	public var canselectcharacter:Bool = true;
+	
+	public var canlivesspawn:Bool = true;
+	
 	//cheatcode flags
 	public static inline var FireCirno = 1;
 	public static inline var KonamiCode = 2;
@@ -93,6 +108,12 @@ class Main extends Sprite {
 	public static inline var RelockAllCharacters = 19;
 	public static inline var ElectricCirno = 20;
 	public static inline var Drumstep = 21;
+	public static inline var Bossrush = 22;
+	public static inline var Danmaku = 23;
+	public static inline var TruckHoarder = 24;
+	public static inline var NoEvents = 25;
+	public static inline var UnlockAllChallenges = 26;
+	public static inline var AllStar = 27;
 	//cheatcodes are stored as md5 hashcodes, so cheatcodes cannot be obtained via hacking, you can press f9 in the character select to convert your player name to an md5 hash requires in game debug mode (Main.DEBUG=true)
 	//75efc70c0e990c49b8ee4fbdaca89dae = firecirno
 	//6718c4714daa73a63e1e4ea54757449c = upupdowndownleftrightleftrightbastart
@@ -115,7 +136,13 @@ class Main extends Sprite {
 	//fda28399f82b488a33807573a2d670c5 = lookatdemtumbleweeds...
 	//1b9b7d20ce44ad2f880f677deefd711b = shockingisntit
 	//0c22948e07710faa0ad65b83053d77e0 = drumstep
-	public static var codes:Array<String> = ["75efc70c0e990c49b8ee4fbdaca89dae", "6718c4714daa73a63e1e4ea54757449c", "9e6122001ea0464018c634c285233853", "7d51b214e0069ac6361aaaf2034279a6", "2b59c79dfe67f2a5d0f17c646ae894ed", "fa55036379520473353e15548f2a388e", "69034dbf1b3882954b3a9b8bf9686d1c","c16404177908ade1a1f1b0e3f8835ec9","6170e8e40fdf20f6fbeefd88815a2086","525afc6a26124022359a9ad101e71e99","5aed71982de151ff05492c9babb533ea","45c48cce2e2d7fbdea1afc51c7c6ad26","1c0108249de204153f4e296913fcacea","09e1ca57cc1c4e73bd7fc9f5642883db","f9df7933994ea2e532cc30a842d36766","151115624f4a47252d316c30d1ccbced","4b54a629dbc0c68ab8312740ae3d1e84","b32092f7b9e04c12abb373a257ba16fe","fda28399f82b488a33807573a2d670c5","1b9b7d20ce44ad2f880f677deefd711b","0c22948e07710faa0ad65b83053d77e0"];
+	//0f6a8fa3f3985858ebc1debc5ce61f7e = /bossrush
+	//c022be00cb710d03d98d67fb6cbf6d7a = /danmaku
+	//42fa0e8cfd0cb2102c7d23ebd7ada199 = /truckhoarder
+	//2f4581b3456a9c99e51b0237fe9bde0a = teatime
+	//5e19e32cb6c2a71bec4fed4135f2785f = spell card rules what are those?
+	//1a723cfc8a28af39a97b5c0f497e52c4 = /allstar
+	public static var codes:Array<String> = ["75efc70c0e990c49b8ee4fbdaca89dae", "6718c4714daa73a63e1e4ea54757449c", "9e6122001ea0464018c634c285233853", "7d51b214e0069ac6361aaaf2034279a6", "2b59c79dfe67f2a5d0f17c646ae894ed", "fa55036379520473353e15548f2a388e", "69034dbf1b3882954b3a9b8bf9686d1c","c16404177908ade1a1f1b0e3f8835ec9","6170e8e40fdf20f6fbeefd88815a2086","525afc6a26124022359a9ad101e71e99","5aed71982de151ff05492c9babb533ea","45c48cce2e2d7fbdea1afc51c7c6ad26","1c0108249de204153f4e296913fcacea","09e1ca57cc1c4e73bd7fc9f5642883db","f9df7933994ea2e532cc30a842d36766","151115624f4a47252d316c30d1ccbced","4b54a629dbc0c68ab8312740ae3d1e84","b32092f7b9e04c12abb373a257ba16fe","fda28399f82b488a33807573a2d670c5","1b9b7d20ce44ad2f880f677deefd711b","0c22948e07710faa0ad65b83053d77e0","0f6a8fa3f3985858ebc1debc5ce61f7e","c022be00cb710d03d98d67fb6cbf6d7a","42fa0e8cfd0cb2102c7d23ebd7ada199","2f4581b3456a9c99e51b0237fe9bde0a","5e19e32cb6c2a71bec4fed4135f2785f","1a723cfc8a28af39a97b5c0f497e52c4"];
 	public var GameFlags:FlagManager;
 	public function new () {
 		super ();
@@ -152,6 +179,10 @@ class Main extends Sprite {
 		{
 			savedata.data.maxlevel = 1;
 		}
+		if (savedata.data.challenges == null)
+			{
+				savedata.data.challenges = new Array<Bool>();
+			}
 		
 		if (savedata.data.controlscheme == null)
 		{
@@ -307,6 +338,7 @@ class Main extends Sprite {
 					{
 						online = true;
 					}
+					//roomprefix = "classicmode";
 					showcharacterselect();
 				}
 				if (status == "Options")
@@ -319,15 +351,36 @@ class Main extends Sprite {
 		{
 			characterselect.this_onEnterFrame();
 			var S = characterselect.status;
+			
+			
 			if (S == "PlayGame")
 			{
+				var bannedname = false;
 				var code = characterselect.Nameinput.text;
+				var C = code;
+				if (code.length > 0)
+				{
+					C = code.toLowerCase().split(" ").join("");
+					if (code.charAt(0) == "/")
+					{
+						bannedname = true;
+					}
+					if (code == "PlayerName" && online)
+					{
+						bannedname = true;
+					}
+				}
+				else
+				{
+					bannedname = true;
+				}
 				var valid = true;
+				if (!bannedname)
 				{
 					
 					if (code.length > 0)
 					{
-						code = code.toLowerCase().split(" ").join("");
+						code = C;
 						code = MD5.hash(code);
 						var gamecode = codes.indexOf(code) + 1;
 						if (gamecode == UnlockAllCharacters)
@@ -358,6 +411,21 @@ class Main extends Sprite {
 							//restart character select menu
 							showcharacterselect();
 						}
+						else if (gamecode == UnlockAllChallenges)
+						{
+							var i = 0;
+							while (i < 4)
+							{
+								savedata.data.challenges[i] = true;
+								i++;
+							}
+							i = 0;
+							valid = false;
+							//restart character select menu
+							//showcharacterselect();
+							showtitlescreen();
+							return;
+						}
 						else
 						{
 						if (gamecode > 0)
@@ -365,6 +433,7 @@ class Main extends Sprite {
 							valid = false;
 							characterselect.Nameinput.text = characterselect.playername;
 							GameFlags.set(gamecode, true);
+							cheating = true;
 						}
 						}
 					}
@@ -372,7 +441,9 @@ class Main extends Sprite {
 				characterselect.status = "";
 				if (valid)
 				{
-					if ((online && GameFlags.getactiveflags().length > 0) && !characterselect.custom)
+					//if ((online && GameFlags.getactiveflags().length > 0) && !characterselect.custom)
+					//if ((online && cheating) && !characterselect.custom)
+					if ((online && cheating) && !characterselect.custom)
 					{
 						//no cheats in multiplayer unless a custom room(custom rooms are checked to see if not a actually a public room)
 						valid = false;
@@ -382,7 +453,7 @@ class Main extends Sprite {
 						valid = true;
 					}
 				}
-				if (valid)
+				if (valid && !bannedname)
 				{
 					playerspick = characterselect.selected;
 					if (GameFlags.get(Prinny))
@@ -394,9 +465,26 @@ class Main extends Sprite {
 						playerspick = "pika";
 					}
 					Room = characterselect.Room;
-					savedata.data.characterselected = playerspick;
+					if (canselectcharacter)
+					{
+						savedata.data.characterselected = playerspick;
+					}
 					level = characterselect.level;
 					showgame();
+				}
+				else
+				{
+					if (bannedname)
+					{
+						characterselect.status = "Error:Name";
+					}
+					else
+					{
+						if (online)
+						{
+							characterselect.status = "Error:Cheat";
+						}
+					}
 				}
 			}
 			if (S == "TitleScreen")
@@ -519,7 +607,7 @@ class Main extends Sprite {
 		game.playerspick = playerspick;
 		game.playername = playername;
 		game.online = online;
-		game.Room = Room;
+		game.Room = roomprefix + "_" + Room;
 		game.GameFlags = GameFlags;
 		game.level = level-1;
 		game.start();
@@ -528,11 +616,24 @@ class Main extends Sprite {
 	private function showtitlescreen()
 	{
 		clear();
+		resetsettings();
 		titlescreen = new TitleScreenView();
 		titlescreen.AL = AL;
 		stage.addChild(titlescreen);
 		titlescreen.start();
 		status = "titlescreen";
+		playerspick = "";
+	}
+	public function resetsettings()
+	{
+		GameFlags.clearall();
+		levelselect = true;
+		level = 1;
+		levelincrement = 1;
+		cancontinue = true;
+		canselectcharacter = true;
+		cheating = false;
+		canlivesspawn = true;
 	}
 	private function showcharacterselect()
 	{
@@ -540,8 +641,13 @@ class Main extends Sprite {
 		characterselect = new CharacterSelectView();
 		characterselect.AL = AL;
 		stage.addChild(characterselect);
+		if (playerspick == "")
+		{
+			playerspick = savedata.data.characterselected;
+		}
 		characterselect.playername = savedata.data.playername;
-		characterselect.selected = savedata.data.characterselected;
+		characterselect.selected = playerspick;
+		//characterselect.selected = savedata.data.characterselected;
 		characterselect.online = online;
 		if (characterselect.selected == null)
 		{

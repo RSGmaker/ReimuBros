@@ -54,6 +54,7 @@ enum TypeofRound {
 		ParseeBoss;
 		MurasaBoss;
 		Marisa;
+		Danmaku;
 	}
 class GameView extends Sprite
 {
@@ -112,6 +113,8 @@ class GameView extends Sprite
 	public var lastprogress:Float;
 	public var leveltitle:TextField;
 	public var lifeicon:Bitmap;
+	public var ufolimit:Int = 8;
+	public var useablelist:Array<String>;
 	
 	public function GetPlayers():Array<Player>
 	{
@@ -133,6 +136,13 @@ class GameView extends Sprite
 			alt = true;
 			name = name.substr(0, name.length - 3);
 			i = Player.characters.indexOf(name);
+		}
+		if (GameFlags.get(Main.AllStar))
+		{
+			if (useablelist.indexOf(name) < 0)
+			{
+				useablelist[useablelist.length] = name;
+			}
 		}
 		var savedata = Main._this.savedata;
 		if (i > -1)
@@ -244,7 +254,8 @@ class GameView extends Sprite
 	public var rept:Float;
 	//public var PointsToLife:Int=10000;
 	//public var PointsToLife:Int=12000;
-	public var PointsToLife:Int=14000;
+	//public var PointsToLife:Int=14000;
+	public var PointsToLife:Int=15000;
 	public var CombinedScore:Int = 0;
 	//ALL means it even counts score used up on 1ups
 	public var CombinedScoreALL:Int = 0;
@@ -294,6 +305,10 @@ class GameView extends Sprite
 	
 	public var entitylayer:Sprite;
 	public var gamestage:Sprite;
+	
+	public var spawnpaused:Bool;
+	//number of imposters we should spawn next level
+	public var imposterbonus:Int;
 	
 	
 	
@@ -493,6 +508,27 @@ class GameView extends Sprite
 		entities = new Array<Entity>();
 		//entities = null;
 	}
+	public function gethighscore():Int
+	{
+		return Reflect.field(Main._this.savedata.data, "Highscore:" + Main._this.roomprefix);
+		//return Main._this.savedata.data["Highscore:" + Main._this.roomprefix];
+	}
+	public function sethighscore(score:Int)
+	{
+		Reflect.setField(Main._this.savedata.data, "Highscore:" + Main._this.roomprefix, score);
+		//Main._this.savedata.data["Highscore:" + Main._this.roomprefix] = score;
+	}
+	public function getmaxlevel():Int
+	{
+		return Reflect.field(Main._this.savedata.data, "maxlevel:" + Main._this.roomprefix);
+		//return Main._this.savedata.data["maxlevel:" + Main._this.roomprefix];
+	}
+	public function setmaxlevel(level:Int)
+	{
+		//Main._this.savedata.data["maxlevel:" + Main._this.roomprefix] = level;
+		Reflect.setField(Main._this.savedata.data, "maxlevel:" + Main._this.roomprefix, level);
+	}
+	//Main._this.savedata.data.maxlevel
 	public function start() {
 		
 		{
@@ -531,7 +567,8 @@ class GameView extends Sprite
 		gamestage.addChild(Background);
 		entitylayer = new Sprite();
 		gamestage.addChild(entitylayer);
-		HighScore = Main._this.savedata.data.highscore;
+		//HighScore = Main._this.savedata.data.highscore;
+		HighScore = gethighscore();
 		ufos = 0;
 		Players = new Map<String,Player>();
 		ControlEvent = false;
@@ -749,29 +786,34 @@ class GameView extends Sprite
 		addChild(gui);
 		colorflash = new Shape();
 		gui.addChild(colorflash);
-		BGCRight = new Bitmap(Assets.getBitmapData("assets/bgcolor.png"));
+		scrollRect = new Rectangle(0, 0, 800, 5000);
+		/*BGCRight = new Bitmap(Assets.getBitmapData("assets/bgcolor.png"));
 		BGCRight.x = 800;
 		BGCRight.y = 0;
 		BGCRight.scaleX = 500;
-		BGCRight.scaleY = 2000;
+		BGCRight.scaleY = 1000;
+		BGCRight.cacheAsBitmap = true;
 		//addChild(BGCRight);
 		gui.addChild(BGCRight);
 		BGCLeft = new Bitmap(Assets.getBitmapData("assets/bgcolor.png"));
 		BGCLeft.x = -500;
 		BGCLeft.y = 0;
 		BGCLeft.scaleX = 500;
-		BGCLeft.scaleY = 2000;
+		BGCLeft.scaleY = 1000;
+		BGCLeft.cacheAsBitmap = true;
 		//BGCLeft.z = -10;
 		//addChild(BGCLeft);
 		gui.addChild(BGCLeft);
 		BGCBottom = new Bitmap(Assets.getBitmapData("assets/bgcolor.png"));
 		BGCBottom.x = -500;
 		BGCBottom.y = 600;
-		BGCBottom.scaleX = 1500;
-		BGCBottom.scaleY = 1000;
+		BGCBottom.scaleX = 1000;
+		BGCBottom.scaleY = 500;
+		BGCBottom.cacheAsBitmap = true;
 		//BGCBottom.z = -10;
 		//addChild(BGCBottom);
-		gui.addChild(BGCBottom);
+		gui.addChild(BGCBottom);*/
+		gamestage.scrollRect = new Rectangle(0, 0, 800, 600);
 		Dpad = new Bitmap(Assets.getBitmapData("assets/Dpad.png"));
 		Dpad.x = 0;
 		Dpad.y = 600;
@@ -783,16 +825,7 @@ class GameView extends Sprite
 		B.y = 620;
 		gui.addChild(B);
 		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-					menu = !menu;
-					if (!online)
-			{
-				//paused = !paused;
-				paused = menu;
-			}
-			//if (!menu)
-			{
-				Main._this.savedata.data.characterselected = playerspick;
-			}
+					togglemenu();
 				 } 
 				);
 		
@@ -860,8 +893,72 @@ class GameView extends Sprite
 		lifeicon.cacheAsBitmap = true;
 		gui.addChild(progressbar);
 		
+		if (GameFlags.get(Main.AllStar))
+		{
+			useablelist = new Array<String>();
+			useablelist[useablelist.length] = playerspick;
+		}
 		//gui.addChild(lifeicon);
 		level++;
+	}
+	public function togglemenu()
+	{
+		menu = !menu;
+		
+		if (GameFlags.get(Main.AllStar))
+		{
+			if (menu)
+			{
+			if (charselect != null)
+			{
+				gui.removeChild(charselect);
+				charselect = null;
+			}
+			}
+			else
+			{
+				if (myplayer.killed )
+				{
+					if (useablelist.indexOf(charselect.selected) >= 0)
+					{
+						playerspick = charselect.selected;
+						SendEvent("ChangeCharacter", playerspick);
+						var D:Dynamic = { };
+						D.x = 400;
+						D.y = 0;
+						myplayer.cancel = false;
+						myplayer.ability.onloselife();
+						if (!myplayer.cancel)
+						{
+							myplayer.lives--;
+						}
+						D.lives = myplayer.lives;
+						SendEvent("PlayerRespawn", D);
+					}
+					else
+					{
+						menu = true;
+						SoundManager.Play("bonk");
+					}
+				}
+			}
+		}
+		/*if (charselect.selected != playerspick)
+			{
+				playerspick = charselect.selected;
+				SendEvent("ChangeCharacter", playerspick);
+				//myplayer.init(playerspick);
+			}*/
+					if (!online)
+			{
+				//paused = !paused;
+				paused = menu;
+			}
+			//if (!menu)
+			if (!GameFlags.get(Main.AllStar))
+			{
+				Main._this.savedata.data.characterselected = playerspick;
+			}
 	}
 	public function updatelifeicon()
 	{
@@ -1710,6 +1807,7 @@ class GameView extends Sprite
 			{
 				maxspawns = 0;
 			}
+			
 			if (RoundType != R)
 			{
 				if (R == TypeofRound.Table)
@@ -1733,20 +1831,44 @@ class GameView extends Sprite
 			gamestage.scaleX = 1;
 			gamestage.scaleY = 1;
 			successstreak++;
-			if (myplayer.score > HighScore && GameFlags.getactiveflags().length==0)
+			if (myplayer.score > HighScore && !Main._this.cheating/* && GameFlags.getactiveflags().length==0*/)
 				{
 					HighScore = myplayer.score;
-					Main._this.savedata.data.highscore = HighScore;
+					sethighscore(HighScore);
+					//Main._this.savedata.data.highscore = HighScore;
 				}
 			ufos = 0;
 			spawns = 0;
 			roundstarted = false;
 			level = data.level;
+			
 			if (!online)
 			{
-				if (Main._this.savedata.data.maxlevel < level)
+				/*if (Main._this.savedata.data.maxlevel < level)
 				{
 					Main._this.savedata.data.maxlevel = level;
+				}*/
+				if (getmaxlevel() < level)
+				{
+					setmaxlevel(level);
+				}
+				if (level > 30 && !Main._this.savedata.data.challenges[0])
+				{
+					ShowMessage("Danmaku challenge");
+					ShowMessage("is now available!");
+					Main._this.savedata.data.challenges[0] = true;
+				}
+				if (level > 60 && !Main._this.savedata.data.challenges[3])
+				{
+					ShowMessage("All Star Mode");
+					ShowMessage("is now available!");
+					Main._this.savedata.data.challenges[3] = true;
+				}
+				if (level > 90 && !Main._this.savedata.data.challenges[1])
+				{
+					ShowMessage("Boss Rush challenge");
+					ShowMessage("is now available!");
+					Main._this.savedata.data.challenges[0] = true;
 				}
 			}
 			var L = level - 1;
@@ -1921,6 +2043,12 @@ class GameView extends Sprite
 				i++;
 			}
 		}
+		if (evt == "Mission Failed")
+		{
+			myplayer.visible = false;
+			myplayer.y = 1000;
+			ProcessEvent("GameOver", "Myself", null);
+		}
 		if (evt == "PlayerRespawn")
 		{
 			P.x = data.x;
@@ -1955,12 +2083,22 @@ class GameView extends Sprite
 			successstreak = 0;
 			if (me)
 			{
-				SoundManager.PlayJingle("gameover").addEventListener(Event.SOUND_COMPLETE, function(e:Event):Void {/*if (online)*/{ SendEvent("Continue", null); }} );
+				
+				SoundManager.PlayJingle("gameover").addEventListener(Event.SOUND_COMPLETE, function(e:Event):Void 
+				{
+					if (!online && !Main._this.cancontinue)
+					{
+						status = "quitting";
+						return;
+					}
+					/*if (online)*/{ SendEvent("Continue", null); }} 
+				);
 				gameover.visible = true;
 				if (myplayer.score > HighScore)
 				{
 					HighScore = myplayer.score;
-					Main._this.savedata.data.highscore = HighScore;
+					sethighscore(HighScore);
+					//Main._this.savedata.data.highscore = HighScore;
 				}
 			}
 		}
@@ -3159,7 +3297,7 @@ class GameView extends Sprite
 					{
 						item = "GiantPoint";
 					}
-					else if (R < 0.83)
+					else if (R < 0.83 && Main._this.canlivesspawn)
 					{
 						item = "1up";
 					}
@@ -3520,16 +3658,7 @@ class GameView extends Sprite
 		}
 		if (event.keyCode == Main._this.controlscheme[5])
 		{
-			menu = !menu;
-			if (!online)
-			{
-				//paused = !paused;
-				paused = menu;
-			}
-			//if (!menu)
-			{
-				Main._this.savedata.data.characterselected = playerspick;
-			}
+			togglemenu();
 		}
 		ControlEvent = true;
 	}
@@ -3556,7 +3685,7 @@ class GameView extends Sprite
 			while (i < activeEnemies.length)
 			{
 				var E = activeEnemies[i];
-				if (E.alive && !E.killed)
+				if (E.alive && !E.killed && E.subtype != "boss")
 				{
 					SendEvent("Kill", E.UID);
 				}
@@ -3631,6 +3760,16 @@ class GameView extends Sprite
 					if (D.type == "RedFairy")
 					{
 						E = new RedFairy();
+						type = "Enemy";
+					}
+					if (D.type == "MoonRabbit")
+					{
+						E = new MoonRabbit();
+						type = "Enemy";
+					}
+					if (D.type == "kisume")
+					{
+						E = new Kisume();
 						type = "Enemy";
 					}
 					if (D.type == "Mystia")
@@ -3893,7 +4032,38 @@ class GameView extends Sprite
 		}
 		return E;
 	}
-	public static function GetLevelTitle(level:Int, sublevel:Bool=true)
+	public static function GetRankTitle(level:Int):String
+	{
+		var L = level - 1;
+		var rank = Math.floor(L / 30);
+		var S = "";
+		if (rank == 0)
+		{
+			S = "Easy";
+		}
+		if (rank == 1)
+		{
+			S = "Normal";
+		}
+		if (rank == 2)
+		{
+			S = "Hard";
+		}
+		if (rank == 3)
+		{
+			S = "Lunatic";
+		}
+		if (rank == 4)
+		{
+			S = "Extr:";
+		}
+		if (rank > 4)
+		{
+			S = "EX" + (rank - 3);
+		}
+		return S;
+	}
+	public static function GetLevelTitle(level:Int, sublevel:Bool=true,difficulty:Bool = true)
 	{
 		var L = level - 1;
 		var rank = Math.floor(L / 30);
@@ -3921,6 +4091,10 @@ class GameView extends Sprite
 		if (rank > 4)
 		{
 			S = "EX" + (rank - 3) + ":";
+		}
+		if (!difficulty)
+		{
+			S = "";
 		}
 		var stage = Math.floor((level - 1) / 5);
 		stage = stage % 6;
@@ -3964,10 +4138,23 @@ class GameView extends Sprite
 	}
 	public function ShowLevel()
 	{
-		var S = GetLevelTitle(level);
+		var S = GetLevelTitle(level,true,false);
 		var M = messages.length;
 		ShowMessage(S);
-		leveltitle.text = S;
+		var mode = "Solo";
+		if (online)
+		{
+			if (Hoster)
+			{
+				mode = "Hoster";
+			}
+			else
+			{
+				mode = "Client";
+			}
+		}
+		var R = GetRankTitle(level);
+		leveltitle.text = Main._this.roomprefix+"-"+R+":"+mode;
 		leveltitle.width = leveltitle.textWidth+8;
 		if (M == 0)
 		{
@@ -4000,7 +4187,7 @@ class GameView extends Sprite
 		{
 			if (charselect == null)
 			{
-				charselect = new CharacterSelect(playerspick);
+				charselect = new CharacterSelect(playerspick,useablelist);
 				var B = new MenuButton("Quit Game");
 				B.x += 670;
 				B.y += 500;
@@ -4015,12 +4202,7 @@ class GameView extends Sprite
 				B.x += 670;
 				B.y += 12;
 				B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-					menu = false;
-					if (!online)
-					{
-						paused = menu;
-					}
-					Main._this.savedata.data.characterselected = playerspick;
+					togglemenu();
 					
 				 } 
 				);
@@ -4120,7 +4302,7 @@ class GameView extends Sprite
 		}
 		TF.scaleX = 2;
 		TF.scaleY = 2;
-		TF.text = "x " + myplayer.lives;
+		TF.text = "x " + Math.max(myplayer.lives,0);
 		TF.textColor = 0xFFFFFF;
 		if (missingTime > 3 /* && !online*/)
 		{
@@ -4204,7 +4386,13 @@ class GameView extends Sprite
 		{
 			CombinedScore = (myplayer.score - myplayer.spentscore);
 			CombinedScoreALL = myplayer.score;
-			S = myplayer.playername + ": " + myplayer.score + "\nHighscore: " + HighScore;
+			var HS = HighScore;
+			if (myplayer.score > HS)
+			{
+				HS = myplayer.score;
+			}
+			//S = myplayer.playername + ": " + myplayer.score + "\nHighscore: " + HighScore;
+			S = "Score: " + myplayer.score + "\nHighscore: " + HS;
 		}
 		var messag = "";
 		if (messages.length > 0)
@@ -4468,6 +4656,25 @@ class GameView extends Sprite
 		{
 			syncdelay--;
 		}
+		if (useablelist != null)
+		{
+			myplayer.lives = (useablelist.length - 1);
+			if (myplayer.killed && myplayer.y>600)
+			{
+				if (useablelist.indexOf(playerspick) >= 0)
+				{
+					useablelist.remove(playerspick);
+				}
+				if (useablelist.length < 1)
+				{
+					ProcessEvent("GameOver", "Myself", null);
+				}
+				else if (!menu)
+				{
+					togglemenu();
+				}
+			}
+		}
 		updatelifeicon();
 		updateprogressbar();
 		collisiondata = new Array<Dynamic>();
@@ -4492,10 +4699,13 @@ class GameView extends Sprite
 		if (Hoster)
 		{
 			settotalenemies();
-			SpawnTimer -= 1;
-			if ((activeEnemies.length < 1 || totalenemies < 1) && spawns>0 && enemyspawn)
+			if (!spawnpaused)
 			{
-				SpawnTimer -= 2;
+				SpawnTimer -= 1;
+				if ((activeEnemies.length < 1 || totalenemies < 1) && spawns>0 && enemyspawn)
+				{
+					SpawnTimer -= 2;
+				}
 			}
 			if (totalenemies == 1 && Hoster)
 			{
@@ -4514,9 +4724,10 @@ class GameView extends Sprite
 					}
 					else
 					{
-						var enemy = new Imposter();
+						/*var enemy = new Imposter();
 						enemy.UID = 0;
-						SpawnList.add(enemy);
+						SpawnList.add(enemy);*/
+						imposterbonus++;
 						spawnedChar = true;
 					}
 				}
@@ -4574,7 +4785,14 @@ class GameView extends Sprite
 				}
 				D.y = -100;
 				spawnedChar = false;
-				SendEvent("SpawnItem", D);
+				if (Main._this.canlivesspawn)
+				{
+					SendEvent("SpawnItem", D);
+				}
+				else
+				{
+					imposterbonus++;
+				}
 				CombinedScore -= PointsToLife;
 			}
 		}
@@ -4805,7 +5023,7 @@ class GameView extends Sprite
 					D.spawns = 0;
 					SendEvent("SpawnEnemy", D);
 				}
-				else if (ufos<8 && E == "UFO")
+				else if (ufos<ufolimit && E == "UFO")
 				{
 					var D:Dynamic = { };
 					D.type = "UFO";
@@ -5037,7 +5255,7 @@ class GameView extends Sprite
 					SpawnTimer = SpawnTimer >> 1;
 					if (gamestarted)
 					{
-						level += 1;
+						level += Main._this.levelincrement;
 					}
 				var tmp = 0;
 				if (Hoster)
@@ -5116,6 +5334,17 @@ class GameView extends Sprite
 			array[array.length] = value;
 			i++;
 		}
+	}
+	public function CreateArrayOfMultiple(value:Dynamic, times:Int):Array<Dynamic>
+	{
+		var array = new Array<Dynamic>();
+		var i = 0;
+		while (i < times)
+		{
+			array[array.length] = value;
+			i++;
+		}
+		return array;
 	}
 	private function CalculateLevelData()
 	{
@@ -5220,6 +5449,9 @@ class GameView extends Sprite
 			var E:Array<TypeofRound> = new Array<TypeofRound>();
 			if (level != 9 || GameFlags.get(Main.EventRoundsOnly))
 			{
+				var BossRush = GameFlags.get(Main.Bossrush);
+				if (!BossRush)
+				{
 				E[E.length] = TypeofRound.Rumia;
 				E[E.length] = TypeofRound.Table;
 				E[E.length] = TypeofRound.Cirno;
@@ -5247,19 +5479,28 @@ class GameView extends Sprite
 				{
 					E[E.length] = TypeofRound.ElectricCirno;
 				}
-				if ((level > 30) || GameFlags.get(Main.EventRoundsOnly))
+				}
+				else
 				{
-					if (generalstage == 0)
+					E[E.length] = TypeofRound.Yukari;
+				}
+				if ((level > 30) || GameFlags.get(Main.EventRoundsOnly) || BossRush)
+				{
+					if (generalstage == 0 || BossRush)
 					{
 						E[E.length] = TypeofRound.SanaeBoss;
 					}
-					else if (generalstage == 3)
+					if (generalstage == 3 || BossRush)
 					{
 						E[E.length] = TypeofRound.ParseeBoss;
 					}
-					else if (generalstage == 4)
+					if (generalstage == 4 || BossRush)
 					{
 						E[E.length] = TypeofRound.MurasaBoss;
+					}
+					if (BossRush)
+					{
+						E[E.length] = TypeofRound.CirnoBoss;
 					}
 				}
 			}
@@ -5269,7 +5510,7 @@ class GameView extends Sprite
 			}
 			RoundType = E[(Math.floor(Math.random() * E.length))];
 			
-			if (level > 30 && LV == 9)
+			if (level > 30 && LV == 9 && !GameFlags.get(Main.EventRoundsOnly))
 			{
 				RoundType = TypeofRound.CirnoBoss;
 			}
@@ -5309,10 +5550,20 @@ class GameView extends Sprite
 		{
 			Ev[Ev.length] = TypeofRound.Yukari;
 		}
+		if (GameFlags.get(Main.Danmaku))
+		{
+			Ev[Ev.length] = TypeofRound.Danmaku;
+		}
 		if (Ev.length > 0)
 		{
 			RoundType = Ev[Math.floor(Math.random() * Ev.length)];
 		}
+		if (GameFlags.get(Main.NoEvents))
+		{
+			RoundType = TypeofRound.Normal;
+		}
+		//setup obstacles.
+		
 		if (RoundType == TypeofRound.Normal || RoundType == TypeofRound.Rumia || RoundType == TypeofRound.Table || RoundType == TypeofRound.Balloon || RoundType == TypeofRound.Characters || RoundType == TypeofRound.NoWrap)
 		{
 			if (level > 5)
@@ -5346,6 +5597,24 @@ class GameView extends Sprite
 			{
 				AddToArrayMultiple(Obstacles, "Iku", 3);
 			}
+		}
+		if (GameFlags.get(Main.TruckHoarder))
+		{
+			spawnpaused = true;
+			var D:Dynamic = { };
+			D.type = "Trophy";
+			D.UID = Math.random();
+			D.x = 400;
+			D.y = -100;
+			SendEvent("SpawnItem", D);
+		}
+		if (RoundType == TypeofRound.Danmaku)
+		{
+			AddToArrayMultiple(Obstacles, "Gap", 70);
+			AddToArrayMultiple(Obstacles, "UFO", 32);
+			AddToArrayMultiple(Obstacles, "UnzanFist", 12);
+			AddToArrayMultiple(Obstacles, "Yuuka", 5);
+			epm *= 1.5;
 		}
 		if (RoundType == TypeofRound.Nue)
 		{
@@ -5396,6 +5665,7 @@ class GameView extends Sprite
 			}
 			SendEvent("FreezeWorld", null);
 		}
+		//setup enemytypes.
 		
 		if (RoundType == TypeofRound.Rumia)
 			{
@@ -5409,7 +5679,101 @@ class GameView extends Sprite
 			}
 		if (RoundType == TypeofRound.Normal || RoundType == TypeofRound.Rumia || RoundType == TypeofRound.Seija || RoundType == TypeofRound.Nue || RoundType == TypeofRound.Table || RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.Balloon || RoundType == TypeofRound.ElectricCirno || RoundType == TypeofRound.NoWrap || RoundType == TypeofRound.SanaeBoss || RoundType == TypeofRound.ParseeBoss || RoundType == TypeofRound.MurasaBoss)
 		{
-			AddToArrayMultiple(enemytypes, new RedFairy(), 60);
+			var types = new Array<Array<Dynamic>>();
+			if (generalstage < 2)
+			{
+				types[types.length] = CreateArrayOfMultiple(new RedFairy(), 60);
+			}
+			else if (generalstage == 2)
+			{
+				types[types.length] = CreateArrayOfMultiple(new MoonRabbit(), 55);
+			}
+			else if (generalstage == 3)
+			{
+				types[types.length] = CreateArrayOfMultiple(new Kisume(), 45);
+			}
+			else
+			{
+				types[types.length] = CreateArrayOfMultiple(new Mystia(), 34);
+			}
+			if (level > 3)
+			{
+				if (generalstage != 1)
+				{
+					types[types.length] = CreateArrayOfMultiple(new Keine(), 20);
+				}
+				if (level > 5)
+				{
+					if (generalstage == 1)
+					{
+						types[types.length] = CreateArrayOfMultiple(new Meiling(), 6);
+					}
+					if (level > 10)
+					{
+						types[types.length] = CreateArrayOfMultiple(new Tenshi(), 5);
+						if (level > 15)
+						{
+							types[types.length] = CreateArrayOfMultiple(new Utsuho(), 4);
+							if (level > 25)
+							{
+								types[types.length] = CreateArrayOfMultiple(new Imposter(), 1);
+								if (generalstage == 5)
+								{
+									types[types.length] = CreateArrayOfMultiple(new Tewi(), 34);
+									types[types.length] = CreateArrayOfMultiple(new Reisen(), 15);
+								}
+								if (level > 30)
+								{
+									types[types.length] = CreateArrayOfMultiple(new Marisa(), 5);
+									if (level > 30)
+									{
+										if (generalstage == 1)
+										{
+											types[types.length] = CreateArrayOfMultiple(new Scarlet(), 3);
+										}
+										if (level > 40)
+										{
+											types[types.length] = CreateArrayOfMultiple(new Hecatia(), 3);
+											if (level > 45)
+											{
+												if (generalstage == 3)
+												{
+													types[types.length] = CreateArrayOfMultiple(new Satori(), 3);
+												}
+												if (level > 50)
+												{
+													types[types.length] = CreateArrayOfMultiple(new Kogasa(), 1);
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			var i = 0;
+			var limit = 3;
+			if (lvl > 3)
+			{
+				limit = 4;
+			}
+			limit += Std.int((rank+1) / 2);
+			while (i < limit)
+			{
+				var T = types[Std.int(Math.random() * types.length)];
+				AddToArrayMultiple(enemytypes, T[0], T.length);
+				i++;
+			}
+			i = 0;
+			while (i < types.length)
+			{
+				var T = types[i];
+				AddToArrayMultiple(enemytypes, T[0], T.length);
+				i++;
+			}
+			/*AddToArrayMultiple(enemytypes, new RedFairy(), 60);
 			
 			if (level > 3)
 			{
@@ -5436,7 +5800,7 @@ class GameView extends Sprite
 			}
 			if (level > 30)
 			{
-				AddToArrayMultiple(enemytypes, new Marisa(), 6);
+				AddToArrayMultiple(enemytypes, new Marisa(), 5);
 			}
 			if (level > 35)
 			{
@@ -5453,7 +5817,31 @@ class GameView extends Sprite
 			if (level > 50)
 			{
 				AddToArrayMultiple(enemytypes, new Kogasa(), 1);
+			}*/
+		}
+		if (RoundType == TypeofRound.Danmaku)
+		{
+			if (generalstage < 2)
+			{
+				AddToArrayMultiple(enemytypes, new RedFairy(), 60);
 			}
+			else if (generalstage == 2)
+			{
+				AddToArrayMultiple(enemytypes, new MoonRabbit(), 55);
+			}
+			else if (generalstage == 3)
+			{
+				AddToArrayMultiple(enemytypes, new Kisume(), 45);
+			}
+			else
+			{
+				AddToArrayMultiple(enemytypes, new Mystia(), 34);
+			}
+			//AddToArrayMultiple(enemytypes, new RedFairy(), 60);
+			AddToArrayMultiple(enemytypes, new Tewi(), 37);
+			AddToArrayMultiple(enemytypes, new Utsuho(), 4);
+			AddToArrayMultiple(enemytypes, new Kogasa(), 1);
+			AddToArrayMultiple(enemytypes, new Marisa(), 3);
 		}
 		if (RoundType == TypeofRound.Marisa)
 		{
@@ -5545,6 +5933,13 @@ class GameView extends Sprite
 	}
 	public function populatespawnlist()
 	{
+		while (imposterbonus > 0)
+		{
+			var enemy = new Imposter();
+			enemy.UID = 0;
+			SpawnList.add(enemy);
+			imposterbonus--;
+		}
 		if (enemytypes == null || enemytypes.length < 1)
 		{
 			if (enemytypes == null)

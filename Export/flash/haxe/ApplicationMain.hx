@@ -806,6 +806,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/kisume0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/knife0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -1011,6 +1015,14 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/momiji0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/MoonRabbit0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/MoonRabbitflipped0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		

@@ -41,6 +41,7 @@ class CharacterSelect extends Sprite
 	public var PrevButton:Sprite;
 	public var Buttons:Array<MenuButton>;
 	public var ButtonsPage:Array<Array<MenuButton>>;
+	public var ButtonDisplay:Sprite;
 	public var selected:String;
 	public var currentpage:Int;
 	public var refreshing:Bool;
@@ -50,14 +51,18 @@ class CharacterSelect extends Sprite
 	public var BW:Int = 78;
 	public var BH:Float = 0.75;
 	public var GUI:Sprite;
-	public function new(startingselection:String="reimu") 
+	public var charlist:Array<String>;
+	public function new(startingselection:String="reimu",list:Array<String> = null) 
 	{
 		super();
 		selected = startingselection;
+		charlist = list;
 		AL = Main._this.AL;
 		ButtonsPage = new Array<Array<MenuButton>>();
 		GUI = new Sprite();
 		addChild(GUI);
+		ButtonDisplay = new Sprite();
+		GUI.addChild(ButtonDisplay);
 		
 		var tmp = new TextFormat();
 		tmp.font = "Arial";
@@ -137,7 +142,11 @@ class CharacterSelect extends Sprite
 	public function refreshbuttons()
 	{
 		var i = 0;
-		refreshing=true;
+		refreshing = true;
+		if (charlist == null)
+		{
+			charlist = Player.characters;
+		}
 		while (i < Buttons.length)
 		{
 			var B = Buttons[i];
@@ -145,9 +154,9 @@ class CharacterSelect extends Sprite
 			var tf:Dynamic = (B.getChildByName("textField"));
 			#if html5
 			var S = "";
-			if (i < Player.characters.length)
+			if (i < charlist.length)
 			{
-				S = Player.characters[i];
+				S = charlist[i];
 				
 			}
 			else
@@ -235,6 +244,10 @@ class CharacterSelect extends Sprite
 	}
 	private function makebuttons()
 	{
+		if (charlist == null)
+		{
+			charlist = Player.characters;
+		}
 		var X = 0.0;
 		//var Y = 76.0;
 		var Y = 110.0;
@@ -264,9 +277,9 @@ class CharacterSelect extends Sprite
 				var ok = false;
 				if (PC[i] != "unused")
 				{
-				if (Player.characters.indexOf(PC[i]) >= 0)
+				if (charlist.indexOf(PC[i]) >= 0)
 				{
-					if (O[Player.characters.indexOf(PC[i])])
+					if (O[charlist.indexOf(PC[i])])
 					{
 						B = AddCharacterButton(PC[i], true);
 						ok = true;
@@ -277,8 +290,9 @@ class CharacterSelect extends Sprite
 					B = null;
 					ok = false;
 					
-					B = AddCharacterButton(PC[i], false);
-					ok = true;
+					//B = AddCharacterButton(PC[i], false);
+					//B = AddCharacterButton(PC[i], true);
+					//ok = true;
 				}
 				}
 				else
@@ -396,7 +410,8 @@ class CharacterSelect extends Sprite
 		
 		buttonSprite.update();
 		buttonSprite.x = 0;
-		GUI.addChild(buttonSprite);
+		ButtonDisplay.addChild(buttonSprite);
+		//GUI.addChild(buttonSprite);
 		return buttonSprite;
 	}
 	

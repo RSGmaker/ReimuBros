@@ -44,6 +44,10 @@ class TitleScreenView extends Sprite
 	public var status:String;
 	
 	public var statusmsg:Sprite;
+	public var lastpage:Int;
+	public var currentpage:Int;
+	
+	public var pages:Array<Sprite>;
 	public function new() 
 	{
 		super();
@@ -118,6 +122,13 @@ class TitleScreenView extends Sprite
 			statusmsg = B;
 		}
 	}
+	public function setpage(page:Int)
+	{
+		pages[page].visible = true;
+		pages[currentpage].visible = false;
+		lastpage = currentpage;
+		currentpage = page;
+	}
 	public function show_menu()
 	{
 		
@@ -143,8 +154,9 @@ class TitleScreenView extends Sprite
 		textField.width = textField.textWidth+16;
 		textField.height = textField.textHeight;
 		addChild(textField);
+		
 			menu = true;
-			#if flash
+			/*#if flash
 			startgame = AddButton("Multiplayer");
 			
 			startgame.y = 200+200;
@@ -181,26 +193,245 @@ class TitleScreenView extends Sprite
 				
 				var PA = AddButton("Manual");
 			PA.x += 700;
-			PA.y = 10;
+			PA.y = 10;*/
+			var main = new Sprite();
+			main.x = 400;
+			main.y = 225;
+			addChild(main);
+			
+			pages = new Array<Sprite>();
+			var i = 0;
+			while (i < 4)
+			{
+				pages[i] = new Sprite();
+				main.addChild(pages[i]);
+				i++;
+			}
+			/*pages[0] = new Sprite();
+			pages[1] = new Sprite();
+			main.addChild(pages[0]);
+			main.addChild(pages[1]);*/
+			
+			
+			var P = pages[0];
+			
+			
+			var Y = 0;
+			var X = 0;
+			startgame = AddButton("Play Game",P);
+			startgame.y = Y;
+			startgame.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+				//status = "SinglePlayer";
+					setpage(1);
+				 } 
+				);
+			options = AddButton("Options",P);
+			Y += 96;
+			options.y = Y;
+			options.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+				status = "Options";
+				 } 
+				);
+			Y += 96;
+			var B = AddButton("Manual",P);
+			B.y = Y;
+			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+				Lib.getURL (new openfl.net.URLRequest ("http://sta.sh/0t7u3ibw7dl"));
+				 } 
+				);
+				
+			Y = 0;
+			P = pages[1];
+			P.visible = false;
+			if (Main._this.savedata.data.challenges[3])
+			{
+				Y -= 96;
+			}
+			//P.y = -96;
+			B = AddButton("Classic Mode", P);
+			B.y = Y;
+			Y += 96;
+			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+				//status = "SinglePlayer";
+					Main._this.roomprefix = "Classic";
+					Main._this.GameFlags.clearall();
+					setpage(2);
+				 } 
+				);
+			if (Main._this.savedata.data.challenges[3])
+			{
+				B = AddButton("All Star Mode", P);
+			B.y = Y;
+			Y += 96;
+			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					Main._this.roomprefix = "AllStar";
+					Main._this.GameFlags.clearall();
+					Main._this.GameFlags.set(Main.AllStar, true);
+					Main._this.playerspick = "RedFairy";
+					Main._this.canselectcharacter = false;
+					Main._this.cancontinue = false;
+					Main._this.canlivesspawn = false;
+					setpage(2);
+				 } 
+				);
+			}
+			/*B = AddButton("Single Player", P);
+			B.y = Y;
+			Y += 96;
+			B = AddButton("Multiplayer", P);
+			B.y = Y;
+			Y += 96;*/
+			B = AddButton("Challenges", P);
+			B.y = Y;
+			Y += 96;
+			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					setpage(3);
+				 } 
+				);
+			B = AddButton("Back", P);
+			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					setpage(0);
+				 } 
+				);
+			B.y = Y;
+			Y += 96;
+			
+			Y = 0;
+			P = pages[2];
+			P.visible = false;
+			
+			B = AddButton("Single Player", P);
+			B.y = Y;
+			Y += 96;
+			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					/*#if flash
+					status = "OpenPlay";
+					#else
+					status = "SinglePlayer";
+					#end*/
+					status = "SinglePlayer";
+				 } 
+				);
+			B = AddButton("Multiplayer", P);
+			B.y = Y;
+			Y += 96;
+			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					status = "OpenPlay";
+				 } 
+				);
+			B = AddButton("Back", P);
+			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+				Main._this.resetsettings();
+				setpage(lastpage);
+				 } 
+				);
+			B.y = Y;
+			Y += 96;
+			
+			Y = 0;
+			P = pages[3];
+			P.visible = false;
+			
+			var T = "Danmaku";
+			if (!Main._this.savedata.data.challenges[0])
+			{
+				T = "???";
+			}
+			B = AddButton(T, P);
+			if (T != "???")
+			{
+			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+				Main._this.roomprefix = "Danmaku";
+				Main._this.GameFlags.clearall();
+				Main._this.GameFlags.set(Main.Danmaku, true);
+				Main._this.GameFlags.set(Main.EventRoundsOnly, true);
+				Main._this.levelselect = false;
+				Main._this.level = 16;
+				//Main._this.levelincrement = 5;
+				Main._this.cancontinue = false;
+				setpage(2);
+				 } 
+				);
+			}
+				B.y = Y;
+			Y += 96;
+			T = "Boss Rush";
+			if (!Main._this.savedata.data.challenges[1])
+			{
+				T = "???";
+			}
+			B = AddButton(T, P);
+			if (T != "???")
+			{
+			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+				Main._this.roomprefix = "Boss Rush";
+				Main._this.GameFlags.clearall();
+				Main._this.GameFlags.set(Main.Bossrush, true);
+				Main._this.GameFlags.set(Main.EventRoundsOnly, true);
+				Main._this.levelselect = false;
+				Main._this.level = 35;
+				Main._this.levelincrement = 5;
+				Main._this.cancontinue = false;
+				setpage(2);
+				 } 
+				);
+			}
+			B.y = Y;
+			Y += 96;
+			T = "Truck Hoarder";
+			if (!Main._this.savedata.data.challenges[2])
+			{
+				T = "???";
+			}
+			B = AddButton(T, P);
+			if (T != "???")
+			{
+			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+				Main._this.roomprefix = "Truck Hoarder";
+				Main._this.GameFlags.clearall();
+				Main._this.GameFlags.set(Main.TruckHoarder, true);
+				Main._this.GameFlags.set(Main.NoEvents, true);
+				Main._this.levelselect = false;
+				Main._this.level = 56;
+				Main._this.levelincrement = 1;
+				Main._this.cancontinue = false;
+				setpage(2);
+				 } 
+				);
+			}
+			B.y = Y;
+			Y += 96;
+			
+			B = AddButton("Back", P);
+			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+				setpage(1);
+				 } 
+				);
+			B.y = Y;
+			Y += 96;
 		}
 		else
 		{
 			//check if clicked in the "coded by rsgmaker" area
-			if (mouseY > 520 && mouseX>300 && mouseX<500)
+			if (mouseY > 520 && mouseX>300 && mouseX<500 && currentpage == 0)
 		{
 			Lib.getURL (new openfl.net.URLRequest ("http://rsgmaker.deviantart.com/"));
 		}
 		//check if clicked in the "manual" area(this would've been better as a mouse up listener...)
 		if (mouseY < 80 && mouseX>620 && mouseX<801)
 		{
-			Lib.getURL (new openfl.net.URLRequest ("http://sta.sh/0t7u3ibw7dl"));
+			//Lib.getURL (new openfl.net.URLRequest ("http://sta.sh/0t7u3ibw7dl"));
 		}
 		}
 	}
-	private function AddButton(text:String):Sprite
+	private function AddButton(text:String,sprite:Sprite):Sprite
 	{
 		var buttonSprite = new MenuButton(text);
-		addChild(buttonSprite);
+		if (sprite == null)
+		{
+			sprite = this;
+		}
+		sprite.addChild(buttonSprite);
 		/*var tmp = new TextFormat();
 		tmp.font = "Arial";
 		tmp.size = 44;

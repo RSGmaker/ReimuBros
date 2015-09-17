@@ -32,7 +32,7 @@ class TwuckHunter extends Enemy
 		}
 		accel = 0.25;
 		deccel = 0.1;
-		mxspd = 4.5;
+		mxspd = 4.0;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -46,8 +46,8 @@ class TwuckHunter extends Enemy
 	}
 	public override function increaserank()
 	{
-			accel += 0.1;
-			mxspd += 0.5;
+			accel += 0.05;
+			mxspd += 0.25;
 			pointvalue += 500;
 	}
 	
@@ -243,6 +243,10 @@ class TwuckHunter extends Enemy
 				if (game.Hoster && target != null)
 				{
 					game.SendEvent("Remove", target.UID);
+					if (game.GameFlags.get(Main.TruckHoarder))
+					{
+						game.SendEvent("Mission Failed", null);
+					}
 				}
 			}
 		//killable = flipped > 0;

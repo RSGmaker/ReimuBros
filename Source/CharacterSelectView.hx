@@ -8,6 +8,7 @@ import openfl.display.Sprite;
 import openfl.display.Shape;
 import openfl.Assets;
 import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import openfl.geom.Transform;
 import openfl.Lib;
 import openfl.text.Font;
@@ -109,6 +110,16 @@ class CharacterSelectView extends Sprite
 	
 	public var format:TextFormat;
 	
+	public var errortime:Int;
+	
+	
+	
+	public function getmaxlevel():Int
+	{
+		return Reflect.field(Main._this.savedata.data, "maxlevel:" + Main._this.roomprefix);
+		//return Main._this.savedata.data["maxlevel:" + Main._this.roomprefix];
+	}
+	
 	public function new() 
 	{
 		super();
@@ -134,10 +145,15 @@ class CharacterSelectView extends Sprite
 		level = 1;
 	}
 	public function start() {
-		
+		level = Main._this.level;
 		GUI = new Sprite();
 		entities = new Array<MiniEntity>();
 		select = new CharacterSelect(selected);
+		if (!Main._this.canselectcharacter)
+		{
+			select.ButtonDisplay.visible = false;
+			//select.visible = false;
+		}
 		select.refreshbuttons();
 		selected = "";
 		GUI.addChild(select);
@@ -280,22 +296,20 @@ class CharacterSelectView extends Sprite
 					ExitButton.x -= 10;
 				 } 
 				);
-				if (!online)
-				{
-					tmp = new TextFormat();
+				tmp = new TextFormat();
 					tmp.font = "Arial";
 					tmp.size = 32;
 					tmp.color = 0xFFFFFF;
-		
-					StartButton = AddButton("Start Game");
-					StartButton.x = 554;
-					StartButton.y = 6;
-					
-					leveltitle = new TextField();
+					var Y = 100;
+					if (online)
+					{
+						Y += 140;
+					}
+				leveltitle = new TextField();
 					leveltitle.mouseEnabled = false;
 					leveltitle.text = GameView.GetLevelTitle(level, false);
 					leveltitle.x = 540;
-					leveltitle.y = 100;
+					leveltitle.y = Y;
 					leveltitle.backgroundColor = 0xFFFFFF;
 					//leveltitle.background = true;
 					leveltitle.setTextFormat(tmp);
@@ -324,15 +338,22 @@ class CharacterSelectView extends Sprite
 					
 					var B = AddButton("+ ");
 					var B2 = AddButton(" - ");
+					if (!Main._this.levelselect)
+					{
+						B.visible = false;
+						B2.visible = false;
+					}
 					B.x = 700;
-					B.y = 190;
-					if (Main._this.savedata.data.maxlevel < 6)
+					B.y = Y+90;
+					//if (Main._this.savedata.data.maxlevel < 6)
+					if (getmaxlevel() < 6)
 					{
 						B.visible = false;
 					}
 					GUI.addChild(B);
 					B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-						if (level + 5 <= Main._this.savedata.data.maxlevel)
+						//if (level + 5 <= Main._this.savedata.data.maxlevel)
+						if (level + 5 <= getmaxlevel())
 						{
 							level += 5;
 							var tmp = leveltitle.getTextFormat();
@@ -351,7 +372,7 @@ class CharacterSelectView extends Sprite
 				 });
 				 
 					B2.x = 550;
-					B2.y = 190;
+					B2.y = Y+90;
 					B2.visible = false;
 					GUI.addChild(B2);
 					B2.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
@@ -372,13 +393,26 @@ class CharacterSelectView extends Sprite
 							SoundManager.Play("bonk");
 						}
 				 });
+				if (!online)
+				{
+					
+		
+					StartButton = AddButton("Start Game");
+					StartButton.x = 554;
+					StartButton.y = 6;
+					
+					
 				 
 					
 					StartButton.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-					status = "PlayGame";
-					StartButton.x -= 10;
-					var T = select.selectedcharacter.getTextFormat();
-					select.selectedcharacter.text = "Cheat code toggled!\nyou may enter more codes\nor start the game";
+						var T = select.selectedcharacter.getTextFormat();
+						if (errortime<1)
+						{
+							status = "PlayGame";
+							StartButton.x -= 10;
+							select.selectedcharacter.text = "Cheat code toggled!\nyou may enter more codes\nor start the game";
+						}
+					
 					select.selectedcharacter.setTextFormat(T);
 				 });
 				}
@@ -393,7 +427,7 @@ class CharacterSelectView extends Sprite
 					
 					B = AddButton("Room#2");
 					B.x = 554;
-					B.y = 106;
+					B.y = 91;
 					B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 						Room = "public2";
 					status = "PlayGame";
@@ -401,7 +435,7 @@ class CharacterSelectView extends Sprite
 					
 					B = AddButton("Room#3");
 					B.x = 554;
-					B.y = 206;
+					B.y = 176;
 					B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 						Room = "public3";
 					status = "PlayGame";
@@ -462,7 +496,7 @@ class CharacterSelectView extends Sprite
 		Nameinput.backgroundColor = 0xFFFFFF;
 		GUI.addChild(Nameinput);
 		
-		BGCRight = new Bitmap(Assets.getBitmapData("assets/bgcolor.png"));
+		/*BGCRight = new Bitmap(Assets.getBitmapData("assets/bgcolor.png"));
 		BGCRight.x = 800;
 		BGCRight.y = 0;
 		BGCRight.scaleX = 500;
@@ -481,7 +515,8 @@ class CharacterSelectView extends Sprite
 		BGCBottom.scaleX = 1500;
 		BGCBottom.scaleY = 1000;
 		//BGCBottom.z = -10;
-		addChild(BGCBottom);
+		addChild(BGCBottom);*/
+		scrollRect = new Rectangle(0, 0, 800, 600);
 		
 		//simulate some time so background characters will appear immediatly
 		var i = 0;
@@ -517,6 +552,54 @@ class CharacterSelectView extends Sprite
 				char.y = 500 - charpreview.height;
 			}
 			Lselected = selected;
+		}
+		if (status == "Error:Name")
+		{
+			errortime++;
+			if (errortime > 30)
+			{
+				errortime = 0;
+				status = "";
+				Nameinput.backgroundColor = 0xFFFFFF;
+				Nameinput.text = "PlayerName";
+			}
+			else
+			{
+				select.selectedcharacter.text = "Please enter a valid player name!";
+				select.selectedcharacter.textColor = 0xFF0000;
+				if (errortime & 2 != 0)
+				{
+					Nameinput.backgroundColor = 0xFF0000;
+				}
+				else
+				{
+					Nameinput.backgroundColor = 0xFFFFFF;
+				}
+			}
+		}
+		if (status == "Error:Cheat")
+		{
+			select.selectedcharacter.text = "You cannot enter a public room with cheats enabled!\nuse a uniquely named custom room instead!\nyou can remove your codes by returning to the title screen.";
+			select.selectedcharacter.textColor = 0xFF0000;
+			
+			errortime++;
+			if (errortime > 15)
+			{
+				status = "";
+				errortime = 0;
+				CustomRoom.backgroundColor = 0xFFFFFF;
+			}
+			else
+			{
+				if (errortime & 2 != 0)
+				{
+					CustomRoom.backgroundColor = 0xFF0000;
+				}
+				else
+				{
+					CustomRoom.backgroundColor = 0xFFFFFF;
+				}
+			}
 		}
 		
 		//backlayer stuff
