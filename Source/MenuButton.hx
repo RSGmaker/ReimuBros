@@ -142,6 +142,21 @@ class MenuButton extends Sprite
 		inner.graphics.drawRect(0, 0, width-SZ2, height-SZ2);
 		inner.graphics.endFill();
 		
+		var fillType:flash.display.GradientType = flash.display.GradientType.LINEAR;
+		//var colors:Array<UInt> = [0x777777, 0xffffff];
+		//var colors:Array<UInt> = [0, 0xffffff];
+		var colors:Array<UInt> = [innercolor, 0xffffff];
+		var alphas = [0.06, 0.6];
+		var ratios = [0x00, 0xFF];
+		var matr:flash.geom.Matrix = new flash.geom.Matrix();
+		//matr.createGradientBox(50, 9, 1.57079632679, 0, -4.5);
+		matr.createGradientBox(50, height-SZ2, 1.57079632679, 0, height-SZ2);
+		var spreadMethod:flash.display.SpreadMethod = flash.display.SpreadMethod.REFLECT;
+		inner.graphics.beginGradientFill(fillType, colors, alphas, ratios, matr, spreadMethod);  
+	 
+		inner.graphics.drawRoundRect(0, 0, width-SZ2, (height-SZ2)*0.65,5);
+		inner.graphics.endFill();
+		
 		if (manualwidth > 0)
 		{
 			width = manualwidth;
