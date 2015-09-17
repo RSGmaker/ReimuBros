@@ -136,23 +136,72 @@ class CharacterSelect extends Sprite
 	private function AddButton(text:String):Sprite
 	{
 		var buttonSprite = new MenuButton(text);
-		GUI.addChild(buttonSprite);
+		ButtonDisplay.addChild(buttonSprite);
 		return buttonSprite;
+	}
+	public function refreshdescription()
+	{
+		//var tf:Dynamic = (B.getChildByName("textField"));
+		/*#if html5
+			var S = "";
+			if (i < charlist.length)
+			{
+				S = charlist[i];
+				
+			}
+			else
+			{
+				//S = Player.hiddencharacters[i-Player.characters.length];
+			}
+			#else
+			var S:String = tf.text.toLowerCase();
+			#end*/
+			var S = selected;
+			
+			var dsc = "Can float briefly";
+			var AL = PlayerAbilityManager.GetAbilities2(S);
+			dsc = "";
+			var c = 0;
+			//var i = 0;
+			while (c < AL.length)
+			{
+				dsc = dsc + AL[c].description;
+				/*if (i > 0)
+				{
+					dsc = dsc + "\n";
+				}*/
+				c++;
+			}
+			var tmp = new TextFormat();
+			tmp.font = "Arial";
+			tmp.size = 22;
+			tmp.color = 0xFFFFFF;
+			var SS = (S.charAt(0).toUpperCase() + S.substr(1)).split("ALT").join("☆");
+			//var basic = S.split("ALT").join("");
+			var SC = tmp;
+
+			
+			selectedcharacter.text = SS + "\n"+dsc;
+			selectedcharacter.setTextFormat(SC);
+			
+			
 	}
 	public function refreshbuttons()
 	{
 		var i = 0;
+		
 		refreshing = true;
 		if (charlist == null)
 		{
 			charlist = Player.characters;
 		}
+		
 		while (i < Buttons.length)
 		{
 			var B = Buttons[i];
 			B.visible = (ButtonsPage[currentpage].indexOf(B) > -1);
 			var tf:Dynamic = (B.getChildByName("textField"));
-			#if html5
+		#if html5
 			var S = "";
 			if (i < charlist.length)
 			{
@@ -166,8 +215,8 @@ class CharacterSelect extends Sprite
 			#else
 			var S:String = tf.text.toLowerCase();
 			#end
-			var dsc = "Can float briefly";
-			//var AL = PlayerAbilityManager.GetAbilityList(PlayerAbilityManager.GetFlags(S));
+			
+			/*var dsc = "Can float briefly";
 			var AL = PlayerAbilityManager.GetAbilities2(S);
 			dsc = "";
 			var c = 0;
@@ -180,33 +229,31 @@ class CharacterSelect extends Sprite
 				}
 				c++;
 			}
-			/*var SP = Player.Scharacters.indexOf(S);
-			if (SP >= 0)
-			{
-				//dsc = Player.Description[SP];
-			}*/
 			var tmp = new TextFormat();
 			tmp.font = "Arial";
 			tmp.size = 22;
-			tmp.color = 0xFFFFFF;
+			tmp.color = 0xFFFFFF;*/
 			
 			var SS = S.charAt(0).toUpperCase() + S.substr(1);
 			var O:Dynamic = (B.getChildByName("selectedshape"));
 			var V:Dynamic = (B.getChildByName("selectedshape2"));
-			//var SC = selectedcharacter.getTextFormat();
-			var SC = tmp;
+			//var SC = tmp;
 			if (S == selected)
 			{
 				//O.visible = true;
 				//V.visible = false;
 				
-				selectedcharacter.text = SS + "\n"+dsc;
-				selectedcharacter.setTextFormat(SC);
+				//selectedcharacter.text = SS + "\n"+dsc;
+				//selectedcharacter.setTextFormat(SC);
 			}
 			else
 			{
 				var II = Player.characters.indexOf(S);
-				if (II >= 0)
+				if (II < 0)
+				{
+					B.buttonMode = true;
+				}
+				else if (II >= 0)
 				{
 					B.buttonMode = Main._this.savedata.data.unlock[II];
 				}
@@ -227,8 +274,8 @@ class CharacterSelect extends Sprite
 				if ((S + "ALT") == selected)
 				{
 					//V.visible = true;
-					selectedcharacter.text = SS+"☆" + "\n" + dsc;
-					selectedcharacter.setTextFormat(SC);
+					//selectedcharacter.text = SS+"☆" + "\n" + dsc;
+					//selectedcharacter.setTextFormat(SC);
 				}
 				else
 				{
@@ -240,6 +287,7 @@ class CharacterSelect extends Sprite
 			//this_onEnterFrame();
 			i += 1;
 		}
+		refreshdescription();
 		refreshing=false;
 	}
 	private function makebuttons()
@@ -334,7 +382,7 @@ class CharacterSelect extends Sprite
 		buttonSprite.textfield.visible = false;
 		buttonSprite.button.alpha = 0.65;
 		
-		if (unlocked)
+		//if (unlocked || charlist != Player.characters)
 		{
 		buttonSprite.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 					//var D:Dynamic = buttonSprite;

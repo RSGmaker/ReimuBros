@@ -267,7 +267,7 @@ class TitleScreenView extends Sprite
 					Main._this.roomprefix = "AllStar";
 					Main._this.GameFlags.clearall();
 					Main._this.GameFlags.set(Main.AllStar, true);
-					Main._this.playerspick = "RedFairy";
+					Main._this.playerspick = "redfairy";
 					Main._this.canselectcharacter = false;
 					Main._this.cancontinue = false;
 					Main._this.canlivesspawn = false;
