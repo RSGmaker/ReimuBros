@@ -28,7 +28,7 @@ class Mystia extends Enemy
 		image.image_speed = 0.4;
 		rng = null;
 		//mntime = 1;
-		mntime = 10;
+		mntime = 45;
 		pointvalue = 200;
 		rename = "EMystia";
 		subtype = "mystia";
@@ -114,7 +114,7 @@ class Mystia extends Enemy
 					rng.seed += rng.twist(rng.seed, 1, 800)[0];
 					//Vspeed = -4 - ((rng.seed % 800)*0.01);
 					//Vspeed = -7;
-					Vspeed = -6;
+					Vspeed = -7;
 				}
 			}
 			
