@@ -70,7 +70,7 @@ class RedFairy extends Enemy
 			}
 		}
 		updphysics();
-		updateanimation("redfairy");
+		updateanimation("red_fairy");
 		
 		if (ground != null)
 		{

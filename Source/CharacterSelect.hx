@@ -166,6 +166,10 @@ class CharacterSelect extends Sprite
 			while (c < AL.length)
 			{
 				dsc = dsc + AL[c].description;
+				//if (c > 0)
+				{
+					dsc = dsc + "\n";
+				}
 				/*if (i > 0)
 				{
 					dsc = dsc + "\n";
@@ -177,6 +181,24 @@ class CharacterSelect extends Sprite
 			tmp.size = 22;
 			tmp.color = 0xFFFFFF;
 			var SS = (S.charAt(0).toUpperCase() + S.substr(1)).split("ALT").join("☆");
+			var SA = SS.split("_");
+			var i = 0;
+			SS = "";
+			while (i < SA.length)
+			{
+				var str = SA[i];
+				str = (str.charAt(0).toUpperCase() + str.substr(1));
+				if (SS == "")
+				{
+					SS = str;
+				}
+				else
+				{
+					SS = SS + " " + str;
+				}
+				i++;
+			}
+			//.split("_").join(" ")
 			//var basic = S.split("ALT").join("");
 			var SC = tmp;
 
