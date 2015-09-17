@@ -42,8 +42,17 @@ class Bullet extends Entity
 			HP--;
 			if (HP < 1)
 			{
-				alive = false;
-				killed = true;
+				scaleX -= 0.2;
+				scaleY -= 0.2;
+				if (scaleX <= 0 || scaleY <= 0)
+				{
+					alive = false;
+					killed = true;
+				}
+				else
+				{
+					HP++;
+				}
 			}
 		}
 		if ((x < -width && gravX<=0 && Hspeed<=0) || (y < -height && gravY<=0 && Vspeed<=0) || (x>832 && gravX>=0 && Hspeed>=0) || (y>832 && gravY>=0 && Vspeed>=0))
