@@ -118,7 +118,7 @@ class BossYukari extends Boss
 					spd = -spd;
 				}
 				var R = Math.floor(4 * Math.random()) * 160;
-				Y += R-64;
+				Y += R-60;
 				var D:Dynamic = { };
 				D.type = "train";
 				D.UID = UID;
