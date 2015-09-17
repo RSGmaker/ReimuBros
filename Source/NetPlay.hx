@@ -117,12 +117,13 @@ class NetPlay
                                     {
                                         
                                         case "NetConnection.Connect.Success":
-                                            trace( 'connection made');
+											var R = "org.walfasgame.ReimuBros/" + Main._this.gameversion + "/" + Room;
+                                            trace( 'connected!, moving to:'+R);
                                             trace( ' near id ' + nc.nearID );
                                             trace( ' far id ' + nc.farID );
 											NID = ""+nc.nearID;
 											var groupSpecifier:GroupSpecifier;
-											groupSpecifier = new GroupSpecifier("org.walfasgame.ReimuBros/"+Main._this.gameversion+"/" + Room);
+											groupSpecifier = new GroupSpecifier(R);
 											groupSpecifier.postingEnabled = true;
 											groupSpecifier.serverChannelEnabled = true;
 											groupSpecifier.routingEnabled = true;
