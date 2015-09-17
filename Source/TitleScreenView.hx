@@ -47,6 +47,8 @@ class TitleScreenView extends Sprite
 	public var lastpage:Int;
 	public var currentpage:Int;
 	
+	public var Description:TextField;
+	
 	public var pages:Array<Sprite>;
 	public function new() 
 	{
@@ -128,6 +130,19 @@ class TitleScreenView extends Sprite
 		pages[currentpage].visible = false;
 		lastpage = currentpage;
 		currentpage = page;
+	}
+	public function setdescription(text:String)
+	{
+		var tmp = new TextFormat();
+		tmp.font = "Arial";
+		tmp.size = 22;
+		tmp.color = 0xFFFFFF;
+		Description.text = text;
+		Description.setTextFormat(tmp);
+		Description.x = -Description.textWidth / 2;
+		Description.width = Description.textWidth + 8;
+		Description.height = Description.textHeight + 8;
+		
 	}
 	public function show_menu()
 	{
@@ -255,6 +270,7 @@ class TitleScreenView extends Sprite
 				//status = "SinglePlayer";
 					Main._this.roomprefix = "Classic";
 					Main._this.GameFlags.clearall();
+					setdescription("Classic Mode:\nClear levels by defeating enemies.\nHit blocks with enemies on top of them to flip them over,\ntouching a flipped over enemy defeats them.");
 					setpage(2);
 				 } 
 				);
@@ -267,10 +283,11 @@ class TitleScreenView extends Sprite
 					Main._this.roomprefix = "AllStar";
 					Main._this.GameFlags.clearall();
 					Main._this.GameFlags.set(Main.AllStar, true);
-					Main._this.playerspick = "redfairy";
+					Main._this.playerspick = "red_fairy";
 					Main._this.canselectcharacter = false;
 					Main._this.cancontinue = false;
 					Main._this.canlivesspawn = false;
+					setdescription("All Star Mode:\nThere are no lives in this mode.\nYou can switch to characters unlocked in this play session.\nLosing a life means losing a character.\nRun out of characters and it's game over.");
 					setpage(2);
 				 } 
 				);
@@ -299,6 +316,17 @@ class TitleScreenView extends Sprite
 			Y = 0;
 			P = pages[2];
 			P.visible = false;
+			var dimmer = new Shape();
+			dimmer.graphics.beginFill(0, 0.3);
+			dimmer.graphics.drawRect( 0, 0, 800, 600);
+			dimmer.graphics.endFill();
+			dimmer.x = -main.x;
+			dimmer.y = -main.y;
+			P.addChild(dimmer);
+			
+			Description = new TextField();
+			Description.y = -200;
+			P.addChild(Description);
 			
 			B = AddButton("Single Player", P);
 			B.y = Y;
@@ -346,9 +374,10 @@ class TitleScreenView extends Sprite
 				Main._this.GameFlags.set(Main.Danmaku, true);
 				Main._this.GameFlags.set(Main.EventRoundsOnly, true);
 				Main._this.levelselect = false;
-				Main._this.level = 16;
-				//Main._this.levelincrement = 5;
+				Main._this.level = 35;
+				Main._this.levelincrement = 5;
 				Main._this.cancontinue = false;
+				setdescription("Danmaku:\nDifficulty ramps up quickly in this mode.\nEnemy bullets are everywhere in this mode.");
 				setpage(2);
 				 } 
 				);
@@ -372,6 +401,7 @@ class TitleScreenView extends Sprite
 				Main._this.level = 35;
 				Main._this.levelincrement = 5;
 				Main._this.cancontinue = false;
+				setdescription("Boss Rush:\nEvery level is a boss event");
 				setpage(2);
 				 } 
 				);
@@ -395,6 +425,7 @@ class TitleScreenView extends Sprite
 				Main._this.level = 56;
 				Main._this.levelincrement = 1;
 				Main._this.cancontinue = false;
+				setdescription("Truck Hoarder:\nIn this mode you have to beat each level while protecting a toy truck.");
 				setpage(2);
 				 } 
 				);
