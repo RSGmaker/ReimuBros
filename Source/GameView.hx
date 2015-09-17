@@ -3627,9 +3627,11 @@ class GameView extends Sprite
 				//var B = new BossCirno();
 				//var B = new BossYukari();
 				
-				var B = new BossSanae();
+				//var B = new BossSanae();
 				//var B = new BossParsee();
 				//var B = new BossMurasa();
+				
+				var B = new Meiling();
 				AddEnemy(B);
 				//AddObject(B);
 			}
@@ -5553,6 +5555,10 @@ class GameView extends Sprite
 		if (GameFlags.get(Main.Danmaku))
 		{
 			Ev[Ev.length] = TypeofRound.Danmaku;
+		}
+		if (GameFlags.get(Main.SanaeBoss))
+		{
+			Ev[Ev.length] = TypeofRound.SanaeBoss;
 		}
 		if (Ev.length > 0)
 		{

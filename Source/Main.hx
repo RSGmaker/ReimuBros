@@ -114,6 +114,7 @@ class Main extends Sprite {
 	public static inline var NoEvents = 25;
 	public static inline var UnlockAllChallenges = 26;
 	public static inline var AllStar = 27;
+	public static inline var SanaeBoss = 28;
 	//cheatcodes are stored as md5 hashcodes, so cheatcodes cannot be obtained via hacking, you can press f9 in the character select to convert your player name to an md5 hash requires in game debug mode (Main.DEBUG=true)
 	//75efc70c0e990c49b8ee4fbdaca89dae = firecirno
 	//6718c4714daa73a63e1e4ea54757449c = upupdowndownleftrightleftrightbastart
@@ -142,7 +143,8 @@ class Main extends Sprite {
 	//2f4581b3456a9c99e51b0237fe9bde0a = teatime
 	//5e19e32cb6c2a71bec4fed4135f2785f = spell card rules what are those?
 	//1a723cfc8a28af39a97b5c0f497e52c4 = /allstar
-	public static var codes:Array<String> = ["75efc70c0e990c49b8ee4fbdaca89dae", "6718c4714daa73a63e1e4ea54757449c", "9e6122001ea0464018c634c285233853", "7d51b214e0069ac6361aaaf2034279a6", "2b59c79dfe67f2a5d0f17c646ae894ed", "fa55036379520473353e15548f2a388e", "69034dbf1b3882954b3a9b8bf9686d1c","c16404177908ade1a1f1b0e3f8835ec9","6170e8e40fdf20f6fbeefd88815a2086","525afc6a26124022359a9ad101e71e99","5aed71982de151ff05492c9babb533ea","45c48cce2e2d7fbdea1afc51c7c6ad26","1c0108249de204153f4e296913fcacea","09e1ca57cc1c4e73bd7fc9f5642883db","f9df7933994ea2e532cc30a842d36766","151115624f4a47252d316c30d1ccbced","4b54a629dbc0c68ab8312740ae3d1e84","b32092f7b9e04c12abb373a257ba16fe","fda28399f82b488a33807573a2d670c5","1b9b7d20ce44ad2f880f677deefd711b","0c22948e07710faa0ad65b83053d77e0","0f6a8fa3f3985858ebc1debc5ce61f7e","c022be00cb710d03d98d67fb6cbf6d7a","42fa0e8cfd0cb2102c7d23ebd7ada199","2f4581b3456a9c99e51b0237fe9bde0a","5e19e32cb6c2a71bec4fed4135f2785f","1a723cfc8a28af39a97b5c0f497e52c4"];
+	//b330c71bd2c3ca1f4c6ecea06838ce2f = theticketsarenowriceballs
+	public static var codes:Array<String> = ["75efc70c0e990c49b8ee4fbdaca89dae", "6718c4714daa73a63e1e4ea54757449c", "9e6122001ea0464018c634c285233853", "7d51b214e0069ac6361aaaf2034279a6", "2b59c79dfe67f2a5d0f17c646ae894ed", "fa55036379520473353e15548f2a388e", "69034dbf1b3882954b3a9b8bf9686d1c","c16404177908ade1a1f1b0e3f8835ec9","6170e8e40fdf20f6fbeefd88815a2086","525afc6a26124022359a9ad101e71e99","5aed71982de151ff05492c9babb533ea","45c48cce2e2d7fbdea1afc51c7c6ad26","1c0108249de204153f4e296913fcacea","09e1ca57cc1c4e73bd7fc9f5642883db","f9df7933994ea2e532cc30a842d36766","151115624f4a47252d316c30d1ccbced","4b54a629dbc0c68ab8312740ae3d1e84","b32092f7b9e04c12abb373a257ba16fe","fda28399f82b488a33807573a2d670c5","1b9b7d20ce44ad2f880f677deefd711b","0c22948e07710faa0ad65b83053d77e0","0f6a8fa3f3985858ebc1debc5ce61f7e","c022be00cb710d03d98d67fb6cbf6d7a","42fa0e8cfd0cb2102c7d23ebd7ada199","2f4581b3456a9c99e51b0237fe9bde0a","5e19e32cb6c2a71bec4fed4135f2785f","1a723cfc8a28af39a97b5c0f497e52c4","b330c71bd2c3ca1f4c6ecea06838ce2f"];
 	public var GameFlags:FlagManager;
 	public function new () {
 		super ();
