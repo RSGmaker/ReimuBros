@@ -26,7 +26,7 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.SpawnShanghai(null), names:["alice"] };
 		L[L.length] = { type:new abilities.MoreZombieFairies(null), names:["orin"] };
 		L[L.length] = { type:new abilities.DoubleMyon(null), names:["youmu"] };
-		L[L.length] = { type:new abilities.Floating(null), names:["lunasa", "lyrica", "merlin", "daiyousei", "mystia", "lunachild", "starsaphire", "elis", "kurumi", "gengetsu", "mai", "shinki", "makairesident-a", "lilith"] };
+		L[L.length] = { type:new abilities.Floating(null), names:["lunasa", "lyrica", "merlin", "daiyousei", "mystia", "lunachild", "starsaphire", "elis", "kurumi", "gengetsu", "mai", "shinki", "mika", "lilith"] };
 		L[L.length] = { type:new abilities.YinYangOrbs(null), names:["reimu"] };
 		L[L.length] = { type:new abilities.IceAffinity(null), names:["cirno", "letty"] };
 		L[L.length] = { type:new abilities.WorldFreezer(null), names:["letty"] };
