@@ -51,7 +51,7 @@ class BossYukari extends Boss
 			B.Hspeed = data.speed;
 			B.Vspeed = 0;
 			B.ChangeAnimation("train");
-			game.AddObject(B);
+			game.AddObject(B,0);
 			i++;
 			}
 			var X = 100;

@@ -26,7 +26,7 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.SpawnShanghai(null), names:["alice"] };
 		L[L.length] = { type:new abilities.MoreZombieFairies(null), names:["orin"] };
 		L[L.length] = { type:new abilities.DoubleMyon(null), names:["youmu"] };
-		L[L.length] = { type:new abilities.Floating(null), names:["lunasa", "lyrica", "merlin", "daiyousei", "mystia", "lunachild", "starsaphire", "elis", "kurumi", "gengetsu", "mai", "shinki", "mika", "lilith"] };
+		L[L.length] = { type:new abilities.Floating(null), names:["lunasa", "lyrica", "merlin", "daiyousei", "mystia", "luna_child", "star_sapphire", "elis", "kurumi", "gengetsu", "mai", "shinki", "mika", "senkou"] };
 		L[L.length] = { type:new abilities.YinYangOrbs(null), names:["reimu"] };
 		L[L.length] = { type:new abilities.IceAffinity(null), names:["cirno", "letty"] };
 		L[L.length] = { type:new abilities.WorldFreezer(null), names:["letty"] };
@@ -64,12 +64,12 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.Fairplay(null), names:["shikieiki"] };
 		L[L.length] = { type:new abilities.SuwakoHoop(null), names:["suwako"] };
 		L[L.length] = { type:new abilities.ExtraPoints(null), names:["minoriko"] };
-		L[L.length] = { type:new abilities.BecomeInvisible(null), names:["sunnymilk", "nitori"] };
+		L[L.length] = { type:new abilities.BecomeInvisible(null), names:["sunny_milk", "nitori"] };
 		L[L.length] = { type:new abilities.AbsorbDamage(null), names:["byakuren"] };
 		L[L.length] = { type:new abilities.MusicSelector(null), names:["lunasa", "lyrica", "merlin"] };
 		L[L.length] = { type:new abilities.HeadCannon(null), names:["sekibanki"] };
 		L[L.length] = { type:new abilities.ClearSpawnList(null), names:["rin"] };
-		L[L.length] = { type:new abilities.RefreshBlocks(null), names:["lily"] };
+		L[L.length] = { type:new abilities.RefreshBlocks(null), names:["lily","junko"] };
 		L[L.length] = { type:new abilities.MasterSpark(null), names:["yuuka"] };
 		L[L.length] = { type:new abilities.AlternateMusic(null), names:["benben", "yatsuhashi"] };
 		L[L.length] = { type:new abilities.VampiricTouch(null), names:["remilia"] };
@@ -84,7 +84,7 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.TreasureHunter(null), names:["nazrin"] };
 		
 		
-		L[L.length] = { type:new abilities.NoAbility(null), names:["redfairy"] };
+		L[L.length] = { type:new abilities.NoAbility(null), names:["red_fairy"] };
 		L[L.length] = { type:new abilities.BasicShot(null), names:["benben","yatsuhashi"] };
 	}
 	public function init()

@@ -48,7 +48,7 @@ class EntityGap extends Entity
 		{
 			SoundManager.Play("fireballspawn");
 			readyinteract = false;
-			if (y > 300 && UID > 0.5 && game.RoundType != GameView.TypeofRound.Yukari)
+			if (y > 300 && UID > 0.5 && game.RoundType != GameView.TypeofRound.Yukari && game.RoundType != GameView.TypeofRound.Danmaku)
 			{
 				if (game.Hoster)
 				{

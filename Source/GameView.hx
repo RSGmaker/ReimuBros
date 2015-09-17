@@ -113,7 +113,7 @@ class GameView extends Sprite
 	public var lastprogress:Float;
 	public var leveltitle:TextField;
 	public var lifeicon:Bitmap;
-	public var ufolimit:Int = 8;
+	public var ufolimit:Int;
 	public var useablelist:Array<String>;
 	
 	public function GetPlayers():Array<Player>
@@ -137,13 +137,14 @@ class GameView extends Sprite
 			name = name.substr(0, name.length - 3);
 			i = Player.characters.indexOf(name);
 		}
-		if (GameFlags.get(Main.AllStar))
+		/*if (GameFlags.get(Main.AllStar))
 		{
 			if (useablelist.indexOf(name) < 0)
 			{
 				useablelist[useablelist.length] = name;
 			}
-		}
+		}*/
+		getcharacter(name);
 		var savedata = Main._this.savedata;
 		if (i > -1)
 		{
@@ -162,6 +163,23 @@ class GameView extends Sprite
 			{
 				savedata.data.unlock[i] = true;
 				ShowMessage("Unlocked " + name.charAt(0).toUpperCase() + name.substr(1)+"!");
+			}
+		}
+	}
+	//unlocks character for all star mode list.
+	public function getcharacter(name:String)
+	{
+		var alt = false;
+		if (name.indexOf("ALT") > -1)
+		{
+			alt = true;
+			name = name.substr(0, name.length - 3);
+		}
+		if (GameFlags.get(Main.AllStar))
+		{
+			if (useablelist.indexOf(name) < 0)
+			{
+				useablelist[useablelist.length] = name;
 			}
 		}
 	}
@@ -303,6 +321,7 @@ class GameView extends Sprite
 	public var flashrate:Float;
 	public var flashalphadirection:Bool;
 	
+	public var backlayer:Sprite;
 	public var entitylayer:Sprite;
 	public var gamestage:Sprite;
 	
@@ -341,6 +360,7 @@ class GameView extends Sprite
 		//netlog = Main._this.DEBUG;
 		messages = new Array<String>();
 		entitylayer = new Sprite();
+		backlayer = new Sprite();
 		gamestage = new Sprite();
 	}
 	
@@ -413,14 +433,14 @@ class GameView extends Sprite
 			if (generalstage == 0)
 			{
 				L = L.concat(["reimu", "marisa", /*"sanae", */"kanako", "suwako", "alice", "shanghai"/*, "suika"*/]);
-				L = L.concat(["sara", "louise", "yuki", "mai", "ayana", "yumeko", "shinki", "makairesident-a", "lilith", "orange", "kurumi", "elly", "rengeteki"/*, "yuuka"*/, "mugetsu", "gengetsu", "ellen", "kotohime", "kana", "rikako", "chiyuri", "yumemi", "ruukoto", "rika", "noroiko", "meira", "matenshi", "shingyoku", "elis", "sariel", "mima", "konngara"]);
+				L = L.concat(["sara", "louise", "yuki", "mai", "ayana", "yumeko", "shinki", "mika", "senkou", "orange", "kurumi", "elly", "rengeteki"/*, "yuuka"*/, "mugetsu", "gengetsu", "ellen", "kotohime", "kana", "rikako", "chiyuri", "yumemi", "ruukoto", "rika", "noroiko", "meira", "matenshi", "shingyoku", "elis", "sariel", "mima", "konngara"]);
 				L = L.concat(["lily", "lyrica", "lunasa", "merlin","youmu", "yuyuko"]);
 			}
 			//sdm
 			if (generalstage == 1)
 			{
 				L = L.concat(["daiyousei", "meiling", "koakuma", "patchouli", "sakuya",/* "remilia", "flandre",*/ "rin"]);
-				L = L.concat(["lunachild", "starsaphire", "sunnymilk"]);
+				L = L.concat(["lunachild", "star_sapphire", "sunnymilk"]);
 			}
 			//space
 			if (generalstage == 2)
@@ -466,12 +486,12 @@ class GameView extends Sprite
 				"wakasagihime", "sekibanki", "kagerou", "benben", "yatsuhashi", /*"seija",*/ "shinmyoumaru", "raiko",
 				"sumireko",
 				"seiran", "ringo", "doremy",
-				"lunachild", "starsaphire", "sunnymilk", "reisen", "toyohime", "yorihime", "kasen", "kosuzu","tokiko","akyu","maribel","renko",
+				"luna_child", "star_sapphire", "sunny_milk", "reisen", "toyohime", "yorihime", "kasen", "kosuzu","tokiko","akyu","maribel","renko",
 				"shingyoku","elis", "sariel", "mima", "konngara",
 				"rika","noroiko", "meira", "matenshi",
 				"ellen", "kotohime", "kana", "rikako", "chiyuri", "yumemi", "ruukoto",
 				"orange", "kurumi", "elly", "rengeteki"/*, "yuuka"*/, "mugetsu", "gengetsu",
-				"sara", "louise"/*,"alice"*/, "yuki", "mai", "ayana", "yumeko", "shinki", "makairesident-a", "lilith"]);
+				"sara", "louise"/*,"alice"*/, "yuki", "mai", "ayana", "yumeko", "shinki", "mika", "senkou"]);
 			}
 		}
 		if (L.length == 0)
@@ -565,6 +585,8 @@ class GameView extends Sprite
 		Background.alpha = 0;
 		gamestage.addChild(OBackground);
 		gamestage.addChild(Background);
+		backlayer = new Sprite();
+		gamestage.addChild(backlayer);
 		entitylayer = new Sprite();
 		gamestage.addChild(entitylayer);
 		//HighScore = Main._this.savedata.data.highscore;
@@ -609,7 +631,7 @@ class GameView extends Sprite
 		entities = new Array<Entity>();
 		thegiant = new GiantSuika();
 		thegiant.visible = false;
-		AddObject(thegiant);
+		AddObject(thegiant,0);
 		if (AL == null)
 		{
 			AL = new Animationloader();
@@ -928,11 +950,12 @@ class GameView extends Sprite
 						D.y = 0;
 						myplayer.cancel = false;
 						myplayer.ability.onloselife();
-						if (!myplayer.cancel)
+						/*if (!myplayer.cancel)
 						{
 							myplayer.lives--;
-						}
-						D.lives = myplayer.lives;
+						}*/
+						//D.lives = myplayer.lives;
+						D.lives = (useablelist.length-1);
 						SendEvent("PlayerRespawn", D);
 					}
 					else
@@ -1042,7 +1065,7 @@ class GameView extends Sprite
 		xx = 0;
 		while (xx < L.length)
 		{
-			AddObject(L[xx]);
+			AddObject(L[xx],0);
 			xx++;
 		}
 	}
@@ -1251,31 +1274,39 @@ class GameView extends Sprite
 					gamestage.removeChild(player.nameplate);
 				}
 				Players.remove(P);
-				entities.remove(player);
-				entitylayer.removeChild(player);
+				RemoveObject(player);
+				//entities.remove(player);
+				//entitylayer.removeChild(player);
 			}
 			
 		}
 	}
-	private function AddEntityItem(E:EntityItem) {
-		AddObject(E);
+	private function AddEntityItem(E:EntityItem,layer:Int = 1) {
+		AddObject(E,layer);
 		activeItems[activeItems.length] = E;
 	}
-	private function AddEnemy(E:Enemy) {
-		AddObject(E);
+	private function AddEnemy(E:Enemy,layer:Int = 1) {
+		AddObject(E,layer);
 		//if (E.respawn)
 		{
 			activeEnemies[activeEnemies.length] = E;
 		}
 	}
-	public function AddObject(E:Entity) {
+	public function AddObject(E:Entity,layer:Int = 1) {
 		if (E.interactable/* && activeInteractables.indexOf(E >= 0)*/)
 		{
 			activeInteractables[activeInteractables.length] = E;
 		}
 		entities[entities.length] = E;
 		//addChild(E);
-		entitylayer.addChild(E);
+		if (layer == 1)
+		{
+			entitylayer.addChild(E);
+		}
+		else if (layer == 0)
+		{
+			backlayer.addChild(E);
+		}
 	}
 	private function RemoveEntityItem(I:Entity) {
 		var D:Dynamic = I;
@@ -1294,7 +1325,14 @@ class GameView extends Sprite
 		}
 		//removeChild(I);
 		entities.remove(I);
-		entitylayer.removeChild(I);
+		if (entitylayer.contains(I))
+		{
+			entitylayer.removeChild(I);
+		}
+		else if (backlayer.contains(I))
+		{
+			backlayer.removeChild(I);
+		}
 	}
 	//retuns solid object at point
 	public function CollisionDetectPoint(X:Float,Y:Float):Entity {
@@ -2115,6 +2153,14 @@ class GameView extends Sprite
 		}
 		if (evt == "Continue")
 		{
+			if (P.isme)
+			{
+				if (GameFlags.get(Main.AllStar))
+				{
+					SendEvent("ChangeCharacter", "red_fairy");
+					getcharacter("red_fairy");
+				}
+			}
 			P.lives = startinglives;
 			P.ability.oncontinue();
 			/*if (level > 0 && level % 5 != 1)
@@ -3401,8 +3447,15 @@ class GameView extends Sprite
 			if (data.user != null)
 			{
 				var D:Dynamic = EntityFromUID(data.user);
-				var P:Player = D;
-				L.user = P;
+				//var P:Player = D;
+				L.user = D;
+				if (D != null)
+				{
+				L.offsetX = L.x;
+				L.offsetY = L.y;
+				L.x += D.x;
+				L.y += D.y;
+				}
 			}
 			L.antiplayer = data.antiplayer;
 			L.antienemy = data.antienemy;
@@ -3528,6 +3581,56 @@ class GameView extends Sprite
 				}
 			}
 	}
+	//clones a "PlayerDanmaku" data and sends it(used for spamming danmaku)
+	public function SendPlayerDanmaku(data:Dynamic)
+	{
+		//var O = new PlayerBullet();
+		var O:Dynamic = { };
+			O.x = data.x;
+			O.y = data.y;//+10;
+			O.Hspeed = data.Hspeed;
+			O.Vspeed = data.Vspeed;
+			O.gravX = data.gravX;
+			O.gravY = data.gravY;
+			O.scale = data.scale;
+			//O.scaleX = data.scale;
+			//O.scaleY = data.scale;
+			O.bounces = false;
+			O.type = data.type;
+			if (data.wrap != null)
+			{
+				O.wrap = data.wrap;
+			}
+			if (data.bounces != null)
+			{
+				O.bounces = data.bounces;
+			}
+			if (data.HP != null)
+			{
+				O.HP = data.HP;
+			}
+			if (data.topbounce != null)
+			{
+				O.topbounce = data.topbounce;
+			}
+			if (data.bouncedrain != null)
+			{
+				O.bouncedrain = data.bouncedrain;
+			}
+			if (data.bumps != null)
+			{
+				O.bumps = data.bumps;
+			}
+			if (data.rolls != null)
+			{
+				O.rolls = data.rolls;
+			}
+			if (data.image_speed != null)
+			{
+				O.image_speed = data.image_speed;
+			}
+			SendEvent("PlayerDanmaku", O);
+	}
 	public function stage_onKeyDown (event:KeyboardEvent):Void {
 		//TF.text = "test"+event.toString();
 		if (event.keyCode == Keyboard.SPACE) {
@@ -3631,7 +3734,8 @@ class GameView extends Sprite
 				//var B = new BossParsee();
 				//var B = new BossMurasa();
 				
-				var B = new Meiling();
+				//var B = new Meiling();
+				var B = new Marisa();
 				AddEnemy(B);
 				//AddObject(B);
 			}
@@ -5352,6 +5456,7 @@ class GameView extends Sprite
 	{
 		gamestarted = true;
 		boss = null;
+		ufolimit = 8;
 		
 		var L = level - 1;
 		var stage = Math.floor((L) / 5);
@@ -5616,10 +5721,12 @@ class GameView extends Sprite
 		}
 		if (RoundType == TypeofRound.Danmaku)
 		{
-			AddToArrayMultiple(Obstacles, "Gap", 70);
+			ufolimit = 10;
+			AddToArrayMultiple(Obstacles, "Gap", 60);
 			AddToArrayMultiple(Obstacles, "UFO", 32);
 			AddToArrayMultiple(Obstacles, "UnzanFist", 12);
-			AddToArrayMultiple(Obstacles, "Yuuka", 5);
+			AddToArrayMultiple(Obstacles, "Yuuka", 4);
+			AddToArrayMultiple(Obstacles, "Yinyangorb", 7);
 			epm *= 1.5;
 		}
 		if (RoundType == TypeofRound.Nue)
@@ -5829,25 +5936,26 @@ class GameView extends Sprite
 		{
 			if (generalstage < 2)
 			{
-				AddToArrayMultiple(enemytypes, new RedFairy(), 60);
+				AddToArrayMultiple(enemytypes, new RedFairy(), 30);
 			}
 			else if (generalstage == 2)
 			{
-				AddToArrayMultiple(enemytypes, new MoonRabbit(), 55);
+				AddToArrayMultiple(enemytypes, new MoonRabbit(), 25);
 			}
 			else if (generalstage == 3)
 			{
-				AddToArrayMultiple(enemytypes, new Kisume(), 45);
+				AddToArrayMultiple(enemytypes, new Kisume(), 20);
 			}
 			else
 			{
-				AddToArrayMultiple(enemytypes, new Mystia(), 34);
+				AddToArrayMultiple(enemytypes, new Mystia(), 15);
 			}
 			//AddToArrayMultiple(enemytypes, new RedFairy(), 60);
-			AddToArrayMultiple(enemytypes, new Tewi(), 37);
-			AddToArrayMultiple(enemytypes, new Utsuho(), 4);
-			AddToArrayMultiple(enemytypes, new Kogasa(), 1);
+			AddToArrayMultiple(enemytypes, new Tewi(), 25);
+			AddToArrayMultiple(enemytypes, new Utsuho(), 2);
+			AddToArrayMultiple(enemytypes, new Kogasa(), 2);
 			AddToArrayMultiple(enemytypes, new Marisa(), 3);
+			AddToArrayMultiple(enemytypes, new Imposter(), 3);
 		}
 		if (RoundType == TypeofRound.Marisa)
 		{

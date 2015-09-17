@@ -377,6 +377,7 @@ class Main extends Sprite {
 					bannedname = true;
 				}
 				var valid = true;
+				var gamecode = -1;
 				if (!bannedname)
 				{
 					
@@ -384,7 +385,7 @@ class Main extends Sprite {
 					{
 						code = C;
 						code = MD5.hash(code);
-						var gamecode = codes.indexOf(code) + 1;
+						gamecode = codes.indexOf(code) + 1;
 						if (gamecode == UnlockAllCharacters)
 						{
 							var i = 0;
@@ -482,9 +483,13 @@ class Main extends Sprite {
 					}
 					else
 					{
-						if (online)
+						if ((online && !characterselect.custom) && (gamecode < 1))
 						{
 							characterselect.status = "Error:Cheat";
+						}
+						else if (gamecode > 0)
+						{
+							characterselect.status = "Cheat";
 						}
 					}
 				}

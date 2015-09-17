@@ -82,6 +82,15 @@ class UFO extends Enemy
 			iter = 30 + rng.twist(0, 1, 240)[0];
 			fuel = 90 + rng.twist(0, 1, 900 + (rank * 150))[0];
 			reducetime = rank * 30;
+			if (game.RoundType == GameView.TypeofRound.Danmaku)
+			{
+				reducetime += 30;
+				fuel += 150;
+			}
+			if (reducetime > 180)
+			{
+				reducetime = 180;
+			}
 		}
 		rename = ufotype + "ufo";
 		animate();

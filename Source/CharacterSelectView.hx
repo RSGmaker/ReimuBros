@@ -553,6 +553,13 @@ class CharacterSelectView extends Sprite
 			}
 			Lselected = selected;
 		}
+		var T = select.selectedcharacter.getTextFormat();
+		if (status == "Cheat")
+		{
+			select.selectedcharacter.text = "Cheat code toggled!\nyou may enter more codes\nor start the game";
+			status = "";
+		}
+		
 		if (status == "Error:Name")
 		{
 			errortime++;
@@ -600,8 +607,10 @@ class CharacterSelectView extends Sprite
 					CustomRoom.backgroundColor = 0xFFFFFF;
 				}
 			}
+			T = select.selectedcharacter.getTextFormat();
 		}
 		
+		select.selectedcharacter.setTextFormat(T);
 		//backlayer stuff
 		if (!refreshing)
 		{

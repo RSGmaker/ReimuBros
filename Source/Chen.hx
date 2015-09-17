@@ -73,11 +73,11 @@ class Chen extends Enemy
 			}
 			//reducetime = rank * 30;
 			reducetime = rank * 20;
-			if (game.RoundType == GameView.TypeofRound.Yukari)
+			if (game.RoundType == GameView.TypeofRound.Yukari || game.RoundType == GameView.TypeofRound.Danmaku)
 			{
 				reducetime += 150;
 			}
-			if (game.RoundType == GameView.TypeofRound.Yukari || rank>0)
+			if (game.RoundType == GameView.TypeofRound.Yukari || rank>0 || game.RoundType == GameView.TypeofRound.Danmaku)
 			{
 				//danmaku = 15+rng.twist(rng.seed, 1, 540-reducetime)[0];
 				danmaku = 15+rng.twist(rng.seed, 1, 740-reducetime)[0];
