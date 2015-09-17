@@ -100,7 +100,8 @@ class BossMurasa extends Boss
 				{
 					var D:Dynamic = { };
 					D.type = "anchor";
-					D.angle = 0.7 + (rng.quick(160) * 0.01);
+					//D.angle = 0.7 + (rng.quick(160) * 0.01);
+					D.angle = 0.9 + (rng.quick(120) * 0.01);
 					SendCustomEvent(D);
 				}
 			}
@@ -120,6 +121,10 @@ class BossMurasa extends Boss
 			{
 				if ( Anchor.y + 30 >= 600)
 				{
+					if (Anchor.Vspeed > 0)
+					{
+						SoundManager.Play("anchor");
+					}
 					Anchor.Hspeed = 0;
 					Anchor.Vspeed = 0;
 					ReverseDelay--;
@@ -155,7 +160,7 @@ class BossMurasa extends Boss
 						//S -= 0.1;
 						O.visuallyrotates = true;
 						//O.changeangle(1.57);
-						O.changeangle(A);
+						O.changeangle(A+0.4);
 						O.shotby = this;
 
 						O.currot = O.getangle();
@@ -170,7 +175,7 @@ class BossMurasa extends Boss
 						//S -= 0.1;
 						O.visuallyrotates = true;
 						//O.changeangle(1.57);
-						O.changeangle(A);
+						O.changeangle(A-0.4);
 						O.shotby = this;
 
 						O.currot = O.getangle();
