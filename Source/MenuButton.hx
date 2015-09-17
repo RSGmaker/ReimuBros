@@ -26,7 +26,7 @@ class MenuButton extends Sprite
 	public var button:Sprite;
 	//lets us put whatever data inside that associates with this button
 	public var data:Dynamic;
-	public function new(text:String=" ",fontsize:Int=44,fontname:String="Arial",outlinesize:Int=6,innercolor:UInt=0x11CC55,outlinecolor:UInt=0x00AA33) 
+	public function new(text:String=" ",fontsize:Int=44,fontname:String="Arial",outlinesize:Int=5,innercolor:UInt=0x11CC55,outlinecolor:UInt=0x00AA33) 
 	{
 		super();
 		data = { };
@@ -135,11 +135,13 @@ class MenuButton extends Sprite
 		
 		outline.graphics.clear();
 		outline.graphics.beginFill(outlinecolor);
-		outline.graphics.drawRect(-SZ, -SZ, width, height);
+		//outline.graphics.drawRect(-SZ, -SZ, width, height);
+		outline.graphics.drawRoundRect(-SZ, -SZ, width, height,5);
 		outline.graphics.endFill();
 		inner.graphics.clear();
 		inner.graphics.beginFill(innercolor);
-		inner.graphics.drawRect(0, 0, width-SZ2, height-SZ2);
+		//inner.graphics.drawRect(0, 0, width-SZ2, height-SZ2);
+		inner.graphics.drawRoundRect(0, 0, width-SZ2, height-SZ2,5);
 		inner.graphics.endFill();
 		
 		var fillType:flash.display.GradientType = flash.display.GradientType.LINEAR;
