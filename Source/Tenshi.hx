@@ -218,11 +218,11 @@ class Tenshi extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 30 * 4;
+				flipped = 30 * 7;
 			}
 			else
 			{
-				flipped = 30 * 7;
+				flipped = 30 * 11;
 			}
 		}
 		else
