@@ -13,7 +13,7 @@ class Meiling extends Enemy
 	
 	public var awake:Int;
 	
-	public var target:Player;
+	//public var target:Player;
 	
 	public var rename:String;
 	
@@ -73,7 +73,26 @@ class Meiling extends Enemy
 		}
 		if (flipped < 1)
 		{
-		if (target == null)
+			if (!speedup)
+			{
+				if (Math.abs(game.myplayer.y - y) < 60 && ((Ldir == -1 && game.myplayer.x<x) || (Ldir==1 && game.myplayer.x>x)))
+					{
+						SendCustomEvent(null);
+					}
+					if (!speedup)
+			{
+				awake--;
+				if (awake == 0)
+				{
+					flipped = 30 * 20;
+					awake = -1;
+					rename = "meilingsleeping";
+					Hspeed = 0;
+					
+				}
+			}
+			}
+		/*if (target == null)
 		{
 			
 			var L = game.GetPlayers();
@@ -114,7 +133,7 @@ class Meiling extends Enemy
 				game.SendEvent("CustomEvent", D);
 			}
 			
-		}
+		}*/
 		if (speedup)
 		{
 			if (ground != null)
