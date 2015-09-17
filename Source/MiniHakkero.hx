@@ -92,7 +92,7 @@ class MiniHakkero extends CarryItem
 			//var L = new LaserBeam();
 			//var X = P.x;
 			var D:Dynamic = { };
-			D.x = x;
+			/*D.x = x;
 			if (P.Ldir < 0)
 			{
 				D.x -= 800;
@@ -100,8 +100,9 @@ class MiniHakkero extends CarryItem
 			else
 			{
 				D.x += 13;
-			}
-			D.y = y;
+			}*/
+			D.x = -8;
+			D.y = y-P.y;
 			D.user = P.UID;
 			D.antiplayer = false;
 			D.antienemy = true;

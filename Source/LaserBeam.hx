@@ -19,7 +19,9 @@ class LaserBeam extends Entity
 	public var Time:Int;
 	public var antiplayer:Bool;
 	public var antienemy:Bool;
-	public var user:Player;
+	public var user:Entity;
+	public var offsetX:Float;
+	public var offsetY:Float;
 	public function new() 
 	{
 		super("black");
@@ -40,12 +42,24 @@ class LaserBeam extends Entity
 		
 		Size = 0.1;
 		Time = 10;
-		type = "Bullet";
+		type = "Laser";
 	}
 	
 	override public function update():Void 
 	{
 		super.update();
+		if (user != null)
+		{
+		x = user.x + offsetX + (user.width);
+		y = user.y + offsetY;
+		if (user.Ldir < 0)
+		{
+			//x = user.x-800;
+			//x -= 800 + 13;
+			///x -= 800 + 9;
+			x -= 800;
+		}
+		}
 		/*if (ray != null)
 		{
 		if (!started)
@@ -124,7 +138,7 @@ class LaserBeam extends Entity
 				game.SendEvent("PlayerDeath", P.myMyon != null);
 			}
 		}
-		if (antienemy && ((game.Hoster && user==null) || (user != null && user.isme)))
+		if (antienemy && ((game.Hoster && (user==null || user.type != "Player")) || (user != null && user == game.myplayer)))
 		{
 			var i = 0;
 			while (i <T.activeEnemies.length)

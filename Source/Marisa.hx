@@ -123,18 +123,19 @@ class Marisa extends Enemy
 						D.Hspeed = Ldir * 2;
 						game.SendEvent("unyucannon", D);*/
 						var D:Dynamic = { };
-						D.x = x;
+						D.x = -20;
 						if (Ldir < 0)
 						{
-							D.x -= 800;
+							//D.x -= 800;
 						}
-						D.y = y+32;
+						D.y = 32;
 						//D.user = P.UID;
 						D.antiplayer = true;
 						D.antienemy = false;
+						D.user = UID;
 						game.SendEvent("LaserBeam",D);
 					}
-					Ldir = -Ldir;
+					//Ldir = -Ldir;
 					rng.seed += rng.twist(rng.seed, 1, 500)[0];
 					timetofire = 200 + (rng.seed % 500);
 				}
