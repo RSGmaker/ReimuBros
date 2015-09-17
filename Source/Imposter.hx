@@ -112,6 +112,17 @@ class Imposter extends Enemy
 				
 			}
 		}
+		if (game.GameFlags.get(Main.AllStar))
+		{
+			if (game.useablelist.indexOf(rename) < 0)
+			{
+				have = false;
+			}
+			else
+			{
+				have = true;
+			}
+		}
 		if (myMyon != null && maxHP == 0)
 		{
 			maxHP = 1;
@@ -266,6 +277,8 @@ class Imposter extends Enemy
 			{
 				alive = false;
 				visible = false;
+				maxHP = 0;
+				HP = 0;
 			}
 		killable = flipped > 0;
 	}
