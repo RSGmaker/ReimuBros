@@ -61,7 +61,7 @@ class Main extends Sprite {
 	public var DEBUG:Bool = false;
 	#end
 	//info displayed in titlescreen
-	public var gameversion:String = "1.6.1Beta";
+	public var gameversion:String = "1.6.1";
 	public var controlscheme:Array<UInt>;
 	//message shown to player should the host of that session make them leave
 	public var statusmessage:String = "";
