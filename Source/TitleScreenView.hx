@@ -401,7 +401,7 @@ class TitleScreenView extends Sprite
 				Main._this.level = 35;
 				Main._this.levelincrement = 5;
 				Main._this.cancontinue = false;
-				setdescription("Boss Rush:\nEvery level is a boss event");
+				setdescription("Boss Rush:\nEvery level is a boss event.\nSurvive as many as you can.");
 				setpage(2);
 				 } 
 				);

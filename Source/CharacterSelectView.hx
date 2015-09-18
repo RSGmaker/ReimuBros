@@ -586,7 +586,7 @@ class CharacterSelectView extends Sprite
 		}
 		if (status == "Error:Cheat")
 		{
-			select.selectedcharacter.text = "You cannot enter a public room with cheats enabled!\nuse a uniquely named custom room instead!\nyou can remove your codes by returning to the title screen.";
+			select.selectedcharacter.text = "You cannot enter a public room with cheats enabled!\nUse a uniquely named custom room instead!\nYou can remove your codes by returning\nto the title screen.";
 			select.selectedcharacter.textColor = 0xFF0000;
 			
 			errortime++;
