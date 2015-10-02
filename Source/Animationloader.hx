@@ -226,7 +226,7 @@ class Animationloader
 			CHR.y -= bounds.y;
 			//var bitmapData:BitmapData = new BitmapData(Std.int((R.width * 0.75)), Std.int(R.height),true, 0x00000000);
 			//var bitmapData:BitmapData = new BitmapData(Std.int((R.right + CHR.x)), Std.int(R.height),true, 0x00000000);
-			var bitmapData:BitmapData = new BitmapData(Std.int(bounds.width), Std.int(bounds.height),true, 0x00000000);
+			var bitmapData:BitmapData = new BitmapData(Std.int(Math.max(bounds.width,1)), Std.int(Math.max(bounds.height,1)),true, 0x00000000);
 			bitmapData.draw(spr);
 			lst[lst.length] = bitmapData;
 			return lst;

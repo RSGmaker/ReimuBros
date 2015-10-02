@@ -58,7 +58,7 @@ class Shop extends Sprite
 	{
 		//var T = ["Hat", "Hair", "Body", "Arms", "Eyes", "Mouth", "Prop", "Accessory", "Back",other];
 		//var type = 
-		if (inventory.length > 40)
+		if (inventory.length > 39)
 		{
 			var R = Math.floor(Math.random() * inventory.length);
 			inventory.remove(inventory[R]);
@@ -141,7 +141,26 @@ class Shop extends Sprite
 				}
 				else
 				{
-					var j = i + 1;
+					
+				}
+			}
+			else
+			{
+				/*var j = i + 1;
+					while (j < inventory.length)
+					{
+						if (data.type == inventory[j].type && data.index == inventory[j].index)
+						{
+							//this is already listed so lets remove it
+							j = inventory.length+1;
+							inventory.remove(data);
+							Main._this.savedata.data.shop_inventory = inventory;
+							i--;
+						}
+						j++;
+					}*/
+			}
+			var j = i + 1;
 					while (j < inventory.length)
 					{
 						if (data.type == inventory[j].type && data.index == inventory[j].index)
@@ -154,8 +173,6 @@ class Shop extends Sprite
 						}
 						j++;
 					}
-				}
-			}
 			i++;
 		}
 	}
