@@ -131,6 +131,7 @@ class GameView extends Sprite
 	{
 		var i = Player.characters.indexOf(name);
 		var alt = false;
+		var moneyreward = true;
 		if (name.indexOf("ALT") > -1)
 		{
 			alt = true;
@@ -156,15 +157,27 @@ class GameView extends Sprite
 				if (!savedata.data.alts[i])
 				{
 					savedata.data.alts[i] = true;
-					ShowMessage("Unlocked " + name.charAt(0).toUpperCase() + name.substr(1)+"☆!");
+					ShowMessage("Unlocked " + name.charAt(0).toUpperCase() + name.substr(1) + "☆!");
+					moneyreward = false;
 				}
 			}
 			if (!savedata.data.unlock[i])
 			{
 				savedata.data.unlock[i] = true;
-				ShowMessage("Unlocked " + name.charAt(0).toUpperCase() + name.substr(1)+"!");
+				ShowMessage("Unlocked " + name.charAt(0).toUpperCase() + name.substr(1) + "!");
+				moneyreward = false;
 			}
 		}
+		if (moneyreward)
+		{
+			awardmoney(1);
+		}
+	}
+	public function awardmoney(amount:Int)
+	{
+		Main._this.savedata.data.money += amount;
+		moneytime = 150;
+		//SoundManager.Play("cash");
 	}
 	//unlocks character for all star mode list.
 	public function getcharacter(name:String)
@@ -295,6 +308,7 @@ class GameView extends Sprite
 	
 	//how many rounds since the last game over.(effects events)
 	public var successstreak:Int;
+	public var mysuccessstreak:Int;
 	
 	//if netlog is active we can monitor events 
 	public var sentmessagelog:Map<String,Int>;
@@ -329,7 +343,9 @@ class GameView extends Sprite
 	//number of imposters we should spawn next level
 	public var imposterbonus:Int;
 	
-	
+	//amount of time to display the amount of money you have.
+	public var moneytime:Int;
+	public var moneyicon:Bitmap;
 	
 	public var spawnrate:Float = 1.0;
 	var ZaWarudo:Sprite = null;
@@ -378,6 +394,42 @@ class GameView extends Sprite
 		colorflash.graphics.endFill();
 		colorflash.alpha = flashalpha;
 	}
+	public function unlockpart(type:String, index:Int,displaymsg:Bool=true)
+	{
+		if (type == "" || type == "random" || type == "Random")
+		{
+			var S:Array<String> = new Array<String>();
+			S.push("Body");
+			S.push("Hair");
+			S.push("Arms");
+			S.push("Mouth");
+			S.push("Eyes");
+			S.push("Accessory");
+			S.push("Hat");
+			S.push("Back");
+			var D = AvatarEditor.pickpart(S);
+			type = D.type;
+			index = D.index;
+		}
+		var ok = AvatarEditor.unlockpart(type, index, true);
+		if (ok && displaymsg)
+		{
+			var D = AvatarEditor.getpart(type);
+			
+			ShowMessage("Unlocked " + type+":");
+			ShowMessage(D.data[index][0]);
+		}
+	}
+	
+	/*private function getpartdata(type:String):Dynamic
+	{
+		var D:Dynamic = { };
+		if (type == "body")
+		{
+			D.data = CharHelper.BodyData;
+			D.unlock = Main._this.savedata.data.unlockables_body;
+		}
+	}*/
 	
 	public function GetImposterList():Array<String>
 	{
@@ -440,7 +492,7 @@ class GameView extends Sprite
 			if (generalstage == 1)
 			{
 				L = L.concat(["daiyousei", "meiling", "koakuma", "patchouli", "sakuya",/* "remilia", "flandre",*/ "rin"]);
-				L = L.concat(["lunachild", "star_sapphire", "sunnymilk"]);
+				L = L.concat(["luna_child", "star_sapphire", "sunny_milk"]);
 			}
 			//space
 			if (generalstage == 2)
@@ -548,6 +600,28 @@ class GameView extends Sprite
 		//Main._this.savedata.data["maxlevel:" + Main._this.roomprefix] = level;
 		Reflect.setField(Main._this.savedata.data, "maxlevel:" + Main._this.roomprefix, level);
 	}
+	public function getbackground(lvl:Int=-1):BitmapData
+	{
+		if (lvl < 0)
+		{
+			lvl = level;
+		}
+		var L = Math.floor((lvl - 1) / 5);
+		//var L = Math.floor((level) / 5);
+			//var BGS = [57, 129, 89,98,131,185];
+		var BGS = [CharHelper.GetBG("Moriya Shrine Room"), CharHelper.GetBG("Clocktower"), CharHelper.GetBG("The Moon"),CharHelper.GetBG("Underground Cave"),CharHelper.GetBG("Murasa's Ship (2)"),CharHelper.GetBG("Eientei Outside")];
+		if (L < 0)
+			{
+				L = 0;
+			}
+			while (L >= BGS.length)
+			{
+				L -= BGS.length;
+			}
+			var ind = BGS[L];
+			var bd = AL.GetAnimation("background-" + ind)[0];
+			return bd;
+	}
 	//Main._this.savedata.data.maxlevel
 	public function start() {
 		
@@ -559,6 +633,7 @@ class GameView extends Sprite
 		collisiondata = new Array<Dynamic>();
 		collisiondangerousdata = new Array<Dynamic>();
 		successstreak = 0;
+		mysuccessstreak = 0;
 		recievedmessagelog = new Map<String,Int>();
 		sentmessagelog = new Map<String,Int>();
 		yuukaactive = false;
@@ -567,20 +642,7 @@ class GameView extends Sprite
 		RoundType = TypeofRound.Normal;
 		spawnedChar = false;
 		OBackground = new Bitmap(AL.GetAnimation("CSBG")[0]);
-		Background = new Bitmap(AL.GetAnimation("BG")[0]);
-		var L = Math.floor((level) / 5);
-			var A = AL.GetAnimation("BG");
-			if (L < 0)
-			{
-				L = 0;
-			}
-			while (L >= A.length)
-			{
-				L -= A.length;
-			}
-			Background.bitmapData = A[L];
-			Background.alpha = 0;
-		
+		Background = new Bitmap(getbackground());
 		
 		Background.alpha = 0;
 		gamestage.addChild(OBackground);
@@ -640,7 +702,12 @@ class GameView extends Sprite
 		{
 			playerspick = Player.getRandomCharacter();
 		}
-		myplayer = new Player(playerspick, control);
+		var soul:String = null;
+		if (playerspick == "customavatar")
+		{
+			soul = Main._this.savedata.data.avatarability;
+		}
+		myplayer = new Player(playerspick, control,soul);
 		myplayer.x = 140;
 		myplayer.y = (600-32)-myplayer.height;
 		myplayer.playername = playername;
@@ -689,7 +756,8 @@ class GameView extends Sprite
 		TF.x = 200;
 		TF.y = 10;
 		TF.width = 50;
-		TF.height = 20;
+		TF.height = 60;
+		TF.mouseEnabled = false;
 		/*TF.visible = false;
 		#if debug
 		TF.visible = true;
@@ -774,6 +842,14 @@ class GameView extends Sprite
 		updatelifeicon();
 		
 		addChild(lifeicon);
+		moneyicon = new Bitmap(AL.GetAnimation("money")[0]);
+		moneyicon.x = 175;
+		moneyicon.y = 40;
+		moneyicon.scaleX = 0.4;
+		moneyicon.scaleY = 0.4;
+		addChild(moneyicon);
+		moneytime = 150;
+		//moneyicon.visible = false;
 		addChild(TF);
 		
 		stage.color = 0x009977;
@@ -943,8 +1019,13 @@ class GameView extends Sprite
 				{
 					if (useablelist.indexOf(charselect.selected) >= 0)
 					{
+						
 						playerspick = charselect.selected;
-						SendEvent("ChangeCharacter", playerspick);
+						var D:Dynamic = { };
+						D.C = playerspick;
+						D.A = null;
+						SendEvent("ChangeCharacter", D);
+						//SendEvent("ChangeCharacter", playerspick);
 						var D:Dynamic = { };
 						D.x = 400;
 						D.y = 0;
@@ -1188,17 +1269,23 @@ class GameView extends Sprite
 	private function PlayMusic(showlevel:Bool):Void
 	{
 		OBackground.bitmapData = Background.bitmapData;
-		var L = Math.floor((level-1) / 5);
-			var A = AL.GetAnimation("BG");
-			if (L < 0)
+		var L = Math.floor((level - 1) / 5);
+		//var BGS = [57, 129, 89,98,131,185];
+		if (L < 0)
 			{
 				L = 0;
 			}
-			while (L >= A.length)
+			while (L >= 6)
 			{
-				L -= A.length;
+				L -= 6;
 			}
-			Background.bitmapData = A[L];
+			/*var A = AL.GetAnimation("BG");
+			
+			Background.bitmapData = A[L];*/
+			
+			//Background.bitmapData = AL.GetAnimation("background-89")[0];
+			//Background.bitmapData = AL.GetAnimation("background-"+BGS[L])[0];
+			Background.bitmapData = getbackground();
 			Background.alpha = 0;
 			
 		L = Math.floor((level - 1) / 5);
@@ -1544,7 +1631,7 @@ class GameView extends Sprite
 		#if flash
 		if (online)
 		{
-			NP.SendData("GameEvent", D);
+			NP.SendData("E", D);
 		}
 		#end
 		if (netlog)
@@ -1585,9 +1672,10 @@ class GameView extends Sprite
 		}
 		if (evt == "ChangeCharacter")
 		{
-			if (P.charname != data)
+			if (P.charname != data.C)
 			{
-				P.init(data);
+				P.charactersoul = data.A;
+				P.init(data.C);
 			}
 		}
 		if (evt == "StageSeal")
@@ -1869,6 +1957,20 @@ class GameView extends Sprite
 			gamestage.scaleX = 1;
 			gamestage.scaleY = 1;
 			successstreak++;
+			mysuccessstreak++;
+			if (mysuccessstreak > 4)
+			{
+				//var L = level - 1;
+				//var stage = Math.floor((L) / 5);
+
+				//var generalstage = stage % 6;
+				var T = level % 5;
+				if (T == 1)
+				{
+					awardmoney((rank + 1) * 3);
+					Main._this.savedata.data.shop_ticks = Main._this.savedata.data.shop_ticks + 2;
+				}
+			}
 			if (myplayer.score > HighScore && !Main._this.cheating/* && GameFlags.getactiveflags().length==0*/)
 				{
 					HighScore = myplayer.score;
@@ -2121,7 +2223,7 @@ class GameView extends Sprite
 			successstreak = 0;
 			if (me)
 			{
-				
+				mysuccessstreak = 0;
 				SoundManager.PlayJingle("gameover").addEventListener(Event.SOUND_COMPLETE, function(e:Event):Void 
 				{
 					if (!online && !Main._this.cancontinue)
@@ -2157,7 +2259,11 @@ class GameView extends Sprite
 			{
 				if (GameFlags.get(Main.AllStar))
 				{
-					SendEvent("ChangeCharacter", "red_fairy");
+					var D:Dynamic = { };
+					D.C = "red_fairy";
+					D.A = "";
+					SendEvent("ChangeCharacter", D);
+					//SendEvent("ChangeCharacter", "red_fairy");
 					getcharacter("red_fairy");
 				}
 			}
@@ -4293,7 +4399,7 @@ class GameView extends Sprite
 		{
 			if (charselect == null)
 			{
-				charselect = new CharacterSelect(playerspick,useablelist);
+				charselect = new CharacterSelect(playerspick,useablelist,Main._this.canselectcharacter);
 				var B = new MenuButton("Quit Game");
 				B.x += 670;
 				B.y += 500;
@@ -4318,7 +4424,8 @@ class GameView extends Sprite
 		}
 		if (!online && paused)
 		{
-			TF.text = "Paused";
+			TF.text = "Paused" + "\nx " + Main._this.savedata.data.money;
+			moneyicon.visible = true;
 			ltime = Timer.stamp ();
 			return;
 		}
@@ -4327,7 +4434,15 @@ class GameView extends Sprite
 			if (charselect.selected != playerspick)
 			{
 				playerspick = charselect.selected;
-				SendEvent("ChangeCharacter", playerspick);
+				var soul = "";
+				if (playerspick == "customavatar" && Main._this.canselectcharacter)
+				{
+					soul = Main._this.savedata.data.avatarability;
+				}
+				var D:Dynamic = { };
+				D.C = playerspick;
+				D.A = soul;
+				SendEvent("ChangeCharacter", D);
 				//myplayer.init(playerspick);
 			}
 			gui.removeChild(charselect);
@@ -4335,7 +4450,7 @@ class GameView extends Sprite
 		}
 		if (pausetime>0)
 		{
-			TF.text = "Time has stopped";
+			TF.text = "Time has\nstopped";
 			var currentTime = Timer.stamp ();
 		var T = currentTime - ltime;
 		pausetime -= T;
@@ -4408,7 +4523,22 @@ class GameView extends Sprite
 		}
 		TF.scaleX = 2;
 		TF.scaleY = 2;
-		TF.text = "x " + Math.max(myplayer.lives,0);
+		var str = "x " + Math.max(myplayer.lives, 0);
+		if (menu && moneytime < 1)
+		{
+			moneytime = 1;
+		}
+		if (moneytime > 0)
+		{
+			str = str + "\nx " + Main._this.savedata.data.money;
+			moneyicon.visible = true;
+			moneytime--;
+		}
+		else
+		{
+			moneyicon.visible = false;
+		}
+		TF.text = str;
 		TF.textColor = 0xFFFFFF;
 		if (missingTime > 3 /* && !online*/)
 		{
@@ -4574,6 +4704,12 @@ class GameView extends Sprite
 				{
 					D.ID = myplayer.UID;
 					D.char = myplayer.charname;
+					//if (myplayer.charactersoul != "")
+					if (myplayer.charname == "customavatar")
+					{
+						D.soul = myplayer.charactersoul;
+						D.char = "dna-"+Main._this.savedata.data.avatar;
+					}
 					D.name = this.playername;
 					D.score = myplayer.score;
 				}

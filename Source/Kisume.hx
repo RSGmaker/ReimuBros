@@ -1,5 +1,6 @@
 package;
 import openfl.display.Shape;
+import openfl.geom.Rectangle;
 
 /**
  * ...
@@ -38,6 +39,7 @@ class Kisume extends Enemy
 	{
 		if (!started)
 		{
+			hitbox = new Rectangle(0, height * 0.7, width, height * 0.3);
 			/*darkness = new Bitmap(game.AL.GetAnimation("darkness")[0]);
 			darkness.scaleX = 2;
 			darkness.scaleY = 2;

@@ -168,6 +168,56 @@ class TitleScreenView extends Sprite
 		
 		textField.width = textField.textWidth+16;
 		textField.height = textField.textHeight;
+		/*var clip = Assets.getMovieClip ("create:Character");
+            addChild (clip);*/
+			/*Assets.loadLibrary ("Char", function (_) {
+            var clip = Assets.getMovieClip ("Char:Char");
+			clip.x = 400;
+			clip.y = 300;
+			addChild (clip);
+			clip.cacheAsBitmap = true;
+			var D:Dynamic = clip;
+			D = clip.getChildByName("body");
+			D.gotoAndStop(10);
+			D = clip.getChildByName("eyes");
+			D.gotoAndStop(0);
+			D = clip.getChildByName("legs");
+			D.gotoAndStop(0);
+			D = clip.getChildByName("hat");
+			D.gotoAndStop(50);
+			D = clip.getChildByName("arms");
+			D.gotoAndStop(20);
+			D = clip.getChildByName("head");
+			D.gotoAndStop(15);
+			D.HairColor.gotoAndStop(15);
+			D.eye2.visible = false;
+			//D.eye2._visible = true;
+            //D.eye2.gotoAndStop(GameData.Parts[A][N][5]);
+			D = clip.getChildByName("head2");
+			D.gotoAndStop(15);
+			D.HairColor.gotoAndStop(15);
+			D.HairColor.gotoAndStop(15);
+			D = clip.getChildByName("accessory");
+			D.gotoAndStop(65);
+			D = clip.getChildByName("wings");
+			D.gotoAndStop(37);
+			D = clip.getChildByName("mouth");
+			D.gotoAndStop(1);
+			D = clip.getChildByName("item");
+			D.gotoAndStop(2);
+			if (false)
+			{
+            var bitmapData:BitmapData = new BitmapData(Std.int(clip.width), Std.int(clip.height),true, 0x00000000);
+			bitmapData.draw(clip);
+			removeChild(clip);
+			var bitmap:Bitmap = new Bitmap(bitmapData);
+			bitmap.x = 400;
+			bitmap.y = 300;
+			addChild(bitmap);
+		}
+
+        });*/
+			
 		addChild(textField);
 		
 			menu = true;
@@ -233,6 +283,11 @@ class TitleScreenView extends Sprite
 			
 			var Y = 0;
 			var X = 0;
+			//if (Main._this.savedata.data.avatar != "")
+			//if (CharHelper.getdnapart(Main._this.savedata.data.avatar,0)!="-1")
+			{
+				Y -= 96;
+			}
 			startgame = AddButton("Play Game",P);
 			startgame.y = Y;
 			startgame.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
@@ -254,6 +309,18 @@ class TitleScreenView extends Sprite
 				Lib.getURL (new openfl.net.URLRequest ("http://sta.sh/0t7u3ibw7dl"));
 				 } 
 				);
+				
+				Y += 96;
+				//if (Main._this.savedata.data.avatar != "")
+				//if (CharHelper.getdnapart(Main._this.savedata.data.avatar,0)!="-1")
+				{
+			B = AddButton("Customize",P);
+			B.y = Y;
+			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+				status = "Shop";
+				 } 
+				);
+				}
 				
 			Y = 0;
 			P = pages[1];

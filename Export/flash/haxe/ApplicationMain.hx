@@ -42,6 +42,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
+		urls.push ("assets/Audio/Mp3/cash.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
 		urls.push ("assets/Audio/Mp3/characterselect.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
@@ -111,6 +115,10 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Audio/Mp3/se_tan01.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("assets/Audio/Mp3/shop.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
@@ -202,6 +210,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
+		urls.push ("assets/Audio/Mp3/zawarudo.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
 		urls.push ("assets/bgcolor.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -263,30 +275,6 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/benben0.png");
-		types.push (lime.Assets.AssetType.IMAGE);
-		
-		
-		urls.push ("assets/Sprites/BG0.png");
-		types.push (lime.Assets.AssetType.IMAGE);
-		
-		
-		urls.push ("assets/Sprites/BG1.png");
-		types.push (lime.Assets.AssetType.IMAGE);
-		
-		
-		urls.push ("assets/Sprites/BG2.png");
-		types.push (lime.Assets.AssetType.IMAGE);
-		
-		
-		urls.push ("assets/Sprites/BG3.png");
-		types.push (lime.Assets.AssetType.IMAGE);
-		
-		
-		urls.push ("assets/Sprites/BG4.png");
-		types.push (lime.Assets.AssetType.IMAGE);
-		
-		
-		urls.push ("assets/Sprites/BG5.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -1018,6 +1006,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/money0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/MoonRabbit0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -1086,10 +1078,6 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("assets/Sprites/options0.png");
-		types.push (lime.Assets.AssetType.IMAGE);
-		
-		
 		urls.push ("assets/Sprites/orange0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -1131,6 +1119,10 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/POWalt0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/present0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -1383,6 +1375,10 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/skull0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/spectrum0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -1698,6 +1694,22 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("libraries/Char/Char.swf");
+		types.push (lime.Assets.AssetType.BINARY);
+		
+		
+		urls.push ("libraries/Char.json");
+		types.push (lime.Assets.AssetType.TEXT);
+		
+		
+		urls.push ("libraries/Background/Background.swf");
+		types.push (lime.Assets.AssetType.BINARY);
+		
+		
+		urls.push ("libraries/Background.json");
+		types.push (lime.Assets.AssetType.TEXT);
+		
+		
 		
 		if (config.assetsPrefix != null) {
 			
@@ -1743,6 +1755,12 @@ class ApplicationMain {
 		
 		preloader = null;
 		
+		
+		total++;
+		openfl.Assets.loadLibrary ("Char", library_onLoad);
+		
+		total++;
+		openfl.Assets.loadLibrary ("Background", library_onLoad);
 		
 		
 		if (total == 0) {

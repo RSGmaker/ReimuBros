@@ -49,8 +49,11 @@ class OptionView extends Sprite
 	public function new() 
 	{
 		super();
-		var str = "assets/Sprites/options0.png";
-		var bd = Assets.getBitmapData (str);
+		AL = Main._this.AL;
+		//var str = "assets/Sprites/options0.png";
+		var str = "background-" + CharHelper.GetBG("Computer Grid");
+		//var bd = Assets.getBitmapData (str);
+		var bd = AL.GetAnimation(str)[0];
 		img_options = new Bitmap(bd);
 		
 		selection = -1;
@@ -246,6 +249,39 @@ class OptionView extends Sprite
 				status = "Back";
 				 } 
 				);
+				
+		var delete:MenuButton = new MenuButton("   Erase\nSave Data", 28, "Arial", 5, 0xCC5511, 0xAA0033);
+		delete.x = 650;
+		delete.y = 8;
+		
+		var deletedimmer = new Sprite();
+		var G = deletedimmer.graphics;
+		G.beginFill(0, 0.3);
+		G.drawRect(0, 0, 800, 600);
+		G.endFill();
+		deletedimmer.visible = false;
+		addChild(deletedimmer);
+		var erase = new MenuButton("I'm sure.\n(cannot be undone)",44, "Arial", 5, 0xCC5511, 0xAA0033);
+		erase.x = 400;
+		erase.y = 400;
+		deletedimmer.addChild(erase);
+		erase.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			Main._this.savedata.clear();
+					status = "Back";
+		});
+		var cancel = new MenuButton("Cancel");
+		cancel.x = 200;
+		cancel.y =  400;
+		cancel.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			deletedimmer.visible = false;
+		});
+		deletedimmer.addChild(cancel);
+		addChild(delete);
+		delete.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			deletedimmer.visible = true;
+			}
+				);
+		
 	}
 	public function stage_onKeyUp (event:KeyboardEvent):Void {
 		if (selection > -1)

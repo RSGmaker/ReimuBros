@@ -1,5 +1,6 @@
 package;
 
+import openfl.display.BitmapData;
 import openfl.display.Shape;
 import openfl.display.Sprite;
 import openfl.text.TextField;
@@ -75,6 +76,39 @@ class MenuButton extends Sprite
 		if (alpha >= 0)
 		{
 			button.alpha = alpha;
+		}
+		update();
+	}
+	public function setbitmapdata(image:BitmapData,scaleX:Float=1,scaleY:Float=1)
+	{
+		var ok = false;
+		if (this.image == null)
+		{
+			this.image = new Animation([image]);
+			ok = true;
+		}
+		else
+		{
+			this.image.ChangeAnimation([image]);
+		}
+		var img = this.image;
+		img.scaleX = scaleX;
+		img.scaleY = scaleY;
+		img.x = 0;
+		img.y = 0;
+		if (manualwidth > 0)
+		{
+			var W = manualwidth+outlinesize;
+			var WH = W / 2;
+			
+			img.x = WH - (img.width / 2);
+			img.y = WH - (img.height / 2);
+			img.x -= outlinesize*1.5;
+			img.y -= outlinesize*1.5;
+		}
+		if (ok)
+		{
+			addChild(this.image);
 		}
 		update();
 	}

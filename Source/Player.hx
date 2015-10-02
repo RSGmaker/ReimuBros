@@ -5,6 +5,7 @@ import openfl.media.Sound;
 import openfl.Assets;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
+import openfl.display.MovieClip;
 
 /**
  * ...
@@ -50,12 +51,14 @@ class Player extends Entity
 	//public var myMyon:MyonItem;
 	
 	public var equipment:EntityItem;
+	public var CHR:MovieClip;
 
 	//list of character in order of savedata
 	public static var characters:Array<String> = ["reimu", "marisa", "patchouli", "remilia", "sanae", "sakuya", "suwako", "yuyuko", "tenshi", "iku", "aya", "alice", "youmu", "shikieiki", "flandre", "satori", "koishi", "momiji", "nitori", "udongein", "komachi", "yuuka", "mokou", "meiling", "parsee", "kokoro", "kogasa", "kasen", "utsuho", "suika", "kaguya", "eirin", "nazrin", "orin", "hina", "byakuren", "chiyuri", "ellen", "elly", "gengetsu", "kana", "kotohime", "elis", "louise", "mai", "meira", "mugetsu", "orange", "rika", "rikako", "sara", "yuki", "yumeko", "yumemi", "akyu", "futo", "kagerou", "keine", "kosuzu", "luna_child", "mamizou", "medicine", "minoriko", "murasa", "seiga", "sekibanki", "shanghai", "shinmyoumaru", "shizuha", "shou", "sunny_milk", "tokiko", "wriggle", "yoshika", "star_sapphire", "lily", "letty", "mika", "senkou", "ayana", "matenshi", "noroiko", "mystia", "lunasa", "lyrica", "merlin", "maribel", "renko", "miko", "reisen", "ruukoto", "tojiko", "toyohime", "yorihime", "wakasagihime", "yatsuhashi", "mima", "konngara","tewi","kanako","ringo","doremy","seiran","sumireko","rin","raiko","shingyoku","hatate","daiyousei","kurumi","yuugi","benben","ichirin","kyouko","yamame","koakuma","shinki","rengeteki","sariel","yukari", "seija", "rumia","cirno","nue","chen","ran","clownpiece","hecatia","junko","sagume"];
 	
 	//list of characters sorted by game(from touhou wiki's character format)
-	public static var charorder:Array<String> = ["reimu", "marisa", "rumia", "daiyousei", "cirno", "meiling", "koakuma", "patchouli", "sakuya", "remilia", "flandre", "rin",
+	public static var charorder:Array<String> = ["customavatar",
+	"reimu", "marisa", "rumia", "daiyousei", "cirno", "meiling", "koakuma", "patchouli", "sakuya", "remilia", "flandre", "rin",
 	"letty", "chen", "alice", "shanghai"/*,"hourai"*/, "lily", "lyrica", "lunasa", "merlin", "youmu", "yuyuko", "ran", "yukari",
 	"suika",
 	"wriggle", "mystia", "keine", "tewi", "udongein", "eirin", "kaguya", "mokou",
@@ -162,9 +165,19 @@ class Player extends Entity
 	public static inline var base_mxspd = 6.00;
 	
 	public var inactive:Bool;
+	public var charactersoul:String="";
+	
+	public function getabilityalias()
+	{
+		if (charactersoul != "")
+		{
+			return charactersoul;
+		}
+		return charname;
+	}
 	
 	public var evt_onframe:Dynamic;
-	public function new(charname:String,controller:Array<Bool>) 
+	public function new(charname:String,controller:Array<Bool>,soul:String="") 
 	{
 		super(charname);
 		elavation = 0;
@@ -229,10 +242,10 @@ class Player extends Entity
 		steps = 0;
 		invincibility = 0;
 		playername = "";
+		charactersoul = soul;
+		//charname = "dna-" + "3.39:RSGmaker:100:0:192:324:232:24:0:0:0:1:0:321A00";
+		//charactersoul = "meiling";
 		init(charname);
-		
-		
-		//baseflags = flags.clone();
 	}
 	
 	public function init(charname:String)
@@ -243,6 +256,10 @@ class Player extends Entity
 		}
 		alpha = 1;
 		this.charname = charname;
+		if (charname.indexOf("dna-") < 0 && charname!="customavatar")
+		{
+			charactersoul = "";
+		}
 		flags = new FlagManager(1);
 		
 		
@@ -321,6 +338,10 @@ class Player extends Entity
 	public override function update()
 	{
 		frames++;
+		if (CHR != null)
+		{
+			CHR.scaleX = Math.abs(CHR.scaleX) * Ldir;
+		}
 		if (!killed && lives>-1)
 		{
 			if (!started)

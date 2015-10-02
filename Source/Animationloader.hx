@@ -22,6 +22,10 @@ import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;
 import haxe.ds.ObjectMap;
+import flash.display.DisplayObject;
+   import flash.display.BitmapData;
+   import flash.geom.Rectangle;
+   import flash.geom.Matrix;
 //import flash.geom;
 /**
  * ...
@@ -35,15 +39,54 @@ class Animationloader
 		Dictionary = new Map<String,Array<BitmapData>>();
 		
 	}
+	   
+	public static function getVisibleBounds(source:DisplayObject):Rectangle
+   {
+       // Updated 11-18-2010;
+       // Thanks to Mark in the comments for this addition;
+       var matrix:Matrix = new Matrix();
+       matrix.tx = -source.getBounds(null).x;
+       matrix.ty = -source.getBounds(null).y;
+ 
+       var data:BitmapData = new BitmapData(Std.int(source.width), Std.int(source.height), true, 0x00000000);
+       data.draw(source, matrix);
+       var bounds : Rectangle = data.getColorBoundsRect(0xFFFFFFFF, 0x000000, false);
+       data.dispose();
+       return bounds;
+   }
 	public function GetAnimation(path:String):Array<BitmapData> {
+		var DNA = null;
+		if (path == "customavatar")
+		{
+			path = "dna-"+Main._this.savedata.data.avatar;
+		}
 		if (Dictionary.exists(path))
 		{
 			return Dictionary[path];
 		}
 		else
 		{
+			DNA = CharHelper.getCharPreset(path);
+			if (DNA != null)
+			{
+				//path = DNA;
+			}
+		}
+		if (Dictionary.exists(path))
+		{
+			return Dictionary[path];
+		}
+		else
+		{
+			var P = path;
+			
+			if (P.indexOf("dna-") >= 0)
+			{
+				var index = path.lastIndexOf(":")+7;
+				P = path.substr(0, index) +"::0"+ path.substr(index, path.length - index);
+			}
 			//check if we need to edit this image
-			if (path.lastIndexOf("E") == path.length-1 || path.lastIndexOf("U") == path.length-1 || path.lastIndexOf("S") == path.length - 1)
+			if (DNA == null && (P.lastIndexOf("E") == P.length-1 || P.lastIndexOf("U") == P.length-1 || P.lastIndexOf("S") == P.length - 1))
 			{
 				//recolor the image
 				var color:UInt = 0xff0000;
@@ -90,7 +133,7 @@ class Animationloader
 				Dictionary.set(path, lst);
 				return lst;
 			}
-			if (path.lastIndexOf("F") == path.length-1)
+			if (P.lastIndexOf("F") == P.length-1)
 			{
 				//flip the image
 				var P = path.substring(0, path.length - 1);
@@ -107,21 +150,88 @@ class Animationloader
 			}
 			else
 			{
-			var lst = new Array<BitmapData>();
-			var i = 0;
-			
-			var str = "assets/Sprites/" + path + i + ".png";
-			var bd = Assets.getBitmapData (str);
-			while (bd != null) {
-				lst[lst.length] = bd;
-				i += 1;
-				str = "assets/Sprites/" + path + i + ".png";
-				bd = Assets.getBitmapData (str);
+			var P = path;
+			if (DNA != null)
+			{
+				P = DNA;
 			}
+			var lst = getBitmapData(P);
 			Dictionary.set(path, lst);
 			return lst;
 			}
 		}
+	}
+	public function getBitmapData(data:String):Array<BitmapData>
+	{
+		var i = 0;
+		var lst = new Array<BitmapData>();
+		if (data.indexOf("dna-") < 0)
+		{
+			if (data.indexOf("background-") < 0)
+			{
+		var str = "assets/Sprites/" + data + i + ".png";
+			var bd = Assets.getBitmapData (str);
+			while (bd != null) {
+				lst[lst.length] = bd;
+				i += 1;
+				str = "assets/Sprites/" + data + i + ".png";
+				bd = Assets.getBitmapData (str);
+			}
+			return lst;
+			}
+			else
+			{
+				var spr:Sprite = new Sprite();
+				//var CHR = CharHelper.makeChar(data);
+				var clip = Assets.getMovieClip ("Background:");
+				var CHR = clip;
+				var dst = Std.parseInt(data.split("-")[1]);
+				var D:Dynamic = clip.getChildAt(0);
+				D.gotoAndStop(dst);
+				
+				//var CHR = new Background;
+				CHR.scaleX = 1.5;
+				CHR.scaleY = 1.5;
+				CHR.y = -2;
+			spr.addChild(CHR);
+			/*var R = CHR.getBounds(spr);
+			CHR.x = -R.x;
+			CHR.y = -R.y;*/
+			//var bitmapData:BitmapData = new BitmapData(Std.int(R.width), Std.int(R.height),true, 0x00000000);
+			//var bitmapData:BitmapData = new BitmapData(Std.int(CHR.width), Std.int(CHR.height),true, 0x00000000);
+			var bitmapData:BitmapData = new BitmapData(Std.int(800), Std.int(600),true, 0x00000000);
+			//bitmapData.draw(spr);
+			bitmapData.draw(spr);
+			lst[lst.length] = bitmapData;
+			return lst;
+			}
+		}
+		else
+		{
+			/*if (data.indexOf("-1") > -1)
+			{
+				lst[lst.length] =new BitmapData(1, 1, true, 0);
+				return lst;
+			}*/
+			var spr:Sprite = new Sprite();
+			var CHR = CharHelper.makeChar(data);
+			CHR.scaleX *= 0.24;
+			CHR.scaleY *= 0.24;
+			spr.addChild(CHR);
+			var R = CHR.getBounds(spr);
+			CHR.x = -R.x;
+			CHR.y = -R.y;
+			var bounds = getVisibleBounds(spr);
+			CHR.x -= bounds.x;
+			CHR.y -= bounds.y;
+			//var bitmapData:BitmapData = new BitmapData(Std.int((R.width * 0.75)), Std.int(R.height),true, 0x00000000);
+			//var bitmapData:BitmapData = new BitmapData(Std.int((R.right + CHR.x)), Std.int(R.height),true, 0x00000000);
+			var bitmapData:BitmapData = new BitmapData(Std.int(bounds.width), Std.int(bounds.height),true, 0x00000000);
+			bitmapData.draw(spr);
+			lst[lst.length] = bitmapData;
+			return lst;
+		}
+		
 	}
 	function flipBitmapData(original:BitmapData, axis:String = "x"):BitmapData
 {

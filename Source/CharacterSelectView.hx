@@ -148,11 +148,11 @@ class CharacterSelectView extends Sprite
 		level = Main._this.level;
 		GUI = new Sprite();
 		entities = new Array<MiniEntity>();
-		select = new CharacterSelect(selected);
+		//select = new CharacterSelect(selected,null,true);
+		select = new CharacterSelect(selected,null,Main._this.savedata.data.avatar!="");
 		if (!Main._this.canselectcharacter)
 		{
 			select.ButtonDisplay.visible = false;
-			//select.visible = false;
 		}
 		select.refreshbuttons();
 		selected = "";

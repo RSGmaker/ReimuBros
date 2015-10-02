@@ -52,7 +52,8 @@ class CharacterSelect extends Sprite
 	public var BH:Float = 0.75;
 	public var GUI:Sprite;
 	public var charlist:Array<String>;
-	public function new(startingselection:String="reimu",list:Array<String> = null) 
+	public var customavatar:Bool;
+	public function new(startingselection:String="reimu",list:Array<String> = null,customavatar:Bool=false) 
 	{
 		super();
 		selected = startingselection;
@@ -88,6 +89,7 @@ class CharacterSelect extends Sprite
 		filterArr = new Array();
 		filterArr[0] = AA;
 		selectedcharacter.filters = filterArr;
+		this.customavatar = customavatar;
 		
 		makebuttons();
 		refreshbuttons();
@@ -157,6 +159,12 @@ class CharacterSelect extends Sprite
 			var S:String = tf.text.toLowerCase();
 			#end*/
 			var S = selected;
+			var disp = S;
+			if (S.toLowerCase() == "customavatar")
+			{
+				S = Main._this.savedata.data.avatarability;
+				disp = Main._this.savedata.data.playername;
+			}
 			
 			var dsc = "Can float briefly";
 			var AL = PlayerAbilityManager.GetAbilities2(S);
@@ -166,21 +174,13 @@ class CharacterSelect extends Sprite
 			while (c < AL.length)
 			{
 				dsc = dsc + AL[c].description;
-				//if (c > 0)
-				{
-					dsc = dsc + "\n";
-				}
-				/*if (i > 0)
-				{
-					dsc = dsc + "\n";
-				}*/
 				c++;
 			}
 			var tmp = new TextFormat();
 			tmp.font = "Arial";
 			tmp.size = 22;
 			tmp.color = 0xFFFFFF;
-			var SS = (S.charAt(0).toUpperCase() + S.substr(1)).split("ALT").join("☆");
+			var SS = (disp.charAt(0).toUpperCase() + disp.substr(1)).split("ALT").join("☆");
 			var SA = SS.split("_");
 			var i = 0;
 			SS = "";
@@ -318,6 +318,12 @@ class CharacterSelect extends Sprite
 		{
 			charlist = Player.characters;
 		}
+		//if (customavatar && CharHelper.getdnapart(Main._this.savedata.data.avatar,0)!="-1")
+		if (customavatar && Main._this.savedata.data.avatar.indexOf("-1")<0)
+		{
+			charlist = charlist.copy();
+			charlist.push("customavatar");
+		}
 		var X = 0.0;
 		//var Y = 76.0;
 		var Y = 110.0;
@@ -349,7 +355,7 @@ class CharacterSelect extends Sprite
 				{
 				if (charlist.indexOf(PC[i]) >= 0)
 				{
-					if (O[charlist.indexOf(PC[i])])
+					if (O[charlist.indexOf(PC[i])] || PC[i] == "customavatar")
 					{
 						B = AddCharacterButton(PC[i], true);
 						ok = true;

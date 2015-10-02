@@ -7,8 +7,11 @@
 	<source path="Source" />
 	<haxeflag name="-D network-sandbox" />
 	<haxelib name="openfl" />
-	<assets path="Assets" rename="assets" exclude="*.mp3" unless="flash" />
-	<assets path="Assets" rename="assets" exclude="*.ogg" if="flash" />
+	<haxelib name="swf" />
+	<assets path="Assets" rename="assets" exclude="*.mp3|*.swf" unless="flash" />
+	<assets path="Assets" rename="assets" exclude="*.ogg|*.swf" if="flash" />
+	<library path="Assets/Char.swf" id="Char" type="swf" preload="true" generate="true" />
+	<library path="Assets/Background.swf" id="Background" type="swf" preload="true" generate="true" />
 	<icon path="Assets/openfl.svg" />
 	<window width="800" height="600" fps="30" hardware="true" vsync="true"/>
 	

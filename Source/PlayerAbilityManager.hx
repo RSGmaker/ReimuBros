@@ -84,7 +84,7 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.TreasureHunter(null), names:["nazrin"] };
 		
 		
-		L[L.length] = { type:new abilities.NoAbility(null), names:["red_fairy"] };
+		L[L.length] = { type:new abilities.NoAbility(null), names:["red_fairy","none"] };
 		L[L.length] = { type:new abilities.BasicShot(null), names:["benben","yatsuhashi"] };
 	}
 	public function init()
@@ -228,7 +228,7 @@ class PlayerAbilityManager
 	public static var ListAbilities:Array<Dynamic>;
 	public static function GetAbilities(player:Player):Array<PlayerAbility>
 	{
-		var ret = GetAbilities2(player.charname, player);
+		var ret = GetAbilities2(player.getabilityalias(), player);
 		return ret;
 	}
 	public static function GetAbilities2(name:String,player:Player=null):Array<PlayerAbility>

@@ -259,15 +259,20 @@ class NetPlay
 					var i = message.d;
 					var M = game.GetPlayer(message.i);
 					var add = false;
+					var soul = "";
+					if (i.soul != null)
+					{
+						soul = i.soul;
+					}
 					if (M == null)
 					{
 						if (i.name != null)
 						{
-						M = new Player(i.char, new Array<Bool>());
+							
+						M = new Player(i.char, new Array<Bool>(),soul);
 						M.ID = message.i;
 						//this might fix the :a bunch of reward spawning issue. so they dont spawn on a glitchy quit scenario
 						M.spentscore = i.score;
-						
 						M.playing = i.F;
 						game.AddPlayer(M);
 						}
@@ -375,7 +380,7 @@ class NetPlay
 					}
 					
 				}
-				if (message.t == "GameEvent")
+				if (message.t == "E")
 				{
 					game.ProcessEvent(message.d.evt,message.i, message.d.data);
 				}

@@ -39,6 +39,7 @@ class Main extends Sprite {
 	public var game:GameView;
 	public var titlescreen:TitleScreenView;
 	public var optionscreen:OptionView;
+	public var shopscreen:ShopView;
 	public static var _this:Main;
 	//this gets shared across all parts of the program.
 	public var AL:Animationloader;
@@ -61,7 +62,7 @@ class Main extends Sprite {
 	public var DEBUG:Bool = false;
 	#end
 	//info displayed in titlescreen
-	public var gameversion:String = "1.6.1";
+	public var gameversion:String = "1.7.0beta";
 	public var controlscheme:Array<UInt>;
 	//message shown to player should the host of that session make them leave
 	public var statusmessage:String = "";
@@ -153,7 +154,8 @@ class Main extends Sprite {
 			//Haxe doesn't support this external files easily.
 			//stage.addChild(new TheMiner());  
 		}
-		stage.quality = flash.display.StageQuality.LOW;
+		//stage.quality = flash.display.StageQuality.LOW;
+		//stage.quality = flash.display.StageQuality.MEDIUM;
 		AL = new Animationloader();
 		_this = this;
 		optionscreen = null;
@@ -175,16 +177,117 @@ class Main extends Sprite {
 		}
 		if (savedata.data.musicvolume == null)
 		{
-			savedata.data.musicvolume = 1.0;
+			savedata.data.musicvolume = 0.7;
 		}
 		if (savedata.data.maxlevel == null)
 		{
 			savedata.data.maxlevel = 1;
 		}
 		if (savedata.data.challenges == null)
-			{
-				savedata.data.challenges = new Array<Bool>();
-			}
+		{
+			savedata.data.challenges = new Array<Bool>();
+		}
+		if (savedata.data.avatar == null)
+		{
+			//savedata.data.avatar = "";
+			savedata.data.avatar = "3.40:PlayerName:100:0:-1:-1:-1:-1:0:0:0:0:0:321A00";
+		}
+		if (savedata.data.avatarabilities == null)
+		{
+			//savedata.data.avatar = "";
+			savedata.data.avatarabilities = false;
+		}
+		if (savedata.data.unlockables_body == null)
+		{
+			savedata.data.unlockables_body = new Array<Bool>();
+		}
+		if (savedata.data.unlockables_hair == null)
+		{
+			savedata.data.unlockables_hair = new Array<Bool>();
+		}
+		if (savedata.data.unlockables_arms == null)
+		{
+			savedata.data.unlockables_arms = new Array<Bool>();
+		}
+		if (savedata.data.unlockables_shoes == null)
+		{
+			//shoes will be just a single unlockable since they are not very interesting
+			savedata.data.unlockables_shoes = false;
+		}
+		if (savedata.data.unlockables_hat == null)
+		{
+			savedata.data.unlockables_hat = new Array<Bool>();
+			savedata.data.unlockables_hat[0] = true;
+		}
+		if (savedata.data.unlockables_eyes == null)
+		{
+			savedata.data.unlockables_eyes = new Array<Bool>();
+			savedata.data.unlockables_eyes[0] = true;
+		}
+		if (savedata.data.unlockables_mouth == null)
+		{
+			savedata.data.unlockables_mouth = new Array<Bool>();
+			savedata.data.unlockables_mouth[0] = true;
+		}
+		if (savedata.data.unlockables_accessory == null)
+		{
+			savedata.data.unlockables_accessory = new Array<Bool>();
+			savedata.data.unlockables_accessory[0] = true;
+		}
+		if (savedata.data.unlockables_back == null)
+		{
+			savedata.data.unlockables_back = new Array<Bool>();
+			savedata.data.unlockables_back[0] = true;
+		}
+		if (savedata.data.shop_hair == null)
+		{
+			savedata.data.shop_hair = new Array<Int>();
+		}
+		if (savedata.data.shop_body == null)
+		{
+			savedata.data.shop_body = new Array<Int>();
+		}
+		if (savedata.data.shop_arms == null)
+		{
+			savedata.data.shop_arms = new Array<Int>();
+		}
+		if (savedata.data.shop_hats == null)
+		{
+			savedata.data.shop_hats = new Array<Int>();
+		}
+		if (savedata.data.shop_eyes == null)
+		{
+			savedata.data.shop_eyes = new Array<Int>();
+		}
+		if (savedata.data.shop_mouth == null)
+		{
+			savedata.data.shop_mouth = new Array<Int>();
+		}
+		if (savedata.data.shop_accessory == null)
+		{
+			savedata.data.shop_accessory = new Array<Int>();
+		}
+		if (savedata.data.shop_back == null)
+		{
+			savedata.data.shop_back = new Array<Int>();
+		}
+		if (savedata.data.shop_ticks == null)
+		{
+			savedata.data.shop_ticks = 5;
+		}
+		//if (savedata.data.shop_inventory == null)
+		{
+			savedata.data.shop_inventory = new Array<Dynamic>();
+		}
+		if (savedata.data.money == null)
+		{
+			savedata.data.money = 0;
+		}
+		//savedata.data.avatar = "3.39:RSGmaker:100:0:192:324:232:24:0:0:0:1:0:321A00";
+		if (savedata.data.avatarability == null)
+		{
+			savedata.data.avatarability = "none";
+		}
 		
 		if (savedata.data.controlscheme == null)
 		{
@@ -346,6 +449,10 @@ class Main extends Sprite {
 				if (status == "Options")
 				{
 					showoptions();
+				}
+				if (status == "Shop")
+				{
+					showshopscreen();
 				}
 			}
 		}
@@ -545,6 +652,17 @@ class Main extends Sprite {
 				showoptions();
 			}
 		}
+		else if (shopscreen != null)
+		{
+			if (shopscreen.status == "TitleScreen")
+			{
+				showtitlescreen();
+			}
+			else
+			{
+				shopscreen.this_onEnterFrame();
+			}
+		}
 	}
 	//stops all active views, used to prepare for showing a new one or to restart one.
 	private function clear()
@@ -604,6 +722,14 @@ class Main extends Sprite {
 			optionscreen = null;
 			savedata.flush();
 		}
+		if (shopscreen != null)
+		{
+			stage.removeChild(shopscreen);
+			savedata.data.avatar = shopscreen.custompanel.avatardna;
+			savedata.data.avatarability = shopscreen.custompanel.soul;
+			savedata.flush();
+			shopscreen = null;
+		}
 	}
 	private function showgame()
 	{
@@ -661,6 +787,15 @@ class Main extends Sprite {
 			characterselect.selected = "reimu";
 		}
 		characterselect.start();
+	}
+	private function showshopscreen()
+	{
+		clear();
+		shopscreen = new ShopView();
+		shopscreen.custompanel.avatardna = savedata.data.avatar;
+		shopscreen.custompanel.soul = savedata.data.avatarability;
+		stage.addChild(shopscreen);
+		shopscreen.start();
 	}
 	
 	private function showoptions()
