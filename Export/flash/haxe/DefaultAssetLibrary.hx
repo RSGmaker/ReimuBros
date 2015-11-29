@@ -184,16 +184,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Audio/Mp3/ufochange.mp3", AssetType.MUSIC);
 		className.set ("assets/Audio/Mp3/ufoitem.mp3", __ASSET__assets_audio_mp3_ufoitem_mp3);
 		type.set ("assets/Audio/Mp3/ufoitem.mp3", AssetType.MUSIC);
-		className.set ("assets/Audio/Mp3/zawarudo.mp3", __ASSET__assets_audio_mp3_zawarudo_mp3);
-		type.set ("assets/Audio/Mp3/zawarudo.mp3", AssetType.MUSIC);
 		className.set ("assets/bgcolor.png", __ASSET__assets_bgcolor_png);
 		type.set ("assets/bgcolor.png", AssetType.IMAGE);
 		className.set ("assets/black.png", __ASSET__assets_black_png);
 		type.set ("assets/black.png", AssetType.IMAGE);
 		className.set ("assets/Dpad.png", __ASSET__assets_dpad_png);
 		type.set ("assets/Dpad.png", AssetType.IMAGE);
-		className.set ("assets/Key.txt", __ASSET__assets_key_txt);
-		type.set ("assets/Key.txt", AssetType.TEXT);
 		className.set ("assets/Sprites/1up0.png", __ASSET__assets_sprites_1up0_png);
 		type.set ("assets/Sprites/1up0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/anchor0.png", __ASSET__assets_sprites_anchor0_png);
@@ -957,10 +953,6 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.MUSIC);
-		id = "assets/Audio/Mp3/zawarudo.mp3";
-		path.set (id, id);
-		
-		type.set (id, AssetType.MUSIC);
 		id = "assets/bgcolor.png";
 		path.set (id, id);
 		
@@ -973,10 +965,6 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
-		id = "assets/Key.txt";
-		path.set (id, id);
-		
-		type.set (id, AssetType.TEXT);
 		id = "assets/Sprites/1up0.png";
 		path.set (id, id);
 		
@@ -2286,8 +2274,6 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
-		
-		
 		#end
 		
 		#if (windows || mac || linux)
@@ -2495,9 +2481,6 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("assets/Audio/Mp3/ufoitem.mp3", __ASSET__assets_audio_mp3_ufoitem_mp3);
 		type.set ("assets/Audio/Mp3/ufoitem.mp3", AssetType.MUSIC);
 		
-		className.set ("assets/Audio/Mp3/zawarudo.mp3", __ASSET__assets_audio_mp3_zawarudo_mp3);
-		type.set ("assets/Audio/Mp3/zawarudo.mp3", AssetType.MUSIC);
-		
 		className.set ("assets/bgcolor.png", __ASSET__assets_bgcolor_png);
 		type.set ("assets/bgcolor.png", AssetType.IMAGE);
 		
@@ -2506,9 +2489,6 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("assets/Dpad.png", __ASSET__assets_dpad_png);
 		type.set ("assets/Dpad.png", AssetType.IMAGE);
-		
-		className.set ("assets/Key.txt", __ASSET__assets_key_txt);
-		type.set ("assets/Key.txt", AssetType.TEXT);
 		
 		className.set ("assets/Sprites/1up0.png", __ASSET__assets_sprites_1up0_png);
 		type.set ("assets/Sprites/1up0.png", AssetType.IMAGE);
@@ -4002,11 +3982,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_titlescreenintro_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_ufochange_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_ufoitem_mp3 extends flash.media.Sound { }
-@:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_zawarudo_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_bgcolor_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_black_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_dpad_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
-@:keep @:bind #if display private #end class __ASSET__assets_key_txt extends flash.utils.ByteArray { }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_1up0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_anchor0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_arrow0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -4573,8 +4551,6 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
-
-
 #else
 
 
@@ -4649,11 +4625,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:file("Assets/Audio/Mp3/titlescreenintro.mp3") #if display private #end class __ASSET__assets_audio_mp3_titlescreenintro_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/ufochange.mp3") #if display private #end class __ASSET__assets_audio_mp3_ufochange_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/ufoitem.mp3") #if display private #end class __ASSET__assets_audio_mp3_ufoitem_mp3 extends lime.utils.ByteArray {}
-@:file("Assets/Audio/Mp3/zawarudo.mp3") #if display private #end class __ASSET__assets_audio_mp3_zawarudo_mp3 extends lime.utils.ByteArray {}
 @:image("Assets/bgcolor.png") #if display private #end class __ASSET__assets_bgcolor_png extends lime.graphics.Image {}
 @:image("Assets/black.png") #if display private #end class __ASSET__assets_black_png extends lime.graphics.Image {}
 @:image("Assets/Dpad.png") #if display private #end class __ASSET__assets_dpad_png extends lime.graphics.Image {}
-@:file("Assets/Key.txt") #if display private #end class __ASSET__assets_key_txt extends lime.utils.ByteArray {}
 @:image("Assets/Sprites/1up0.png") #if display private #end class __ASSET__assets_sprites_1up0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/anchor0.png") #if display private #end class __ASSET__assets_sprites_anchor0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/Arrow0.png") #if display private #end class __ASSET__assets_sprites_arrow0_png extends lime.graphics.Image {}

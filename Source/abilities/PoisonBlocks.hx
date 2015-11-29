@@ -10,7 +10,7 @@ class PoisonBlocks extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Spreads poisonous clouds\nwhich slows enemies";
+		description = "Spreads poisonous clouds\nwhich slow enemies";
 	}
 	override public function init() 
 	{

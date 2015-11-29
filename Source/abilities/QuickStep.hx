@@ -9,7 +9,7 @@ class QuickStep extends PlayerAbility
 	public function new(player:Player)
 	{
 		super(player);
-		description = "Moves a bit quicker";
+		description = "Moves slightly faster";
 	}
 	override public function init() 
 	{
