@@ -9,7 +9,7 @@ class FallFlip extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Flips red/angry enemies";
+		description = "Flips enraged enemies";
 	}
 	override public function init() 
 	{

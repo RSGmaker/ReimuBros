@@ -302,10 +302,6 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
-		urls.push ("assets/Audio/Mp3/zawarudo.mp3");
-		types.push (lime.Assets.AssetType.MUSIC);
-		
-		
 		urls.push ("assets/bgcolor.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -316,10 +312,6 @@ class ApplicationMain {
 		
 		urls.push ("assets/Dpad.png");
 		types.push (lime.Assets.AssetType.IMAGE);
-		
-		
-		urls.push ("assets/Key.txt");
-		types.push (lime.Assets.AssetType.TEXT);
 		
 		
 		urls.push ("assets/Sprites/1up0.png");

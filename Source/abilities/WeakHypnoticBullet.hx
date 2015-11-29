@@ -9,7 +9,7 @@ class WeakHypnoticBullet extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Fires a musical note\nwhich flips enemies";
+		description = "Fires a hypnotic musical\nnote";
 	}
 	override public function init() 
 	{

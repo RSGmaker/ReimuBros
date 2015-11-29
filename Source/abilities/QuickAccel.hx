@@ -10,7 +10,7 @@ class QuickAccel extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Turns around quickly";
+		description = "Accelerates quickly";
 	}
 	override public function init() 
 	{

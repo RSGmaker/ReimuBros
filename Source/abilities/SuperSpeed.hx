@@ -11,7 +11,7 @@ class SuperSpeed extends PlayerAbility
 	{
 		super(player);
 		//description = "Moves quickly\nJumps higher";
-		description = "Moves very fast\nhandles great in mid-air";
+		description = "Moves very fast\nHandles great in mid-air";
 	}
 	override public function init() 
 	{

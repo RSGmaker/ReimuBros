@@ -9,7 +9,7 @@ class CoverShot extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Fires bullets\nforward and back";
+		description = "Fires bullets forward\nand backward";
 	}
 	override public function init() 
 	{
