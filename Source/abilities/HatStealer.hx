@@ -11,7 +11,7 @@ class HatStealer extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Steals hats from enemies\nwhich grants extra hp";
+		description = "Steals hats from enemies,\ngranting extra hp";
 	}
 	override public function init() 
 	{
