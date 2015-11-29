@@ -91,7 +91,7 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.MegaLaser(null), names:["utsuho","ruukoto"] };
 		L[L.length] = { type:new abilities.DollMaker(null), names:["alice"] };
 		L[L.length] = { type:new abilities.QuickStep(null), names:["hatate", "momiji", "orin","tokiko"] };
-		L[L.length] = { type:new abilities.WeakShot(null), names:["hatate", "iku","akyu","nue","kurumi","maribel","kosuzu","kasen","shinki","sara"] };
+		L[L.length] = { type:new abilities.WeakShot(null), names:["hatate", "iku","akyu","nue","kurumi","maribel","kosuzu","kasen","shinki","sara","kokoro"] };
 		L[L.length] = { type:new abilities.LesserDashAttack(null), names:["momiji", "kagerou","konngara"] };
 		L[L.length] = { type:new abilities.BasicWideShot(null), names:["seiran"] };
 		L[L.length] = { type:new abilities.KaPowSlow(null), names:["seija","tojiko"] };
@@ -137,24 +137,36 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.SymmetryLaser(null), names:["chiyuri"] };
 		L[L.length] = { type:new abilities.EnergyWave(null), names:["kotohime"] };
 		L[L.length] = { type:new abilities.SummonBlueBird(null), names:["kana"] };
+		L[L.length] = { type:new abilities.EmotionController(null), names:["kokoro"] };
 		
 		
 		L[L.length] = { type:new abilities.NoAbility(null), names:["red_fairy","none","customavatar"] };
-		L[L.length] = { type:new abilities.BasicShot(null), names:["benben", "yatsuhashi", "kokoro", "hecatia"] };
+		L[L.length] = { type:new abilities.BasicShot(null), names:["benben", "yatsuhashi", "hecatia"] };
 	}
 	public function getdescription():String
 	{
+		return getdescriptionfromlist(abilities);
+	}
+	public static function getdescriptionfromlist(PA:Array<PlayerAbility>):String
+	{
 		var ret = "";
 		var i = 0;
-		while (i < abilities.length)
+		while (i < PA.length)
 		{
-			var A = abilities[i];
+			var A = PA[i];
+			if (A.description != "")
+			{
 			if (ret != "")
 			{
 				ret = ret + "\n";
 			}
 			ret = ret + A.description;
+			}
 			i++;
+		}
+		if (!Main._this.gamemode.abilitiesenabled)
+		{
+			ret = "(Abilities are disabled.)";
 		}
 		return ret;
 	}

@@ -10,6 +10,7 @@ class PointCollectingLogic extends LevelLogic
 	public var progress:Float = 0.3;
 	public var lprogress:Float = 0.5;
 	public var increment:Float = 0.05;
+	public var antipowcollect:Int=0;
 	
 	//time before next reimu spawns.
 	public var reimutimer:Int;
@@ -51,7 +52,7 @@ class PointCollectingLogic extends LevelLogic
 	override public function update() 
 	{
 		//super.update();
-		
+		antipowcollect--;
 		if (game.Hoster)
 		{
 		if (game.activeEnemies.length == 0)
@@ -102,6 +103,7 @@ class PointCollectingLogic extends LevelLogic
 		/*while (i < game.activeItems.length)
 		{
 			var E = game.activeItems[i];
+			//E.cancollectfrombelow = false;
 			if (Std.is(E, PointItem))
 			{
 				greedenabled = true;
@@ -174,10 +176,17 @@ class PointCollectingLogic extends LevelLogic
 				}
 				else
 				{
+					if (antipowcollect < 1)
+					{
 					var D:Dynamic = game.EntityFromUID(data);
 					if (D != null && D.alive)
 					{
 						progress += increment;
+					}
+					}
+					else
+					{
+						return true;
 					}
 				}
 			}
@@ -185,6 +194,10 @@ class PointCollectingLogic extends LevelLogic
 		if (evt == "AttachItem")
 		{
 			return true;
+		}
+		if (evt == "POW!")
+		{
+			antipowcollect = 13;
 		}
 		return false;
 		//return super.OnProcessEvent(evt, P, data);

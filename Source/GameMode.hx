@@ -64,7 +64,7 @@ class GameMode
 		G.fullname = "Classic Mode";
 		G.description = "Clear levels by defeating enemies.\nHit blocks with enemies on top of them to flip them over,\ntouching a flipped over enemy defeats them.";
 		G.preunlocked = true;
-		G.reward = 20;
+		G.reward = 30;
 		G.rewardrequirement = 30;
 		G.unlock = "AllStar";
 		M.push(G);
@@ -76,7 +76,7 @@ class GameMode
 		G.abilitiesenabled = false;
 		G.canmyonspawn = false;
 		G.preunlocked = true;
-		G.reward = 20;
+		G.reward = 30;
 		G.rewardrequirement = 20;
 		G.unlock = "AllStar";
 		//G.description = "Travel through Gensokyo.\nCharacter abilities are replaced with powerup items.";

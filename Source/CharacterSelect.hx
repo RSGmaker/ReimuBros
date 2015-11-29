@@ -171,11 +171,12 @@ class CharacterSelect extends Sprite
 			dsc = "";
 			var c = 0;
 			//var i = 0;
-			while (c < AL.length)
+			/*while (c < AL.length)
 			{
 				dsc = dsc + AL[c].description+"\n";
 				c++;
-			}
+			}*/
+			dsc = PlayerAbilityManager.getdescriptionfromlist(AL);
 			if (!Main._this.gamemode.abilitiesenabled)
 			{
 				dsc = "(Abilities are disabled.)";

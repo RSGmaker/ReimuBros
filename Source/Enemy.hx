@@ -23,7 +23,7 @@ class Enemy extends Entity
 	///whether or not if this enemy doesnt go back to spawnlist
 	public var respawn:Bool;
 	
-	//the difficulty of the game, every 30 levels it increases by 1.
+	//the base rank is the difficulty rank of the game(every 30 levels=1 rank), enemy rank can 2 higher than the base rank.
 	public var rank:Int;
 	
 	public var HP:Int;
@@ -32,10 +32,15 @@ class Enemy extends Entity
 	private var currentrank:Int;
 	public var spawns:Int;
 	public var needtokill:Bool;
+	//if false, the system won't send enrage messages.
 	public var enrageable:Bool = true;
+	//makes enemy flicker red.
 	public var doingability:Bool = false;
+	//used during flicker
 	private var lastabilityframe:Bool = false;
+	//if true customspawn is called and its coordinates are applied on spawn.
 	public var hascustomspawn:Bool = false;
+	//if false they use "dropped" instead of "flipped", which keeps them from pulling an expression, when flipped.
 	public var expressive:Bool = true;
 	public function new(ani:String) 
 	{

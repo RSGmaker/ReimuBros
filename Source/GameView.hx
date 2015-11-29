@@ -5945,7 +5945,12 @@ class GameView extends Sprite
 		{
 			gamestage.visible = false;
 		}
-		if (missingTime > 0.0334)
+		
+		{
+		updategame(event);
+		missingTime = 0;
+		}
+		/*if (missingTime > 0.0334)
 		{
 			updategame(event);
 			missingTime -= 0.0334;
@@ -5958,7 +5963,7 @@ class GameView extends Sprite
 		{
 			updategame(event);
 			missingTime -= 0.0334;
-		}
+		}*/
 		if (!gamestage.visible)
 		{
 			gamestage.visible = true;
