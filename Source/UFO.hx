@@ -47,6 +47,7 @@ class UFO extends Enemy
 	{
 		//return super.attack();
 		fuel = 0;
+		killed = true;
 		return false;
 	}
 	
@@ -82,7 +83,7 @@ class UFO extends Enemy
 			iter = 30 + rng.twist(0, 1, 240)[0];
 			fuel = 90 + rng.twist(0, 1, 900 + (rank * 150))[0];
 			reducetime = rank * 30;
-			if (game.RoundType == GameView.TypeofRound.Danmaku)
+			if (game.RoundType == GameView.TypeofRound.EventDanmaku)
 			{
 				reducetime += 30;
 				fuel += 150;
@@ -92,10 +93,13 @@ class UFO extends Enemy
 				reducetime = 180;
 			}
 		}
-		rename = ufotype + "ufo";
+		//rename = ufotype + "ufo";
+		rename = "Blackufo";
 		animate();
 		killed = false;
-		dangerous = true;
+		dangerous = false;
+		//dangerous = true;
+		
 		killable = false;
 		x += movement;
 		if (fuel>0 && game.myplayer.GetHitbox().intersects(GetHitbox()))
@@ -110,6 +114,7 @@ class UFO extends Enemy
 		{
 			x = -width;
 		}
+		doingability = false;
 		if (fuel > 0)
 		{
 			fuel--;
@@ -120,7 +125,8 @@ class UFO extends Enemy
 			iter --;
 			if (iter < 12)
 			{
-				visuallyEnraged = !visuallyEnraged;
+				//visuallyEnraged = !visuallyEnraged;
+				doingability = true;
 			}
 			if (iter < 4)
 			{
@@ -151,7 +157,9 @@ class UFO extends Enemy
 		}
 		else
 		{
-			y--;
+			invincibility = 100;
+			//y--;
+			y-=1.5;
 			visuallyEnraged = false;
 			if (y < -200)
 			{

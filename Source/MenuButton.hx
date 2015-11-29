@@ -3,8 +3,10 @@ package;
 import openfl.display.BitmapData;
 import openfl.display.Shape;
 import openfl.display.Sprite;
+import openfl.geom.Rectangle;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
+import openfl.events.MouseEvent;
 
 /**
  * ...
@@ -24,13 +26,24 @@ class MenuButton extends Sprite
 	public var manualwidth:Int = 0;
 	public var manualheight:Int = 0;
 	
+	public var colorschemes:Array<UInt>;
+	public var currentscheme:Int = -1;
+	
+	public var sound:String = "click";
+	
 	public var button:Sprite;
+	
 	//lets us put whatever data inside that associates with this button
 	public var data:Dynamic;
+	public var display:Sprite;
+	public var hitbox:Sprite;
 	public function new(text:String=" ",fontsize:Int=44,fontname:String="Arial",outlinesize:Int=5,innercolor:UInt=0x11CC55,outlinecolor:UInt=0x00AA33) 
 	{
 		super();
 		data = { };
+		colorschemes = new Array<UInt>();
+		addcolorscheme(innercolor, outlinecolor);
+		addcolorscheme(0xFF0000, 0xFFFFFF);
 		textformat = new TextFormat();
 		textformat.font = fontname;
 		textformat.size = fontsize;
@@ -41,27 +54,79 @@ class MenuButton extends Sprite
 		textfield.setTextFormat(textformat);
 		textfield.name = "textField";
 		
+		textfield.mouseEnabled = false;
+		
 		this.outlinesize = outlinesize;
 		this.outlinecolor = outlinecolor;
 		this.innercolor = innercolor;
+		currentscheme = 0;
 		
 		
 		outline = new Shape();
 		inner = new Shape();
 		button = new Sprite();
+		display = new Sprite();
+		hitbox = new Sprite();
+		hitbox.visible = false;
+		display.mouseEnabled = false;
+		
+		
 		
 		button.addChild(outline);
 		button.addChild(inner);
 		addChild(button);
-		addChild(textfield);
-		
+		display.addChild(textfield);
+		addChild(display);
 		update();
 		
 		x = outlinesize;
 		x -= (textfield.width / 2);
 		
 		
-		this.buttonMode = true;
+		//this.buttonMode = true;
+		button.buttonMode = true;
+		
+		//this.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		this.addEventListener( MouseEvent.CLICK, function( ev ) {
+					if (sound != "" && sound != null)
+					{
+						SoundManager.Play(sound);
+					}
+				 } 
+				);
+	}
+	public function addclick(func:Dynamic)
+	{
+		this.addEventListener(MouseEvent.CLICK,func);
+	}
+	public function addcolorscheme(innercolor:UInt, outlinecolor:UInt)
+	{
+		colorschemes.push(innercolor);
+		colorschemes.push(outlinecolor);
+	}
+	public function changecolorscheme(scheme:Int,innercolor:UInt, outlinecolor:UInt)
+	{
+		var ind = scheme * 2;
+		colorschemes[ind] = innercolor;
+		colorschemes[ind + 1] = outlinecolor;
+		if (currentscheme == scheme)
+		{
+			usecolorscheme(scheme);
+		}
+	}
+	public function usecolorscheme(scheme:Int)
+	{
+		var ind = scheme * 2;
+		setcolors(colorschemes[ind], colorschemes[ind + 1]);
+		currentscheme = scheme;
+	}
+	public function press()
+	{
+		usecolorscheme(1);
+	}
+	public function depress()
+	{
+		usecolorscheme(0);
 	}
 	public function settext(text:String)
 	{
@@ -71,6 +136,7 @@ class MenuButton extends Sprite
 	}
 	public function setcolors(innercolor:UInt = 0x11CC55, outlinecolor:UInt = 0x00AA33,alpha:Float=-1)
 	{
+		currentscheme = -1;
 		this.outlinecolor = outlinecolor;
 		this.innercolor = innercolor;
 		if (alpha >= 0)
@@ -96,6 +162,7 @@ class MenuButton extends Sprite
 		img.scaleY = scaleY;
 		img.x = 0;
 		img.y = 0;
+		
 		if (manualwidth > 0)
 		{
 			var W = manualwidth+outlinesize;
@@ -103,8 +170,8 @@ class MenuButton extends Sprite
 			
 			img.x = WH - (img.width / 2);
 			img.y = WH - (img.height / 2);
-			img.x -= outlinesize*1.5;
-			img.y -= outlinesize*1.5;
+			img.x -= outlinesize;
+			img.y -= outlinesize;
 		}
 		if (ok)
 		{
@@ -136,12 +203,12 @@ class MenuButton extends Sprite
 			
 			img.x = WH - (img.width / 2);
 			img.y = WH - (img.height / 2);
-			img.x -= outlinesize*1.5;
-			img.y -= outlinesize*1.5;
+			img.x -= outlinesize;
+			img.y -= outlinesize;
 		}
 		if (ok)
 		{
-			addChild(this.image);
+			display.addChild(this.image);
 		}
 		update();
 	}
@@ -154,13 +221,15 @@ class MenuButton extends Sprite
 		var SZ3 = SZ + SZ + SZ;
 		textfield.setTextFormat(textformat);
 		
-		textfield.x = 0;
-		textfield.y = 0;
-		textfield.width = textfield.textWidth + SZ2;
+		textfield.x = SZ;
+		textfield.y = SZ;
+		textfield.width = textfield.textWidth + SZ2+8;
 		textfield.height = textfield.textHeight + SZ2;
 		
-		var width = textfield.textWidth+SZ2;
-		var height = textfield.textHeight+SZ2;
+		/*var width = textfield.textWidth+SZ2;
+		var height = textfield.textHeight+SZ2;*/
+		var width = textfield.textWidth+SZ3;
+		var height = textfield.textHeight+SZ3;
 		if (manualwidth > 0)
 		{
 			width = manualwidth;
@@ -168,7 +237,8 @@ class MenuButton extends Sprite
 		}
 		
 		outline.graphics.clear();
-		outline.graphics.beginFill(outlinecolor);
+		//weird border logic
+		/*outline.graphics.beginFill(outlinecolor);
 		//outline.graphics.drawRect(-SZ, -SZ, width, height);
 		outline.graphics.drawRoundRect(-SZ, -SZ, width, height,5);
 		outline.graphics.endFill();
@@ -176,21 +246,34 @@ class MenuButton extends Sprite
 		inner.graphics.beginFill(innercolor);
 		//inner.graphics.drawRect(0, 0, width-SZ2, height-SZ2);
 		inner.graphics.drawRoundRect(0, 0, width-SZ2, height-SZ2,5);
+		inner.graphics.endFill();*/
+		//non negative border logic.
+		outline.graphics.beginFill(outlinecolor);
+		//outline.graphics.drawRect(-SZ, -SZ, width, height);
+		outline.graphics.drawRoundRect(0, 0, width, height,5);
+		outline.graphics.endFill();
+		inner.graphics.clear();
+		inner.graphics.beginFill(innercolor);
+		//inner.graphics.drawRect(0, 0, width-SZ2, height-SZ2);
+		inner.graphics.drawRoundRect(SZ, SZ, width-SZ2, height-SZ2,5);
 		inner.graphics.endFill();
 		
 		var fillType:flash.display.GradientType = flash.display.GradientType.LINEAR;
 		//var colors:Array<UInt> = [0x777777, 0xffffff];
 		//var colors:Array<UInt> = [0, 0xffffff];
 		var colors:Array<UInt> = [innercolor, 0xffffff];
-		var alphas = [0.06, 0.6];
+		//var alphas = [0.06, 0.6];
+		var alphas = [0.06, 0.65];
 		var ratios = [0x00, 0xFF];
 		var matr:flash.geom.Matrix = new flash.geom.Matrix();
 		//matr.createGradientBox(50, 9, 1.57079632679, 0, -4.5);
-		matr.createGradientBox(50, height-SZ2, 1.57079632679, 0, height-SZ2);
+		//matr.createGradientBox(50, height-SZ2, 1.57079632679, 0, height-SZ2);
+		matr.createGradientBox(50, height-SZ2, 1.57079632679, 0, height-SZ);
 		var spreadMethod:flash.display.SpreadMethod = flash.display.SpreadMethod.REFLECT;
 		inner.graphics.beginGradientFill(fillType, colors, alphas, ratios, matr, spreadMethod);  
 	 
-		inner.graphics.drawRoundRect(0, 0, width-SZ2, (height-SZ2)*0.65,5);
+		//inner.graphics.drawRoundRect(0, 0, width-SZ2, (height-SZ2)*0.65,5);
+		inner.graphics.drawRoundRect(SZ, SZ, width-SZ2, (height-SZ2)*0.65,5);
 		inner.graphics.endFill();
 		
 		if (manualwidth > 0)
@@ -205,5 +288,16 @@ class MenuButton extends Sprite
 			width = textfield.width;
 			height = textfield.height;
 		}
+		button.scrollRect = new Rectangle(0, 0, width+SZ, height+SZ);
+		display.scrollRect = new Rectangle(SZ, SZ, width - SZ2, height - SZ2);
+		display.x = SZ;
+		display.y = SZ;
+		
+		hitbox.graphics.clear();
+		hitbox.graphics.beginFill(0xFFFFFF);
+		hitbox.graphics.drawRect(0, 0, width, height);
+		hitbox.graphics.endFill();
+		this.hitArea = hitbox;
+		
 	}
 }

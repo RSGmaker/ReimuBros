@@ -127,7 +127,8 @@ class BossSanae extends Boss
 	private function makewave(X:Float,wave:Array<Bullet>)
 	{
 		var WI = wave.length - waveindex;
-		var Y = 0;
+		//var Y = 0;
+		var Y = -100;
 		var W = wavesine;
 		
 		X = X + (Math.sin(W) * 75);
@@ -223,14 +224,17 @@ class BossSanae extends Boss
 				}
 			}
 		}
+		doingability = false;
 		if (frame % 325 < 25)
 		{
-			visuallyEnraged = !visuallyEnraged;
+			//visuallyEnraged = !visuallyEnraged;
+			doingability = true;
 		}
 		
 		if (frame % 325 == 25)
 		{
-			visuallyEnraged = false;
+			//visuallyEnraged = false;
+			//doingability = false;
 			var i = 0;
 			//var X = cx - 200 + (rng.quick(300));
 			var X = cx;

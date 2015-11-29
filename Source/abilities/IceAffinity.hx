@@ -17,4 +17,9 @@ class IceAffinity extends PlayerAbility
 		super.init();
 		player.ignoreice = true;
 	}
+	override public function lostability() 
+	{
+		player.ignoreice = false;
+		super.lostability();
+	}
 }

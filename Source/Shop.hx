@@ -17,7 +17,8 @@ import openfl.text.TextFormat;
 class Shop extends Sprite
 {
 	public var AL:Animationloader;
-	public var DNA:String = "3.39:faceman:100:0:240:0:0:0:128:0:0:0:0:C0FFEE";
+	//public var DNA:String = "3.39:faceman:100:0:240:0:0:0:128:0:0:0:0:C0FFEE";
+	public var DNA:String = "3.39:faceman:100:0:-1:0:0:0:128:0:0:0:0:C0FFEE";
 	public var shopkeeperDNA:String;
 	public var shopkeeper:Sprite;
 	public var shopkeeperimage:Bitmap;
@@ -42,6 +43,7 @@ class Shop extends Sprite
 	//public var idletalk:Array<String> = ["Click any item you'd like and click \"purchase\".","I get new items in stock each time you complete enough levels.","Purchasing items also helps me get new items in stock."];
 	public var idletalk:Array<String> = ["Choose any item you'd like and [Purchase] it.", "Be sure to check back later, I may have some new items in stock."];
 	public var rares:Array<Dynamic>;
+	public var availablerares:Array<Dynamic>;
 	public function new() 
 	{
 		super();
@@ -51,7 +53,23 @@ class Shop extends Sprite
 	{
 		rares = new Array<Dynamic>();
 		//index,shopkeepertext,image,price,availability,rarity
-		rares.push([rares.length, "Would you be interested in this: \"Ability Copier\"?","satori", 100,Main._this.savedata.data.avatarabilities!=true,50]);
+		/*rares.push([rares.length, "Would you be interested in this: \"Ability Copier\"?", "satori", 100, Main._this.savedata.data.avatarabilities != true, 30]);
+		rares.push([rares.length, "Would you be interested in this assortment of footwear?", "dna-" + CharHelper.changednapart(DNA, AvatarEditor.partlist.indexOf("Shoes"), "" + 1), 30, Main._this.savedata.data.unlockables_shoes != true, 15]);
+		rares.push([rares.length, "Could I interest you in some hair dye?", "hairdye", 50, Main._this.savedata.data.unlockables_haircolor != true, 15]);*/
+		rares.push([rares.length, "Would you be interested in this: \"Ability Copier\"?", CharHelper.getCharPreset("satori"), 100, Main._this.savedata.data.avatarabilities != true, 1]);
+		rares.push([rares.length, "Would you be interested in this assortment of footwear?", "dna-" + CharHelper.changednapart(DNA, AvatarEditor.partlist.indexOf("Shoes"), "" + 1), 30, Main._this.savedata.data.unlockables_shoes != true, 1]);
+		rares.push([rares.length, "Could I interest you in some hair dye?", "hairdye", 50, Main._this.savedata.data.unlockables_haircolor != true, 1]);
+		
+		availablerares = new Array<Dynamic>();
+		var i = 0;
+		while (i < rares.length)
+		{
+			if (rares[i][4])
+			{
+				availablerares.push(rares[i]);
+			}
+			i++;
+		}
 	}
 	
 	public function dotick()
@@ -74,18 +92,34 @@ class Shop extends Sprite
 		S.push("Back");
 		var D:Dynamic = AvatarEditor.pickpart(S);
 		//if (Math.random() > 0)
+		if (availablerares.length>0)
 		{
-			var T = rares[Std.int(Math.floor(Math.random() * rares.length))];
+			//var T = rares[Std.int(Math.floor(Math.random() * rares.length))];
+			var T = availablerares[Std.int(Math.floor(Math.random() * availablerares.length))];
 			var rarity = T[5];
 			var ok:Bool = Math.floor(Math.random() * rarity) < 1;
 			var ok2:Dynamic = T[4];
 			if (ok2 && ok)
 			{
-				D = { };
-				D.type = "Rare";
+				var i = 0;
+				var have = false;
 				var Cast:Dynamic = T[0];
 				var I:Int = Cast;
-				D.index = I;
+				while (i < inventory.length)
+				{
+					if (inventory[i].type == "Rare" && inventory[i].index == I)
+					{
+						have = true;
+					}
+					i++;
+				}
+				if (!have)
+				{
+					D = { };
+					D.type = "Rare";
+				
+					D.index = I;
+				}
 			}
 		}
 		if (D != null)
@@ -139,40 +173,20 @@ class Shop extends Sprite
 					Main._this.savedata.data.shop_inventory = inventory;
 					i--;
 				}
-				else
-				{
-					
-				}
-			}
-			else
-			{
-				/*var j = i + 1;
-					while (j < inventory.length)
-					{
-						if (data.type == inventory[j].type && data.index == inventory[j].index)
-						{
-							//this is already listed so lets remove it
-							j = inventory.length+1;
-							inventory.remove(data);
-							Main._this.savedata.data.shop_inventory = inventory;
-							i--;
-						}
-						j++;
-					}*/
 			}
 			var j = i + 1;
-					while (j < inventory.length)
-					{
-						if (data.type == inventory[j].type && data.index == inventory[j].index)
-						{
-							//this is already listed so lets remove it
-							j = inventory.length+1;
-							inventory.remove(data);
-							Main._this.savedata.data.shop_inventory = inventory;
-							i--;
-						}
-						j++;
-					}
+			while (j < inventory.length)
+			{
+				if (data.type == inventory[j].type && data.index == inventory[j].index)
+				{
+					//this is already listed so lets remove it
+					j = inventory.length+1;
+					inventory.remove(data);
+					Main._this.savedata.data.shop_inventory = inventory;
+					i--;
+				}
+				j++;
+			}
 			i++;
 		}
 	}
@@ -199,7 +213,12 @@ class Shop extends Sprite
 			{
 				//price = getprice(data.type);
 				ind = AvatarEditor.partlist.indexOf(data.type);
-				img = "dna-" + CharHelper.changednapart(DNA, ind, "" + part);
+				var TD = CharHelper.changednapart(DNA, ind, "" + part);
+				if (data.type == "Hair")
+				{
+					TD = CharHelper.changednapart(TD, AvatarEditor.partlist.indexOf("Hair Color"), ""+CharHelper.Hairdata[part][6]);
+				}
+				img = "dna-" + TD;
 			}
 			else
 			{
@@ -218,7 +237,8 @@ class Shop extends Sprite
 			M.update();
 			if (data.type == "Rare")
 			{
-				M.setcolors(0xCCCC11, 0xAAAA00);
+				//M.setcolors(0xCCCC11, 0xAAAA00);
+				M.changecolorscheme(0, 0xCCCC11, 0xAAAA00);
 			}
 			var B = new Bitmap(moneyicon.bitmapData);
 			B.scaleX = 0.35;
@@ -240,7 +260,12 @@ class Shop extends Sprite
 			inventorypanel.addChild(M);
 			
 			var ii = i;
-			M.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			M.sound = "";
+			M.addclick( function( ev ) {
+				/*if (selectedpiece != M)
+				{
+					SoundManager.Play("click");
+				}*/
 				selectedpiece = M;
 				selectpiece(ii);
 				//setdescription(desc);
@@ -262,9 +287,16 @@ class Shop extends Sprite
 	{
 		if (lselectedpiece != null)
 		{
-			lselectedpiece.setcolors();
+			//lselectedpiece.setcolors();
+			lselectedpiece.depress();
 		}
-		selectedpiece.setcolors(0xFF0000, 0xFFFFFF);
+		//selectedpiece.setcolors(0xFF0000, 0xFFFFFF);
+		selectedpiece.press();
+		if (selectedindex == index)
+		{
+			return;
+		}
+		SoundManager.Play("click");
 		selectedindex = index;
 		var data = inventory[index];
 		var ind = AvatarEditor.partlist.indexOf(data.type);
@@ -274,7 +306,7 @@ class Shop extends Sprite
 		if (data.type != "Rare")
 		{
 			name = AvatarEditor.getpart(data.type).data[part][0];
-			talk("Do you want the " + data.type.toLowerCase()+": \n\"" + name+"\"?\nIt's yours for only "+price+" gems.");
+			talk("Do you want the " + data.type.toLowerCase()+": \n\"" + name+"\"?\nIt's yours for only "+price+" mon.");
 		}
 		else
 		{
@@ -323,6 +355,7 @@ class Shop extends Sprite
 						{
 							//ability copier
 							Main._this.savedata.data.avatarabilities = true;
+							/*Main._this.savedata.data.avatarabilities = true;
 							Main._this.savedata.data.money = Main._this.savedata.data.money - price;
 							moneycounter.text = ":" + Main._this.savedata.data.money;
 							inventory.remove(inventory[selectedindex]);
@@ -332,8 +365,39 @@ class Shop extends Sprite
 							talk("Thank you for your purchase.");
 							SoundManager.Play("cash");
 							refreshinventory();
-							selectedindex = -1;
+							selectedindex = -1;*/
 						}
+						else if (data.index == 1)
+						{
+							//footwear
+							Main._this.savedata.data.unlockables_shoes = true;
+							/*Main._this.savedata.data.unlockables_shoes = true;
+							Main._this.savedata.data.money = Main._this.savedata.data.money - price;
+							moneycounter.text = ":" + Main._this.savedata.data.money;
+							inventory.remove(inventory[selectedindex]);
+							Main._this.savedata.data.shop_inventory = inventory;
+							
+							Main._this.savedata.data.shop_ticks = Main._this.savedata.data.shop_ticks + 1;
+							talk("Thank you for your purchase.");
+							SoundManager.Play("cash");
+							refreshinventory();
+							selectedindex = -1;*/
+						}
+						else if (data.index == 2)
+						{
+							Main._this.savedata.data.unlockables_haircolor = true;
+						}
+						
+						Main._this.savedata.data.money = Main._this.savedata.data.money - price;
+						moneycounter.text = ":" + Main._this.savedata.data.money;
+						inventory.remove(inventory[selectedindex]);
+						Main._this.savedata.data.shop_inventory = inventory;
+					
+						Main._this.savedata.data.shop_ticks = Main._this.savedata.data.shop_ticks + 1;
+						talk("Thank you for your purchase.");
+						SoundManager.Play("cash");
+						refreshinventory();
+						selectedindex = -1;
 					}
 					else
 					{
@@ -344,7 +408,7 @@ class Shop extends Sprite
 			}
 			else
 			{
-				talk("You don't have enough gems.");
+				talk("You don't have enough mon.");
 				var dna = shopkeeperDNA;
 				dna = CharHelper.changednapart(dna, AvatarEditor.partlist.indexOf("Eyes"), "93");
 				dna = CharHelper.changednapart(dna, AvatarEditor.partlist.indexOf("Mouth"), "2");
@@ -377,12 +441,13 @@ class Shop extends Sprite
 		}
 		inventory = Main._this.savedata.data.shop_inventory;
 		var i = 0;
-		shopkeeperDNA = CharHelper.changednascale(CharHelper.getCharPreset("Alice"),130);
+		//shopkeeperDNA = CharHelper.changednascale(CharHelper.getCharPreset("Alice"),130);
+		shopkeeperDNA = CharHelper.changednascale(CharHelper.getCharPreset("Nitori"),130);
 		var bg = new Bitmap(AL.GetAnimation("background-" + CharHelper.GetBG("Kourindou"))[0]);
 		addChild(bg);
 		inventorypanel = new Sprite();
 		inventorypanel.x = 10;
-		inventorypanel.y = 106;
+		inventorypanel.y = 101;
 		addChild(inventorypanel);
 		/*preview = new MenuButton("",1,"Arial",4,0,1);
 		preview.manualheight = 150;
@@ -395,10 +460,11 @@ class Shop extends Sprite
 		preview.buttonMode = false;
 		addChild(preview);*/
 		purchase = new MenuButton("Purchase");
+		purchase.sound = "";
 		purchase.x = 600;
 		//purchase.y = 160;
 		purchase.y = 10;
-		purchase.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		purchase.addclick( function( ev ) {
 				purchaseitem();
 				//setdescription(desc);
 				 } 
@@ -456,14 +522,15 @@ class Shop extends Sprite
 		
 		moneyicon = new Bitmap(AL.getBitmapData("money")[0]);
 		moneyicon.x = 400;
-		moneyicon.y = 7;
+		//moneyicon.y = 7;
+		moneyicon.y = 24;
 		
 		addChild(moneyicon);
 		moneycounter = new TextField();
 		moneycounter.scaleX = 4;
 		moneycounter.scaleY = 4;
 		moneycounter.x = moneyicon.x + 25;
-		moneycounter.y = moneyicon.y;
+		moneycounter.y = moneyicon.y-16;
 		moneycounter.mouseEnabled = false;
 		moneycounter.text = ":" + Main._this.savedata.data.money;
 		
@@ -513,20 +580,25 @@ class Shop extends Sprite
 		if (Main._this.DEBUG)
 		{
 			var B:MenuButton = new MenuButton("Cheat:Money");
-			B.x = 600;
-			B.y = 400;
-			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				Main._this.savedata.data.money = Main._this.savedata.data.money + 10;
+			B.x = 0;
+			B.y = 469;
+			B.addclick( function( ev ) {
+				Main._this.savedata.data.money = Main._this.savedata.data.money + 1000;
 				moneycounter.text = ":" + Main._this.savedata.data.money;
 				//setdescription(desc);
 				 } 
 				);
 			addChild(B);
 			var B:MenuButton = new MenuButton("Cheat:Tick");
-			B.x = 600;
-			B.y = 300;
-			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				dotick();
+			B.x = 300;
+			B.y = 469;
+			B.addclick( function( ev ) {
+				var i = 0;
+				while (i < 40)
+				{
+					dotick();
+					i++;
+				}
 				refreshinventory();
 				//setdescription(desc);
 				 } 

@@ -6,7 +6,7 @@ package abilities;
  */
 class MoreZombieFairies extends PlayerAbility
 {
-
+	public var amount:Float = 0.1;//0.05
 	public function new(player:Player)  
 	{
 		super(player);
@@ -15,6 +15,11 @@ class MoreZombieFairies extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.zombiefairychance += 0.05;
+		player.zombiefairychance += amount;
+	}
+	override public function lostability() 
+	{
+		player.zombiefairychance -= amount;
+		super.lostability();
 	}
 }

@@ -97,6 +97,8 @@ class Imposter extends Enemy
 			}
 			}
 			//if (((rng.twist(rng.seed, 1, 100)[0]) > 75 || rename=="youmu" || rename=="reimu" || rename == "marisa" || rename == "orin") && spawns<=1 && game.Hoster)
+			if (game.gamemode.canmyonspawn)
+			{
 			if (((rng.twist(rng.seed, 1, 100)[0]) > 83 || rename=="youmu" || rename=="reimu" || rename == "marisa" || rename == "orin") && spawns<=1 && game.Hoster)
 			{
 				var D:Dynamic = { };
@@ -110,6 +112,7 @@ class Imposter extends Enemy
 					game.SendEvent("AttachMyon", D);
 				}
 				
+			}
 			}
 		}
 		if (game.GameFlags.get(Main.AllStar))

@@ -93,13 +93,34 @@ class SoundManager
 				_this.nextsong = path;
 			}
 		}
-		if (_this._song != path && !_this.playingintro)
+		if (_this._song != path/* && !_this.playingintro*/)
 		{
+			
+		if (_this.playingintro)
+		{
+			var i = 0;
+			//while (_this.activeaudio.length > 0)
+			while (i < _this.activeaudio.length)
+			{
+				var D = _this.activeaudio[i];
+				if (D.channel == _this.intro)
+				{
+					D.channel.stop();
+					if (_this.activeaudio.indexOf(D) > -1)
+					{	
+						_this.activeaudio.remove(D);
+					}
+					_this.playingintro = false;
+				}
+				i++;
+			}
+		}
 		var A = _this._Play(path + "intro",0,0,_this.musicvol);
 		if (A != null)
 		{
 			_this.playingintro = true;
 			_this.intro = A;
+			_this._song = path;
 			if (_this.music != null)
 			{
 				_this.music.stop();
@@ -110,6 +131,7 @@ class SoundManager
 				_this.music = null;
 			}
 			A.addEventListener(Event.SOUND_COMPLETE, function(e:Event):Void {
+				_this._song = "";
 				_this._PlayMusic(path);
 				_this.playingintro = false;
 				_this.intro = null;
@@ -183,7 +205,7 @@ class SoundManager
 			else
 			{
 			}
-			var C = S.play(position,Loops,T);
+			var C = S.play(position, Loops, T);
 			var D:Dynamic = { };
 			D.channel = C;
 			D.time = Timer.stamp();
@@ -238,6 +260,30 @@ class SoundManager
 	}
 	public static function StopAll() {
 		return _this._StopAll();
+	}
+	public static function StopMusic() {
+		return _this._StopMusic();
+	}
+	public function _StopMusic() {
+		var i = 0;
+		while (activeaudio.length > i)
+		{
+			var D = activeaudio[i];
+			if (D.channel != null && (D.channel == music || D.channel == intro || D.channel == jingle))
+			{
+				D.channel.stop();
+				if (activeaudio.indexOf(D) > -1)
+				{
+					activeaudio.remove(D);
+				}
+			}
+			i++;
+		}
+		music = null;
+		_song = null;
+		jingle = null;
+		intro = null;
+		playingintro = false;
 	}
 	public function _StopAll() {
 		while (activeaudio.length > 0)
@@ -300,7 +346,7 @@ class SoundManager
 		while (i < activeaudio.length)
 		{
 			var D = activeaudio[i];
-			if ((D.channel == music && jingle==null) || D.channel == jingle)
+			if ((D.channel == music && jingle==null) || D.channel == jingle || D.channel == intro)
 			{
 				D.channel.soundTransform = new SoundTransform(volume, 0);
 			}

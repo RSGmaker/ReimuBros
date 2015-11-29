@@ -18,6 +18,23 @@ class FlagManager
 			i++;
 		}
 	}
+	public function isidentical(flags:FlagManager):Bool
+	{
+		if (data.length != flags.data.length)
+		{
+			return false;
+		}
+		var i = 0;
+		while (i < data.length)
+		{
+			if (data[i] != flags.data[i])
+			{
+				return false;
+			}
+			i++;
+		}
+		return true;
+	}
 	public function add(flags:FlagManager)
 	{
 		var i = 0;

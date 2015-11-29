@@ -1,4 +1,5 @@
 package;
+import openfl.geom.Point;
 
 /**
  * ...
@@ -31,6 +32,11 @@ class Enemy extends Entity
 	private var currentrank:Int;
 	public var spawns:Int;
 	public var needtokill:Bool;
+	public var enrageable:Bool = true;
+	public var doingability:Bool = false;
+	private var lastabilityframe:Bool = false;
+	public var hascustomspawn:Bool = false;
+	public var expressive:Bool = true;
 	public function new(ani:String) 
 	{
 		super(ani);
@@ -49,6 +55,12 @@ class Enemy extends Entity
 		visuallyEnraged = false;
 		spawns = 0;
 		needtokill = true;
+		removeonlevelend = true;
+	}
+	public function customspawn():Dynamic
+	{
+		var ret:Dynamic = { };
+		return ret;
 	}
 	public function getdangerlevel():Int
 	{
@@ -113,7 +125,14 @@ class Enemy extends Entity
 		var C = name;
 		if (flipped >= 1)
 		{
-			C = C + "flipped";
+			if (expressive)
+			{
+				C = C + "flipped";
+			}
+			else
+			{
+				C = C + "dropped";
+			}
 		}
 		var enr = visuallyEnraged || enraged;
 		if (rank == game.rank+1)
@@ -128,9 +147,41 @@ class Enemy extends Entity
 			enraged = true;
 			enr = true;
 		}
+		var en = 0;
+		if (enr)
+		{
+			en++;
+		}
+		if (doingability && !lastabilityframe)
+		{
+			en++;
+		}
+		if (en == 1)
+		{
+			C = C + "E";
+		}
+		else if (en == 2)
+		{
+			C = C + "]";
+		}
+		/*if (!doingability || !lastabilityframe)
+		{
 		if (enr)
 		{
 			C = C + "E";
+		}
+		}
+		else if (doingability)
+		{
+			C = C + "]";
+		}*/
+		if (doingability)
+		{
+			lastabilityframe = !lastabilityframe;
+		}
+		else
+		{
+			lastabilityframe = false;
 		}
 		if (Ldir > 0)
 		{

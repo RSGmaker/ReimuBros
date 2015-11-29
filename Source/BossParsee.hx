@@ -46,7 +46,8 @@ class BossParsee extends Boss
 		D.Dir = 1;
 		if (rng.quick(100)>50)
 		{
-			D.X = 800 - jealousX - 80;
+			//D.X = 800 - jealousX - 80;
+			D.X = 800 - 80;
 			D.Dir = -1;
 		}
 		D.type = "jealous";
@@ -82,9 +83,11 @@ class BossParsee extends Boss
 				limit = jealoustime;
 			}
 		}
+		doingability = false;
 		if (shottime < 25)
 		{
-			visuallyEnraged = !visuallyEnraged;
+			//visuallyEnraged = !visuallyEnraged;
+			doingability = true;
 		}
 		else
 		{

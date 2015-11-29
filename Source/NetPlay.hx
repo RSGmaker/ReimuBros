@@ -32,6 +32,9 @@ class NetPlay
 	public var Room:String;
 	public var game:GameView;
 	
+	public var running:Bool;
+	public var error:String;
+	
 	public function new() 
 	{
 		_nc = null;
@@ -50,7 +53,10 @@ class NetPlay
 		else if (_cumulus == "")
 		{
 			trace("netplay is missing an rtmfp url,netplay cannot function without it");
+			error = "This version of ReimuBros is not configured properly for multiplayer, let the author of this build know.";
 		}
+		error = "";
+		running = false;
 	}
 	public function end()
 	{
@@ -89,7 +95,12 @@ class NetPlay
 										{
 											Main._this.game.TF.text = "Became\nHoster!";
 										}
+										var H = game.Hoster;
 										Main._this.game.Hoster = true;
+										if (H != Main._this.game.Hoster)
+										{
+											game.ShowLevel(false);
+										}
 										Main._this.game.TF.text = "Became/remained\nHoster!";
 									}
 									else
@@ -118,7 +129,8 @@ class NetPlay
                                         
                                         case "NetConnection.Connect.Success":
 											var R = "org.walfasgame.ReimuBros/" + Main._this.gameversion + "/" + Room;
-                                            trace( 'connected!, moving to:'+R);
+                                            //trace( 'connected!, moving to:'+R);
+											trace( 'connected to room:'+R);
                                             trace( ' near id ' + nc.nearID );
                                             trace( ' far id ' + nc.farID );
 											NID = ""+nc.nearID;
@@ -128,20 +140,41 @@ class NetPlay
 											groupSpecifier.serverChannelEnabled = true;
 											groupSpecifier.routingEnabled = true;
 											
+											groupSpecifier.peerToPeerDisabled = false;
+											groupSpecifier.multicastEnabled = true;
+											//groupSpecifier.ipMulticastMemberUpdatesEnabled = true;
+											
 											try
 											{
 												group = new flash.net.NetGroup(_nc, groupSpecifier.groupspecWithoutAuthorizations());
 												group.addEventListener(NetStatusEvent.NET_STATUS, NetStatusHandler);
+												running = true;
 											}
 											
+											
                                         case "NetConnection.Connect.Failed":
-                                            trace( 'CONNECTION FAIL: change your firewall settings or you are using the wrong key - 90 sec timeout' );
+											trace("CONNECTION FAIL: change your firewall settings or you are using the wrong key");
+											running = false;
+											error = "Connection failed, check firewall settings.\nDetails:"+e.info.details;
+										case "NetGroup.Connect.Rejected":
+											trace("CONNECTION REJECTED");
+											running = false;
+											error = "Connection rejected.\nDetails:"+e.info.details;
+                                            //trace( 'CONNECTION FAIL: change your firewall settings or you are using the wrong key - 90 sec timeout' );
                                     }
                                     
                                 }
                             );
-                            
+        try
+		{
         _nc.connect( _cumulus, 100 );
+		}
+		catch(e:Dynamic)
+		{
+			trace("CONNECTION Error");
+			running = false;
+			error = "An error has occured while establishing connection.";
+		}
 	}
 	// Handles all NetStatusEvents for the NetConnection and the NetGroup.
         // This code includes cases it doesn't handle so you can see the cases
@@ -150,19 +183,24 @@ class NetPlay
 			var started:Bool = groupstarted;
 			try
 			{
+				var G = groupstarted;
 				groupstarted = true;
+				//trace(e.info.code);
 				switch ( e.info.code ) 
                 {
                                         
                     case "NetConnection.Connect.Success":
-											
+							//running = true;
 					case "NetConnection.Connect.Failed":
 						groupstarted = false;
+						error = "error:server connect.\nDetails:"+e.info.details;
 					case "NetGroup.Connect.Failed":
+						groupstarted = false;
+						error = "error:session connect.\nDetails:"+e.info.details;
 					case "NetGroup.Connect.Success":
-						
+						//running = true;
 					case "NetGroup.Neighbor.Connect":
-						
+						Flush();
 					case "NetGroup.Neighbor.Disconnect":
 						removeplayer("" + e.info.peerID);
 						
@@ -186,12 +224,17 @@ class NetPlay
 							//A.remove(D);
 							i++;
 						}
-					
+					default:
+						groupstarted = true;
 				}
+				/*if (!G && groupstarted)
+				{
+					Flush();
+				}*/
 			}
 			if (groupstarted && !started)
 			{
-				if (Main._this.game != null)
+				if (Main._this.game != null && Main._this.game.NP == this)
 				{
 					
 					var D:Dynamic = { };
@@ -200,12 +243,14 @@ class NetPlay
 					Connections[0] = D;
 					
 					Main._this.game.Hoster = false;
+					
+					Main._this.game.ShowLevel(false);
 				}
 			}
 		}
 		public function SendData(message:String,data:Dynamic)
 		{
-			if (groupstarted)
+			//if (groupstarted)
 			{
 			var msg:Dynamic = { };
 			msg.t = message;
@@ -216,7 +261,7 @@ class NetPlay
 		}
 		public function SendMessage(message:String)
 		{
-			if (groupstarted)
+			//if (groupstarted)
 			{
 			var msg:Dynamic = { };
 			msg.t = message;
@@ -231,18 +276,29 @@ class NetPlay
 			{
 				//post is slower apparently but works outside of neighbors, but neighbors only go up to 14 peers.
 				//group.post(Queue);
-				group.sendToAllNeighbors(Queue);
+				if (running)
+				{
+					//if (Main._this.game != null && Main._this.game.NP == this)
+					if (true)
+					{
+						group.sendToAllNeighbors(Queue);
+					}
+					else
+					{
+						group.post(Queue);
+					}
+				}
 				Queue = new Array<Dynamic>();
 			}
 			
 		}
-		private function OnPosting(message:Dynamic):Void{
-			
+		private function GamePost(message:Dynamic)
+		{
 			if ((""+message.i) != (""+_nc.nearID))
 			{
 			//try
 			{
-				if (message.t == "Upd")
+				if (message.t == "U")
 				{
 					if (!Announced && groupstarted)
 			{
@@ -260,49 +316,49 @@ class NetPlay
 					var M = game.GetPlayer(message.i);
 					var add = false;
 					var soul = "";
-					if (i.soul != null)
+					if (i.sl != null)
 					{
-						soul = i.soul;
+						soul = i.sl;
 					}
 					if (M == null)
 					{
-						if (i.name != null)
+						if (i.nm != null)
 						{
 							
-						M = new Player(i.char, new Array<Bool>(),soul);
+						M = new Player(i.ch, new Array<Bool>(),soul);
 						M.ID = message.i;
 						//this might fix the :a bunch of reward spawning issue. so they dont spawn on a glitchy quit scenario
-						M.spentscore = i.score;
+						M.spentscore = i.sc;
 						M.playing = i.F;
 						game.AddPlayer(M);
 						}
 					}
 					if (M != null)
 					{
-						if (i.name != null)
+						if (i.nm != null)
 						{
-							if (i.char != M.charname)
+							if (i.ch != M.charname)
 							{
-								M.init(i.char);
+								M.init(i.ch);
 							}
 						}
 					M.frame = game.frame;
-					M.controller[0] = i.con[0];
-					M.controller[1] = i.con[1];
-					M.controller[2] = i.con[2];
-					M.controller[3] = i.con[3];
+					M.controller[0] = i.cn[0];
+					M.controller[1] = i.cn[1];
+					M.controller[2] = i.cn[2];
+					M.controller[3] = i.cn[3];
 					M.x = i.x;
 					M.y = i.y;
-					M.Hspeed = i.Hsp;
-					M.Vspeed = i.Vsp;
+					M.Hspeed = i.H;
+					M.Vspeed = i.V;
 					//M.visible = i.visible;
 					
 					
-					if (i.name != null)
+					if (i.nm != null)
 					{
 					M.UID = i.ID;
-					M.playername = i.name;
-					M.score = i.score;
+					M.playername = i.nm;
+					M.score = i.sc;
 					}
 					M.playing = i.F;
 					M.frame = game.frame;
@@ -361,11 +417,16 @@ class NetPlay
 							if (a > b) return 1;
 							return 0;
 							} );
+						var H = Main._this.game.Hoster;
 						if (Connections[0].id == ""+_nc.nearID)
 						{
 							if (Main._this.game != null)
 							{
 								Main._this.game.Hoster = true;
+								if (H != Main._this.game.Hoster)
+								{
+									game.ShowLevel(false);
+								}
 								//Main._this.game.TF.text = "Now Hosting!!!";
 							}
 						}
@@ -374,6 +435,10 @@ class NetPlay
 							if (Main._this.game != null)
 							{
 								Main._this.game.Hoster = false;
+								if (H != Main._this.game.Hoster)
+								{
+									game.ShowLevel(false);
+								}
 								//Main._this.game.TF.text = "Joined game!";
 							}
 						}
@@ -384,7 +449,40 @@ class NetPlay
 				{
 					game.ProcessEvent(message.d.evt,message.i, message.d.data);
 				}
+				if (message.t == "Q")
+				{
+					game.ProcessQueueEvent(message.d.evt,message.i, message.d.data,message.d.timer);
+				}
 			}
+			}
+		}
+		public function dolobbyannounce()
+		{
+			var D:Dynamic = { };
+			D.room = Main._this.Room;
+			//D.room = Main._this.roomprefix + "_" + Main._this.Room;
+			D.players = Main._this.game.GetPlayers().length;
+			SendData("Roomreport", D);
+			Flush();
+		}
+		private function OnPosting(message:Dynamic):Void{
+			if (message.t == "ping")
+			{
+				if (Main._this.game != null && Main._this.game.Hoster && !Main._this.customroom)
+				{
+					dolobbyannounce();
+				}
+				//trace("ping!");
+			}
+			if (message.t == "Roomreport" && Main._this.characterselect != null)
+			{
+				var C = Main._this.characterselect;
+				C.roomreport(message.d);
+				
+			}
+			if (Main._this.game != null && Main._this.game.NP == this)
+			{
+				GamePost(message);
 			}
         }
 }

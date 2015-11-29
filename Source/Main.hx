@@ -36,6 +36,9 @@ import openfl.media.SoundTransform;
 //import flash.text.Font;
 
 class Main extends Sprite {
+	public var frameskip:Bool;
+	public var frameskipenabled:Bool = true;
+	
 	public var game:GameView;
 	public var titlescreen:TitleScreenView;
 	public var optionscreen:OptionView;
@@ -62,7 +65,7 @@ class Main extends Sprite {
 	public var DEBUG:Bool = false;
 	#end
 	//info displayed in titlescreen
-	public var gameversion:String = "1.7.0beta";
+	public var gameversion:String = "2.0.0beta";
 	public var controlscheme:Array<UInt>;
 	//message shown to player should the host of that session make them leave
 	public var statusmessage:String = "";
@@ -72,34 +75,49 @@ class Main extends Sprite {
 	public var session:Dynamic;
 	
 	public var roomprefix:String = "main";
-	
-	public var level:Int=1;
-	
 	public var cheating:Bool;
 	
+	public var gamemode:GameMode;
+	
+	public var level:Int = 1;
+	
+	public var customroom:Bool = false;
+	
+	public var netlobby:NetPlay = null;
+	//time spent as host.
+	public var hosttime:Int = 0;
+	//time spent as client.
+	public var clienttime:Int = 0;
+	
+	/*public var level:Int=1;
 	public var levelselect:Bool;
-	
 	public var levelincrement:Int = 1;
-	
 	public var cancontinue:Bool = true;
-	
 	public var canselectcharacter:Bool = true;
-	
 	public var canlivesspawn:Bool = true;
+	public var canmyonspawn:Bool = true;
+	public var abilitiesenabled:Bool = true;*/
 	
-	//cheatcode flags
+	//cheatcodes&gamemode flags
+	
 	public static inline var FireCirno = 1;
+	//extra lives
 	public static inline var KonamiCode = 2;
+	//play as prinny
 	public static inline var Prinny = 3;
+	//causes normal mode music to play during easy mode, and vice versa.
 	public static inline var AltMusic = 4;
 	public static inline var TableEvent = 5;
+	//play as pikemarisa
 	public static inline var Pikachu = 6;
 	//public static inline var Mima = 7;(mima was originally planned to be an event character)
+	
 	public static inline var NormalMode = 8;
 	public static inline var HardMode = 9;
 	public static inline var LunaticMode = 10;
 	public static inline var ExtraMode = 11;
 	public static inline var CirnoEvent = 12;
+	//forces every level to be an event
 	public static inline var EventRoundsOnly = 13;
 	public static inline var UltraCommonCharacters = 14;
 	public static inline var NueEvent = 15;
@@ -108,14 +126,27 @@ class Main extends Sprite {
 	public static inline var UnlockAllCharacters = 18;
 	public static inline var RelockAllCharacters = 19;
 	public static inline var ElectricCirno = 20;
+	//something silly that changes step sound effects
 	public static inline var Drumstep = 21;
+	//boss events only
 	public static inline var Bossrush = 22;
+	//forces danmaku event
 	public static inline var Danmaku = 23;
+	//forces a truck to spawn each level the truck does not despawn, and enemies will not spawn until you pick it up,if kaguya/mokou take the truck offscreen it results in a game over.
 	public static inline var TruckHoarder = 24;
+	//prevents events
 	public static inline var NoEvents = 25;
 	public static inline var UnlockAllChallenges = 26;
+	//activates the life system used in all star mode.
 	public static inline var AllStar = 27;
 	public static inline var SanaeBoss = 28;
+	public static inline var UnlockAllOutfits = 29;
+	public static inline var LavaEvent = 30;
+	//replaces normal levels with sidescrolling ones, also adds the powerup ability(required for powerup items to work) to all characters.
+	public static inline var Adventure = 31;
+	public static inline var ParseeEvent = 32;
+	public static inline var Explosive = 33;
+	public static inline var PointCollecting = 34;
 	//cheatcodes are stored as md5 hashcodes, so cheatcodes cannot be obtained via hacking, you can press f9 in the character select to convert your player name to an md5 hash requires in game debug mode (Main.DEBUG=true)
 	//75efc70c0e990c49b8ee4fbdaca89dae = firecirno
 	//6718c4714daa73a63e1e4ea54757449c = upupdowndownleftrightleftrightbastart
@@ -145,26 +176,49 @@ class Main extends Sprite {
 	//5e19e32cb6c2a71bec4fed4135f2785f = spell card rules what are those?
 	//1a723cfc8a28af39a97b5c0f497e52c4 = /allstar
 	//b330c71bd2c3ca1f4c6ecea06838ce2f = theticketsarenowriceballs
-	public static var codes:Array<String> = ["75efc70c0e990c49b8ee4fbdaca89dae", "6718c4714daa73a63e1e4ea54757449c", "9e6122001ea0464018c634c285233853", "7d51b214e0069ac6361aaaf2034279a6", "2b59c79dfe67f2a5d0f17c646ae894ed", "fa55036379520473353e15548f2a388e", "69034dbf1b3882954b3a9b8bf9686d1c","c16404177908ade1a1f1b0e3f8835ec9","6170e8e40fdf20f6fbeefd88815a2086","525afc6a26124022359a9ad101e71e99","5aed71982de151ff05492c9babb533ea","45c48cce2e2d7fbdea1afc51c7c6ad26","1c0108249de204153f4e296913fcacea","09e1ca57cc1c4e73bd7fc9f5642883db","f9df7933994ea2e532cc30a842d36766","151115624f4a47252d316c30d1ccbced","4b54a629dbc0c68ab8312740ae3d1e84","b32092f7b9e04c12abb373a257ba16fe","fda28399f82b488a33807573a2d670c5","1b9b7d20ce44ad2f880f677deefd711b","0c22948e07710faa0ad65b83053d77e0","0f6a8fa3f3985858ebc1debc5ce61f7e","c022be00cb710d03d98d67fb6cbf6d7a","42fa0e8cfd0cb2102c7d23ebd7ada199","2f4581b3456a9c99e51b0237fe9bde0a","5e19e32cb6c2a71bec4fed4135f2785f","1a723cfc8a28af39a97b5c0f497e52c4","b330c71bd2c3ca1f4c6ecea06838ce2f"];
+	//0d32665af25beb996ee1c2b6b33f4d74 = thegap
+	//1dceddadb5d8f6174e0a829cdeb56b35 = hellisfloodingagain
+	//e77933862aef3c8fd9a60cffde17344e = /adventure
+	//c357bef743f927a4baa4806f19868c8f = parseebros
+	//170fa0be197479f2e10280f483300cca = /explosive
+	//7a16c4a81660276b789cd58d6666315f = /pointcollection
+	public static var codes:Array<String> = ["75efc70c0e990c49b8ee4fbdaca89dae", "6718c4714daa73a63e1e4ea54757449c", "9e6122001ea0464018c634c285233853", "7d51b214e0069ac6361aaaf2034279a6", "2b59c79dfe67f2a5d0f17c646ae894ed", "fa55036379520473353e15548f2a388e", "69034dbf1b3882954b3a9b8bf9686d1c","c16404177908ade1a1f1b0e3f8835ec9","6170e8e40fdf20f6fbeefd88815a2086","525afc6a26124022359a9ad101e71e99","5aed71982de151ff05492c9babb533ea","45c48cce2e2d7fbdea1afc51c7c6ad26","1c0108249de204153f4e296913fcacea","09e1ca57cc1c4e73bd7fc9f5642883db","f9df7933994ea2e532cc30a842d36766","151115624f4a47252d316c30d1ccbced","4b54a629dbc0c68ab8312740ae3d1e84","b32092f7b9e04c12abb373a257ba16fe","fda28399f82b488a33807573a2d670c5","1b9b7d20ce44ad2f880f677deefd711b","0c22948e07710faa0ad65b83053d77e0","0f6a8fa3f3985858ebc1debc5ce61f7e","c022be00cb710d03d98d67fb6cbf6d7a","42fa0e8cfd0cb2102c7d23ebd7ada199","2f4581b3456a9c99e51b0237fe9bde0a","5e19e32cb6c2a71bec4fed4135f2785f","1a723cfc8a28af39a97b5c0f497e52c4","b330c71bd2c3ca1f4c6ecea06838ce2f","0d32665af25beb996ee1c2b6b33f4d74","1dceddadb5d8f6174e0a829cdeb56b35","e77933862aef3c8fd9a60cffde17344e","c357bef743f927a4baa4806f19868c8f","170fa0be197479f2e10280f483300cca","7a16c4a81660276b789cd58d6666315f"];
 	public var GameFlags:FlagManager;
+	public var CheatFlags:FlagManager;
 	public function new () {
 		super ();
+		AL = new Animationloader();
+		new SoundManager();
+		init();
+		stage.addEventListener (Event.ENTER_FRAME, this_onEnterFrame);
+		stage.addEventListener (KeyboardEvent.KEY_UP, stage_onKeyUp);
+		stage.addEventListener (KeyboardEvent.KEY_DOWN, stage_onKeyDown);
+		stage.addEventListener (Event.DEACTIVATE, stage_deactivate);
+		
+	}
+	public function init()
+	{
 		if (DEBUG)
 		{
 			//Haxe doesn't support this external files easily.
 			//stage.addChild(new TheMiner());  
 		}
+		stage.quality = flash.display.StageQuality.LOW;
 		//stage.quality = flash.display.StageQuality.LOW;
 		//stage.quality = flash.display.StageQuality.MEDIUM;
-		AL = new Animationloader();
+		
 		_this = this;
 		optionscreen = null;
-		new SoundManager();
+		
 		online = false;
+		
 		playerspick = "";
 		savedata = openfl.net.SharedObject.getLocal("ReimuBrosData", "/", false);
 		flash.system.Security.allowDomain('*');
+		GameMode.init();
+		gamemode = GameMode.GetModeByName("Classic");
 		GameFlags = new FlagManager(2);
+		CheatFlags = new FlagManager(2);
 		var FPS = stage.frameRate;
 		playername = savedata.data.playername;
 		if (playername == null)
@@ -190,7 +244,7 @@ class Main extends Sprite {
 		if (savedata.data.avatar == null)
 		{
 			//savedata.data.avatar = "";
-			savedata.data.avatar = "3.40:PlayerName:100:0:-1:-1:-1:-1:0:0:0:0:0:321A00";
+			savedata.data.avatar = "3.39:PlayerName:100:0:-1:-1:-1:-1:0:0:0:0:0:321A00";
 		}
 		if (savedata.data.avatarabilities == null)
 		{
@@ -213,6 +267,10 @@ class Main extends Sprite {
 		{
 			//shoes will be just a single unlockable since they are not very interesting
 			savedata.data.unlockables_shoes = false;
+		}
+		if (savedata.data.unlockables_haircolor == null)
+		{
+			savedata.data.unlockables_haircolor = false;
 		}
 		if (savedata.data.unlockables_hat == null)
 		{
@@ -275,7 +333,7 @@ class Main extends Sprite {
 		{
 			savedata.data.shop_ticks = 5;
 		}
-		//if (savedata.data.shop_inventory == null)
+		if (savedata.data.shop_inventory == null)
 		{
 			savedata.data.shop_inventory = new Array<Dynamic>();
 		}
@@ -353,11 +411,18 @@ class Main extends Sprite {
 			savedata.data.highscore = 0;
 		}
 		Room = "public1";
-		stage.addEventListener (Event.ENTER_FRAME, this_onEnterFrame);
-		stage.addEventListener (KeyboardEvent.KEY_UP, stage_onKeyUp);
-		stage.addEventListener (KeyboardEvent.KEY_DOWN, stage_onKeyDown);
-		stage.addEventListener (Event.DEACTIVATE, stage_deactivate);
 		showtitlescreen();
+	}
+	private function create_unlockedarray(length:Int = 1000, value:Bool=true)
+	{
+		var ret = new Array<Bool>();
+		var i = 0;
+		while (i < length)
+		{
+			ret.push(value);
+			i++;
+		}
+		return ret;
 	}
 	private function stage_deactivate(event:Event):Void
 	{
@@ -366,12 +431,22 @@ class Main extends Sprite {
 			game.LoseFocus();
 		}
 	}
+	public function resetgamesettings()
+	{
+		GameFlags.clearall();
+		playerspick = savedata.data.characterselected;
+		/*canmyonspawn = true;
+		abilitiesenabled = true;
+		canlivesspawn = true;*/
+		GameView.levelsperstage = 5;
+		GameView.levelsperrank = GameView.levelsperstage * GameView.stagesperrank;
+	}
 	//do special key functions, and pass on key info to active view.
 	private function stage_onKeyUp (event:KeyboardEvent):Void {
 		
 		switch (event.keyCode) {
 			case Keyboard.M:
-				if (characterselect == null)
+				if (characterselect == null && shopscreen == null)
 				{
 					SoundManager._this.ToggleMute();
 				}
@@ -423,16 +498,87 @@ class Main extends Sprite {
 		}
 	}
 	private function stage_onKeyDown (event:KeyboardEvent):Void {
-		if (game != null)
+		if (game != null && stage.focus == this)
 		{
 			game.stage_onKeyDown(event);
+		}
+		if (titlescreen != null)
+		{
+			if (!titlescreen.menu)
+			{
+				titlescreen.MSE = true;
+				titlescreen.show_menu();
+			}
+		}
+	}
+	public function updateflags()
+	{
+		GameFlags.clearall();
+		GameFlags.add(gamemode.GameFlags);
+		if (!CheatFlags.isempty())
+		{
+			cheating = true;
+			GameFlags.add(CheatFlags);
+		}
+		else
+		{
+			cheating = false;
 		}
 	}
 	//check if the view is done interacting with the player, and show the new view eg; character select->main game(aka gameview)
 	private function this_onEnterFrame (event:Event):Void {
-		
+		if (game != null)
+		{
+			game.this_onEnterFrame(event);
+			
+			if (online)
+			{
+				if (customroom && netlobby != null)
+				{
+					endnetlobby();
+				}
+				if (game.Hoster)
+				{
+					hosttime++;
+					clienttime = 0;
+					if (hosttime > 300 && netlobby == null && !customroom)
+					{
+						startnetlobby(false);
+					}
+				}
+				else
+				{
+					clienttime++;
+					hosttime = 0;
+					if (clienttime > 300 && netlobby != null)
+					{
+						endnetlobby();
+					}
+				}
+			}
+		}
+		if (shopscreen != null)
+		{
+			if (shopscreen.status == "TitleScreen")
+			{
+				showtitlescreen();
+			}
+			else
+			{
+				shopscreen.this_onEnterFrame();
+			}
+		}
+		if (frameskipenabled)
+		{
+			frameskip = !frameskip;
+			if (frameskip)
+			{
+				return;
+			}
+		}
 		if (titlescreen != null)
 		{
+			titlescreen.update();
 			if (titlescreen.status != "")
 			{
 				status = titlescreen.status;
@@ -444,6 +590,7 @@ class Main extends Sprite {
 						online = true;
 					}
 					//roomprefix = "classicmode";
+					updateflags();
 					showcharacterselect();
 				}
 				if (status == "Options")
@@ -461,7 +608,10 @@ class Main extends Sprite {
 			characterselect.this_onEnterFrame();
 			var S = characterselect.status;
 			
-			
+			if (netlobby != null && characterselect.frame > 300 && netlobby.group.neighborCount>10)
+			{
+				endnetlobby();
+			}
 			if (S == "PlayGame")
 			{
 				var bannedname = false;
@@ -536,18 +686,38 @@ class Main extends Sprite {
 							showtitlescreen();
 							return;
 						}
+						else if (gamecode == UnlockAllOutfits)
+						{
+							savedata.data.unlockables_back = create_unlockedarray();
+							savedata.data.unlockables_accessory = create_unlockedarray();
+							savedata.data.unlockables_mouth = create_unlockedarray();
+							savedata.data.unlockables_eyes = create_unlockedarray();
+							savedata.data.unlockables_hat = create_unlockedarray();
+							savedata.data.unlockables_shoes = true;
+							savedata.data.unlockables_arms = create_unlockedarray();
+							savedata.data.unlockables_hair = create_unlockedarray();
+							savedata.data.unlockables_body = create_unlockedarray();
+							savedata.data.avatarabilities = true;
+							savedata.data.unlockables_haircolor = true;
+							valid = false;
+							showtitlescreen();
+							return;
+						}
 						else
 						{
 						if (gamecode > 0)
 						{
 							valid = false;
 							characterselect.Nameinput.text = characterselect.playername;
-							GameFlags.set(gamecode, true);
-							cheating = true;
+							//GameFlags.set(gamecode, true);
+							CheatFlags.set(gamecode, true);
+							updateflags();
+							//cheating = true;
 						}
 						}
 					}
 				}
+				customroom = characterselect.custom;
 				characterselect.status = "";
 				if (valid)
 				{
@@ -575,11 +745,12 @@ class Main extends Sprite {
 						playerspick = "pika";
 					}
 					Room = characterselect.Room;
-					if (canselectcharacter)
+					if (gamemode.forcedcharacter=="")
 					{
 						savedata.data.characterselected = playerspick;
 					}
 					level = characterselect.level;
+					updateflags();
 					showgame();
 				}
 				else
@@ -609,7 +780,8 @@ class Main extends Sprite {
 		else if (game != null)
 		{
 			//seems to fix some minor input issues.
-			if (stage.focus != this)
+			//if (stage.focus != this && (!game.menu || online))
+			if (stage.focus != this && !game.paused)
 			{
 				stage.focus = this;
 			}
@@ -628,6 +800,10 @@ class Main extends Sprite {
 				statusmessage = "room is full.";
 				showtitlescreen();
 			}
+			else if (game.status == "restart")
+			{
+				showgame();
+			}
 			else if (game.myplayer != null)
 			{
 				//if actively playing then lets keep track of their progress so if they rejoin a multiplayer session we can let them resume with their previous stats.
@@ -643,6 +819,7 @@ class Main extends Sprite {
 		}
 		else if (optionscreen != null)
 		{
+			optionscreen.update();
 			if (optionscreen.status == "Back")
 			{
 				showtitlescreen();
@@ -652,23 +829,20 @@ class Main extends Sprite {
 				showoptions();
 			}
 		}
-		else if (shopscreen != null)
-		{
-			if (shopscreen.status == "TitleScreen")
-			{
-				showtitlescreen();
-			}
-			else
-			{
-				shopscreen.this_onEnterFrame();
-			}
-		}
+		
+	}
+	public function changeGameMode(gamemode:GameMode)
+	{
+		this.gamemode = gamemode;
+		updateflags();
 	}
 	//stops all active views, used to prepare for showing a new one or to restart one.
 	private function clear()
 	{
 		//prepare for new screen.
-		SoundManager.StopAll();
+		///SoundManager.StopAll();
+		SoundManager.StopMusic();
+		stage.focus = this;
 		if (titlescreen != null)
 		{
 			stage.removeChild(titlescreen);
@@ -679,9 +853,9 @@ class Main extends Sprite {
 			game.end();
 			stage.removeChild(game);
 			GameView._this = null;
-			if (session != null)
+			if (session != null && session.online)
 			{
-				if (session.lives >= 0)
+				if (session.lives >= 0 && session.level > 1)
 				{
 					lastsession = session;
 				}
@@ -727,6 +901,8 @@ class Main extends Sprite {
 			stage.removeChild(shopscreen);
 			savedata.data.avatar = shopscreen.custompanel.avatardna;
 			savedata.data.avatarability = shopscreen.custompanel.soul;
+			playername = CharHelper.getdnapart(shopscreen.custompanel.avatardna, 1);
+			savedata.data.playername = playername;
 			savedata.flush();
 			shopscreen = null;
 		}
@@ -750,6 +926,12 @@ class Main extends Sprite {
 	{
 		clear();
 		resetsettings();
+		if (netlobby != null)
+		{
+			netlobby.end();
+			netlobby = null;
+		}
+		
 		titlescreen = new TitleScreenView();
 		titlescreen.AL = AL;
 		stage.addChild(titlescreen);
@@ -760,13 +942,16 @@ class Main extends Sprite {
 	public function resetsettings()
 	{
 		GameFlags.clearall();
-		levelselect = true;
+		CheatFlags.clearall();
+		updateflags();
+		/*levelselect = true;
 		level = 1;
 		levelincrement = 1;
 		cancontinue = true;
 		canselectcharacter = true;
+		abilitiesenabled = true;
+		canlivesspawn = true;*/
 		cheating = false;
-		canlivesspawn = true;
 	}
 	private function showcharacterselect()
 	{
@@ -780,6 +965,10 @@ class Main extends Sprite {
 		}
 		characterselect.playername = savedata.data.playername;
 		characterselect.selected = playerspick;
+		if (gamemode.forcedcharacter != "")
+		{
+			characterselect.selected = gamemode.forcedcharacter;
+		}
 		//characterselect.selected = savedata.data.characterselected;
 		characterselect.online = online;
 		if (characterselect.selected == null)
@@ -787,12 +976,50 @@ class Main extends Sprite {
 			characterselect.selected = "reimu";
 		}
 		characterselect.start();
+		/*if (online)
+		{
+			netlobby = new NetPlay();
+			netlobby.Room = "lobby_"+roomprefix;
+			netlobby.start();
+			netlobby.SendMessage("ping");
+		}*/
+		startnetlobby();
+	}
+	public function endnetlobby()
+	{
+		if (netlobby != null)
+		{
+			netlobby.end();
+			netlobby = null;
+		}
+	}
+	public function startnetlobby(ping:Bool=true)
+	{
+		endnetlobby();
+		if (online)
+		{
+			netlobby = new NetPlay();
+			netlobby.Room = "lobby_"+roomprefix;
+			netlobby.start();
+			netlobby.SendMessage("ping");
+		}
 	}
 	private function showshopscreen()
 	{
 		clear();
 		shopscreen = new ShopView();
-		shopscreen.custompanel.avatardna = savedata.data.avatar;
+		var D:String = savedata.data.avatar;
+		var S = D.split(":");
+		var P:String = ""+savedata.data.playername;
+		if (savedata.data.playername == null)
+		{
+			P = "PlayerName";
+		}
+		S[1] = "" + P;
+		D = S.join(":");
+		
+		shopscreen.custompanel.avatardna = D;
+		//shopscreen.custompanel.avatardna = savedata.data.avatar;
 		shopscreen.custompanel.soul = savedata.data.avatarability;
 		stage.addChild(shopscreen);
 		shopscreen.start();

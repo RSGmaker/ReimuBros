@@ -1,10 +1,16 @@
 package;
 import abilities.AbsorbDamage;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
 import openfl.display.DisplayObject;
 import openfl.display.MovieClip;
 import openfl.Assets;
 import flash.display.Graphics;
 import flash.geom.ColorTransform;
+import openfl.display.PixelSnapping;
+import openfl.display.Sprite;
+import openfl.geom.Matrix;
+import openfl.geom.Rectangle;
 
 /**
  * ...
@@ -14,6 +20,7 @@ class CharHelper
 {
 	public static var Hairdata:Array<Dynamic>;
 	public static var DNAdata:Array<Dynamic>;
+	public static var Presets:Map <String, Int>;
 	public static var HatsData:Array<Dynamic>;
 	public static var BGs:Array<Dynamic>;
 	public static var BackData:Array<Dynamic>;
@@ -24,6 +31,8 @@ class CharHelper
 	public static var BodyData:Array<Dynamic>;
 	public static var ArmsData:Array<Dynamic>;
 	public static var ShoesData:Array<Dynamic>;
+	private static var spr:Sprite;
+	private static var char:MovieClip;
 	public var eyes:Int;
 	public var mouth:Int;
 	public var hat:Int;
@@ -269,11 +278,11 @@ ShoesData.push(["Lily White", 24, 0, 0, 0]);
 ShoesData.push(["Lily Black", 25, 0, 0, 0]);
 ShoesData.push(["Komachi", 26, 0, 0, 0]);
 ShoesData.push(["Nitori", 27, 0, 0, 0]);
-ShoesData.push(["Sikieiki", 28, 0, 0, 0]);
+ShoesData.push(["Shikieiki", 28, 0, 0, 0]);
 ShoesData.push(["Wriggle", 29, 0, 0, 0]);
 ShoesData.push(["Rumia", 30, 0, 0, 0]);
 ShoesData.push(["Aya", 31, 0, 0, 0]);
-ShoesData.push(["Momizi", 32, 0, 0, 0]);
+ShoesData.push(["Momiji", 32, 0, 0, 0]);
 ShoesData.push(["Koakuma", 33, 0, 0, 0]);
 ShoesData.push(["Lunasa", 34, 0, 0, 0]);
 ShoesData.push(["Merlin", 35, 0, 0, 0]);
@@ -401,11 +410,11 @@ ArmsData.push(["Lily White", 24, 0, 0, 0]);
 ArmsData.push(["Lily Black", 25, 0, 0, 0]);
 ArmsData.push(["Komachi", 26, 0, 0, 0]);
 ArmsData.push(["Nitori", 27, 0, 0, 0]);
-ArmsData.push(["Sikieiki", 28, 0, 0, 0]);
+ArmsData.push(["Shikieiki", 28, 0, 0, 0]);
 ArmsData.push(["Wriggle", 29, 0, 0, 0]);
 ArmsData.push(["Rumia", 30, 0, 0, 0]);
 ArmsData.push(["Aya", 31, 0, 0, 0]);
-ArmsData.push(["Momizi", 32, 0, 0, 0]);
+ArmsData.push(["Momiji", 32, 0, 0, 0]);
 ArmsData.push(["Koakuma", 33, 0, 0, 0]);
 ArmsData.push(["Lunasa", 34, 0, 0, 0]);
 ArmsData.push(["Merlin", 35, 0, 0, 0]);
@@ -514,12 +523,12 @@ ArmsData.push(["Lily White (2)", 137, 0, 0, 0]);
 ArmsData.push(["Lily Black (2)", 138, 0, 0, 0]);
 ArmsData.push(["Komachi (2)", 139, 0, 0, 0]);
 ArmsData.push(["Nitori (2)", 140, 0, 0, 0]);
-ArmsData.push(["Sikieiki (2)", 141, 0, 0, 0]);
+ArmsData.push(["Shikieiki (2)", 141, 0, 0, 0]);
 ArmsData.push(["Wriggle (2)", 142, 0, 0, 0]);
 ArmsData.push(["Rumia (2)", 143, 0, 0, 0]);
 ArmsData.push(["Outstretched SS", 144, 0, 0, 0]);
 ArmsData.push(["Aya (2)", 145, 0, 0, 0]);
-ArmsData.push(["Momizi (2)", 146, 0, 0, 0]);
+ArmsData.push(["Momiji (2)", 146, 0, 0, 0]);
 ArmsData.push(["Koakuma (2)", 147, 0, 0, 0]);
 ArmsData.push(["Lunasa (2)", 148, 0, 0, 0]);
 ArmsData.push(["Merlin (2)", 149, 0, 0, 0]);
@@ -689,11 +698,11 @@ BodyData.push(["Lily White", 24, 0, 0, 0]);
 BodyData.push(["Lily Black", 25, 0, 0, 0]);
 BodyData.push(["Komachi", 26, 0, 0, 0]);
 BodyData.push(["Nitori", 27, 0, 0, 0]);
-BodyData.push(["Sikieiki", 28, 0, 0, 0]);
+BodyData.push(["Shikieiki", 28, 0, 0, 0]);
 BodyData.push(["Wriggle", 29, 0, 0, 0]);
 BodyData.push(["Rumia", 30, 0, 0, 0]);
 BodyData.push(["Aya", 31, 0, 0, 0]);
-BodyData.push(["Momizi", 32, 0, 0, 0]);
+BodyData.push(["Momiji", 32, 0, 0, 0]);
 BodyData.push(["Koakuma", 33, 0, 0, 0]);
 BodyData.push(["Lunasa", 34, 0, 0, 0]);
 BodyData.push(["Merlin", 35, 0, 0, 0]);
@@ -808,12 +817,12 @@ BodyData.push(["Lily Black (2)", 143, 0, 0, 0]);
 BodyData.push(["Komachi (2)", 144, 0, 0, 0]);
 BodyData.push(["Nitori (2)", 145, 0, 0, 0]);
 BodyData.push(["Plain Red", 146, 0, 0, 0]);
-BodyData.push(["Sikieiki (2)", 147, 0, 0, 0]);
+BodyData.push(["Shikieiki (2)", 147, 0, 0, 0]);
 BodyData.push(["Wriggle (2)", 148, 0, 0, 0]);
 BodyData.push(["Rumia (2)", 149, 0, 0, 0]);
 BodyData.push(["Aya (2A)", 150, 0, 0, 0]);
 BodyData.push(["Aya (2B)", 151, 0, 0, 0]);
-BodyData.push(["Momizi (2)", 152, 0, 0, 0]);
+BodyData.push(["Momiji (2)", 152, 0, 0, 0]);
 BodyData.push(["Koakuma (2)", 153, 0, 0, 0]);
 BodyData.push(["Marisa (2)", 154, 0, 0, 0]);
 BodyData.push(["Lunasa (2)", 155, 0, 0, 0]);
@@ -1116,7 +1125,7 @@ AccData.push(["Pink Bow", 77, 5, -5, -5]);
 AccData.push(["White Bow", 78, 5, -5, -5]);
 AccData.push(["Scarf (Pink 2)", 79, 5, -5, -5]);
 AccData.push(["Dog Leash", 80, 5, -5, -5]);
-AccData.push(["Momizi Ears", 81, 5, 10, -5]);
+AccData.push(["Momiji Ears", 81, 5, 10, -5]);
 AccData.push(["Ahoge", 82, 5, 10, -5]);
 AccData.push(["Antennae Hair", 83, 5, 10, -5]);
 AccData.push(["Cigarette", 84, 5, -5, -5]);
@@ -1246,7 +1255,7 @@ ItemsData.push(["Fishing Pole", 44, -17, 8, -5]);
 ItemsData.push(["Flashlight", 45, -10, 12, -15]);
 ItemsData.push(["Camera", 46, -10, -5, 0]);
 ItemsData.push(["Leaf Fan", 47, -10, -5, 0]);
-ItemsData.push(["Momizi's Gear", 48, 0, 2, -5]);
+ItemsData.push(["Momiji's Gear", 48, 0, 2, -5]);
 ItemsData.push(["Tea", 49, -10, 0, 0]);
 ItemsData.push(["Violin", 50, -25, 0, 0]);
 ItemsData.push(["Trumpet", 51, -25, 3, 0]);
@@ -1306,7 +1315,7 @@ ItemsData.push(["Nue's Trident 2", 104, -13, 0, 0]);
 ItemsData.push(["Scythe 2", 105, -13, 0, -10]);
 ItemsData.push(["Lightsaber (Green)", 106, -24, 0, 0]);
 ItemsData.push(["Lightsaber (Red)", 107, -24, 0, 0]);
-ItemsData.push(["Momizi's Gear 2", 108, 0, 2, -5]);
+ItemsData.push(["Momiji's Gear 2", 108, 0, 2, -5]);
 ItemsData.push(["Knife 2", 109, -13, 0, 0]);
 ItemsData.push(["Sakuya Staff", 110, -16, 0, 0]);
 ItemsData.push(["Sanae Staff", 111, -16, 0, 0]);
@@ -1901,7 +1910,7 @@ HatsData.push(["Antennae", 145, 0, 0, 0]);
 HatsData.push(["Rumia's Amulet 2", 146, 0, 0, 0]);
 HatsData.push(["Tengu Hat 2A", 147, 0, 0, 0]);
 HatsData.push(["Tengu Hat 2B", 148, 0, 0, 0]);
-HatsData.push(["Momizi Hat+Ears", 149, 0, 0, 0]);
+HatsData.push(["Momiji Hat+Ears", 149, 0, 0, 0]);
 HatsData.push(["Devil Wings 2", 150, 0, 0, 0]);
 HatsData.push(["Witch Hat 2", 151, 0, 0, 0]);
 HatsData.push(["Lunasa's Hat 2", 152, 0, 0, 0]);
@@ -1942,7 +1951,7 @@ HatsData.push(["Ran's Ears", 186, 0, 0, 0]);
 HatsData.push(["Chen's Ears", 187, 0, 0, 0]);
 HatsData.push(["Tokiko's Clip 2", 188, 0, 0, 0]);
 HatsData.push(["Sunny Band 2", 189, 0, 0, 0]);
-HatsData.push(["Momizi Ears", 190, 0, 0, 0]);
+HatsData.push(["Momiji Ears", 190, 0, 0, 0]);
 HatsData.push(["Mettaur (Yellow)", 191, 0, 0, 0]);
 HatsData.push(["Mettaur (Blue)", 192, 0, 0, 0]);
 HatsData.push(["Mettaur (Red)", 193, 0, 0, 0]);
@@ -2332,16 +2341,21 @@ BGs.push(["Earth from Space", 215]);
 BGs.push(["Cathedral (Red)", 216]);
 BGs.push(["Ten Desires Stage 4", 217]);
 BGs.push(["Myouren Temple Path", 218]);
+BGs.push(["Kishinjou Hallway", 219,"Feraligono"]);
+BGs.push(["Palanquin Ship", 220, "Feraligono"]);
+BGs.push(["Dirt Road", 221,"RSGmaker"]);
 BGs.push("random");
 	}
 	private static function initdna()
 	{
 		DNAdata = new Array<Dynamic>();
+		Presets = new Map<String,Int>();
 		addDNA("3.39:Akyu (2):100:208:179:194:176:54:0:0:0:0:0:984499","Akyu (2)");
 addDNA("3.39:Akyu:100:54:53:54:54:54:0:0:69:0:0:C073C0","Akyu");
 addDNA("3.39:Alice (2A):100:125:124:124:119:13:0:0:0:0:0:FFFF80","Alice (2A)");
-addDNA("3.39:Alice (2B):100:125:125:125:119:13:0:0:0:0:0:FFFF80","Alice (2B)");
-addDNA("3.39:Alice (PC-98)(2):100:286:222:290:228:69:0:0:0:0:0:FEFE54","Alice (PC-98)(2)");
+addDNA("3.39:Alice (2B):100:125:125:125:119:13:0:0:0:0:0:FFFF80", "Alice (2B)");
+addDNA("3.39:AliceALT (2):100:286:222:290:228:69:0:0:0:0:0:FEFE54","AliceALT (2)");
+//addDNA("3.39:Alice (PC-98)(2):100:286:222:290:228:69:0:0:0:0:0:FEFE54","Alice (PC-98)(2)");
 addDNA("3.39:Alice (PC-98):100:70:69:70:69:69:0:0:0:0:0:FEFE54","Alice (PC-98)");
 addDNA("3.39:Alice:100:13:12:13:13:13:0:0:12:0:0:FFFF80","Alice");
 addDNA("3.39:Aya (2A):100:147:150:150:145:31:0:0:0:0:0:373737","Aya (2A)");
@@ -2355,7 +2369,8 @@ addDNA("3.39:Chiyuri (2):100:216:186:203:183:57:0:0:0:0:0:FEFD81","Chiyuri (2)")
 addDNA("3.39:Chiyuri:100:57:56:57:57:57:0:0:0:0:0:FEF4AB","Chiyuri");
 addDNA("3.39:Cirno (2A):100:117:119:120:3:9:0:51:0:0:47:49CAE9","Cirno (2A)");
 addDNA("3.39:Cirno (2B):100:117:120:120:3:9:0:51:0:0:47:49CAE9","Cirno (2B)");
-addDNA("3.39:Cirno (Fire):100:223:189:213:3:6:0:51:0:0:100:CC0000","Cirno (Fire)");
+//addDNA("3.39:Cirno (Fire):100:223:189:213:3:6:0:51:0:0:100:CC0000","Cirno (Fire)");
+addDNA("3.39:CirnoALT:100:223:189:213:3:6:0:51:0:0:100:CC0000","CirnoALT");
 addDNA("3.39:Cirno:100:9:8:9:9:9:0:1:0:0:2:49CAE9","Cirno");
 addDNA("3.39:Daiyousei (2):100:156:157:160:152:37:0:0:0:0:70:A4F4B4","Daiyousei (2)");
 addDNA("3.39:Daiyousei:100:37:36:37:37:37:0:0:0:0:18:A4F4B4","Daiyousei");
@@ -2377,7 +2392,8 @@ addDNA("3.39:Hatate:100:199:177:184:174:31:0:0:0:0:0:40351E","Hatate");
 addDNA("3.39:Hina (2A):100:160:161:166:156:42:0:0:0:0:0:87E791","Hina (2A)");
 addDNA("3.39:Hina (2B):100:164:161:166:156:42:0:0:0:0:0:87E791","Hina (2B)");
 addDNA("3.39:Hina:100:42:41:42:42:42:0:0:0:0:0:87E791","Hina");
-addDNA("3.39:Ichirin (2):100:324:259:337:255:103:0:0:95:0:0:B8BCE0","Ichirin (2)");
+addDNA("3.39:Ichirin (2):100:324:259:337:255:103:0:0:95:0:0:B8BCE0", "Ichirin (2)");
+addDNA("3.39:IchirinALT (2 Alt):100:324:259:352:255:103:0:0:95:0:0:B8BCE0", "IchirinALT");
 addDNA("3.39:Ichirin:100:104:103:104:103:103:0:0:95:0:0:B8BCE0","Ichirin");
 addDNA("3.39:Iku (2):100:244:201:226:195:62:0:0:0:0:105:8C75EA","Iku (2)");
 addDNA("3.39:Iku:100:62:61:62:62:62:0:0:0:0:32:8C75EA","Iku");
@@ -2403,8 +2419,9 @@ addDNA("3.39:Kogasa:100:0:102:103:102:102:81:0:94:0:0:6AA8AE","Kogasa");
 addDNA("3.39:Koishi (2A):100:270:212:266:214:75:0:0:0:0:0:DFFDE1","Koishi (2A)");
 addDNA("3.39:Koishi (2B):100:270:212:267:214:75:0:0:0:125:0:DFFDE1","Koishi (2B)");
 addDNA("3.39:Koishi:100:76:75:76:75:75:0:23:0:66:36:DDFFE7","Koishi");
-addDNA("3.39:Kokoro:100:345:272:356:270:123:0:0:0:0:0:F0B9CA","Kokoro");
-addDNA("3.39:Komachi (2):100:142:143:144:139:26:40:22:0:0:0:CB4545","Komachi (2)");
+addDNA("3.39:Kokoro:100:345:272:356:270:123:0:0:0:0:0:F0B9CA", "Kokoro");
+addDNA("3.39:Komachi (2):100:142:143:144:139:26:0:0:0:0:0:CB4545","Komachi (2)");
+//addDNA("3.39:Komachi (2):100:142:143:144:139:26:40:22:0:0:0:CB4545","Komachi (2)");
 addDNA("3.39:Komachi:100:26:25:26:26:26:40:22:41:0:0:CB4545","Komachi");
 addDNA("3.39:Konngara (2A):100:295:233:301:130:82:0:0:83:0:0:3C3C3C","Konngara (2A)");
 addDNA("3.39:Konngara (2B):100:295:234:301:130:82:0:0:83:0:0:3C3C3C","Konngara (2B)");
@@ -2417,16 +2434,21 @@ addDNA("3.39:Kurumi:100:71:70:71:70:70:0:0:0:0:33:FFFF77","Kurumi");
 addDNA("3.39:Kyouko:100:329:261:343:258:25:0:0:0:0:0:007075","Kyouko");
 addDNA("3.39:Layla:100:0:108:109:108:108:31:11:0:0:0:51B087","Layla");
 addDNA("3.39:Letty (2):100:134:133:134:126:20:0:11:0:0:54:F3E8FD","Letty (2)");
-addDNA("3.39:Letty:100:20:19:20:20:20:0:0:0:63:0:E1D5FF","Letty");
-addDNA("3.39:Lie Meiling:100:111:111:112:209:5:0:0:0:0:0:373737","Lie Meiling");
-addDNA("3.39:Lily Black (2):100:141:142:143:138:25:0:0:0:0:60:F3BB69","Lily Black (2)");
+addDNA("3.39:Letty:100:20:19:20:20:20:0:0:0:63:0:E1D5FF", "Letty");
+addDNA("3.39:MeilingALT:100:111:111:112:209:5:0:0:0:0:0:373737","MeilingALT");
+//addDNA("3.39:Lie Meiling:100:111:111:112:209:5:0:0:0:0:0:373737","Lie Meiling");
+addDNA("3.39:Lily_WhiteALT:100:141:142:143:138:25:0:0:0:0:60:F3BB69","Lily_WhiteALT");
+//addDNA("3.39:Lily Black (2):100:141:142:143:138:25:0:0:0:0:60:F3BB69","Lily Black (2)");
 addDNA("3.39:Lily Black:100:25:24:25:25:25:0:0:0:0:12:F3BB69","Lily Black");
-addDNA("3.39:Lily White (2):100:140:141:142:137:24:0:0:0:0:60:FEFDA3","Lily White (2)");
-addDNA("3.39:Lily White:100:24:23:24:24:24:0:0:0:0:12:FEFDA3","Lily White");
-addDNA("3.39:Luize (2A):100:289:225:293:231:71:0:0:0:0:0:FEFDAB","Luize (2A)");
+//addDNA("3.39:Lily White (2):100:140:141:142:137:24:0:0:0:0:60:FEFDA3","Lily White (2)");
+addDNA("3.39:Lily_White (2):100:140:141:142:137:24:0:0:0:0:60:FEFDA3","Lily_White (2)");
+addDNA("3.39:Lily White:100:24:23:24:24:24:0:0:0:0:12:FEFDA3", "Lily White");
+addDNA("3.39:Louise:100:289:225:293:231:71:0:0:0:0:0:FEFDAB","Louise");
+//addDNA("3.39:Luize (2A):100:289:225:293:231:71:0:0:0:0:0:FEFDAB","Luize (2A)");
 addDNA("3.39:Luize (2B):100:289:225:294:231:71:0:0:0:0:0:FEFDAB","Luize (2B)");
-addDNA("3.39:Luize:100:72:71:72:71:71:31:39:0:0:0:FEFDAB","Luize");
-addDNA("3.39:Luna Child (2):100:200:178:185:175:53:0:0:0:0:92:FFFF5E","Luna Child (2)");
+addDNA("3.39:Luize:100:72:71:72:71:71:31:39:0:0:0:FEFDAB", "Luize");
+addDNA("3.39:Luna_Child (2):100:200:178:185:175:53:0:0:0:0:92:FFFF5E","Luna_Child (2)");
+//addDNA("3.39:Luna Child (2):100:200:178:185:175:53:0:0:0:0:92:FFFF5E","Luna Child (2)");
 addDNA("3.39:Luna Child:100:53:52:53:53:53:0:0:0:0:25:ECEB57","Luna Child");
 addDNA("3.39:Lunasa (2):100:152:154:155:148:34:0:0:0:0:0:FEF4A3","Lunasa (2)");
 addDNA("3.39:Lunasa:100:34:33:34:34:34:0:0:50:0:0:FEF4A3","Lunasa");
@@ -2437,8 +2459,9 @@ addDNA("3.39:Mai:100:89:88:89:88:88:0:0:0:0:39:ABABFE","Mai");
 addDNA("3.39:Mamizou:100:338:267:350:264:46:0:0:0:155:133:8A5D5D","Mamizou");
 addDNA("3.39:Maribel (2):100:211:183:198:178:56:0:0:0:0:0:FFF177","Maribel (2)");
 addDNA("3.39:Maribel:100:56:55:56:56:56:0:0:0:0:0:FFF177","Maribel");
-addDNA("3.39:Marisa (2):100:151:153:154:117:3:0:0:0:0:0:FEFE78","Marisa (2)");
-addDNA("3.39:Marisa (PC-98)(2):100:288:224:292:230:67:0:0:0:0:0:FEFE54","Marisa (PC-98)(2)");
+addDNA("3.39:Marisa (2):100:151:153:154:117:3:0:0:0:0:0:FEFE78", "Marisa (2)");
+addDNA("3.39:MarisaALT (2):100:288:224:292:230:67:0:0:0:0:0:FEFE54","MarisaALT (2)");
+//addDNA("3.39:Marisa (PC-98)(2):100:288:224:292:230:67:0:0:0:0:0:FEFE54","Marisa (PC-98)(2)");
 addDNA("3.39:Marisa (PC-98):100:68:67:68:67:67:0:0:0:0:0:FEFE54","Marisa (PC-98)");
 addDNA("3.39:Marisa (PCB):100:113:113:114:99:3:0:11:0:0:0:FEFD92","Marisa (PCB)");
 addDNA("3.39:Marisa (SA):100:100:99:100:99:99:0:11:0:0:0:F5E981","Marisa (SA)");
@@ -2455,8 +2478,9 @@ addDNA("3.39:Merlin (2):100:153:155:156:149:35:0:0:0:0:0:DDF2FF","Merlin (2)");
 addDNA("3.39:Merlin:100:35:34:35:35:35:0:0:51:0:0:DDF2FF","Merlin");
 addDNA("3.39:Miko (Alt):100:337:266:349:263:41:0:0:0:154:0:C3B594","Miko (Alt)");
 addDNA("3.39:Miko:100:337:266:348:263:41:0:0:0:0:0:C3B594","Miko");
-addDNA("3.39:Mima (2):100:174:168:172:163:98:0:0:0:0:0:48771A","Mima (2)");
-addDNA("3.39:Mima (HRtP):100:246:168:175:163:98:0:0:0:0:0:48771A","Mima (HRtP)");
+addDNA("3.39:Mima (2):100:174:168:172:163:98:0:0:0:0:0:48771A", "Mima (2)");
+addDNA("3.39:MimaALT:100:246:168:175:163:98:0:0:0:0:0:48771A","MimaALT");
+//addDNA("3.39:Mima (HRtP):100:246:168:175:163:98:0:0:0:0:0:48771A","Mima (HRtP)");
 addDNA("3.39:Mima:100:48:47:48:48:98:0:0:0:0:0:48771A","Mima");
 addDNA("3.39:Minoriko (2):100:167:165:169:159:45:0:0:0:0:0:FFCC57","Minoriko (2)");
 addDNA("3.39:Minoriko:100:45:44:45:45:45:0:0:0:0:0:FFCC57","Minoriko");
@@ -2464,13 +2488,14 @@ addDNA("3.39:Mitori:100:277:216:280:218:6:0:0:151:0:114:EF8F8F","Mitori");
 //addDNA("3.39:Mokou (2):100:127:127:127:121:15:0:0:0:0:48:D9DEE1","Mokou (2)");
 addDNA("3.39:Mokou (2):100:127:127:127:121:15:0:0:0:0:0:D9DEE1","Mokou (2)");
 addDNA("3.39:Mokou:100:15:14:15:15:15:0:0:0:0:7:EEEEEE","Mokou");
-addDNA("3.39:Momizi (2):100:149:151:152:146:32:0:0:108:0:65:FBFBFB","Momizi (2)");
-addDNA("3.39:Momizi:100:32:31:32:32:32:0:0:48:37:16:FBFBFB","Momizi");
+addDNA("3.39:Momiji (2):100:149:151:152:146:32:0:0:108:0:65:FBFBFB","Momiji (2)");
+addDNA("3.39:Momiji:100:32:31:32:32:32:0:0:48:37:16:FBFBFB","Momiji");
 addDNA("3.39:Mugetsu (2):100:293:229:298:234:78:0:0:0:0:0:FEFD89","Mugetsu (2)");
 addDNA("3.39:Mugetsu:100:79:78:79:78:78:0:0:0:0:0:FEFD89","Mugetsu");
 addDNA("3.39:Murasa:100:137:136:137:129:14:0:0:100:0:56:262626","Murasa");
-addDNA("3.39:Mystia (2A):100:128:128:128:122:16:0:0:0:0:50:F19FAD","Mystia (2A)");
-addDNA("3.39:Mystia (2B):100:129:128:129:123:16:31:11:0:0:49:F19FAD","Mystia (2B)");
+addDNA("3.39:Mystia (2A):100:128:128:128:122:16:0:0:0:0:50:F19FAD", "Mystia (2A)");
+addDNA("3.39:MystiaALT (2B):100:129:128:129:123:16:31:11:0:0:49:F19FAD","MystiaALT (2B)");
+//addDNA("3.39:Mystia (2B):100:129:128:129:123:16:31:11:0:0:49:F19FAD","Mystia (2B)");
 addDNA("3.39:Mystia:100:16:15:16:16:16:0:0:0:0:4:F19FAD","Mystia");
 addDNA("3.39:Nazrin (2):100:321:256:333:226:101:0:0:0:0:43:969696","Nazrin (2)");
 addDNA("3.39:Nazrin:100:102:101:102:101:101:0:11:93:0:43:969696","Nazrin");
@@ -2492,20 +2517,23 @@ addDNA("3.39:Ran:100:19:18:19:19:19:0:0:0:0:9:FEE170","Ran");
 addDNA("3.39:Reimu (2 Blue):100:112:112:113:111:2:0:0:0:0:0:283960","Reimu (2 Blue)");
 addDNA("3.39:Reimu (2 Brown):100:112:145:113:111:2:0:0:0:0:0:6F4722","Reimu (2 Brown)");
 addDNA("3.39:Reimu (EoSD):100:112:169:186:111:2:0:0:0:0:0:283960","Reimu (EoSD)");
-addDNA("3.39:Reimu (PC-98 2 Green):100:268:190:264:213:39:0:0:0:0:0:890099","Reimu (PC-98 2 Green)");
-addDNA("3.39:Reimu (PC-98 2):100:229:190:217:189:59:0:0:0:0:0:890099","Reimu (PC-98 2)");
+addDNA("3.39:Reimu (PC-98 2 Green):100:268:190:264:213:39:0:0:0:0:0:890099", "Reimu (PC-98 2 Green)");
+addDNA("3.39:ReimuALT (2):100:229:190:217:189:59:0:0:0:0:0:890099","ReimuALT (2)");
+//addDNA("3.39:Reimu (PC-98 2):100:229:190:217:189:59:0:0:0:0:0:890099","Reimu (PC-98 2)");
 addDNA("3.39:Reimu (PC-98):100:59:58:59:59:59:0:0:0:0:0:890099","Reimu (PC-98)");
 addDNA("3.39:Reimu (PCB):100:112:169:187:111:2:0:0:0:0:0:???","Reimu (PCB)");
 addDNA("3.39:Reimu (PoFV):100:112:145:188:111:2:0:0:0:0:0:6F4722","Reimu (PoFV)");
 addDNA("3.39:Reimu (SA):100:112:169:189:111:2:0:0:0:0:0:283960","Reimu (SA)");
-addDNA("3.39:Reimu:100:2:1:2:2:2:0:0:1:0:0:283960","Reimu");
-addDNA("3.39:Reisen (2):100:126:126:126:120:14:0:0:0:0:51:CB93E3","Reisen (2)");
+addDNA("3.39:Reimu:100:2:1:2:2:2:0:0:1:0:0:283960", "Reimu");
+addDNA("3.39:Reisen:100:101:100:126:14:14:0:0:0:0:51:BFB4D3","Reisen");
+//addDNA("3.39:Reisen (2):100:126:126:126:120:14:0:0:0:0:51:CB93E3","Reisen (2)");
 addDNA("3.39:Reisen (SWR):100:14:126:101:100:100:0:0:0:0:51:CB93E3","Reisen (SWR)");
 addDNA("3.39:Reisen II:100:101:100:126:14:14:0:0:0:0:51:BFB4D3","Reisen II");
 addDNA("3.39:Reisen:100:14:13:14:14:14:0:0:0:0:51:E788FF","Reisen");
 addDNA("3.39:Remilia (2):100:139:140:141:136:23:0:0:0:0:59:80A2D5","Remilia (2)");
-addDNA("3.39:Remilia:100:23:22:23:23:23:0:0:39:0:11:80A2D5","Remilia");
-addDNA("3.39:Rengeteki:100:181:172:176:166:68:0:0:0:0:82:D156D0","Rengeteki");
+addDNA("3.39:Remilia:100:23:22:23:23:23:0:0:39:0:11:80A2D5", "Remilia");
+addDNA("3.39:Rengeteki:100:181:172:176:165:68:0:0:0:0:82:D156D0","Rengeteki");
+//addDNA("3.39:Rengeteki:100:181:172:176:166:68:0:0:0:0:82:D156D0","Rengeteki");
 addDNA("3.39:Renko (2):100:210:181:196:175:55:0:0:0:0:0:634D2E","Renko (2)");
 addDNA("3.39:Renko:100:55:54:55:55:55:0:0:0:0:0:947252","Renko");
 addDNA("3.39:Rika (2A):100:302:241:307:226:86:0:0:0:0:0:7A380E","Rika (2A)");
@@ -2514,20 +2542,24 @@ addDNA("3.39:Rika:100:87:86:87:86:86:0:0:42:0:31:7A380E","Rika");
 addDNA("3.39:Rikako (2A):100:300:239:305:239:85:0:0:0:139:0:980198","Rikako (2A)");
 addDNA("3.39:Rikako (2B):100:300:239:306:239:85:0:0:0:139:0:980198","Rikako (2B)");
 addDNA("3.39:Rikako:100:86:85:86:85:85:0:0:87:64:0:980198","Rikako");
-addDNA("3.39:Rin Satsuki:100:59:107:108:107:107:0:11:97:68:0:F5FABA","Rin Satsuki");
+//addDNA("3.39:Rin Satsuki:100:59:107:108:107:107:0:11:97:68:0:F5FABA", "Rin Satsuki");
+addDNA("3.39:Rin:100:59:107:108:107:107:0:11:97:68:0:F5FABA","Rin");
 addDNA("3.39:Ringo:100:353:280:363:277:102:0:0:0:0:0:B2A249","Ringo");
 addDNA("3.39:Rinnosuke (2):100:0:170:173:164:49:0:0:0:64:0:FBFBFB","Rinnosuke (2)");
-addDNA("3.39:Rinnosuke:100:0:48:49:49:49:0:0:0:1:0:FBFBFB","Rinnosuke");
-addDNA("3.39:Rumia (2):100:146:149:149:143:30:31:13:0:33:0:FEF39A","Rumia (2)");
+addDNA("3.39:Rinnosuke:100:0:48:49:49:49:0:0:0:1:0:FBFBFB", "Rinnosuke");
+addDNA("3.39:ERumia (2):100:146:149:149:143:30:31:13:0:0:0:FEF39A", "ERumia (2)");
+addDNA("3.39:Rumia (2):100:146:149:149:126:30:31:13:0:33:0:FEF39A","Rumia (2)");
 addDNA("3.39:Rumia:100:30:29:30:30:30:0:0:0:33:0:FEF39A","Rumia");
 addDNA("3.39:Ruukoto (2):100:291:227:296:233:77:0:0:0:0:0:70FE70","Ruukoto (2)");
 addDNA("3.39:Ruukoto:100:78:77:78:77:77:31:11:0:0:0:70FE70","Ruukoto");
-addDNA("3.39:Sakuya (2):100:114:114:115:89:90:0:0:0:0:0:E6E6E6","Sakuya (2)");
-addDNA("3.39:Sakuya (Inu):100:168:114:115:89:90:0:0:0:0:0:E6E6E6","Sakuya (Inu)");
+addDNA("3.39:Sakuya (2):100:114:114:115:89:90:0:0:0:0:0:E6E6E6", "Sakuya (2)");
+addDNA("3.39:SakuyaALT:100:168:114:115:89:90:0:0:0:0:0:E6E6E6","SakuyaALT");
+//addDNA("3.39:Sakuya (Inu):100:168:114:115:89:90:0:0:0:0:0:E6E6E6","Sakuya (Inu)");
 addDNA("3.39:Sakuya (Magical):100:114:114:158:151:111:0:0:0:0:0:E6E6E6","Sakuya (Magical)");
 addDNA("3.39:Sakuya:100:4:3:4:4:4:0:0:3:0:0:E6E6E6","Sakuya");
-addDNA("3.39:Sanae (2):100:161:162:167:157:43:0:0:0:0:0:98F898","Sanae (2)");
-addDNA("3.39:Sanae (Magical):100:155:162:159:157:43:0:0:111:0:0:98F898","Sanae (Magical)");
+addDNA("3.39:Sanae (2):100:161:162:167:157:43:0:0:0:0:0:98F898", "Sanae (2)");
+addDNA("3.39:SanaeALT:100:155:162:159:157:43:0:0:111:0:0:98F898","SanaeALT");
+//addDNA("3.39:Sanae (Magical):100:155:162:159:157:43:0:0:111:0:0:98F898","Sanae (Magical)");
 addDNA("3.39:Sanae:100:43:42:43:43:43:0:0:74:0:0:98F898","Sanae");
 addDNA("3.39:Sara (2):100:0:249:316:246:92:0:0:0:0:0:EFABBA","Sara (2)");
 addDNA("3.39:Sara:100:0:92:93:92:92:0:0:0:0:0:EFABBA","Sara");
@@ -2541,12 +2573,15 @@ addDNA("3.39:Satori:100:75:74:75:74:74:73:40:0:61:0:E3BBFF","Satori");
 addDNA("3.39:Seiga:100:334:263:345:260:25:0:0:0:0:132:3D6EA1","Seiga");
 addDNA("3.39:Seija:100:349:275:359:273:35:0:0:0:0:0:BB0000","Seija");
 addDNA("3.39:Seiran:100:351:279:362:276:24:0:0:158:0:0:549DE7","Seiran");
-addDNA("3.39:Sekibanki:100:343:270:354:268:121:0:0:0:156:0:EC0202","Sekibanki");
+addDNA("3.39:Sekibanki:100:343:270:354:268:121:0:0:0:156:0:EC0202", "Sekibanki");
+addDNA("3.39:Sekibankinohead:100:0:240:354:268:121:128:0:0:156:0:C0FFEE","Sekibankinohead");
 addDNA("3.39:Shanghai (2):100:326:260:341:256:106:0:0:0:0:0:FFFF80","Shanghai (2)");
-addDNA("3.39:Shanghai:100:107:106:107:106:106:0:0:0:0:23:FFFF80","Shanghai");
-addDNA("3.39:Shingyoku F (2):100:317:252:325:226:95:0:0:0:0:0:D22D2D","Shingyoku F (2)");
-addDNA("3.39:Shingyoku F:100:96:95:96:95:95:0:0:0:0:0:D22D2D","Shingyoku F");
-addDNA("3.39:Shingyoku M (2):100:318:253:326:249:96:0:0:0:0:0:393939","Shingyoku M (2)");
+addDNA("3.39:Shanghai:100:107:106:107:106:106:0:0:0:0:23:FFFF80", "Shanghai");
+addDNA("3.39:Shingyoku (2):100:317:252:325:226:95:0:0:0:0:0:D22D2D","Shingyoku (2)");
+//addDNA("3.39:Shingyoku F (2):100:317:252:325:226:95:0:0:0:0:0:D22D2D","Shingyoku F (2)");
+addDNA("3.39:Shingyoku F:100:96:95:96:95:95:0:0:0:0:0:D22D2D", "Shingyoku F");
+addDNA("3.39:ShingyokuALT (2):100:318:253:326:249:96:0:0:0:0:0:393939","ShingyokuALT (2)");
+//addDNA("3.39:Shingyoku M (2):100:318:253:326:249:96:0:0:0:0:0:393939","Shingyoku M (2)");
 addDNA("3.39:Shingyoku M:100:97:96:97:96:96:0:0:0:0:0:393939","Shingyoku M");
 addDNA("3.39:Shinki (2):100:171:167:171:161:47:0:0:0:0:78:EDEAFB","Shinki (2)");
 addDNA("3.39:Shinki:100:47:46:47:47:47:0:0:0:0:21:EDEAFB","Shinki");
@@ -2554,15 +2589,17 @@ addDNA("3.39:Shinmyoumaru:100:350:277:360:274:45:0:0:156:0:135:8D8AB0","Shinmyou
 addDNA("3.39:Shizuha (2):100:169:166:170:160:46:0:0:0:0:0:FFF06F","Shizuha (2)");
 addDNA("3.39:Shizuha:100:46:45:46:46:46:0:0:0:0:0:FFF06F","Shizuha");
 addDNA("3.39:Shou:100:138:137:138:130:14:0:11:101:0:57:FBFF6C","Shou");
-addDNA("3.39:Sikieiki (2):100:144:146:147:141:28:0:0:0:0:0:BBD5C5","Sikieiki (2)");
-addDNA("3.39:Sikieiki:100:28:27:28:28:28:0:0:43:0:0:BBD5C5","Sikieiki");
-addDNA("3.39:Star Sapphire (2A):100:195:175:182:173:52:0:0:0:0:86:444444","Star Sapphire (2A)");
+addDNA("3.39:Shikieiki (2):100:144:146:147:141:28:0:0:0:0:0:BBD5C5","Shikieiki (2)");
+addDNA("3.39:Shikieiki:100:28:27:28:28:28:0:0:43:0:0:BBD5C5", "Shikieiki");
+addDNA("3.39:Star_Sapphire (2A):100:195:175:182:173:52:0:0:0:0:86:444444","Star_Sapphire (2A)");
+//addDNA("3.39:Star Sapphire (2A):100:195:175:182:173:52:0:0:0:0:86:444444","Star Sapphire (2A)");
 addDNA("3.39:Star Sapphire (2B):100:195:176:182:173:52:0:0:0:0:86:444444","Star Sapphire (2B)");
 addDNA("3.39:Star Sapphire:100:52:51:52:52:52:0:0:0:0:24:444444","Star Sapphire");
 addDNA("3.39:Suika (2):100:136:135:136:128:22:23:8:0:0:0:FEB74E","Suika (2)");
 addDNA("3.39:Suika:100:22:21:22:22:22:31:13:36:0:0:FEB74E","Suika");
-addDNA("3.39:Sumireko:100:210:282:365:250:124:0:0:0:158:138:634D2E","Sumireko");
-addDNA("3.39:Sunny Milk (2):100:189:174:181:172:51:0:0:0:0:85:F7ED8C","Sunny Milk (2)");
+addDNA("3.39:Sumireko:100:210:282:365:250:124:0:0:0:158:138:634D2E", "Sumireko");
+addDNA("3.39:Sunny_Milk (2):100:189:174:181:172:51:0:0:0:0:85:F7ED8C","Sunny_Milk (2)");
+//addDNA("3.39:Sunny Milk (2):100:189:174:181:172:51:0:0:0:0:85:F7ED8C","Sunny Milk (2)");
 addDNA("3.39:Sunny Milk:100:51:50:51:51:51:0:0:0:0:23:F7ED8C","Sunny Milk");
 addDNA("3.39:Suwako (2):100:159:160:165:155:41:0:0:0:0:0:FEF7BC","Suwako (2)");
 addDNA("3.39:Suwako:100:41:40:41:41:41:0:0:0:0:0:FAFFC4","Suwako");
@@ -2575,7 +2612,11 @@ addDNA("3.39:Tojiko:100:335:264:346:261:117:0:0:0:0:0:C5D1AF","Tojiko");
 addDNA("3.39:Tokiko (2):100:188:173:179:169:50:0:0:0:0:83:B4CBFE","Tokiko (2)");
 addDNA("3.39:Tokiko:100:50:49:50:50:50:0:0:0:0:22:EEEEEE","Tokiko");
 addDNA("3.39:Toyohime (2):100:285:220:288:226:66:0:0:144:0:0:FEEDB9","Toyohime (2)");
-addDNA("3.39:Toyohime:100:67:66:67:66:66:0:0:0:0:0:FEEDB9","Toyohime");
+addDNA("3.39:Toyohime:100:67:66:67:66:66:0:0:0:0:0:FEEDB9", "Toyohime");
+addDNA("3.39:redeyedudongein:100:126:126:126:120:14:105:0:0:0:51:CB93E3", "redeyedudongein");
+//
+addDNA("3.39:Udongein (2):100:126:126:126:120:14:0:0:0:0:51:CB93E3", "Udongein (2)");
+addDNA("3.39:Okuu (2):100:256:208:240:201:115:0:0:0:0:0:3C3C3C","Okuu (2)");
 addDNA("3.39:Utsuho (2):100:256:208:240:201:115:0:0:0:0:110:3C3C3C","Utsuho (2)");
 addDNA("3.39:Utsuho:100:73:72:73:72:72:0:0:0:0:34:3C3C3C","Utsuho");
 addDNA("3.39:VIVIT (2):100:304:244:309:241:79:0:0:0:0:0:ED5F5F","VIVIT (2)");
@@ -2583,23 +2624,28 @@ addDNA("3.39:VIVIT:100:80:79:80:79:79:0:0:0:0:0:ED5F5F","VIVIT");
 addDNA("3.39:Wakasagihime:100:342:269:353:267:120:0:0:0:0:0:01597E", "Wakasagihime");
 addDNA("3.39:Wriggle (2):100:145:148:148:126:29:0:0:0:0:63:497255","Wriggle (2)");
 addDNA("3.39:Wriggle:100:29:28:29:29:29:0:0:0:0:14:497255","Wriggle");
-addDNA("3.39:Yatsuhashi:100:348:274:358:272:123:0:0:0:0:0:7E604E","Yatsuhashi");
-addDNA("3.39:Yamame (2):100:215:185:202:182:60:0:0:0:0:0:FEF1C4","Yamame (2)");
+addDNA("3.39:Yatsuhashi:100:348:274:358:272:123:0:0:0:0:0:7E604E", "Yatsuhashi");
+addDNA("3.39:Yamame (2):100:215:185:202:180:60:0:0:0:0:0:FEF1C4","Yamame (2)");
+//addDNA("3.39:Yamame (2):100:215:185:202:182:60:0:0:0:0:0:FEF1C4","Yamame (2)");
 addDNA("3.39:Yamame:100:60:59:60:60:60:0:0:0:0:30:FEF1C4","Yamame");
 addDNA("3.39:Yorihime (2):100:284:219:287:224:65:0:0:143:0:0:D6CBDE","Yorihime (2)");
 addDNA("3.39:Yorihime:100:66:65:66:65:65:0:0:0:0:0:D6CBDE","Yorihime");
 addDNA("3.39:Yoshika:100:331:262:344:0:53:0:0:0:152:0:5E6283","Yoshika");
 addDNA("3.39:Youki (2):100:0:221:289:227:68:0:0:0:138:0:F7F7F7","Youki (2)");
-addDNA("3.39:Youki:100:0:68:69:68:68:0:0:0:59:0:F7F7F7","Youki");
+addDNA("3.39:Youki:100:0:68:69:68:68:0:0:0:59:0:F7F7F7", "Youki");
+addDNA("3.39:Youmumyon:100:123:122:122:117:3:0:0:0:0:26:F2F2F2","Youmumyon");
 addDNA("3.39:Youmu (2):100:123:122:122:117:3:0:0:0:0:0:F2F2F2","Youmu (2)");
-addDNA("3.39:Youmu:100:11:10:11:11:11:0:11:10:0:0:F2F2F2","Youmu");
-addDNA("3.39:Yuka (2):100:0:159:163:142:40:0:0:0:0:0:309C30","Yuka (2)");
-addDNA("3.39:Yuka (PJ's 2):100:319:254:330:250:97:0:0:0:0:0:23AB23","Yuka (PJ's 2)");
+addDNA("3.39:Youmu:100:11:10:11:11:11:0:11:10:0:0:F2F2F2", "Youmu");
+addDNA("3.39:Yuuka (2):100:0:159:163:142:40:0:0:0:0:0:309C30","Yuuka (2)");
+//addDNA("3.39:Yuka (2):100:0:159:163:142:40:0:0:0:0:0:309C30","Yuka (2)");
+addDNA("3.39:YuukaALT:100:319:254:330:250:97:0:0:0:0:0:23AB23","YuukaALT");
+//addDNA("3.39:Yuka (PJ's 2):100:319:254:330:250:97:0:0:0:0:0:23AB23","Yuka (PJ's 2)");
 addDNA("3.39:Yuka (PJ's):100:98:97:98:97:97:0:0:0:0:0:23AB23","Yuka (PJ's)");
 addDNA("3.39:Yuka:100:0:39:40:40:40:0:0:57:0:0:309C30","Yuka");
 addDNA("3.39:Yukari (2):100:320:258:116:112:5:0:0:0:0:0:FFFF80","Yukari (2)");
-addDNA("3.39:Yukari (IaMP):100:99:115:116:112:5:0:11:0:0:0:FFFF80","Yukari (IaMP)");
-addDNA("3.39:Yukari (PCB 2):100:320:255:331:251:5:0:0:0:0:0:FFFF80","Yukari (PCB 2)");
+addDNA("3.39:Yukari (IaMP):100:99:115:116:112:5:0:11:0:0:0:FFFF80", "Yukari (IaMP)");
+addDNA("3.39:YukariALT:100:320:255:331:251:5:0:0:0:0:0:FFFF80","YukariALT");
+//addDNA("3.39:Yukari (PCB 2):100:320:255:331:251:5:0:0:0:0:0:FFFF80","Yukari (PCB 2)");
 addDNA("3.39:Yukari (PCB):100:99:98:99:98:5:0:0:0:0:0:FFFF80","Yukari (PCB)");
 addDNA("3.39:Yukari:100:5:4:5:5:5:0:0:4:0:27:FFFF80","Yukari");
 addDNA("3.39:Yuki (2):100:303:243:308:240:87:0:0:0:0:0:FEFE54","Yuki (2)");
@@ -2612,11 +2658,33 @@ addDNA("3.39:Yuugi (2):100:250:204:232:197:63:0:0:0:0:0:EFDDAF","Yuugi (2)");
 addDNA("3.39:Yuugi:100:63:62:63:63:63:0:0:81:0:0:EFDDAF","Yuugi");
 addDNA("3.39:Yuyuko (2):100:116:117:118:114:9:0:11:0:0:0:FF9999","Yuyuko (2)");
 addDNA("3.39:Yuyuko:100:7:6:7:7:7:0:0:27:0:28:FF9999","Yuyuko");
-addDNA("3.39:Zombie Fairy:100:106:105:106:105:105:85:0:0:0:44:D9DDFF","Zombie Fairy");
+addDNA("3.39:Zombie Fairy:100:106:105:106:105:105:85:0:0:0:44:D9DDFF", "Zombie Fairy");
+
+addDNA("3.39:Sagume:100:0:283:366:279:124:0:0:0:0:139:D3D5D8", "Sagume");
+addDNA("3.39:Clownpiece:100:355:284:367:280:126:0:0:0:0:141:EBB902", "Clownpiece");
+addDNA("3.39:Junko:100:356:285:368:281:125:0:0:0:0:140:F6A500", "Junko");
+addDNA("3.39:Hecatia:100:357:286:369:282:45:0:0:0:0:0:A10000", "Hecatia");
+
+addDNA("3.39:Blue Fairy:63:0:185:298:209:46:0:0:0:0:86:F3F3FF", "Blue_Fairy");
+addDNA("3.39:Gold Fairy:63:0:185:176:209:46:0:0:0:0:86:FFFFF3", "Gold_Fairy");
+addDNA("3.39:Green Fairy:63:0:185:270:209:46:0:0:0:0:86:F3FFF3", "Green_Fairy");
+addDNA("3.39:Red Fairy:63:0:185:201:209:46:0:0:0:0:86:FFF3F3", "Red_Fairy");
+
+addDNA("3.39:MoonRabbit:100:130:181:215:120:17:0:0:0:0:51:FCE24E", "MoonRabbit");
 	}
 	private static function addDNA(dna:String,presetname:String)
 	{
-		DNAdata[DNAdata.length] = [dna, presetname];
+		var i = DNAdata.length;
+		DNAdata[i] = [dna, presetname];
+		var s = presetname.toLowerCase();
+		if (s.indexOf(" (") > -1)
+		{
+			s = s.split(" (")[0];
+		}
+		if (Presets[s] == null)
+		{
+			Presets.set(s, i);
+		}
 	}
 	private static function inithair()
 	{
@@ -2649,11 +2717,11 @@ addHair(["Lily White", 24, 0, 0, 0, 0, "FEFDA3"]);
 addHair(["Lily Black", 25, 0, 0, 0, 0, "F3BB69"]);
 addHair(["Komachi", 26, 0, 0, 0, 0, "CB4545"]);
 addHair(["Nitori", 27, 0, 0, 0, 0, "4B95F6"]);
-addHair(["Sikieiki", 28, 0, 0, 0, 0, "BBD5C5"]);
+addHair(["Shikieiki", 28, 0, 0, 0, 0, "BBD5C5"]);
 addHair(["Wriggle", 29, 0, 0, 0, 0, "497255"]);
 addHair(["Rumia", 30, 0, 0, 0, 0, "FEF39A"]);
 addHair(["Aya", 31, 0, 0, 0, 0, "332B1A"]);
-addHair(["Momizi", 32, 0, 0, 0, 0, "FBFBFB"]);
+addHair(["Momiji", 32, 0, 0, 0, 0, "FBFBFB"]);
 addHair(["Koakuma", 33, 0, 0, 0, 0, "9C1F1F"]);
 addHair(["Lunasa", 34, 0, 0, 0, 0, "FEF4A3"]);
 addHair(["Merlin", 35, 0, 0, 0, 0, "DDF2FF"]);
@@ -2768,12 +2836,12 @@ addHair(["Lily Black (2)", 140, 0, 0, 0, 0, "F3BB69"]);
 addHair(["Komachi (2)", 141, 0, 0, 0, 0, "CB4545"]);
 addHair(["Nitori (2)", 142, 0, 0, 0, 0, "4B95F6"]);
 addHair(["Reimu (2 Brown)", 112, 0, 0, 0, 0, "6F4722"]);
-addHair(["Sikieiki (2)", 143, 0, 0, 0, 0, "BBD5C5"]);
+addHair(["Shikieiki (2)", 143, 0, 0, 0, 0, "BBD5C5"]);
 addHair(["Byakuren (No Gr.)", 144, 0, 0, 0, 0, "C0994C"]);
 addHair(["Wriggle (2)", 145, 0, 0, 0, 0, "497255"]);
 addHair(["Rumia (2)", 146, 0, 0, 0, 0, "FEF39A"]);
 addHair(["Aya (2)", 147, 0, 0, 0, 0, "373737"]);
-addHair(["Momizi (2)", 148, 0, 0, 0, 0, "FBFBFB"]);
+addHair(["Momiji (2)", 148, 0, 0, 0, 0, "FBFBFB"]);
 addHair(["Koakuma (2)", 149, 0, 0, 0, 0, "9C1F1F"]);
 addHair(["Marisa (2)", 150, 0, 0, 0, 0, "FEFE78"]);
 addHair(["Lunasa (2)", 151, 0, 0, 0, 0, "FEF4A3"]);
@@ -2920,9 +2988,21 @@ addHair(["Hecatia", 282, 0, 0, 0, 0, "A10000"]);
 	{
 		init();
 	}
+	if (name.indexOf("background-") == 0)
+	{
+		return null;
+	}
 		var i = 0;
 		name = name.toLowerCase();
+		var ind = Presets[name];
 		var dna = null;
+		if (ind != null)
+		{
+			dna = "dna-" + DNAdata[ind][0];
+			dna = changednapart(dna, 10, "0");
+			return dna;
+		}
+		return null;
 		//name.split(" (2)").join("");
 		while (i < DNAdata.length)
 		{
@@ -2964,7 +3044,149 @@ addHair(["Hecatia", 282, 0, 0, 0, 0, "A10000"]);
 		var S = dna.split(":");
 		return S[index];
 	}
-	public static function makeChar(T:String):MovieClip
+	public static var optimize:Bool = true;
+	//makes makecharimage's results have smoothened lines
+	public static var smoothen:Bool = true;
+	public static function makeCharImage(T:String,smooth:Dynamic=null):BitmapData
+	{
+		//optimization allows the reusing of assets, but flash seems to have issues with cropping them.
+		//var optimize:Bool = true;
+		if (smooth == null)
+		{
+			smooth = smoothen;
+		}
+		var ok = false;
+		if (spr == null || optimize)
+		{
+			spr = new Sprite();
+			ok = true;
+		}
+		if (!optimize)
+		{
+			char = null;
+			ok = true;
+		}
+			char = makeChar(T, char);
+			var CHR = char;
+			/*CHR.scaleX *= 0.24;
+			CHR.scaleY = CHR.scaleX;*/
+			//CHR.scaleX *= 0.24;
+			if (smooth)
+			{
+				//CHR.scaleX *= 4;
+				CHR.scaleX *= 0.96;
+			}
+			else
+			{
+				CHR.scaleX *= 0.24;
+			}
+			CHR.scaleY = CHR.scaleX;
+			if (ok)
+			{
+				spr.removeChildren();
+				spr.addChild(CHR);
+			}
+			//var R = CHR.getBounds(spr);
+			//if (ok)
+			{
+			//CHR.x = -R.x;
+			//CHR.y = -R.y;
+			
+			//CHR.x = 10;
+			//CHR.y = 50;
+			if (optimize && false)
+			{
+			CHR.x = CHR.width - Std.int(CHR.width / 1.8);
+			CHR.y = CHR.height - (CHR.height / 4.05);
+			}
+			else
+			{
+				var R = CHR.getBounds(spr);
+				CHR.x = -R.x;
+				CHR.y = -R.y;
+			}
+			}
+			var bounds = getVisibleBounds(spr);
+			//if (ok)
+			{
+				CHR.x -= bounds.x;
+				CHR.y -= bounds.y;
+			}
+			var D:Dynamic = CHR.getChildByName("head");
+			D = D.SkinColor;
+			var B = D.getBounds(spr);
+			/////var W = B.x - 97.65;
+			var W = ((B.x+(B.width/2)) / bounds.width);
+			
+			W = bounds.width * (W - 0.5314496314496315);
+			//W = bounds.width * (W - 0.54);
+			W += W;
+			//var W = B.x - 38.3;
+			/*if (B.width <= 0)
+			{
+				W = 0;
+				
+			}*/
+			//var W = (CHR.x - 97.65)/* / 2*/;
+			//var W = (CHR.x - 97.65) / 2;
+			/*if (W < 0)
+			{
+				W = 0;
+			}*/
+			if (W < 0)
+			{
+				W = -W;
+				CHR.x += W;
+				
+				
+				//W = 0;
+			}
+			if (!(W > 0) && !(W < 0))
+			{
+				W = 0;
+			}
+			//W = 0;
+			///CHR.x -= (W/2);
+			//CHR.x += W;
+			//W = 0;
+			var bitmapData:BitmapData = new BitmapData(Std.int(Math.max(bounds.width+W,1)), Std.int(Math.max(bounds.height,1)),true, 0x00000000);
+			bitmapData.draw(spr);
+			//bitmapData.draw(spr, null, null, null, null, true);
+			CHR.x = 0;
+			CHR.y = 0;
+			if (smooth)
+			{
+			var T = new Bitmap(bitmapData, PixelSnapping.NEVER, true);
+			T.scaleX = 0.25;
+			T.scaleY = T.scaleX;
+			var S = new Sprite();
+			S.addChild(T);
+			//var m:Matrix = new Matrix();
+			//m.scale(0.25, 0.25);
+			var ret:BitmapData = new BitmapData(Std.int(Math.max(S.width, 1)), Std.int(Math.max(S.height, 1)), true, 0x00000000);
+			//ret.draw(S);
+			ret.draw(S);
+			//ret.draw(S, m, null, null, null, true);
+			return ret;
+			}
+			return bitmapData;
+			
+	}
+	public static function getVisibleBounds(source:DisplayObject):Rectangle
+   {
+       // Updated 11-18-2010;
+       // Thanks to Mark in the comments for this addition;
+       var matrix:Matrix = new Matrix();
+       matrix.tx = -source.getBounds(null).x;
+       matrix.ty = -source.getBounds(null).y;
+ 
+       var data:BitmapData = new BitmapData(Std.int(source.width), Std.int(source.height), true, 0x00000000);
+       data.draw(source, matrix);
+       var bounds : Rectangle = data.getColorBoundsRect(0xFFFFFFFF, 0x000000, false);
+       data.dispose();
+       return bounds;
+   }
+	public static function makeChar(T:String,char:MovieClip=null):MovieClip
 {
 	if (Hairdata == null)
 	{
@@ -3051,8 +3273,11 @@ addHair(["Hecatia", 282, 0, 0, 0, 0, "A10000"]);
             _loc14 = Std.parseFloat(_loc4[9]);
         } // end else if
     }
-    
-            var clip = Assets.getMovieClip ("Char:Char");
+            var clip = char;
+			if (clip == null)
+			{
+				clip=Assets.getMovieClip ("Char:Char");
+			}
 			//clip.x = 400;
 			//clip.y = 300;
 			//addChild (clip);
@@ -3064,8 +3289,12 @@ addHair(["Hecatia", 282, 0, 0, 0, 0, "A10000"]);
 			_loc14 = MouthData[Std.int(_loc14)][1];
 			_loc19 = ItemsData[Std.int(_loc19)][1];
 			_loc18 = AccData[Std.int(_loc18)][1];
-			_loc20 = EyesData[Std.int(_loc20)][1];
-			_loc21 = HatsData[Std.int(_loc21)][1];
+			var eyes = EyesData[Std.int(_loc20)];
+			_loc20 = eyes[1];
+			var eyes2:Int = Std.int(eyes[5]);
+			//_loc21 = HatsData[Std.int(_loc21)][1];
+			_loc21 = BackData[Std.int(_loc21)][1];
+			
 						
 			//_loc14-=1;
 			
@@ -3105,20 +3334,59 @@ addHair(["Hecatia", 282, 0, 0, 0, 0, "A10000"]);
 				D.visible = _loc7 >= 0 && _loc7 != 236;
 				D.gotoAndStop(_loc7);
 				D.HairColor.gotoAndStop(_loc7);
+				var i = 0;
+					while (i < D.numChildren)
+					{
+						var C = D.getChildAt(i);
+						if (/*C != D.eye2 && */C!=null)
+						{
+							C.visible = true;
+						}
+						i++;
+					}
 			}
 			else
 			{
 				D.visible = false;
+				D.gotoAndStop(161);
+				D.HairColor.gotoAndStop(161);
+				//D.gotoAndStop(2);
+				//D.HairColor.gotoAndStop(2);
 			}
 			D.eye2.visible = false;
+			//D.eye2.visible = eyes2 > 0;
+			//D.eye2.gotoAndStop(eyes2);
+			
+			//D.visible = true;
+			if (eyes2 > 0)
+			{
+				D.eye2.visible = true;
+				D.eye2.gotoAndStop(eyes2);
+				//D.eye2.gotoAndStop(2);
+				if (!D.visible)
+				{
+					D.visible = true;
+					//var M:MovieClip = D;
+					var i = 0;
+					while (i < D.numChildren)
+					{
+						var C = D.getChildAt(i);
+						if (C != D.eye2 && C!=null)
+						{
+							C.visible = false;
+						}
+						i++;
+					}
+				}
+			}
 			//D.eye2._visible = true;
             //D.eye2.gotoAndStop(GameData.Parts[A][N][5]);
 			D = clip.getChildByName("head2");
 			if (hair != null)
 			{
-			D.visible = hair2 > 0 && _loc7 != 236;
-			D.gotoAndStop(hair2);
-			D.HairColor.gotoAndStop(hair2);
+				D.visible = hair2 > 0 && _loc7 != 236;
+				D.gotoAndStop(hair2);
+				D.HairColor.gotoAndStop(hair2);
 			}
 			else
 			{
@@ -3146,7 +3414,7 @@ addHair(["Hecatia", 282, 0, 0, 0, 0, "A10000"]);
 			var colorHex = "0x" + _loc17;
 			D = clip.getChildByName("head");
 			ColorPalette(D.HairColor, colorHex);
-			ColorPalette(D.SkinColor, _sc);
+			////ColorPalette(D.SkinColor, _sc);
 			D = clip.getChildByName("head2");
 			ColorPalette(D.HairColor, colorHex);
 			
@@ -3155,7 +3423,7 @@ addHair(["Hecatia", 282, 0, 0, 0, 0, "A10000"]);
 			//ColorPalette(stage[_loc1].arms.arm.SkinColor, _sc);
 			if (D.arm != null)
 			{
-				ColorPalette(D.arm.SkinColor, _sc);
+				////ColorPalette(D.arm.SkinColor, _sc);
 			}
 			/*else
 			{

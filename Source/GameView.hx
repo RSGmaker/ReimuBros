@@ -1,6 +1,13 @@
 package;
 
 import abilities.AbsorbDamage;
+import levellogic.ArenaLogic;
+import levellogic.ExplosiveLogic;
+import levellogic.FreezeLogic;
+import levellogic.NoWrap;
+import levellogic.PointCollectingLogic;
+import levellogic.WaterLogic;
+import levellogic.YuukaLogic;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.Graphics;
@@ -36,25 +43,33 @@ import openfl.media.SoundTransform;
 
 //aka events
 enum TypeofRound {
-		Normal;
-		Nue;
-		Seija;
-		Cirno;
-		Yukari;
-		Rumia;
-		Table;
-		FireCirno;
-		Balloon;
-		ElectricCirno;
-		Characters;
-		NoWrap;
-		Unzan;
-		SanaeBoss;
-		CirnoBoss;
-		ParseeBoss;
-		MurasaBoss;
-		Marisa;
-		Danmaku;
+		EventNormal;
+		EventNue;
+		EventSeija;
+		EventCirno;
+		EventYukari;
+		EventRumia;
+		EventTable;
+		EventFireCirno;
+		EventBalloon;
+		EventElectricCirno;
+		EventCharacters;
+		EventNoWrap;
+		EventUnzan;
+		EventSanaeBoss;
+		EventCirnoBoss;
+		EventParseeBoss;
+		EventMurasaBoss;
+		EventMarisa;
+		EventDanmaku;
+		EventLava;
+		EventDescending;
+		EventScrolling;
+		EventYuuka;
+		EventExplosive;
+		EventTruck;
+		EventSuwako;
+		EventPointCollecting;
 	}
 class GameView extends Sprite
 {
@@ -62,6 +77,8 @@ class GameView extends Sprite
 	private var text:String;
 	//the text at the top of the screen when playing.
 	public var TF:TextField;
+	//the combo counter
+	public var CTF:TextField;
 	//our player's controls
 	private var control:Array<Bool>;
 	public var myplayer:Player;
@@ -90,6 +107,7 @@ class GameView extends Sprite
 	public var activeItems:Array<EntityItem>;
 	public var activeInteractables:Array<Entity>;
 	public var level:Int;
+	public var Llevel:Int;
 	public var snd_killenemy:Sound;
 	public var snd_finalkillenemy:Sound;
 	//used in text display, and for multiplayer syncing
@@ -100,6 +118,8 @@ class GameView extends Sprite
 	public var ImposterList:Array<String>;
 	public var Players:Map < String, Player>;
 	public var Sealed:Int;
+	//used when a rainbow ufo spawns, prevents obstacles.
+	public var ufoseal:Int;
 	public var messages:Array<String>;
 	public var messagetime:Int;
 	
@@ -113,19 +133,257 @@ class GameView extends Sprite
 	public var lastprogress:Float;
 	public var leveltitle:TextField;
 	public var lifeicon:Bitmap;
+	public var ufoicons:Array<Bitmap>;
+	public var abilityicon:Bitmap;
+	public var currentability:String;
 	public var ufolimit:Int;
 	public var useablelist:Array<String>;
 	
+	public var gamemode:GameMode;
+	
+	//moves all blocks on screen to this offset(used for autoscrolling stages)
+	public var scrollX:Float=0;
+	public var scrollY:Float=0;
+	//last scroll position used to determine if there's been a change.
+	public var LscrollX:Float=0;
+	public var LscrollY:Float=0;
+	
+	public var scrollspeedX:Float=0;
+	public var scrollspeedY:Float=0;
+	
+	//whether or not we scroll this frame(we toggle this each frame to reduce the hit to performance)
+	public var scrollframe:Bool;
+	
+	public var currentgeneralstage:Int;
+	public var currentstage:Int;
+	public var currentstagelevel:Int;
+	public var currentranklevel:Int;
+	public static var stagesperrank:Int = 6;
+	public static var levelsperstage:Int = 5;
+	public static var levelsperrank:Int = 6 * 5;
+	
+	public var allowpowblock:Bool = true;
+	public var lastNPerror:String = "";
+	
+	public var HostPlayer:Player=null;
+	
+	public var gameoverscreen:Sprite;
+	public var gameoverdescription:TextField;
+	
+	public var levelicon:Bitmap;
+	
+	public function GetLogic():LevelLogic
+	{
+		var R = RoundType;
+		if (R == TypeofRound.EventLava)
+		{
+			return new levellogic.LavaLogic();
+		}
+		else if (R == TypeofRound.EventSuwako)
+		{
+			return new levellogic.WaterLogic();
+		}
+		else if (R == TypeofRound.EventCirno || R == TypeofRound.EventFireCirno || R == TypeofRound.EventElectricCirno/* || R == TypeofRound.EventCirnoBoss*/)
+		{
+			return new levellogic.FreezeLogic();
+		}
+		else if (R == TypeofRound.EventNoWrap)
+		{
+			return new levellogic.NoWrap();
+		}
+		else if (R == TypeofRound.EventTable)
+		{
+			return new levellogic.Tables();
+		}
+		else if (R == TypeofRound.EventDescending)
+		{
+			return new levellogic.DescendingArena();
+		}
+		else if (R == TypeofRound.EventScrolling)
+		{
+			return new levellogic.ScrollingArena();
+		}
+		else if (R == TypeofRound.EventYuuka)
+		{
+			return new levellogic.YuukaLogic();
+		}
+		else if (R == TypeofRound.EventExplosive)
+		{
+			return new levellogic.ExplosiveLogic();
+		}
+		else if (R == TypeofRound.EventTruck)
+		{
+			return new levellogic.TruckLogic();
+		}
+		else if (R == TypeofRound.EventPointCollecting)
+		{
+			return new levellogic.PointCollectingLogic();
+		}
+		else if (R == TypeofRound.EventCirnoBoss || R == TypeofRound.EventYukari || R == TypeofRound.EventParseeBoss || R == TypeofRound.EventSanaeBoss || R == TypeofRound.EventMurasaBoss)
+		{
+			return new levellogic.BossArena();
+		}
+		return new levellogic.ArenaLogic();
+	}
+	public function AddWarningSign(X:Float, Y:Float, duration:Int)
+	{
+		var FA:Array<flash.filters.BitmapFilter> = new Array<flash.filters.BitmapFilter>();
+		var AB = new flash.filters.GlowFilter();
+		AB.blurX = 10;
+		AB.blurY = 10;
+		AB.color = 0xFFFFFF;
+		AB.strength = 1;
+		FA[FA.length] = AB;
+		var P = new Particle("warning");
+		P.x = X;
+		P.y = Y;
+		P.HP = duration;
+		P.filters = FA;
+		AddObject(P);
+	}
+	public function autoscroll()
+	{
+		scrollframe = !scrollframe;
+		if (!scrollframe)
+		{
+			return;
+		}
+		if (scrollspeedX == 0 && scrollspeedY == 0)
+		{
+			scrollframe = false;
+			return;
+		}
+		LscrollX = scrollX;
+		LscrollY = scrollY;
+		scrollX += scrollspeedX;
+		scrollY += scrollspeedY;
+		/*while (scrollX <= -288)
+		{
+			scrollX += 1312;
+			LscrollX += 1312;
+		}
+		while (scrollX >= 1344)
+		{
+			scrollX -= 1312;
+			LscrollX -= 1312;
+		}*/
+		
+		
+		scrollwrap();
+	}
+	public function scrollwrap()
+	{
+		/*while (scrollX <= -288)
+		{
+			scrollX += 1312;
+			LscrollX += 1312;
+		}
+		while (scrollX >= 1344)
+		{
+			scrollX -= 1312;
+			LscrollX -= 1312;
+		}*/
+		while (scrollX < 0)
+		{
+			scrollX += 1312;
+			LscrollX += 1312;
+		}
+		while (scrollX > 1312)
+		{
+			scrollX -= 1312;
+			LscrollX -= 1312;
+		}
+		/*while (scrollX > 1056)
+		{
+			scrollX -= 1312;
+			LscrollX -= 1312;
+		}*/
+		
+		while (scrollY <= -32)
+		{
+			scrollY += 632;
+			LscrollY += 632;
+		}
+		while (scrollY >= 600)
+		{
+			scrollY -= 632;
+			LscrollY += 632;
+		}
+	}
+	public function ResetScroll()
+	{
+		scrollX = 0;
+		LscrollX = 0;
+		scrollY = 0;
+		LscrollY = 0;
+		scrollspeedX = 0;
+		scrollspeedY = 0;
+		var i = 0;
+		while (i < entities.length)
+		{
+			var D:Dynamic = entities[i];
+			if (D.type == "Block")
+			{
+				D.ResetPosition();
+			}
+			i++;
+		}
+	}
+	public function ResetScrollX()
+	{
+		scrollX = 0;
+		LscrollX = 0;
+		scrollspeedX = 0;
+		var i = 0;
+		while (i < entities.length)
+		{
+			var D:Dynamic = entities[i];
+			if (D.type == "Block")
+			{
+				D.ResetPositionX();
+			}
+			i++;
+		}
+	}
+	public function ResetScrollY()
+	{
+		scrollY = 0;
+		LscrollY = 0;
+		scrollspeedY = 0;
+		var i = 0;
+		while (i < entities.length)
+		{
+			var D:Dynamic = entities[i];
+			if (D.type == "Block")
+			{
+				D.ResetPositionY();
+			}
+			i++;
+		}
+	}
+	
+	
 	public function GetPlayers():Array<Player>
 	{
-		var ret = new Array<Player>();
+		/*var ret = new Array<Player>();
 		var A = Players.iterator();
 		if (A.hasNext())
 		{
 			ret[ret.length] = A.next();
+		}*/
+		
+		var PL = new Array<Player>();
+		var A = Players.iterator();
+		
+		while (A.hasNext())
+		{
+			var E = A.next();
+			PL[PL.length] = E;
 		}
-		ret.sort(sortplayer);
-		return ret;
+		PL.sort(sortplayer);
+		return PL;
+		//ret.sort(sortplayer);
+		//return ret;
 	}
 	public function unlockcharacter(name:String)
 	{
@@ -157,14 +415,53 @@ class GameView extends Sprite
 				if (!savedata.data.alts[i])
 				{
 					savedata.data.alts[i] = true;
-					ShowMessage("Unlocked " + name.charAt(0).toUpperCase() + name.substr(1) + "☆!");
+					var SS = Player.getname(name);
+					/*var SS = (name.charAt(0).toUpperCase() + name.substr(1)).split("ALT").join("☆");
+					var SA = SS.split("_");
+					var i = 0;
+					SS = "";
+					while (i < SA.length)
+					{
+						var str = SA[i];
+						str = (str.charAt(0).toUpperCase() + str.substr(1));
+						if (SS == "")
+						{
+							SS = str;
+						}
+						else
+						{
+							SS = SS + " " + str;
+						}
+						i++;
+					}*/
+					ShowMessage("Unlocked " + SS + "!");
+					//ShowMessage("Unlocked " + name.charAt(0).toUpperCase() + name.substr(1) + "☆!");
 					moneyreward = false;
 				}
 			}
 			if (!savedata.data.unlock[i])
 			{
 				savedata.data.unlock[i] = true;
-				ShowMessage("Unlocked " + name.charAt(0).toUpperCase() + name.substr(1) + "!");
+				var SS = (name.charAt(0).toUpperCase() + name.substr(1)).split("ALT").join("☆");
+				var SA = SS.split("_");
+				var i = 0;
+				SS = "";
+				while (i < SA.length)
+				{
+					var str = SA[i];
+					str = (str.charAt(0).toUpperCase() + str.substr(1));
+					if (SS == "")
+					{
+						SS = str;
+					}
+					else
+					{
+						SS = SS + " " + str;
+					}
+					i++;
+				}
+				ShowMessage("Unlocked " + SS + "!");
+				//ShowMessage("Unlocked " + name.charAt(0).toUpperCase() + name.substr(1) + "!");
 				moneyreward = false;
 			}
 		}
@@ -274,6 +571,7 @@ class GameView extends Sprite
 	
 	//what event is active
 	public var RoundType:TypeofRound;
+	public var LRoundType:TypeofRound = null;
 	
 	public static var onetickperminutechance:Float = 1.0 / (1800.0);
 	public static var onetickperminutechance2:Float = onetickperminutechance * 2;
@@ -286,7 +584,9 @@ class GameView extends Sprite
 	//public var PointsToLife:Int=10000;
 	//public var PointsToLife:Int=12000;
 	//public var PointsToLife:Int=14000;
-	public var PointsToLife:Int=15000;
+	
+	//public var PointsToLife:Int=15000;
+	public var PointsToLife:Int=3750;
 	public var CombinedScore:Int = 0;
 	//ALL means it even counts score used up on 1ups
 	public var CombinedScoreALL:Int = 0;
@@ -294,9 +594,10 @@ class GameView extends Sprite
 	public var enemytypes:Array<Enemy>;
 	public var platformformation:Int = 0;
 	public var currentformation = -1;
+	public var platforms:Array<Array<Block>>;
 	
 	//every 10000 point spawn a char(offset this by -5000 as a midway bonus to 1up)
-	public var spawnedChar:Bool;
+	///public var spawnedChar:Bool;
 	
 	//the current rank
 	//every cycle(30 level is one cycle), ranks power up enemies and increase point values.
@@ -304,11 +605,14 @@ class GameView extends Sprite
 	
 	public var thegiant:GiantSuika;
 	public var trophyactive:Bool;
-	public var yuukaactive:Bool;
+	public var maxyuuka:Int = 1;
+	public var yuukasactive:Int;
+	//public var yuukaactive:Bool;
 	
 	//how many rounds since the last game over.(effects events)
 	public var successstreak:Int;
 	public var mysuccessstreak:Int;
+	public var objectiveprogress:Int;
 	
 	//if netlog is active we can monitor events 
 	public var sentmessagelog:Map<String,Int>;
@@ -337,7 +641,9 @@ class GameView extends Sprite
 	
 	public var backlayer:Sprite;
 	public var entitylayer:Sprite;
+	public var frontlayer:Sprite;
 	public var gamestage:Sprite;
+	public var camera:Sprite;
 	
 	public var spawnpaused:Bool;
 	//number of imposters we should spawn next level
@@ -352,6 +658,13 @@ class GameView extends Sprite
 	var ZaWarudoCaster:Player = null;
 	
 	public var colorflash:Shape;
+	
+	public var lvllogic:LevelLogic;
+	
+	public var queuedevents:Array<EventQueue>;
+	
+	//number of point items spawned since last ufoitem.
+	public var points:Int=0;
 	
 	public function new () {
 		super ();
@@ -378,6 +691,8 @@ class GameView extends Sprite
 		entitylayer = new Sprite();
 		backlayer = new Sprite();
 		gamestage = new Sprite();
+		camera = new Sprite();
+		queuedevents = new Array<EventQueue>();
 	}
 	
 	public function FlashColor(color:Int,maxalpha:Float,startalpha:Float,rate:Float)
@@ -433,11 +748,13 @@ class GameView extends Sprite
 	
 	public function GetImposterList():Array<String>
 	{
-		var stage = Math.floor((level - 1) / 5);
+		//var stage = Math.floor((level - 1) / 5);
 
-		var generalstage = stage % 6;
+		//var generalstage = stage % 6;
+		var stage = currentstage;
+		var generalstage = currentgeneralstage;
 		var L = new Array<String>();
-		if (RoundType == TypeofRound.Cirno || RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.ElectricCirno || RoundType == TypeofRound.CirnoBoss)
+		if (RoundType == TypeofRound.EventCirno || RoundType == TypeofRound.EventFireCirno || RoundType == TypeofRound.EventElectricCirno || RoundType == TypeofRound.EventCirnoBoss)
 		{
 			L[L.length] = "cirno";
 			L[L.length] = "cirno";
@@ -453,19 +770,19 @@ class GameView extends Sprite
 			
 			L[L.length] = "letty";
 		}
-		else if (RoundType == TypeofRound.Rumia)
+		else if (RoundType == TypeofRound.EventRumia)
 		{
 			L[L.length] = "rumia";
 		}
-		else if (RoundType == TypeofRound.Nue)
+		else if (RoundType == TypeofRound.EventNue)
 		{
 			L[L.length] = "nue";
 		}
-		else if (RoundType == TypeofRound.Seija)
+		else if (RoundType == TypeofRound.EventSeija)
 		{
 			L[L.length] = "seija";
 		}
-		else if (RoundType == TypeofRound.Yukari)
+		else if (RoundType == TypeofRound.EventYukari)
 		{
 			L[L.length] = "chen";
 			L[L.length] = "ran";
@@ -486,7 +803,7 @@ class GameView extends Sprite
 			{
 				L = L.concat(["reimu", "marisa", /*"sanae", */"kanako", "suwako", "alice", "shanghai"/*, "suika"*/]);
 				L = L.concat(["sara", "louise", "yuki", "mai", "ayana", "yumeko", "shinki", "mika", "senkou", "orange", "kurumi", "elly", "rengeteki"/*, "yuuka"*/, "mugetsu", "gengetsu", "ellen", "kotohime", "kana", "rikako", "chiyuri", "yumemi", "ruukoto", "rika", "noroiko", "meira", "matenshi", "shingyoku", "elis", "sariel", "mima", "konngara"]);
-				L = L.concat(["lily", "lyrica", "lunasa", "merlin","youmu", "yuyuko"]);
+				L = L.concat(["lily_white", "lyrica", "lunasa", "merlin","youmu", "yuyuko"]);
 			}
 			//sdm
 			if (generalstage == 1)
@@ -526,7 +843,7 @@ class GameView extends Sprite
 			{
 				// a simpler system, where we just remove event unlockables and put the rest in the list.
 				L = L.concat(["reimu", "marisa", /*"rumia",*/ "daiyousei", /*"cirno",*/ "meiling", "koakuma", "patchouli", "sakuya", "remilia", "flandre", "rin",
-				"letty", /*"chen",*/ "alice", "shanghai"/*,"hourai"*/, "lily", "lyrica", "lunasa", "merlin", "youmu", "yuyuko", /*"ran", "yukari",*/
+				"letty", /*"chen",*/ "alice", "shanghai"/*,"hourai"*/, "lily_white", "lyrica", "lunasa", "merlin", "youmu", "yuyuko", /*"ran", "yukari",*/
 				"suika",
 				"wriggle", "mystia", "keine", "tewi", "udongein", "eirin", "kaguya", "mokou",
 				"aya", "medicine", "yuuka", "komachi", "shikieiki",
@@ -572,7 +889,7 @@ class GameView extends Sprite
 		#end
 		online = false;
 		//this.removeEventListener(Event.ENTER_FRAME,this_onEnterFrame,true);
-		removeEventListener (Event.ENTER_FRAME, this_onEnterFrame);
+		///////removeEventListener (Event.ENTER_FRAME, this_onEnterFrame);
 		removeEventListener( MouseEvent.MOUSE_DOWN, on_mousedown );
 		removeEventListener(MouseEvent.MOUSE_UP, on_mouseup); 
 		removeEventListener( TouchEvent.TOUCH_BEGIN, on_touchbegin);
@@ -599,17 +916,38 @@ class GameView extends Sprite
 	{
 		//Main._this.savedata.data["maxlevel:" + Main._this.roomprefix] = level;
 		Reflect.setField(Main._this.savedata.data, "maxlevel:" + Main._this.roomprefix, level);
+		Main._this.savedata.flush();
 	}
 	public function getbackground(lvl:Int=-1):BitmapData
 	{
+		//updatelevelinfo();
 		if (lvl < 0)
 		{
 			lvl = level;
 		}
-		var L = Math.floor((lvl - 1) / 5);
+		//var L = Math.floor((lvl - 1) / levelsperstage);
+	
+		var L = 0;
+		var BGS;
+		if (!GameFlags.get(Main.Adventure))
+		{
+			L = Math.floor((level-1) / levelsperstage);
+			//BGS = [CharHelper.GetBG("Moriya Shrine Room"), CharHelper.GetBG("Clocktower"), CharHelper.GetBG("The Moon"),CharHelper.GetBG("Underground Cave"),CharHelper.GetBG("Murasa's Ship (2)"),CharHelper.GetBG("Eientei Outside")];
+			BGS = ["Moriya Shrine Room", "Clocktower", "The Moon","Underground Cave","Murasa's Ship (2)","Eientei Outside"];
+			if (L < 0)
+			{
+				L = 0;
+			}
+			while (L >= BGS.length)
+			{
+				L -= BGS.length;
+			}
+		}
+		else
+		{
 		//var L = Math.floor((level) / 5);
 			//var BGS = [57, 129, 89,98,131,185];
-		var BGS = [CharHelper.GetBG("Moriya Shrine Room"), CharHelper.GetBG("Clocktower"), CharHelper.GetBG("The Moon"),CharHelper.GetBG("Underground Cave"),CharHelper.GetBG("Murasa's Ship (2)"),CharHelper.GetBG("Eientei Outside")];
+		/*var BGS = [CharHelper.GetBG("Moriya Shrine Room"), CharHelper.GetBG("Clocktower"), CharHelper.GetBG("The Moon"),CharHelper.GetBG("Underground Cave"),CharHelper.GetBG("Murasa's Ship (2)"),CharHelper.GetBG("Eientei Outside")];
 		if (L < 0)
 			{
 				L = 0;
@@ -618,30 +956,135 @@ class GameView extends Sprite
 			{
 				L -= BGS.length;
 			}
-			var ind = BGS[L];
+			var ind = BGS[L];*/
+			L = currentstagelevel;
+			BGS = ["Computer Grid", "Computer Grid", "Computer Grid", "Computer Grid", "Computer Grid", "Computer Grid", "Computer Grid", "Computer Grid"];
+			//8 level version of adventure mode
+			/*if (currentgeneralstage == 0)
+			{
+				//CharHelper.GetBG("Moriya Shrine Room")
+				//BGS = ["Reimu's Room","Reimu's Door Open","Hakurei Shrine (IaMP)","Shrine Tori"];
+				BGS = ["Reimu's Room","Reimu's Room","Reimu's Door Open","Hakurei Shrine Door","Hakurei Shrine (IaMP)","Hakurei Shrine (IaMP)","Shrine Tori","Shrine Tori"];
+			}
+			else if (currentgeneralstage == 1)
+			{
+				BGS = ["Lakeside (Snowy)", "It's a forest again", "Mansion Path", "SDM gate", "Scarlet Hallway 2", "SDM Balcony", "Clocktower", "Clocktower (Sunset)"];
+			}
+			else if (currentgeneralstage == 2)
+			{
+				BGS = ["Forest Night 2","Hakurei Shrine Night","Some Mountain","Night Mountain","The Moon","The Moon","The Moon","Earth from Space"];
+			}
+			else if (currentgeneralstage == 3)
+			{
+				BGS = ["Yukari's Gap","Crater","Crater","Hell of Blazing Fires","Hell of Blazing Fires","Underground Mine","Underground Cave","Underground Cave"];
+			}
+			else if (currentgeneralstage == 4)
+			{
+				BGS = ["And another forest!", "Mountain Sunset", "Mountain Sunset", "Generic Sky", "The Heavens", "The Heavens", "Murasa's Ship", "Murasa's Ship (2)"];
+				//if feriligono lets me embed palanquin ship then i should use this commented out background setup.
+				//BGS = ["And another forest!","Mountain Sunset","Generic Sky","The Heavens","Palanquin Ship","Palanquin Ship","Murasa's Ship","Murasa's Ship (2)"];
+			}
+			else if (currentgeneralstage == 5)
+			{
+				BGS = ["Open Field","Bamboo Forest","Bamboo Forest","Eientei Outside","Eientei Outside","Eientei Courtyard","Eientei","Eientei"];
+			}*/
+			//5 level version
+			if (currentgeneralstage == 0)
+			{
+				//CharHelper.GetBG("Moriya Shrine Room")
+				BGS = ["Reimu's Room","Reimu's Door Open","Hakurei Shrine Door","Hakurei Shrine (IaMP)","Shrine Tori"];
+			}
+			else if (currentgeneralstage == 1)
+			{
+				//BGS = ["Lakeside (Snowy)", "It's a forest again", "Mansion Path", "SDM gate", "Scarlet Hallway 2", "SDM Balcony", "Clocktower", "Clocktower (Sunset)"];
+				//BGS = ["Mansion Path", "SDM gate", "SDM Balcony", "Clocktower", "Clocktower (Sunset)"];
+				BGS = ["Dirt Road", "SDM gate", "SDM Balcony", "Clocktower", "Clocktower (Sunset)"];
+			}
+			else if (currentgeneralstage == 2)
+			{
+				BGS = ["Forest Night 2","Some Mountain","Night Mountain","The Moon","The Moon"];
+			}
+			else if (currentgeneralstage == 3)
+			{
+				BGS = ["Yukari's Gap","Crater","Crater","Underground Mine","Underground Cave"];
+			}
+			else if (currentgeneralstage == 4)
+			{
+				//BGS = ["And another forest!", "Mountain Sunset", "Mountain Sunset", "Generic Sky", "The Heavens", "The Heavens", "Murasa's Ship", "Murasa's Ship (2)"];
+				//if feriligono lets me embed palanquin ship then i should use this commented out background setup.
+				//BGS = ["And another forest!","Mountain Sunset","Generic Sky","The Heavens","Palanquin Ship","Palanquin Ship","Murasa's Ship","Murasa's Ship (2)"];
+				
+				//BGS = ["Mountain Sunset", "Mountain Sunset", "The Heavens", "Murasa's Ship", "Murasa's Ship (2)"];
+				BGS = ["Mountain Sunset", "Mountain Sunset", "Palanquin Ship", "Murasa's Ship", "Murasa's Ship (2)"];
+			}
+			else if (currentgeneralstage == 5)
+			{
+				BGS = ["Open Field","Bamboo Forest","Eientei Outside","Eientei Courtyard","Eientei"];
+			}
+			L--;
+			if (L < 0)
+			{
+				L = 0;
+			}
+		}
+			var ind = CharHelper.GetBG(BGS[L]);
 			var bd = AL.GetAnimation("background-" + ind)[0];
 			return bd;
 	}
 	//Main._this.savedata.data.maxlevel
-	public function start() {
+	public function updatelevelinfo()
+	{
+		if (Llevel == level)
+		{
+			return;
+		}
+		currentstage  = Math.floor((level - 1) / levelsperstage);//level / levelsperstage;
+		rank = Math.floor(currentstage / stagesperrank);
+		currentgeneralstage = currentstage % stagesperrank;
+		var lvl = ((level - 1) % levelsperstage);
+		lvl++;
+		currentstagelevel = lvl;
 		
+		currentranklevel = level-1;
+		levelsperrank = stagesperrank * levelsperstage;
+		while (currentranklevel >= levelsperrank)
+		{
+			currentranklevel -= levelsperrank;
+		}
+		currentranklevel++;
+		
+		Llevel = level;
+		// = Math.floor((level - 1) / 5);
+	}
+	public function start() {
+		level++;
+		gamemode = Main._this.gamemode;
 		{
 			
 		SoundManager.PlayJingle("startgame").addEventListener(Event.SOUND_COMPLETE,function(e:Event):Void {PlayMusic(true);});
 		}
-		addChild(gamestage);
+		
+		platforms = new Array<Array<Block>>();
+		camera.addChild(gamestage);
+		//addChild(gamestage);
+		addChild(camera);
 		collisiondata = new Array<Dynamic>();
 		collisiondangerousdata = new Array<Dynamic>();
 		successstreak = 0;
 		mysuccessstreak = 0;
+		objectiveprogress = 0;
 		recievedmessagelog = new Map<String,Int>();
 		sentmessagelog = new Map<String,Int>();
-		yuukaactive = false;
+		//yuukaactive = false;
+		yuukasactive = 0;
 		trophyactive = false;
 		_this = this;
-		RoundType = TypeofRound.Normal;
-		spawnedChar = false;
-		OBackground = new Bitmap(AL.GetAnimation("CSBG")[0]);
+		RoundType = TypeofRound.EventNormal;
+		///spawnedChar = false;
+		//OBackground = new Bitmap(AL.GetAnimation("CSBG")[0]);
+		var ind = CharHelper.GetBG("Shrine Entrance");
+		var bd = AL.GetAnimation("background-" + ind)[0];
+		OBackground = new Bitmap(bd);
 		Background = new Bitmap(getbackground());
 		
 		Background.alpha = 0;
@@ -651,6 +1094,8 @@ class GameView extends Sprite
 		gamestage.addChild(backlayer);
 		entitylayer = new Sprite();
 		gamestage.addChild(entitylayer);
+		frontlayer = new Sprite();
+		gamestage.addChild(frontlayer);
 		//HighScore = Main._this.savedata.data.highscore;
 		HighScore = gethighscore();
 		ufos = 0;
@@ -661,7 +1106,8 @@ class GameView extends Sprite
 		activeEnemies = new Array<Enemy>();
 		activeItems = new Array<EntityItem>();
 		activeInteractables = new Array<Entity>();
-		SpawnTimer = 60 * 5;
+		//SpawnTimer = 60 * 5;
+		SpawnTimer = 30 * 6;
 		MSE = false;
 		
 		//level = 0;
@@ -711,27 +1157,29 @@ class GameView extends Sprite
 		myplayer.x = 140;
 		myplayer.y = (600-32)-myplayer.height;
 		myplayer.playername = playername;
+		HostPlayer = myplayer;
 		
 		if (GameFlags.get(Main.KonamiCode))
 		{
 			startinglives = 30;
 			myplayer.lives = 30;
 		}
+		updatelevelinfo();
 		if (GameFlags.get(Main.NormalMode))
 		{
-			level = 30;
+			level = levelsperrank;
 		}
 		if (GameFlags.get(Main.HardMode))
 		{
-			level = 60;
+			level = levelsperrank*2;
 		}
 		if (GameFlags.get(Main.LunaticMode))
 		{
-			level = 90;
+			level = levelsperrank*3;
 		}
 		if (GameFlags.get(Main.ExtraMode))
 		{
-			level = 120;
+			level = levelsperrank*4;
 		}
 		//myplayer will need to be added to the Players list once an id is created.(or maybe just use "0")
 		myplayer.ID = "Myself";
@@ -758,6 +1206,27 @@ class GameView extends Sprite
 		TF.width = 50;
 		TF.height = 60;
 		TF.mouseEnabled = false;
+		
+		CTF = new TextField();
+		CTF.setTextFormat(tmp);
+		CTF.x = 700;
+		CTF.y = 570;
+		CTF.width = 100;
+		CTF.height = 30;
+		CTF.mouseEnabled = false;
+		CTF.visible = false;
+		CTF.scaleX = 1.5;
+		CTF.scaleY = CTF.scaleX;
+		
+		var FA:Array<flash.filters.BitmapFilter> = new Array<flash.filters.BitmapFilter>();
+		var AB = new flash.filters.GlowFilter();
+		AB.blurX = 5;
+		AB.blurY = 5;
+		AB.color = 0x000000;
+		AB.strength = 3;
+		FA[FA.length] = AB;
+		CTF.filters = FA;
+		
 		/*TF.visible = false;
 		#if debug
 		TF.visible = true;
@@ -774,9 +1243,10 @@ class GameView extends Sprite
 		gameover.text = "GAME OVER!";
 		gameover.setTextFormat(tmp);
 		gameover.width = 450;
+		gameover.cacheAsBitmap = true;
 		gameover.mouseEnabled = false;
 		gameover.visible = false;
-		addChild(gameover);
+		//addChild(gameover);
 		
 		scoreboard = new TextField();
 		scoreboard.cacheAsBitmap = true;
@@ -785,7 +1255,8 @@ class GameView extends Sprite
 		scoreboard.y = 0;
 		//scoreboard.x = 300;
 		//scoreboard.y = 10;
-		scoreboard.blendMode = openfl.display.BlendMode.INVERT;
+		///scoreboard.blendMode = openfl.display.BlendMode.INVERT;
+		scoreboard.filters = CTF.filters;
 		
 		SC = new Sprite();
 		SC.x = 300;
@@ -793,6 +1264,7 @@ class GameView extends Sprite
 		SC.addChild(scoreboard);
 		addChild(SC);
 		MSG = new Sprite();
+		MSG.cacheAsBitmap = true;
 		SC.addChild(MSG);
 		MSGText = new TextField();
 		MSGText.x = 3;
@@ -805,19 +1277,23 @@ class GameView extends Sprite
 		var B = new Bitmap(AL.GetAnimation("barrier")[0]);
 		B.x = -20-40;
 		B.y = 430;
+		B.cacheAsBitmap = true;
 		gamestage.addChild(B);
 		
 		B = new Bitmap(AL.GetAnimation("barrierF")[0]);
 		B.x = 820-160+40;
 		B.y = 430;
+		B.cacheAsBitmap = true;
 		gamestage.addChild(B);
 		B = new Bitmap(AL.GetAnimation("barrier")[0]);
 		B.x = -20-40;
 		B.y = -40;
+		B.cacheAsBitmap = true;
 		gamestage.addChild(B);
 		B = new Bitmap(AL.GetAnimation("barrierF")[0]);
 		B.x = 820-160+40;
 		B.y = -40;
+		B.cacheAsBitmap = true;
 		gamestage.addChild(B);
 		
 		
@@ -839,18 +1315,61 @@ class GameView extends Sprite
 		lifeicon.scaleX = 0.6;
 		lifeicon.scaleY = 0.6;
 		//lifeicon.scrollRect = new Rectangle(0, 0, 100, 60);
-		updatelifeicon();
+		
 		
 		addChild(lifeicon);
+		
+		ufoicons = new Array<Bitmap>();
+		var Y = 574;
+		var scl = 0.45;
+		var B = new Bitmap();
+		B.x = 0;
+		B.y = Y;
+		B.scaleX = scl;
+		B.scaleY = B.scaleX;
+		B.cacheAsBitmap = true;
+		B.visible = false;
+		addChild(B);
+		ufoicons.push(B);
+		B = new Bitmap();
+		B.x = 32;
+		B.y = Y;
+		B.scaleX = scl;
+		B.scaleY = B.scaleX;
+		B.cacheAsBitmap = true;
+		B.visible = false;
+		addChild(B);
+		ufoicons.push(B);
+		B = new Bitmap();
+		B.x = 64;
+		B.y = Y;
+		B.scaleX = scl;
+		B.scaleY = B.scaleX;
+		B.cacheAsBitmap = true;
+		B.visible = false;
+		addChild(B);
+		ufoicons.push(B);
+		
+		abilityicon = new Bitmap();
+		abilityicon.x = 133;
+		abilityicon.y = 5;
+		abilityicon.scaleX = 0.4;
+		abilityicon.scaleY = 0.4;
+		if (GameFlags.get(Main.Adventure))
+		{
+			addChild(abilityicon);
+		}
+		updatelifeicon();
 		moneyicon = new Bitmap(AL.GetAnimation("money")[0]);
 		moneyicon.x = 175;
 		moneyicon.y = 40;
-		moneyicon.scaleX = 0.4;
-		moneyicon.scaleY = 0.4;
+		moneyicon.scaleX = 0.7;
+		moneyicon.scaleY = 0.7;
 		addChild(moneyicon);
 		moneytime = 150;
 		//moneyicon.visible = false;
 		addChild(TF);
+		addChild(CTF);
 		
 		stage.color = 0x009977;
 		stage.scaleMode = StageScaleMode.SHOW_ALL;
@@ -864,9 +1383,9 @@ class GameView extends Sprite
 		}
 		
 		
-		addEventListener (Event.ENTER_FRAME, this_onEnterFrame);
+		////addEventListener (Event.ENTER_FRAME, this_onEnterFrame);
 	addEventListener( MouseEvent.MOUSE_DOWN, on_mousedown );
-	addEventListener(MouseEvent.MOUSE_UP, on_mouseup); 
+	addEventListener( MouseEvent.MOUSE_UP, on_mouseup); 
 	addEventListener( TouchEvent.TOUCH_BEGIN, on_touchbegin);
 	addEventListener( TouchEvent.TOUCH_END, on_touchend);
 		#if flash
@@ -911,7 +1430,8 @@ class GameView extends Sprite
 		//BGCBottom.z = -10;
 		//addChild(BGCBottom);
 		gui.addChild(BGCBottom);*/
-		gamestage.scrollRect = new Rectangle(0, 0, 800, 600);
+		///gamestage.scrollRect = new Rectangle(0, -100, 800, 600);
+		//camera.scrollRect = new Rectangle(0, 0, 800, 600);
 		Dpad = new Bitmap(Assets.getBitmapData("assets/Dpad.png"));
 		Dpad.x = 0;
 		Dpad.y = 600;
@@ -921,15 +1441,17 @@ class GameView extends Sprite
 		var B = new MenuButton("Pause",70);
 		B.x += 680;
 		B.y = 620;
+		B.button.buttonMode = false;
 		gui.addChild(B);
 		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 					togglemenu();
 				 } 
 				);
 		
-				var B = new MenuButton("Interact",70);
+		var B = new MenuButton("Interact",70);
 		B.x += 680;
 		B.y = 880;
+		B.button.buttonMode = false;
 		gui.addChild(B);
 		B.addEventListener( MouseEvent.MOUSE_DOWN, function( ev ) {
 					control[4] = true;
@@ -974,12 +1496,16 @@ class GameView extends Sprite
 		filterArr[filters.length] = AA;
 		
 		var flag = new Bitmap(AL.GetAnimation("flag")[0]);
+		flag.x = -8;
+		levelicon = flag;
 		progressbar.addChild(flag);
 		leveltitle = new TextField();
 		leveltitle.y = 20;
 		leveltitle.x = 5;
 		leveltitle.y += progressbar.y;
 		leveltitle.x += progressbar.x;
+		leveltitle.cacheAsBitmap = true;
+		leveltitle.mouseEnabled = false;
 		leveltitle.textColor = 0xFFFFFF;
 		//leveltitle.blendMode = openfl.display.BlendMode.INVERT;
 		leveltitle.filters = filterArr;
@@ -997,10 +1523,68 @@ class GameView extends Sprite
 			useablelist[useablelist.length] = playerspick;
 		}
 		//gui.addChild(lifeicon);
-		level++;
+		
+		updatelevelinfo();
+		
+		/*var TP = new TelephonePole();
+		//TP.x = 800+250;
+		TP.x = 800;
+		AddObject(TP);*/
+		
+		
+		gameoverscreen = new Sprite();
+		var go = gameoverscreen;
+		go.visible = false;
+		go.graphics.beginFill(0, 0.3);
+		go.graphics.drawRect(0, 0, 800, 600);
+		go.graphics.endFill();
+		
+		var T = new TextField();
+		gameoverdescription = T;
+		//T.text = "You've run out of continues...";
+		T.text = "You've run out of continues...";
+		if (!gamemode.cancontinue)
+		{
+			T.text = "There are no continues in this mode.";
+		}
+		T.textColor = 0xFFFFFF;
+		T.scaleX = 2.5;
+		T.scaleY = 2.5;
+		T.width = T.textWidth + 8;
+		T.height = T.textHeight + 8;
+		//T.x = 250;
+		T.x = 400 - (T.width / 2);
+		T.y = 70;
+		T.mouseEnabled = false;
+		go.addChild(T);
+		var B = new MenuButton("Restart from beginning");
+		B.x += 400;
+		B.y += 250;
+		B.sound = "ok";
+		B.addclick(function( ev ) {
+					status = "restart";
+		});
+		go.addChild(B);
+		B = new MenuButton("Return to titlescreen");
+		B.x += 400;
+		B.y += 400;
+		B.sound = "cancel";
+		B.addclick(function( ev ) {
+					status = "quitting";
+		});
+		
+		go.addChild(B);
+		
+		addChild(go);
+		addChild(gameover);
 	}
 	public function togglemenu()
 	{
+		if (gameoverscreen.visible)
+		{
+			status = "restart";
+			return;
+		}
 		menu = !menu;
 		
 		if (GameFlags.get(Main.AllStar))
@@ -1075,6 +1659,34 @@ class GameView extends Sprite
 			lifeicon.y = (5+10) - (BD.height / 8);
 			//lifeicon.x = (TF.x - lifeicon.width)+30;
 		}
+		if (GameFlags.get(Main.Adventure))
+		{
+			if (currentability != myplayer.charactersoul && myplayer.charactersoul != "red_fairy")
+			{
+				currentability = myplayer.charactersoul;
+				var C = CharHelper.getCharPreset(currentability);
+				if (C != null && C != "")
+				{
+					abilityicon.bitmapData = AL.GetAnimation(C)[0];
+				}
+				else
+				{
+					abilityicon.bitmapData = null;
+				}
+			}
+		}
+		var i = 0;
+		while (/*i < myplayer.ufos.length && */i < ufoicons.length)
+		{
+			var B = ufoicons[i];
+			var V = (i < myplayer.ufos.length);
+			if (B.visible != V && V)
+			{
+				B.bitmapData = AL.GetAnimation(myplayer.ufos[i] + "ufo")[0];
+			}
+			B.visible = V;
+			i++;
+		}
 	}
 	//sets down platforms and puts holes in the platforms
 	public function setformation()
@@ -1082,6 +1694,7 @@ class GameView extends Sprite
 		resetblocks();
 		if (platformformation == 0)
 		{
+			/*
 			setholeinplatform(600 - 192, 256, 512,false);
 			//setholeinplatform(600 - 192, 288, 480,false);
 			//setholeinplatform(600 - 352, 192, 576,true);
@@ -1092,19 +1705,96 @@ class GameView extends Sprite
 			//addsectioninplatform(600 - 352, -1000, 96, false);
 			//addsectioninplatform(600 - 352, 672, 2000, false);
 			
+			//1st row
+			addsectioninplatform(600 - 192, -1300, -128, true);
+			addsectioninplatform(600 - 192, 960, 2000, true);
+			//2nd row
+			addsectioninplatform(600 - 352, -1300, -32, false);
+			addsectioninplatform(600 - 352, 864, 2000, false);
+			//3rd row
+			addsectioninplatform(600 - 512, -1300, -160, true);
+			addsectioninplatform(600 - 512, 992, 2000, true);
+			
+			
+			
 			
 			setplatformasplatform(600 - 192, false);
 			setplatformasplatform(600 - 352, false);
-			setplatformasplatform(600 - 512, false);
-			currentformation = 0;
+			setplatformasplatform(600 - 512, false);*/
+			
+			setholeinplatform(platforms[1], 256, 512,false);
+			setholeinplatform(platforms[2], 160-32, 608+32,true);
+			setholeinplatform(platforms[3], 288, 480, false);
+			
+			/*
+			//1st row
+			addsectioninplatform(platforms[1], -1300, -128, true);
+			addsectioninplatform(platforms[1], 960, 2000, true);
+			//2nd row
+			addsectioninplatform(platforms[2], -1300, -32, false);
+			addsectioninplatform(platforms[2], 864, 2000, false);
+			//3rd row
+			addsectioninplatform(platforms[3], -1300, -160, true);
+			addsectioninplatform(platforms[3], 992, 2000, true);*/
+			
+			
+			
+			
+			setplatformasplatform(platforms[1], false);
+			setplatformasplatform(platforms[2], false);
+			setplatformasplatform(platforms[3], false);
 		}
 		if (platformformation == 1)
 		{
-			setholeinplatform(600 - 192, -256, 5120, false);
-			setholeinplatform(600 - 352, -192, 5760,false);
-			setholeinplatform(600 - 512, -256, 5120, false);
-			currentformation = 1;
+			setholeinplatform(platforms[1], -256, 5120, false);
+			setholeinplatform(platforms[2], -192, 5760,false);
+			setholeinplatform(platforms[3], -256, 5120, false);
 		}
+		if (platformformation == 2)
+		{
+			setholeinplatform(platforms[1], 256, 512, false);
+			setholeinplatform(platforms[3], 256, 512,false);
+			//setholeinplatform(600 - 192, 288, 480,false);
+			//setholeinplatform(600 - 352, 192, 576,true);
+			setholeinplatform(platforms[2], 160-32, 608+32,true);
+			//setholeinplatform(600 - 512, 256, 512, false);
+			///setholeinplatform(platforms[3], 288, 480, false);
+			
+			//setholeinplatform(600 - 32, 288, 480, false);
+			setholeinplatform(platforms[0], 160-32, 608+32,true);
+			
+			
+			//addsectioninplatform(600 - 352, -1000, 96, false);
+			//addsectioninplatform(600 - 352, 672, 2000, false);
+			
+			
+			setplatformasplatform(platforms[1], false);
+			setplatformasplatform(platforms[2], false);
+			setplatformasplatform(platforms[3], false);
+		}
+		if (platformformation == 3)
+		{
+			
+			setholeinplatform(platforms[1], 256, 512, false);
+			setholeinplatform(platforms[2], 160-32, 608+32,true);
+			setholeinplatform(platforms[3], 288, 480, false);
+			
+			//1st row
+			addsectioninplatform(platforms[1], -1300, -128, true);
+			addsectioninplatform(platforms[1], 960, 2000, true);
+			//2nd row
+			addsectioninplatform(platforms[2], -1300, -32, false);
+			addsectioninplatform(platforms[2], 864, 2000, false);
+			//3rd row
+			addsectioninplatform(platforms[3], -1300, -160, true);
+			addsectioninplatform(platforms[3], 992, 2000, true);
+			
+			
+			setplatformasplatform(platforms[1], false);
+			setplatformasplatform(platforms[2], false);
+			setplatformasplatform(platforms[3], false);
+		}
+		currentformation = platformformation;
 	}
 	public function resetblocks()
 	{
@@ -1149,23 +1839,29 @@ class GameView extends Sprite
 			AddObject(L[xx],0);
 			xx++;
 		}
+		platforms.push(L);
 	}
-	public function addsectioninplatform(Y:Float,minx:Float, maxx:Float, inverse:Bool)
+	public function addsectioninplatform(platform:Array<Block>,minx:Float, maxx:Float, inverse:Bool)
 	{
 		var i = 0;
-			while (i < entities.length)
+			while (i < platform.length)
 			{
 				
-				var E = entities[i];
+				var E = platform[i];
 				var D:Dynamic = E;
 				
 				if (E.type == "Block")
 				{
 					var B:Block = D;
-					//D.Defrost();
-					if (B.y == Y)
+					var X = E.x;
+					if (B.started)
 					{
-						var ok = (B.x > minx && B.x < maxx);
+						X = E.OX;
+					}
+					//D.Defrost();
+					//if (B.y == Y)
+					{
+						var ok = (X > minx && X < maxx);
 						
 						if (ok)
 						{
@@ -1180,22 +1876,27 @@ class GameView extends Sprite
 				i += 1;
 			}
 	}
-	public function setholeinplatform(Y:Float,minx:Float, maxx:Float, inverse:Bool)
+	public function setholeinplatform(platform:Array<Block>,minx:Float, maxx:Float, inverse:Bool)
 	{
 		var i = 0;
-			while (i < entities.length)
+			while (i < platform.length)
 			{
 				
-				var E = entities[i];
+				var E = platform[i];
 				var D:Dynamic = E;
 				
 				if (E.type == "Block")
 				{
 					var B:Block = D;
-					//D.Defrost();
-					if (B.y == Y)
+					var X = E.x;
+					if (B.started)
 					{
-						var ok = (B.x > minx && B.x < maxx);
+						X = E.OX;
+					}
+					//D.Defrost();
+					//if (B.y == Y)
+					{
+						var ok = (X > minx && X < maxx);
 						if (inverse)
 						{
 							ok = !ok;
@@ -1206,21 +1907,21 @@ class GameView extends Sprite
 				i += 1;
 			}
 	}
-	public function setplatformasplatform(Y:Float,platform:Bool)
+	public function setplatformasplatform(platform:Array<Block>,isplatform:Bool)
 	{
 		var i = 0;
-			while (i < entities.length)
+			while (i < platform.length)
 			{
 				
-				var E = entities[i];
+				var E = platform[i];
 				var D:Dynamic = E;
 				
 				if (E.type == "Block")
 				{
 					var B:Block = D;
-					if (B.y == Y)
+					//if (B.y == Y)
 					{
-						B.platform = platform;
+						B.platform = isplatform;
 					}
 				}
 				i += 1;
@@ -1266,10 +1967,20 @@ class GameView extends Sprite
 		}
 		return "Myself";
 	}
-	private function PlayMusic(showlevel:Bool):Void
+	private function UpdateBackground():Void
 	{
 		OBackground.bitmapData = Background.bitmapData;
-		var L = Math.floor((level - 1) / 5);
+		OBackground.visible = true;
+		
+		Background.bitmapData = getbackground();
+		Background.alpha = 0;
+	}
+	private function PlayMusic(showlevel:Bool):Void
+	{
+		UpdateBackground();
+		//////////////OBackground.bitmapData = Background.bitmapData;
+		//////////////OBackground.visible = true;
+		/*var L = Math.floor((level - 1) / 5);
 		//var BGS = [57, 129, 89,98,131,185];
 		if (L < 0)
 			{
@@ -1278,17 +1989,20 @@ class GameView extends Sprite
 			while (L >= 6)
 			{
 				L -= 6;
-			}
+			}*/
+			updatelevelinfo();
+		//var L = currentgeneralstage;
+		var L = currentstage;
 			/*var A = AL.GetAnimation("BG");
 			
 			Background.bitmapData = A[L];*/
 			
 			//Background.bitmapData = AL.GetAnimation("background-89")[0];
 			//Background.bitmapData = AL.GetAnimation("background-"+BGS[L])[0];
-			Background.bitmapData = getbackground();
-			Background.alpha = 0;
+			//////////////Background.bitmapData = getbackground();
+			//////////////Background.alpha = 0;
 			
-		L = Math.floor((level - 1) / 5);
+		//L = Math.floor((level - 1) / 5);
 		if (showlevel)
 		{
 			ShowLevel();
@@ -1308,7 +2022,14 @@ class GameView extends Sprite
 			}
 		if (musicchannel == null || !myplayer.flags.get(Player.MusicSelector))
 		{
-			musicchannel = SoundManager.PlayMusic("theme" + A[L]);
+			if (currentstagelevel < 4 && GameFlags.get(Main.Adventure))
+			{
+				musicchannel = SoundManager.PlayMusic("adv" + A[L % 6]);
+			}
+			else
+			{
+				musicchannel = SoundManager.PlayMusic("theme" + A[L]);
+			}
 		}
 	}
 	public function GetPlayer(ID:String):Player {
@@ -1379,14 +2100,22 @@ class GameView extends Sprite
 			activeEnemies[activeEnemies.length] = E;
 		}
 	}
-	public function AddObject(E:Entity,layer:Int = 1) {
+	public function AddObject(E:Entity,layer:Int = -1) {
 		if (E.interactable/* && activeInteractables.indexOf(E >= 0)*/)
 		{
 			activeInteractables[activeInteractables.length] = E;
 		}
 		entities[entities.length] = E;
 		//addChild(E);
-		if (layer == 1)
+		if (layer == -1)
+		{
+			layer = E.layer;
+		}
+		if (layer == 2)
+		{
+			frontlayer.addChild(E);
+		}
+		else if (layer == 1)
 		{
 			entitylayer.addChild(E);
 		}
@@ -1412,7 +2141,11 @@ class GameView extends Sprite
 		}
 		//removeChild(I);
 		entities.remove(I);
-		if (entitylayer.contains(I))
+		if (frontlayer.contains(I))
+		{
+			frontlayer.removeChild(I);
+		}
+		else if (entitylayer.contains(I))
 		{
 			entitylayer.removeChild(I);
 		}
@@ -1445,7 +2178,17 @@ class GameView extends Sprite
 		while (i < activeItems.length)
 		{
 			var E = activeItems[i];
-			if (!E.killed && E.alive)
+			var ok = true;
+			if (Std.is(E, CarryItem))
+			{
+				var D:Dynamic = E;
+				var C:CarryItem = D;
+				if (C.holder != null)
+				{
+					ok = false;
+				}
+			}
+			if (!E.killed && E.alive && ok)
 			{
 				if (E.GetHitbox().containsPoint(P))
 				{
@@ -1572,6 +2315,30 @@ class GameView extends Sprite
 		//return false;
 		return null;
 	}
+	public function CollisionDetectTouchPlayer(target:Entity,hitbox:Bool=false):Player {
+		var i = 0;
+		var R = target.getBounds(gamestage);
+		if (hitbox)
+		{
+			R = target.GetHitbox();
+		}
+		var A = GetPlayers();
+		while (i < A.length)
+		{
+			var E = A[i];
+			
+			if (!E.killed)
+			{
+				if (R.intersects(E.getBounds(gamestage)))
+				{
+					return E;
+				}
+			}
+			i += 1;
+		}
+		//return false;
+		return null;
+	}
 	public function CollisionDetectTouchEnemy(target:Entity,hitbox:Bool=false):Enemy {
 		var i = 0;
 		var R = target.getBounds(gamestage);
@@ -1601,8 +2368,17 @@ class GameView extends Sprite
 		while (i < activeItems.length)
 		{
 			var E = activeItems[i];
-			
-			if (!E.killed)
+			var ok = true;
+			if (Std.is(E, CarryItem))
+			{
+				var D:Dynamic = E;
+				var C:CarryItem = D;
+				if (C.holder != null)
+				{
+					ok = false;
+				}
+			}
+			if (!E.killed && ok)
 			{
 				if (R.intersects(E.getBounds(gamestage)))
 				{
@@ -1644,6 +2420,35 @@ class GameView extends Sprite
 		}
 		ProcessEvent(D.evt,D.ID, D.data);
 	}
+	public function SendQueueEvent(evt:String, data:Dynamic, timer:Int,resend_onelapse:Bool=false)
+	{
+		var D:Dynamic = { };
+		D.evt = evt;
+		D.data = data;
+		D.ID == GetNetworkID();
+		D.timer = timer-1;
+		#if flash
+		if (online)
+		{
+			NP.SendData("Q", D);
+		}
+		#end
+		if (netlog)
+		{
+		if (!sentmessagelog.exists(evt))
+		{
+			sentmessagelog[evt] = 0;
+		}
+		sentmessagelog[evt]+=1;
+		}
+		ProcessQueueEvent(evt, D.ID,data, timer,resend_onelapse);
+	}
+	public function ProcessQueueEvent(evt:String,ID:String, data:Dynamic, timer:Int,resend_onelapse:Bool=false)
+	{
+		var Q:EventQueue = new EventQueue(evt, data, ID, timer);
+		Q.clientside = resend_onelapse;
+		queuedevents.push(Q);
+	}
 	//this massive function handles most major events, doing it this way keeps the clients synced.
 	//this could be broken up into smaller functions
 	public function ProcessEvent(evt:String, ID:String, data:Dynamic) {
@@ -1654,6 +2459,7 @@ class GameView extends Sprite
 		var P = GetPlayer(ID);
 		//whether or not this event came from ourselves(used primarily in the case we have to send an event from within another event)
 		var me = ismyplayer(P);
+		
 		if (netlog)
 		{
 		if (!me)
@@ -1669,6 +2475,10 @@ class GameView extends Sprite
 		{
 			//update the last activity frame to this frame(this is to let this client determine inactive/linkdead players)
 			P.frame = frame;
+		}
+		if (lvllogic != null && lvllogic.OnProcessEvent(evt, P, data))
+		{
+			return;
 		}
 		if (evt == "ChangeCharacter")
 		{
@@ -1688,7 +2498,8 @@ class GameView extends Sprite
 			while (i < entities.length)
 			{
 				var E = entities[i];
-				if (E.x == data.x && E.y == data.y && E.type == "Block")
+				//if (E.x == data.x && E.y == data.y && E.type == "Block")
+				if (E.UID == data.UID && E.type == "Block")
 				{
 					var D:Dynamic = E;
 					D.Destroy(data.Destroy);
@@ -1701,7 +2512,9 @@ class GameView extends Sprite
 			if (P != null)
 			{
 				P.cancel = false;
-				P.ability.onattacked();
+				P.ability.onattacked(!data);
+				P.ChangeExpression("Eyes", "24", 45, true);
+				P.ChangeExpression("Mouth", "2", 45);
 				if (!P.cancel)
 				{
 				if (data)
@@ -1725,6 +2538,9 @@ class GameView extends Sprite
 					P.killed = true;
 					P.Vspeed = -9;
 					SoundManager.Play("died");
+					
+					P.ChangeExpression("Eyes", "8", 150, true);
+					P.ChangeExpression("Mouth", "66", 150);
 				}
 				}
 			}
@@ -1740,26 +2556,48 @@ class GameView extends Sprite
 				ProcessEvent("Kill", ID, data);
 			}
 		}
+		if (evt == "Explodify") {
+			var E:Enemy = todyn(EntityFromUID(data));
+			if (E.attack())
+			{
+				//ProcessEvent("Kill", ID, data);
+				ProcessEvent("Remove", ID, data);
+			}
+		}
 		if (evt == "Remove")
 		{
 			var E = EntityFromUID(data);
 			if (E != null)
 			{
 				E.alive = false;
+				E.killed = true;
 			}
 		}
 		if (evt == "Kill" || evt == "Destroy" || evt == "Obliterate") {
 			var E = EntityFromUID(data);
 			if (E != null && !E.killed)
 			{
-				P.ability.onkill(E);
-				E.bonkedby = P;
+				if (evt != "Destroy")
+				{
+					
+					E.bonkedby = P;
+					P.combo++;
+					//P.combotime = 75;
+					P.combotime = 90;
+					P.ability.onkill(E);
+					if (P.combo > 2 && P.isme)
+					{
+						awardmoney(1);
+					}
+				}
 				if (evt == "Obliterate")
 				{
 					E.y = 601;
 				}
 				if (evt == "Kill" && me && E.myMyon != null/* && P.myMyon == null*/)
 				{
+					
+					
 					var ok = (P.myMyon == null);
 					if (!ok && (myplayer.flags.get(Player.DoubleMyon) || (E.myMyon.dualcarry || P.myMyon.dualcarry)))
 					{
@@ -1803,7 +2641,7 @@ class GameView extends Sprite
 						D.killed = true;
 					}
 				}
-				if (me && D.charname == "Imposter")
+				if ((me || evt == "Destroy") && D.charname == "Imposter")
 				{
 					//if an unlockable character(aka imposter) is killed, unlock the character.
 					unlockcharacter(D.rename);
@@ -1859,11 +2697,21 @@ class GameView extends Sprite
 					E = null;
 				}
 			}
-			if (me && online)
+			if (me)
 			{
-				#if flash
-				NP.Flush();
-				#end
+				if (online)
+				{
+					#if flash
+					NP.Flush();
+					#end
+				}
+				if (SpawnList.length > 0)
+				{
+					if (SpawnList.first().charname == data.type)
+					{
+						SpawnList.pop();
+					}
+				}
 			}
 		}
 		if (evt == "Headbonk")
@@ -1880,6 +2728,10 @@ class GameView extends Sprite
 						if (!(P.flags.get(Player.PreservePowBlock) && Math.random() > 0.5))
 						{
 							D.HP = powblock.HP - 1;
+						}
+						if (gamemode.infinitepowblock)
+						{
+							D.HP = 4;
 						}
 						if (me)
 						{
@@ -1929,26 +2781,17 @@ class GameView extends Sprite
 		if (evt == "NextLevel")
 		{
 			var R = TypeofRound.createByIndex(data.RoundType);
+			
 			if (!Hoster)
 			{
 				maxspawns = 0;
 			}
-			
-			if (RoundType != R)
+			if (lvllogic != null)
 			{
-				if (R == TypeofRound.Table)
-				{
-					ProcessEvent("Spawntables", "Myself", null);
-				}
-				if (R == TypeofRound.NoWrap)
-				{
-					ProcessEvent("NoWrap", "Myself", null);
-				}
-				if (R == TypeofRound.Cirno || R == TypeofRound.FireCirno || R == TypeofRound.ElectricCirno || R == TypeofRound.CirnoBoss)
-				{
-					ProcessEvent("FreezeWorld", "Myself", null);
-				}
+				lvllogic.end();
+				lvllogic = null;
 			}
+			
 			boss = null;
 			minipowspawns = 0;
 			RoundType = R;
@@ -1958,13 +2801,49 @@ class GameView extends Sprite
 			gamestage.scaleY = 1;
 			successstreak++;
 			mysuccessstreak++;
+			objectiveprogress++;
+			if (gamemode.rewardrequirement > 0 && objectiveprogress>=gamemode.rewardrequirement)
+			{
+				objectiveprogress = 0;
+				awardmoney(gamemode.reward);
+				if (!gamemode.getcleared())
+				{
+					ShowMessage(gamemode.fullname +" cleared,");
+					gamemode.setcleared(true);
+				}
+				else
+				{
+					ShowMessage("Objective reached,");
+				}
+				ShowMessage("awarded:" + gamemode.reward + "Mon!");
+				
+				//do gamemode unlock here.
+				if (gamemode.unlock != "")
+				{
+					var G = GameMode.GetModeByName(gamemode.unlock);
+					if (G != null)
+					{
+						if (!G.getunlocked())
+						{
+							G.setunlocked(true);
+							var N = G.fullname;
+							if (G.category != "")
+							{
+								N = N + " " + G.category;
+							}
+							ShowMessage(N + " is now available!");
+						}
+					}
+				}
+				Main._this.savedata.flush();
+			}
 			if (mysuccessstreak > 4)
 			{
 				//var L = level - 1;
 				//var stage = Math.floor((L) / 5);
 
 				//var generalstage = stage % 6;
-				var T = level % 5;
+				var T = level % levelsperstage;
 				if (T == 1)
 				{
 					awardmoney((rank + 1) * 3);
@@ -1981,56 +2860,76 @@ class GameView extends Sprite
 			spawns = 0;
 			roundstarted = false;
 			level = data.level;
-			
+			updatelevelinfo();
 			if (!online)
 			{
 				/*if (Main._this.savedata.data.maxlevel < level)
 				{
 					Main._this.savedata.data.maxlevel = level;
 				}*/
-				if (getmaxlevel() < level)
+				var ml:Int = getmaxlevel();
+				if (ml < level)
 				{
 					setmaxlevel(level);
 				}
-				if (level > 30 && !Main._this.savedata.data.challenges[0])
+				/*if (level > levelsperrank && !Main._this.savedata.data.challenges[0])
 				{
 					ShowMessage("Danmaku challenge");
 					ShowMessage("is now available!");
 					Main._this.savedata.data.challenges[0] = true;
 				}
-				if (level > 60 && !Main._this.savedata.data.challenges[3])
+				if (level > (levelsperrank*2) && !Main._this.savedata.data.challenges[3])
 				{
 					ShowMessage("All Star Mode");
 					ShowMessage("is now available!");
 					Main._this.savedata.data.challenges[3] = true;
 				}
-				if (level > 90 && !Main._this.savedata.data.challenges[1])
+				if (level > (levelsperrank*3) && !Main._this.savedata.data.challenges[1])
 				{
 					ShowMessage("Boss Rush challenge");
 					ShowMessage("is now available!");
 					Main._this.savedata.data.challenges[0] = true;
+				}*/
+			}
+			else
+			{
+				if (mysuccessstreak>3 && getmaxlevel() < level)
+				{
+					setmaxlevel(level);
 				}
 			}
-			var L = level - 1;
+			/*var L = level - 1;
 			if (L < 0)
 			{
 				L = 0;
 			}
-			rank = Math.floor(L / 30);
+			rank = Math.floor(L / 30);*/
+			updatelevelinfo();
 			//ShowLevel();
 			//call playmusic() as it will change song if its new
+			
 			SoundManager.PlayJingle("nextlevel").addEventListener(Event.SOUND_COMPLETE, function(e:Event):Void { PlayMusic(Hoster); } );
+			UpdateBackground();
 			var i = 0;
 			while (i < entities.length)
 			{
 				
 				var E = entities[i];
 				var D:Dynamic = E;
-				if (E.type == "Block" && RoundType != TypeofRound.Cirno && RoundType != TypeofRound.FireCirno && RoundType != TypeofRound.ElectricCirno && RoundType != TypeofRound.CirnoBoss)
+				if (E.type == "Block" && RoundType != TypeofRound.EventCirno && RoundType != TypeofRound.EventFireCirno && RoundType != TypeofRound.EventElectricCirno && RoundType != TypeofRound.EventCirnoBoss)
 				{
 					D.Reset();
 				}
-				if (E.type == "Enemy")
+				if (E.removeonlevelend)
+				{
+					if (E.type == "Enemy")
+					{
+						D.reward = false;
+					}
+					E.killed = true;
+					E.alive = false;
+				}
+				/*if (E.type == "Enemy")
 				{
 					D.reward = false;
 					E.killed = true;
@@ -2041,17 +2940,17 @@ class GameView extends Sprite
 					E.killed = true;
 					E.alive = false;
 				}
-				if (E.type == "Bullet" && (RoundType != TypeofRound.NoWrap))
+				if (E.type == "Lava")
 				{
 					E.killed = true;
 					E.alive = false;
 				}
-				if (E.type == "Table" && (RoundType != TypeofRound.Table || Hoster))
+				if (E.type == "Bullet" || E.type == "NoWrap")
 				{
 					E.killed = true;
 					E.alive = false;
 				}
-				if (E.type == "Carryitem" && D.DestroyOnRoundEnd)
+				if (E.type == "Table")
 				{
 					E.killed = true;
 					E.alive = false;
@@ -2060,7 +2959,13 @@ class GameView extends Sprite
 				{
 					E.killed = true;
 					E.alive = false;
-				}
+				}*/
+				/*if (E.type == "Carryitem" && D.DestroyOnRoundEnd)
+				{
+					E.killed = true;
+					E.alive = false;
+				}*/
+				
 				if (E.type == "MasterSpark")
 				{
 					D.Size = 0;
@@ -2073,7 +2978,8 @@ class GameView extends Sprite
 				i += 1;
 			}
 			trophyactive = false;
-			yuukaactive = false;
+			//yuukaactive = false;
+			yuukasactive = 0;
 		}
 		if (evt == "Bump")
 		{
@@ -2084,11 +2990,12 @@ class GameView extends Sprite
 				E.y = data.y;
 				E.Hspeed = data.Hspeed;
 				E.Vspeed = data.Vspeed;
+				E.bump();
 				if (E != P)
 				{
 					P.ability.onbump(E);
 				}
-				E.bump();
+				
 				if (!me)
 				{
 					E.catchup();
@@ -2102,7 +3009,7 @@ class GameView extends Sprite
 			while (i < entities.length)
 			{
 				var E = entities[i];
-				if (E.type == "Bullet" && (RoundType != TypeofRound.NoWrap))
+				if (E.type == "Bullet" && (RoundType != TypeofRound.EventNoWrap))
 				{
 					E.killed = true;
 					E.alive = false;
@@ -2123,6 +3030,16 @@ class GameView extends Sprite
 						D.x = E.x;
 						D.y = E.y;
 						SendEvent("SpawnItem", D);
+					}
+				}
+				if (E.type == "FireBar" || E.type == "Carousel")
+				{
+					E.killed = true;
+					E.alive = false;
+					if (Hoster)
+					{
+						var D:Dynamic = E;
+						D.camera();
 					}
 				}
 				i++;
@@ -2151,7 +3068,7 @@ class GameView extends Sprite
 					E.alive = false;
 					ok = false;
 				}
-				if (E.type == "Bullet" && (RoundType != TypeofRound.NoWrap))
+				if (E.type == "Bullet" && (RoundType != TypeofRound.EventNoWrap))
 				{
 					E.killed = true;
 					E.alive = false;
@@ -2186,8 +3103,13 @@ class GameView extends Sprite
 		if (evt == "Mission Failed")
 		{
 			myplayer.visible = false;
-			myplayer.y = 1000;
-			ProcessEvent("GameOver", "Myself", null);
+			//myplayer.y = 1000;
+			myplayer.hide = true;
+			if (Hoster)
+			{
+				SendEvent("GameOver", null);
+			}
+			//ProcessEvent("GameOver", "Myself", null);
 		}
 		if (evt == "PlayerRespawn")
 		{
@@ -2198,6 +3120,9 @@ class GameView extends Sprite
 			P.Vspeed = 0;
 			P.rotation = 0;
 			P.killed = false;
+			//P.expressiontime = 0;
+			P.ChangeExpression("Eyes", "1", 120, true);
+			P.ChangeExpression("Mouth", "66", 120);
 			if (P.lives < 0)
 				{
 					//do game over things
@@ -2221,14 +3146,28 @@ class GameView extends Sprite
 		if (evt == "GameOver")
 		{
 			successstreak = 0;
-			if (me)
+			if (me || !gamemode.cancontinue)
 			{
-				mysuccessstreak = 0;
+				if (me)
+				{
+					mysuccessstreak = 0;
+				}
+				else
+				{
+					var T = gameoverdescription;
+					T.text = P.name +" has game overed.";
+					T.textColor = 0xFFFFFF;
+					T.width = T.textWidth + 8;
+					T.height = T.textHeight + 8;
+				}
 				SoundManager.PlayJingle("gameover").addEventListener(Event.SOUND_COMPLETE, function(e:Event):Void 
 				{
-					if (!online && !Main._this.cancontinue)
+					if (!online && !gamemode.cancontinue)
 					{
-						status = "quitting";
+						//status = "quitting";
+						SoundManager.StopMusic();
+						paused = true;
+						gameoverscreen.visible = true;
 						return;
 					}
 					/*if (online)*/{ SendEvent("Continue", null); }} 
@@ -2242,7 +3181,7 @@ class GameView extends Sprite
 				}
 			}
 		}
-		if (evt == "RefreshPowBlock")
+		if (evt == "RefreshPowBlock" && allowpowblock)
 		{
 			powblock.HP = 4;
 			powblock.scaleY = 1;
@@ -2268,6 +3207,7 @@ class GameView extends Sprite
 				}
 			}
 			P.lives = startinglives;
+			P.lifefragments = 0;
 			P.ability.oncontinue();
 			/*if (level > 0 && level % 5 != 1)
 			{
@@ -2291,29 +3231,52 @@ class GameView extends Sprite
 			}
 		}
 		//sync any general changes going on.
-		if (evt == "Status")
+		if (evt == "S")
 		{
-			if (data.level > level)
+			HostPlayer = P;
+			//"Status" event
+			if (data.lvl > level)
 			{
-				level = data.level;
-				var L = level - 1;
+				level = data.lvl;
+				/*var L = level - 1;
 				if (L < 0)
 				{
 					L = 0;
 				}
-				rank = Math.floor(L / 30);
+				rank = Math.floor(L / 30);*/
+				updatelevelinfo();
 				PlayMusic(true);
 				
 			}
-			level = data.level;
-			totalenemies = data.totalenemies;
+			scrollX = 0;
+			scrollY = 0;
+			if (data.sx != null)
+			{
+			scrollX = data.sx;
+			}
+			if (data.sy != null)
+			{
+			scrollY = data.sy;
+			}
+			scrollspeedX = 0;
+			scrollspeedY = 0;
+			if (data.Sx != null)
+			{
+				scrollspeedX = data.Sx;
+			}
+			if (data.Sy != null)
+			{
+				scrollspeedY = data.Sy;
+			}
+			level = data.lvl;
+			totalenemies = data.TE;
 			if (!Hoster && totalenemies > maxspawns)
 			{
 				maxspawns = totalenemies;
 				//SpawnList.clear();
 				//populatespawnlist();
 			}
-			sessionID = data.sessionID;
+			sessionID = data.SID;
 			if (Main._this.lastsession != null && sessionID == Main._this.lastsession.sessionID)
 			{
 				if (Main._this.lastsession.lives >= 0)
@@ -2322,25 +3285,33 @@ class GameView extends Sprite
 				}
 				Main._this.lastsession = null;
 			}
-			var R = TypeofRound.createByIndex(data.RoundType);
+			var R = TypeofRound.createByIndex(data.RT);
 			if (RoundType != R)
 			{
-				if (R == TypeofRound.Table)
+				if (lvllogic != null)
+				{
+					lvllogic.end();
+					lvllogic = null;
+				}
+			}
+			/*if (RoundType != R)
+			{
+				if (R == TypeofRound.EventTable)
 				{
 					ProcessEvent("Spawntables", "Myself", null);
 				}
-				if (R == TypeofRound.NoWrap)
+				if (R == TypeofRound.EventNoWrap)
 				{
 					ProcessEvent("NoWrap", "Myself", null);
 				}
-				if (R == TypeofRound.Cirno || R == TypeofRound.FireCirno || R == TypeofRound.ElectricCirno || R == TypeofRound.CirnoBoss)
+				if (R == TypeofRound.EventCirno || R == TypeofRound.EventFireCirno || R == TypeofRound.EventElectricCirno || R == TypeofRound.EventCirnoBoss)
 				{
 					ProcessEvent("FreezeWorld", "Myself", null);
 				}
-			}
+			}*/
 			RoundType = R;
 			///gamemode = data.gamemode;
-			var G = data.GameFlags;
+			var G = data.GF;
 			GameFlags = new FlagManager(1);
 			GameFlags.data = G;
 			if (GameFlags.get(Main.KonamiCode))
@@ -2352,6 +3323,7 @@ class GameView extends Sprite
 				}
 			}
 			//if (data.HP != powblock.HP)
+			if (allowpowblock)
 			{
 				powblock.HP = data.HP;
 				if (powblock.HP == 0)
@@ -2366,13 +3338,18 @@ class GameView extends Sprite
 					powblock.solid = true;
 				}
 			}
-			if (data.activeEnemies != activeEnemies.length && syncdelay<1)
+			else
+			{
+				powblock.visible = false;
+				powblock.solid = false;
+			}
+			if (data.AE != activeEnemies.length && syncdelay<1)
 			{
 				//ask hoster to resend current enemy states.
 				SendEvent("EnemySync", null);
 				syncdelay = 60;
 			}
-			if (data.activeItems != activeItems.length && syncdelay<1)
+			if (data.AI != activeItems.length && syncdelay<1)
 			{
 				//ask hoster to resend current item states.
 				SendEvent("ItemSync", null);
@@ -2418,7 +3395,7 @@ class GameView extends Sprite
 				D.Ldir = E.Ldir;
 				D.alive = E.alive;
 				D.Hspeed = E.Hspeed;
-				D.Vspeed = E.Vspeed ;
+				D.Vspeed = E.Vspeed;
 				D.visible = E.visible;
 				D.type = E.charname;
 				D.rank = E.rank;
@@ -2546,9 +3523,12 @@ class GameView extends Sprite
 				if (data < 0)
 				{
 					var D:Dynamic = EntityFromUID( -data);
+					if (D != null)
+					{
 					D.alive = false;
 					D.killed = true;
 					P.ability.oncollect(D);
+					}
 				}
 				else
 				{
@@ -2600,6 +3580,10 @@ class GameView extends Sprite
 			if (thegiant.active && thegiant.rotation == 0)
 			{
 				thegiant.tipover();
+				if (myplayer == P)
+				{
+					unlockcharacter(thegiant.unlock);
+				}
 			}
 		}
 		if (evt == "BounceEntities")
@@ -2681,7 +3665,7 @@ class GameView extends Sprite
 				}
 				i++;
 			}
-			if (powblock.HP == 0)
+			if (powblock.HP == 0 || !allowpowblock)
 			{
 				powblock.visible = false;
 				powblock.solid = false;
@@ -2708,6 +3692,7 @@ class GameView extends Sprite
 			{
 				D.enrage();
 				D.enraged = true;
+				D.enrageable = false;
 				if (!Hoster)
 				{
 					D.catchup();
@@ -2752,9 +3737,17 @@ class GameView extends Sprite
 						D.x = C.x-115;
 						SendEvent("LightningStrike", D);
 					}
+					else if (C.death && Hoster)
+					{
+						SendEvent("killeveryone", null);
+					}
 				}
 				i += 1;
 			}
+		}
+		if (evt == "killeveryone")
+		{
+			killeveryone();
 		}
 		if (evt == "RefreshBlocks")
 		{
@@ -2794,70 +3787,79 @@ class GameView extends Sprite
 		{
 			
 			var E:Dynamic = EntityFromUID(data.UID);
-			var D:UFO = E;
+			var S = "";
+			if (E.subtype == "UFO")
+			{
+				S = E.ufotype;
+			}
+			if (E.subtype == "RainbowUFO")
+			{
+				S = E.ufotype;
+			}
+			//var D:UFO = E;
 			//trace("UFO strike confirmed!");
-			if (D.ufotype == "Red")
+			if (S == "Red")
 			{
 				//trace("Red pattern detected!");
 				var O = new Bullet();
-				O.x = D.x;
-				O.y = D.y;
+				O.x = E.x;
+				O.y = E.y;
 				O.Hspeed = -2;
 				O.Vspeed = 4;
 				AddObject(O);
 				O = new Bullet();
-				O.x = D.x;
-				O.y = D.y;
+				O.x = E.x;
+				O.y = E.y;
 				O.Hspeed = -3;
 				O.Vspeed = 4;
 				AddObject(O);
 				O = new Bullet();
-				O.x = D.x;
-				O.y = D.y;
+				O.x = E.x;
+				O.y = E.y;
 				O.Hspeed = 2;
 				O.Vspeed = 4;
 				AddObject(O);
 				O = new Bullet();
-				O.x = D.x;
-				O.y = D.y;
+				O.x = E.x;
+				O.y = E.y;
 				O.Hspeed = 3;
 				O.Vspeed = 4;
 				AddObject(O);
 			}
-			if (D.ufotype == "Green")
+			if (S == "Green")
 			{
 				//trace("Green pattern detected!");
 				var O = new Bullet();
-				O.x = D.x-10;
-				O.y = D.y;
+				O.x = E.x-10;
+				O.y = E.y;
 				O.Hspeed = 0;
 				O.Vspeed = 4;
 				AddObject(O);
 				O = new Bullet();
-				O.x = D.x+10;
-				O.y = D.y;
+				O.x = E.x+10;
+				O.y = E.y;
 				O.Hspeed = 0;
 				O.Vspeed = 4;
 				AddObject(O);
 			}
-			if (D.ufotype == "Blue")
+			if (S == "Blue")
 			{
 				//trace("Blue pattern detected!");
 				var O = new Bullet();
-				O.x = D.x;
-				O.y = D.y;
+				O.x = E.x;
+				O.y = E.y;
 				O.Hspeed = 0;
 				O.Vspeed = 4;
 				AddObject(O);
 				O = new Bullet();
-				O.x = D.x;
-				O.y = D.y;
+				O.x = E.x;
+				O.y = E.y;
 				O.Hspeed = 2;
 				O.Vspeed = 4;
 				AddObject(O);
 				O = new Bullet();
-				O.x = D.x;
-				O.y = D.y;
+				O.x = E.x;
+				O.y = E.y;
 				O.Hspeed = -2;
 				O.Vspeed = 4;
 				AddObject(O);
@@ -2872,11 +3874,28 @@ class GameView extends Sprite
 			E.Ldir = data.dir;
 			AddObject(E);
 		}
+		if (evt == "SummonRainbowUFO")
+		{
+			var E = new RainbowUFO();
+			E.x = data.UID * 800;
+			E.y = -200;
+			E.UID = data.UID;
+			E.bonuscolor = data.color;
+			//ufoseal = 2400;
+			ufoseal = 600;
+			AddEnemy(E);
+			SoundManager.Play("summonufo");
+			if (Hoster)
+			{
+				SendEvent("Fairplay", null);
+			}
+		}
 		if (evt == "PlayerDanmaku")
 		{
 			//var E:Dynamic = EntityFromUID(data.UID);
 			var O = new PlayerBullet();
-			O.x = data.x;
+			O.tossedBy = P;
+			/*O.x = data.x;
 			O.y = data.y;//+10;
 			O.Hspeed = data.Hspeed;
 			O.Vspeed = data.Vspeed;
@@ -2893,6 +3912,10 @@ class GameView extends Sprite
 			if (data.HP != null)
 			{
 				O.HP = data.HP;
+			}
+			if (data.spin != null)
+			{
+				O.spin = data.spin;
 			}
 			if (data.topbounce != null)
 			{
@@ -2918,8 +3941,10 @@ class GameView extends Sprite
 			
 			
 			
-			O.allowwrap = data.wrap;
-			if (O.Hspeed >= 0)
+			O.allowwrap = data.wrap;*/
+			O.image.image_speed = 1;
+			CopyBulletData(data, O);
+			if (O.Hspeed >= 0 || data.rotated == true)
 			{
 				O.ChangeAnimation(data.type);
 			}
@@ -2928,6 +3953,15 @@ class GameView extends Sprite
 				O.ChangeAnimation(data.type+"F");
 			}
 			AddObject(O);
+		}
+		if (evt == "Web")
+		{
+			var W = new SpiderWeb();
+			W.x = data.x;
+			W.y = data.y;
+			W.duration = data.d;
+			W.player = P;
+			AddObject(W);
 		}
 		if (evt == "HeadCannon")
 		{
@@ -3093,11 +4127,11 @@ class GameView extends Sprite
 			O.Vspeed = -10;
 			if (Math.random() > 0.9)
 			{
-				O.ChangeAnimation("table");
+				O.ChangeAnimation("tableE");
 			}
 			else
 			{
-				O.ChangeAnimation("hammer");
+				O.ChangeAnimation("hammerE");
 			}
 			O.gravY = 0.3;
 			AddObject(O);
@@ -3153,13 +4187,13 @@ class GameView extends Sprite
 			Tbl.y = 375 - 320+3;
 			Tbl.UID = 1.6;
 			AddObject(Tbl);
-			RoundType = TypeofRound.Table;
+			RoundType = TypeofRound.EventTable;
 		}
 		if (evt == "NoWrap")
 		{
 			var O;
 			var X = 0;
-			var Y = 0;
+			var Y = 0-128;
 			while (Y < 600)
 			{
 				O = new Bullet();
@@ -3169,7 +4203,7 @@ class GameView extends Sprite
 				AddObject(O);
 				Y += 32;
 			}
-			Y = 0;
+			Y = 0-128;
 			X = 800 - 32;
 			while (Y < 600)
 			{
@@ -3177,10 +4211,11 @@ class GameView extends Sprite
 				O.x = X;
 				O.y = Y;
 				O.ChangeAnimation("skull");
+				O.type = "NoWrap";
 				AddObject(O);
 				Y += 32;
 			}
-			RoundType = TypeofRound.NoWrap;
+			RoundType = TypeofRound.EventNoWrap;
 		}
 		if (evt == "unyucannon")
 		{
@@ -3214,6 +4249,10 @@ class GameView extends Sprite
 			O.y = data.y;
 			O.Hspeed = data.Hspeed;
 			O.Vspeed = data.Vspeed;
+			if (data.spin != null)
+			{
+				O.spin = data.spin;
+			}
 			if (data.gravX != null)
 			{
 				O.gravX = data.gravX;
@@ -3271,13 +4310,13 @@ class GameView extends Sprite
 			}
 			#end
 		}
-		if (evt == "GiantSuikaAttack")
+		/*if (evt == "GiantSuikaAttack")
 		{
 			if (thegiant != null && !thegiant.active)
 			{
-				thegiant.activate();
+				//thegiant.activate();
 			}
-		}
+		}*/
 		if (evt == "AttachItem")
 		{
 			var E = EntityFromUID(data.UID);
@@ -3373,7 +4412,8 @@ class GameView extends Sprite
 		if (evt == "SummonYuka")
 		{
 			{
-				yuukaactive = true;
+				//yuukaactive = true;
+				
 				var Y = new Yuuka();
 				Y.x = data.x;
 				Y.y = data.y;
@@ -3429,6 +4469,38 @@ class GameView extends Sprite
 			pausetime = 5.000;
 			ZaWarudoCaster = P;
 		}
+		if (evt == "TelephonePole")
+		{
+			var TP = new TelephonePole();
+			TP.player = P;
+			TP.x = data.x;
+			AddObject(TP);
+		}
+		if (evt == "BananaPeel")
+		{
+			var TP = new BananaPeel();
+			TP.player = P;
+			TP.x = data.x;
+			TP.y = data.y;
+			AddObject(TP);
+		}
+		if (evt == "MiracleMallet")
+		{
+			var i = 0;
+			while (i < activeItems.length)
+			{
+				var E = activeItems[i];
+				if (E.charname == "Mini1up")
+				{
+					var H = E.height;
+					E.scaleX = 1;
+					E.scaleY = E.scaleX;
+					E.y -= E.height - H;
+				}
+				i++;
+			}
+			FlashColor(0xFFCCCC, 0.4, 0, 0.1);
+		}
 		if (evt == "ManipulateGap")
 		{
 			var E = EntityFromUID(data.UID);
@@ -3449,7 +4521,7 @@ class GameView extends Sprite
 					{
 						item = "GiantPoint";
 					}
-					else if (R < 0.83 && Main._this.canlivesspawn)
+					else if (R < 0.83 && gamemode.canlivesspawn)
 					{
 						item = "1up";
 					}
@@ -3563,6 +4635,32 @@ class GameView extends Sprite
 				L.y += D.y;
 				}
 			}
+			if (data.player != null)
+			{
+				var D:Dynamic = EntityFromUID(data.player);
+				L.user = D;
+				L.following = false;
+			}
+			if (data.color != null)
+			{
+				L.lasercolor = data.color;
+			}
+			if (data.size != null)
+			{
+				L.scaleY = data.size;
+			}
+			if (data.time != null)
+			{
+				L.Time = data.time;
+			}
+			if (data.piercing != null)
+			{
+				L.piercing = data.piercing;
+			}
+			if (data.rotation != null)
+			{
+				L.rotation = data.rotation;
+			}
 			L.antiplayer = data.antiplayer;
 			L.antienemy = data.antienemy;
 			AddObject(L);
@@ -3575,6 +4673,74 @@ class GameView extends Sprite
 				E.CustomEvent(data.data);
 			}
 		}
+		if (evt == "CustomLVLEvent")
+		{
+			/*var E = EntityFromUID(data.UID);
+			if (E != null && E.alive)
+			{
+				E.CustomEvent(data.data);
+			}*/
+			if (lvllogic != null)
+			{
+				lvllogic.CustomEvent(data.data);
+			}
+		}
+		if (evt == "SummonBlueBird")
+		{
+			var O = new BlueBird();
+			O.player = P;
+			O.x = 0;
+			O.y = 0;
+			AddObject(O);
+		}
+	}
+	public function killeveryone()
+	{
+		var i = 0;
+		while (i < entities.length)
+		{
+			var E = entities[i];
+			if (E.type == "Enemy")
+			{
+				if (boss != E && E.subtype != "boss" && E.subtype!="yuyuko")
+				{
+					E.alive = false;
+					E.killed = true;
+				}
+			}
+			i++;
+		}
+		FlashColor(0, 0.4, 0, 0.1);
+		
+		if (!myplayer.killed && !myplayer.flags.get(Player.DeathResistence))
+		{
+			myplayer.killed = true;
+			myplayer.Vspeed = -9;
+			SoundManager.Play("died");
+		}
+		//SendEvent("PlayerDeath", false);
+	}
+	public function activategiant()
+	{
+		//thegiant.activate();
+		var D:Dynamic = {};
+		D.type = "activate";
+		D.unlock = "suika";
+		if (RoundType == TypeofRound.EventCirno || RoundType == TypeofRound.EventFireCirno || RoundType == TypeofRound.EventElectricCirno)
+		{
+			D.unlock = "cirno";
+		}
+		if (Math.random() < 0.1)
+		{
+			var S = GetImposterList();
+			var U = S[Std.int(Math.random() * S.length)];
+			var P = CharHelper.getCharPreset(U);
+			if (P != null && P != "")
+			{
+				D.unlock = U;
+			}
+		}
+		thegiant.SendCustomEvent(D);
 	}
 	// Event Handlers
 	
@@ -3687,12 +4853,141 @@ class GameView extends Sprite
 				}
 			}
 	}
+	public function CopyBulletData(data:Dynamic, O:Dynamic)
+	{
+		var B = Std.is(O, PlayerBullet);
+		O.x = data.x;
+		O.y = data.y;//+10;
+		O.Hspeed = data.Hspeed;
+		O.Vspeed = data.Vspeed;
+		O.gravX = data.gravX;
+		O.gravY = data.gravY;
+		//if (O.scaleX == null)
+		if (!B)
+		{
+			O.scale = data.scale;
+		}
+		else
+		{
+			O.scaleX = data.scale;
+			O.scaleY = data.scale;
+		}
+		O.bounces = false;
+		O.type = data.type;
+		if (data.wrap != null)
+		{
+			if (!B)
+			{
+				O.wrap = data.wrap;
+			}
+			else
+			{
+				O.allowwrap = data.wrap;
+			}
+		}
+		if (data.spiral != null)
+		{
+			O.spiral = data.spiral;
+			if (data.spiralrate != null)
+			{
+				O.spiralrate = data.spiralrate;
+			}
+		}
+		if (data.piercing != null)
+		{
+			O.piercing = data.piercing;
+		}
+		if (data.emerge != null)
+		{
+			O.emerge = data.emerge;
+		}
+		if (data.maxscale != null)
+		{
+			O.maxscale = data.maxscale;
+		}
+		if (data.friction != null)
+		{
+			O.friction = data.friction;
+		}
+		if (data.timelimit != null)
+		{
+			O.timelimit = data.timelimit;
+		}
+		if (data.rotated != null)
+		{
+			O.rotated = data.rotated;
+		}
+		if (data.submerge != null)
+		{
+			O.submerge = data.submerge;
+		}
+		if (data.bounces != null)
+		{
+			O.bounces = data.bounces;
+		}
+		if (data.HP != null)
+		{
+			O.HP = data.HP;
+		}
+		if (data.spin != null)
+		{
+			O.spin = data.spin;
+		}
+		if (data.bossdamage != null)
+		{
+			O.bossdamage = data.bossdamage;
+		}
+		if (data.topbounce != null)
+		{
+			O.topbounce = data.topbounce;
+		}
+		if (data.bouncedrain != null)
+		{
+			O.bouncedrain = data.bouncedrain;
+		}
+		if (data.bumps != null)
+		{
+			O.bumps = data.bumps;
+		}
+		if (data.rolls != null)
+		{
+			O.rolls = data.rolls;
+		}
+		if (data.image_speed != null)
+		{
+			if (B)
+			{
+				O.image.image_speed = data.image_speed;
+			}
+			else
+			{
+				O.image_speed = data.image_speed;
+			}
+		}
+		if (data.illusion != null)
+		{
+			O.illusion = data.illusion;
+			if (data.illusiontime != null)
+			{
+				O.illusiontime = data.illusiontime;
+			}
+			if (data.illusiondir != null)
+			{
+				O.illusiondir = data.illusiondir;
+			}
+			if (data.illusionrate != null)
+			{
+				O.illusionrate = data.illusionrate;
+			}
+		}
+	}
 	//clones a "PlayerDanmaku" data and sends it(used for spamming danmaku)
 	public function SendPlayerDanmaku(data:Dynamic)
 	{
 		//var O = new PlayerBullet();
 		var O:Dynamic = { };
-			O.x = data.x;
+		CopyBulletData(data, O);
+			/*O.x = data.x;
 			O.y = data.y;//+10;
 			O.Hspeed = data.Hspeed;
 			O.Vspeed = data.Vspeed;
@@ -3715,6 +5010,14 @@ class GameView extends Sprite
 			{
 				O.HP = data.HP;
 			}
+			if (data.spin != null)
+			{
+				O.spin = data.spin;
+			}
+			if (data.bossdamage != null)
+			{
+				O.bossdamage = data.bossdamage;
+			}
 			if (data.topbounce != null)
 			{
 				O.topbounce = data.topbounce;
@@ -3734,7 +5037,7 @@ class GameView extends Sprite
 			if (data.image_speed != null)
 			{
 				O.image_speed = data.image_speed;
-			}
+			}*/
 			SendEvent("PlayerDanmaku", O);
 	}
 	public function stage_onKeyDown (event:KeyboardEvent):Void {
@@ -3756,6 +5059,7 @@ class GameView extends Sprite
 					level++;
 					if (((level - 1) % 5)+1 == 1)
 					{
+						updatelevelinfo();
 						PlayMusic(Hoster);
 						messagetime = 0;
 					}
@@ -3774,7 +5078,8 @@ class GameView extends Sprite
 		case Keyboard.F2:
 			if (Hoster && Main._this.DEBUG)
 			{
-				SendEvent("GiantSuikaAttack", null);
+				//SendEvent("GiantSuikaAttack", null);
+				activategiant();
 			}
 		case Keyboard.F3:
 			if (Hoster && Main._this.DEBUG)
@@ -3841,9 +5146,29 @@ class GameView extends Sprite
 				//var B = new BossMurasa();
 				
 				//var B = new Meiling();
-				var B = new Marisa();
-				AddEnemy(B);
+				//var B = new Marisa();
+				/*var B = new Reimu();
+				AddEnemy(B);*/
+				//var B:PowerupItem = new PowerupItem();
+				//B.power = "reimu";
+				//var B = new Roukanken();
+				//var B = new Bow();
+				//var B = new MiniHakkero();
+				var B = new CameraItem();
+				//var B = new SpellCardItem();
+				
+				B.x = 400;
+				B.Ldir = 0;
+				AddEntityItem(B);
 				//AddObject(B);
+			}
+		case Keyboard.F8:
+			if (Hoster && Main._this.DEBUG)
+			{
+				if (gamemode.rewardrequirement > 0)
+				{
+					objectiveprogress = gamemode.rewardrequirement - 1;
+				}
 			}
 		}
 		
@@ -3886,6 +5211,42 @@ class GameView extends Sprite
 		if (Math.random() > 0.5)
 		{
 			D.y += 160;
+		}
+		if (RoundType == TypeofRound.EventYuuka && Math.random() > 0.5)
+		{
+			D.y += 160;
+		}
+		if (RoundType == TypeofRound.EventYuuka && Math.random() > 0.5)
+		{
+			D.y -= 160;
+		}
+		//if (yuukaactive)
+		if (yuukasactive>= maxyuuka)
+		{
+			return;
+		}
+		var i = 0;
+		var count = 0;
+		while (i < entities.length)
+		{
+			var E = entities[i];
+			var ED:Dynamic = E;
+			var Y = E.y + 56;
+			//if ((E.type == "Yuuka" && ED.OY == D.y) || (E.type=="MasterSpark" && E.y+56 == D.y))
+			if (E.type == "Yuuka" || E.type == "MasterSpark")
+			{
+				count++;
+			if ((E.type == "Yuuka" && ED.OY == D.y) || (E.type=="MasterSpark" && (Y == D.y || Y+160 == D.y || Y-160 == D.y)))
+			{
+				return;
+			}
+			}
+			i++;
+		}
+		yuukasactive = count;
+		if (count >= maxyuuka)
+		{
+			return;
 		}
 		SendEvent("SummonYuka", D);
 	}
@@ -3966,288 +5327,219 @@ class GameView extends Sprite
 	public function SpawnEntityFromData(D:Dynamic):Dynamic
 	{
 		var E:Dynamic = null;
-		var type = "";
+		
 		if (EntityFromUID(D.UID) == null)
 		{
-					if (D.type == "RedFairy")
+			var LE:Array<Dynamic> = [];
+			//Enemies
+			LE.push( { T:"RedFairy", C:RedFairy } );
+			LE.push( { T:"MoonRabbit", C:MoonRabbit } );
+			LE.push( { T:"kisume", C:Kisume } );
+			LE.push( { T:"Mystia", C:Mystia } );
+			LE.push( { T:"Keine", C:Keine } );
+			LE.push( { T:"Keineex", C:Keine } );
+			
+			LE.push( { T:"Chen", C:Chen } );
+			LE.push( { T:"UFO", C:UFO } );
+			LE.push( { T:"Cirno", C:Cirno } );
+			LE.push( { T:"Imposter", C:Imposter } );
+			LE.push( { T:"rumia", C:Rumia } );
+			LE.push( { T:"seija", C:Seija } );
+			LE.push( { T:"Nue", C:Nue } );
+			LE.push( { T:"tewi", C:Tewi } );
+			//LE.push( { T:"kaguya", C:TwuckHunter } );
+			//LE.push( { T:"mokou", C:TwuckHunter } );
+			LE.push( { T:"utsuho", C:Utsuho } );
+			LE.push( { T:"yuyuko", C:Yuyuko } );
+			LE.push( { T:"satori", C:Satori } );
+			LE.push( { T:"Scarlet", C:Scarlet } );
+			LE.push( { T:"meiling", C:Meiling } );
+			LE.push( { T:"Hina", C:Hina } );
+			LE.push( { T:"sakuya", C:Sakuya } );
+			LE.push( { T:"youmu", C:Youmu } );
+			LE.push( { T:"aya", C:Aya } );
+			LE.push( { T:"Hecatia", C:Hecatia } );
+			LE.push( { T:"bosscirno", C:BossCirno } );
+			LE.push( { T:"bossyukari", C:BossYukari } );
+			LE.push( { T:"bosssanae", C:BossSanae } );
+			LE.push( { T:"bossparsee", C:BossParsee } );
+			LE.push( { T:"bossmurasa", C:BossMurasa } );
+			LE.push( { T:"tenshi", C:Tenshi } );
+			LE.push( { T:"udongein", C:Reisen } );
+			LE.push( { T:"kogasa", C:Kogasa } );
+			LE.push( { T:"Nazrin", C:Nazrin } );
+			LE.push( { T:"Iku", C:Iku } );
+			LE.push( { T:"Reimu", C:Reimu } );
+			LE.push( { T:"marisa", C:Marisa } );
+			LE.push( { T:"Yinyangorb", C:Yinyangorb } );
+			LE.push( { T:"Explosives", C:Explosives } );
+			LE.push( { T:"Orin", C:Orin } );
+			LE.push( { T:"Nitori", C:Nitori } );
+			LE.push( { T:"suwako", C:Suwako } );
+			LE.push( { T:"wakasagihime", C:Wakasagihime } );
+			LE.push( { T:"sekibanki", C:Sekibanki } );
+			LE.push( { T:"alice", C:Alice } );
+			
+			//Items 
+			LE.push( { T:"Point", C:PointItem } );
+			LE.push( { T:"powerup", C:PowerupItem } );
+			LE.push( { T:"GiantPoint", C:GiantPointItem } );
+			LE.push( { T:"Trophy", C:TrophyItem } );
+			LE.push( { T:"trophy", C:TrophyItem } );
+			LE.push( { T:"Balloon", C:BalloonItem } );
+			LE.push( { T:"Roukanken", C:Roukanken } );
+			LE.push( { T:"Bow", C:Bow } );
+			LE.push( { T:"MiniHakkero", C:MiniHakkero } );
+			LE.push( { T:"yinyangorbitem", C:YinYangOrbItem } );
+			LE.push( { T:"SpellCard", C:SpellCardItem } );
+			LE.push( { T:"Boomerang", C:BoomerangItem } );
+			LE.push( { T:"Camera", C:CameraItem } );
+			LE.push( { T:"SanaeStick", C:SanaeStickItem } );
+			LE.push( { T:"Myon", C:MyonItem } );
+			LE.push( { T:"myon", C:MyonItem } );
+			LE.push( { T:"1up", C:LifeItem } );
+			LE.push( { T:"Mini1up", C:MiniLifeItem } );
+			LE.push( { T:"UFOItem", C:UFOItem } );
+			LE.push( { T:"Bomb", C:BombItem } );
+			LE.push( { T:"MiniBomb", C:MiniBombItem } );
+			var T:String = D.type;
+			T = T.toLowerCase();
+			var i = 0;
+			while (i < LE.length)
+			{
+				//if (LE[i].T == D.type)
+				if (LE[i].T.toLowerCase() == T)
+				{
+					E = Type.createInstance(LE[i].C, []);
+					i = LE.length;
+				}
+				i++;
+			}
+			
+			if (E != null)
+			{
+				if (D.type == "Keineex")
+				{
+					E.ex = true;
+				}
+				if (D.type == "1up" || D.type == "Point" || D.type == "GiantPoint")
+				{
+					SoundManager.Play("spawncoin");
+				}
+				if (D.type == "powerup")
+				{
+					if (D.soul != null)
 					{
-						E = new RedFairy();
-						type = "Enemy";
+						E.power = D.soul;
 					}
-					if (D.type == "MoonRabbit")
+				}
+				if (D.type == "UFOItem")
+				{
+					SoundManager.Play("ufoitem");
+					var U:UFOItem = E;
+					if (D.changes == false)
 					{
-						E = new MoonRabbit();
-						type = "Enemy";
+						U.changescolor = false;
 					}
-					if (D.type == "kisume")
+					if (D.color != null)
 					{
-						E = new Kisume();
-						type = "Enemy";
+						U.color = D.color;
 					}
-					if (D.type == "Mystia")
+				}
+			}
+			else
+			{
+				if (D.type == "kaguya" || D.type == "mokou")
+				{
+					E = new TwuckHunter((D.type == "mokou"));
+					/*if (D.type == "mokou")
 					{
-						E = new Mystia();
-						type = "Enemy";
+						E = new TwuckHunter(true);
 					}
-					if (D.type == "Keine")
+					else
 					{
-						E = new Keine();
-						type = "Enemy";
-					}
-					if (D.type == "Keineex")
+						E = new TwuckHunter(false);
+					}*/
+				}
+			}
+			if (E == null)
+			{
+				trace("Could not spawn entity:" + D.type);
+			}
+			if (E != null/* && type=="Enemy"*/ && Std.is(E,Enemy))
+			{
+				E.UID = D.UID;
+				E.y = D.y;
+				E.x = D.x;
+				E.Ldir = D.Ldir;
+				
+				if (D.Hspeed != null)
+				{
+					E.Hspeed = D.Hspeed;
+					E.Vspeed = D.Vspeed;
+				}
+				E.enraged = D.enraged;
+				E.rank = D.rank;
+				if (D.alive != null)
+				{
+					E.alive = D.alive;
+				}
+				if (D.visible != null)
+				{
+					E.visible = D.visible;
+				}
+				if (D.spawns != null)
+				{
+					E.spawns = D.spawns + 1;
+				}
+				else
+				{
+					E.spawns = 1;
+				}
+				if (D.HP != null)
+				{
+					E.HP = D.HP;
+				}
+				if (D.enraged)
+				{
+					E.enrage();
+				}
+			}
+			if (E != null/* && type == "Item"*/ && Std.is(E,EntityItem))
+			{
+				E.UID = D.UID;
+				E.x = D.x;
+				E.y = D.y;
+				E.Ldir = D.Ldir;
+				if (D.holder != null)
+				{
+					var A = EntityFromUID(D.holder);
+					E.holder = A;
+				}
+			}
+			if (E != null && D.platform != null)
+			{
+				var P = EntityFromUID(D.platform);
+				if (P != null)
+				{
+					E.x += P.x;
+					E.y += P.y;
+					if (E.width > 1)
 					{
-						E = new Keine();
-						type = "Enemy";
-						E.ex = true;
+						E.x += ((P.width / 2) - (E.width / 2));
 					}
-					if (D.type == "Chen")
-					{
-						E = new Chen();
-						type = "Enemy";
-					}
-					if (D.type == "UFO")
-					{
-						E = new UFO();
-						type = "Enemy";
-					}
-					if (D.type == "Cirno")
-					{
-						E = new Cirno();
-						type = "Enemy";
-					}
-					if (D.type == "Imposter")
-					{
-						E = new Imposter();
-						type = "Enemy";
-					}
-					if (D.type == "rumia")
-					{
-						E = new Rumia();
-						type = "Enemy";
-					}
-					if (D.type == "seija")
-					{
-						E = new Seija();
-						type = "Enemy";
-					}
-					if (D.type == "Nue")
-					{
-						E = new Nue();
-						type = "Enemy";
-					}
-					if (D.type == "Nue")
-					{
-						E = new Nue();
-						type = "Enemy";
-					}
-					if (D.type == "tewi")
-					{
-						E = new Tewi();
-						type = "Enemy";
-					}
-					if (D.type == "kaguya" || D.type == "mokou")
-					{
-						if (D.type == "mokou")
-						{
-							E = new TwuckHunter(true);
-						}
-						else
-						{
-							E = new TwuckHunter(false);
-						}
-						type = "Enemy";
-					}
-					if (D.type == "utsuho")
-					{
-						E = new Utsuho();
-						type = "Enemy";
-					}
-					if (D.type == "satori")
-					{
-						E = new Satori();
-						type = "Enemy";
-					}
-					if (D.type == "Scarlet")
-					{
-						E = new Scarlet();
-						type = "Enemy";
-					}
-					if (D.type == "meiling")
-					{
-						E = new Meiling();
-						type = "Enemy";
-					}
-					if (D.type == "Hecatia")
-					{
-						E = new Hecatia();
-						type = "Enemy";
-					}
-					if (D.type == "bosscirno")
-					{
-						E = new BossCirno();
-						type = "Enemy";
-					}
-					if (D.type == "bossyukari")
-					{
-						E = new BossYukari();
-						type = "Enemy";
-					}
-					if (D.type == "bosssanae")
-					{
-						E = new BossSanae();
-						type = "Enemy";
-					}
-					if (D.type == "bossparsee")
-					{
-						E = new BossParsee();
-						type = "Enemy";
-					}
-					if (D.type == "bossmurasa")
-					{
-						E = new BossMurasa();
-						type = "Enemy";
-					}
-					if (D.type == "tenshi")
-					{
-						E = new Tenshi();
-						type = "Enemy";
-					}
-					if (D.type == "udongein")
-					{
-						E = new Reisen();
-						type = "Enemy";
-					}
-					if (D.type == "kogasa")
-					{
-						E = new Kogasa();
-						type = "Enemy";
-					}
-					if (D.type == "Nazrin")
-					{
-						E = new Nazrin();
-						type = "Enemy";
-					}
-					if (D.type == "Iku")
-					{
-						E = new Iku();
-						type = "Enemy";
-					}
-					if (D.type == "Reimu")
-					{
-						E = new Reimu();
-						type = "Enemy";
-					}
-					if (D.type == "marisa")
-					{
-						E = new Marisa();
-						type = "Enemy";
-					}
-					if (D.type == "Yinyangorb")
-					{
-						E = new Yinyangorb();
-						type = "Enemy";
-					}
-					if (E != null && type=="Enemy")
-					{
-						E.UID = D.UID;
-						E.y = D.y;
-						E.x = D.x;
-						E.Ldir = D.Ldir;
-						E.alive = D.alive;
-						E.Hspeed = D.Hspeed;
-						E.Vspeed = D.Vspeed;
-						E.enraged = D.enraged;
-						E.rank = D.rank;
-						E.visible = D.visible;
-						E.spawns = D.spawns + 1;
-						if (D.HP != null)
-						{
-							E.HP = D.HP;
-						}
-						if (D.enraged)
-						{
-							E.enrage();
-						}
-					}
-					if (D.type == "Point")
-					{
-						E = new PointItem();
-						SoundManager.Play("spawncoin");
-						type = "Item";
-					}
-					if (D.type == "GiantPoint")
-					{
-						E = new GiantPointItem();
-						SoundManager.Play("spawncoin");
-						type = "Item";
-					}
-					if (D.type == "Trophy" || D.type == "trophy")
-					{
-						E = new TrophyItem();
-						type = "Item";
-					}
-					if (D.type == "Balloon")
-					{
-						E = new BalloonItem();
-						type = "Item";
-					}
-					if (D.type == "MiniHakkero")
-					{
-						E = new MiniHakkero();
-						type = "Item";
-					}
-					if (D.type == "Camera")
-					{
-						E = new CameraItem();
-						type = "Item";
-					}
-					if (D.type == "SpellCard")
-					{
-						E = new SpellCardItem();
-						type = "Item";
-					}
-					if (D.type == "Myon" || D.type == "myon")
-					{
-						E = new MyonItem();
-						type = "Item";
-					}
-					if (D.type == "1up")
-					{
-						E = new LifeItem();
-						SoundManager.Play("spawncoin");
-						type = "Item";
-					}
-					if (D.type == "Bomb")
-					{
-						E = new BombItem();
-						SoundManager.Play("spawncoin");
-						type = "Item";
-					}
-					if (D.type == "MiniBomb")
-					{
-						E = new MiniBombItem();
-						SoundManager.Play("spawncoin");
-						type = "Item";
-					}
-					if (E != null && type == "Item")
-					{
-						E.UID = D.UID;
-						E.x = D.x;
-						E.y = D.y;
-						E.Ldir = D.Ldir;
-						if (D.holder != null)
-						{
-							var A = EntityFromUID(D.holder);
-							E.holder = A;
-						}
-					}
+				}
+			}
 		}
 		return E;
 	}
 	public static function GetRankTitle(level:Int):String
 	{
 		var L = level - 1;
-		var rank = Math.floor(L / 30);
+		//var C = levelsperstage;
+		//var C = 8 * 6;
+		var C = levelsperrank;
+		var rank = Math.floor(L / C);
 		var S = "";
 		if (rank == 0)
 		{
@@ -4267,18 +5559,21 @@ class GameView extends Sprite
 		}
 		if (rank == 4)
 		{
-			S = "Extr:";
+			S = "Extra:";
 		}
 		if (rank > 4)
 		{
-			S = "EX" + (rank - 3);
+			S = "EX" + (rank - 3)+":";
 		}
 		return S;
 	}
 	public static function GetLevelTitle(level:Int, sublevel:Bool=true,difficulty:Bool = true)
 	{
 		var L = level - 1;
-		var rank = Math.floor(L / 30);
+		//var rank = Math.floor(L / 30);
+		//var C = 8 * 6;
+		var C = levelsperrank;
+		var rank = Math.floor(L / C);
 		var S = "";
 		if (rank == 0)
 		{
@@ -4308,10 +5603,10 @@ class GameView extends Sprite
 		{
 			S = "";
 		}
-		var stage = Math.floor((level - 1) / 5);
-		stage = stage % 6;
+		var stage = Math.floor((level - 1) / levelsperstage);
+		stage = stage % stagesperrank;
 
-		var lvl = ((level - 1) % 5);
+		var lvl = ((level - 1) % levelsperstage);
 		lvl++;
 		var S2 = "";
 		if (stage == 0)
@@ -4338,9 +5633,18 @@ class GameView extends Sprite
 		{
 			S2 = "Eintei";
 		}
+
 		if (sublevel)
 		{
-			S = S + S2 + "-" + lvl;
+			if (((level) % levelsperrank) == 9)
+			{
+				S = S + S2 + "-" + "⑨";
+				//S = S + "⑨";
+			}
+			else
+			{
+				S = S + S2 + "-" + lvl;
+			}
 		}
 		else
 		{
@@ -4348,11 +5652,14 @@ class GameView extends Sprite
 		}
 		return S;
 	}
-	public function ShowLevel()
+	public function ShowLevel(displaymessage:Bool=true)
 	{
 		var S = GetLevelTitle(level,true,false);
 		var M = messages.length;
-		ShowMessage(S);
+		if (displaymessage)
+		{
+			ShowMessage(S);
+		}
 		var mode = "Solo";
 		if (online)
 		{
@@ -4364,10 +5671,39 @@ class GameView extends Sprite
 			{
 				mode = "Client";
 			}
+			if (!NP.running)
+			{
+				mode = "Error";
+			}
+			else if (!NP.groupstarted)
+			{
+				mode = "Waiting for players";
+			}
 		}
 		var R = GetRankTitle(level);
-		leveltitle.text = Main._this.roomprefix+"-"+R+":"+mode;
-		leveltitle.width = leveltitle.textWidth+8;
+		if (!online || (NP.running && NP.group != null))
+		{
+			leveltitle.text = Main._this.roomprefix + "-" + R + ":" + mode;
+		}
+		else
+		{
+			leveltitle.text = "Not connected...";
+		}
+		if (online && NP != null && NP.error != "" && NP.error != null)
+		{
+			leveltitle.text = NP.error;
+		}
+		leveltitle.width = leveltitle.textWidth + 8;
+		leveltitle.height = leveltitle.height + 8;
+		var B = leveltitle.getBounds(this);
+		if (B.right > 800)
+		{
+			leveltitle.x += 800 - B.right;
+		}
+		else
+		{
+			leveltitle.x = 5 + progressbar.x;
+		}
 		if (M == 0)
 		{
 			messagetime = 300;
@@ -4390,7 +5726,7 @@ class GameView extends Sprite
 			}
 			return null;
 	}
-	private function this_onEnterFrame (event:Event):Void {
+	public function this_onEnterFrame (event:Event):Void {
 		if (_this != this)
 		{
 			return;
@@ -4399,11 +5735,13 @@ class GameView extends Sprite
 		{
 			if (charselect == null)
 			{
-				charselect = new CharacterSelect(playerspick,useablelist,Main._this.canselectcharacter);
+				charselect = new CharacterSelect(playerspick,useablelist,gamemode.forcedcharacter=="");
 				var B = new MenuButton("Quit Game");
+				B.sound = "cancel";
 				B.x += 670;
 				B.y += 500;
-				B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+				//B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+				B.addclick(function( ev ) {
 					status = "quitting";
 					
 				 } 
@@ -4413,11 +5751,35 @@ class GameView extends Sprite
 				B = new MenuButton("Continue");
 				B.x += 670;
 				B.y += 12;
-				B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+				B.addclick(function( ev ) {
 					togglemenu();
 					
 				 } 
 				);
+				
+				if (gamemode.rewardrequirement > 0)
+				{
+				var TT = new TextField();
+				TT.text = "Levels to objective:" + (gamemode.rewardrequirement - objectiveprogress);
+				TT.mouseEnabled = false;
+				//TT.blendMode = openfl.display.BlendMode.INVERT;
+				var FA:Array<flash.filters.BitmapFilter> = new Array<flash.filters.BitmapFilter>();
+				var AB = new flash.filters.GlowFilter();
+				AB.blurX = 5;
+				AB.blurY = 5;
+				AB.color = 0x000000;
+				AB.strength = 3;
+				FA[FA.length] = AB;
+				TT.filters = FA;
+				//TT.y = 290;
+				TT.y = 100;
+				TT.scaleX = 2.5;
+				TT.scaleY = 2.5;
+				TT.textColor = 0xFFFFFF;
+				TT.width = TT.textWidth + 8;
+				TT.x = 800 - TT.width;
+				charselect.addChild(TT);
+				}
 				charselect.addChild(B);
 				gui.addChild(charselect);
 			}
@@ -4434,10 +5796,15 @@ class GameView extends Sprite
 			if (charselect.selected != playerspick)
 			{
 				playerspick = charselect.selected;
+				
 				var soul = "";
-				if (playerspick == "customavatar" && Main._this.canselectcharacter)
+				if (playerspick == "customavatar" && gamemode.forcedcharacter=="")
 				{
 					soul = Main._this.savedata.data.avatarability;
+				}
+				if (GameFlags.get(Main.Adventure))
+				{
+					soul = myplayer.charactersoul;
 				}
 				var D:Dynamic = { };
 				D.C = playerspick;
@@ -4450,7 +5817,7 @@ class GameView extends Sprite
 		}
 		if (pausetime>0)
 		{
-			TF.text = "Time has\nstopped";
+			/*TF.text = "Time has\nstopped";
 			var currentTime = Timer.stamp ();
 		var T = currentTime - ltime;
 		pausetime -= T;
@@ -4463,7 +5830,7 @@ class GameView extends Sprite
 				ZaWarudoKnives(ZaWarudoCaster);
 				ZaWarudoCaster = null;
 			}
-		}
+		}*/
 			return;
 		}
 		if (ZaWarudo.visible)
@@ -4523,7 +5890,19 @@ class GameView extends Sprite
 		}
 		TF.scaleX = 2;
 		TF.scaleY = 2;
-		var str = "x " + Math.max(myplayer.lives, 0);
+		var L = myplayer.lives + (myplayer.lifefragments / 4);
+		//var str = "x " + Math.max(myplayer.lives, 0);
+		var str = "x " + Math.max(L, 0);
+		
+		if (gamemode.infinitelives)
+		{
+			str = "x " + "∞";
+			if (myplayer.lives < 3)
+			{
+				myplayer.lives = 3;
+			}
+		}
+		
 		if (menu && moneytime < 1)
 		{
 			moneytime = 1;
@@ -4538,14 +5917,39 @@ class GameView extends Sprite
 		{
 			moneyicon.visible = false;
 		}
-		TF.text = str;
-		TF.textColor = 0xFFFFFF;
+		if (TF.text != str)
+		{
+			TF.text = str;
+			TF.textColor = 0xFFFFFF;
+		}
+		if (myplayer.combotime > 0 && myplayer.combo>1)
+		{
+			CTF.alpha = 1;
+			CTF.visible = true;
+			CTF.text = "Combo " + myplayer.combo;
+			CTF.textColor = 0xFFFFFF;
+		}
+		else
+		{
+			CTF.alpha -= 0.1;
+			if (CTF.alpha <= 0)
+			{
+				CTF.visible = false;
+			}
+		}
 		if (missingTime > 3 /* && !online*/)
 		{
 			missingTime = 0.041;
 		}
-		updategame(event);
-		missingTime -= 0.0334;
+		if (missingTime > 0.04)
+		{
+			gamestage.visible = false;
+		}
+		if (missingTime > 0.0334)
+		{
+			updategame(event);
+			missingTime -= 0.0334;
+		}
 		if (missingTime < 0)
 		{
 			missingTime = 0;
@@ -4554,6 +5958,10 @@ class GameView extends Sprite
 		{
 			updategame(event);
 			missingTime -= 0.0334;
+		}
+		if (!gamestage.visible)
+		{
+			gamestage.visible = true;
 		}
 		var cameraenabled = false;
 		if (cameraenabled)
@@ -4568,6 +5976,9 @@ class GameView extends Sprite
 		var S = "";
 		CombinedScore = 0;
 		CombinedScoreALL = 0;
+		var hoststart = -1;
+		var hostlength = 0;
+		var colors:TextColorizer = null;
 		if (online)
 		{
 		var i = 0;
@@ -4575,6 +5986,8 @@ class GameView extends Sprite
 		var PL = new Array<Player>();
 		var A = Players.iterator();
 		var ok = false;
+		colors = new TextColorizer(0xFFFFFF);
+		
 		while (A.hasNext())
 		{
 			var E = A.next();
@@ -4602,16 +6015,38 @@ class GameView extends Sprite
 		while (i < PL.length)
 		{
 			var E = PL[i];
+			var H = false;
+			//var C = 0x00FF55;
+			var C = 0x00DD55;
 			if (!E.inactive)
 			{
-			if (S == "")
+				var PN = E.playername;
+				if (/*!E.isme && */HostPlayer == E)
+				{
+					/*var symbol = "⌂";
+					symbol = "►";
+					PN = symbol + PN;*/
+					H = true;
+				}
+				if (H)
+				{
+					hoststart = S.length;
+					hostlength = PN.length;
+					C = 0xFFFF77;
+				}
+			/*if (S == "")
 			{
-				S = E.playername + ": " + E.score;
+				
+				S = PN + ": " + E.score;
 			}
 			else
 			{
-				S = S + "\n" + E.playername + ": " + E.score;
-			}
+				S = S + "\n" + PN + ": " + E.score;
+			}*/
+			
+			colors.appendline(PN, C);
+			colors.append(": "+E.score);
+			S = "";
 			}
 			i++;
 		}
@@ -4661,6 +6096,17 @@ class GameView extends Sprite
 			SC.scaleY = 1;
 		}
 		scoreboard.text = S;
+		scoreboard.textColor = 0xFFFFFF;
+		/*if (hostlength > 0)
+		{
+			var temp:TextFormat = new TextFormat();
+			temp.color = 0xFFFF77;
+			scoreboard.setTextFormat(temp, hoststart, hoststart + hostlength);
+		}*/
+		if (colors != null)
+		{
+			colors.apply(scoreboard);
+		}
 		scoreboard.width = scoreboard.textWidth+4;
 		scoreboard.height = scoreboard.textHeight + 4;
 		MSGText.text = messag;
@@ -4693,25 +6139,33 @@ class GameView extends Sprite
 			{
 				//made this still the main default blank message as it helps stabalize character movements anyways.
 				var D:Dynamic = { };
-				D.Hsp = myplayer.Hspeed;
-				D.Vsp = myplayer.Vspeed;
+				D.H = myplayer.Hspeed;
+				D.V = myplayer.Vspeed;
 				D.x = myplayer.x;
 				D.y = myplayer.y;
 				//D.visible = myplayer.visible;
-				D.con = myplayer.controller;
+				D.cn = myplayer.controller;
 				//if (frame % F == 0)
 				if (frame % 45 == 0)
 				{
 					D.ID = myplayer.UID;
-					D.char = myplayer.charname;
+					D.ch = myplayer.charname;
 					//if (myplayer.charactersoul != "")
+					if (myplayer.charname == "customavatar" || GameFlags.get(Main.Adventure))
+					{
+						D.sl = myplayer.charactersoul;
+						if (D.sl == null && GameFlags.get(Main.Adventure))
+						{
+							D.sl = "";
+						}
+					}
 					if (myplayer.charname == "customavatar")
 					{
-						D.soul = myplayer.charactersoul;
-						D.char = "dna-"+Main._this.savedata.data.avatar;
+						
+						D.ch = "dna-"+Main._this.savedata.data.avatar;
 					}
-					D.name = this.playername;
-					D.score = myplayer.score;
+					D.nm = this.playername;
+					D.sc = myplayer.score;
 				}
 				D.F = frame;
 				
@@ -4723,7 +6177,7 @@ class GameView extends Sprite
 					SendStatus();
 				}
 			}
-			NP.SendData("Upd", D);
+			NP.SendData("U", D);
 			}
 			
 			NP.Flush();
@@ -4747,7 +6201,7 @@ class GameView extends Sprite
 		ltime = currentTime;
 	}
 	public function LoseFocus() {
-		if (!online)
+		if (!online && !paused)
 		{
 			menu = true;
 			paused = menu;
@@ -4756,15 +6210,31 @@ class GameView extends Sprite
 	public function SendStatus() {
 		settotalenemies();
 		var D:Dynamic = { };
-					D.level = level;
-					D.totalenemies = totalenemies;
-					D.activeEnemies = (activeEnemies.length);
+					D.lvl = level;
+					D.TE = totalenemies;
+					D.AE = (activeEnemies.length);
 					D.HP = powblock.HP;
-					D.activeItems = activeItems.length;
-					D.RoundType = RoundType.getIndex();
-					D.GameFlags = GameFlags.data;
-					D.sessionID = sessionID;
-					SendEvent("Status", D);
+					D.AI = activeItems.length;
+					D.RT = RoundType.getIndex();
+					D.GF = GameFlags.data;
+					D.SID = sessionID;
+					if (scrollX != 0)
+					{
+						D.sx = scrollX;
+					}
+					if (scrollY != 0)
+					{
+						D.sy = scrollY;
+					}
+					if (scrollspeedX != 0)
+					{
+						D.Sx = scrollspeedX;
+					}
+					if (scrollspeedY != 0)
+					{
+						D.Sy = scrollspeedY;
+					}
+					SendEvent("S", D);
 	}
 	public function settotalenemies()
 	{
@@ -4793,34 +6263,9 @@ class GameView extends Sprite
 		}
 		var RS = roundstarted;
 		var prct = 0.5;
-		if (boss == null)
+		if (lvllogic != null)
 		{
-			if (maxspawns == 0 && Hoster)
-			{
-				if (gamestarted)
-				{
-					prct = 1;
-				}
-				else
-				{
-					prct = 0;
-				}
-			}
-			else
-			{
-				if (roundstarted || !Hoster)
-				{
-					prct = (maxspawns - totalenemies) / maxspawns;
-				}
-				else
-				{
-					prct = 1;
-				}
-			}
-		}
-		else
-		{
-			prct = (boss.phase) / boss.totalphases;
+			prct = lvllogic.updateprogressbar();
 		}
 		if (prct < 0)
 		{
@@ -4876,6 +6321,14 @@ class GameView extends Sprite
 		//G.drawRoundRect(20, 20, X, 9,5);
 		G.endFill();
 		
+		if ([TypeofRound.EventNormal, TypeofRound.EventScrolling, TypeofRound.EventDescending].indexOf(RoundType) > -1)
+		{
+			levelicon.bitmapData = AL.GetAnimation("flag")[0];
+		}
+		else
+		{
+			levelicon.bitmapData = AL.GetAnimation("exclamationmark")[0];
+		}
 	}
 	private function updategame (event:Event):Void {
 		if (missingTime < 0.01)
@@ -4886,6 +6339,72 @@ class GameView extends Sprite
 		{
 			Background.alpha += 0.03;
 		}
+		else
+		{
+			OBackground.visible = false;
+		}
+		#if flash
+		//if (Hoster)
+		if (online && !NP.running && NP.error != lastNPerror)
+		{
+			ShowMessage(NP.error);
+			lastNPerror = NP.error;
+		}
+		#end
+		gui.graphics.clear();
+		gamestage.graphics.clear();
+		Background.cacheAsBitmap = Background.alpha >= 1;
+		/*if (gamestage.scaleY > 0)
+		{
+			//gamestage.y = Math.min(Math.max(myplayer.y + 300,0),100);
+			var Y = Math.min(Math.max(myplayer.y - 200,-100),0);
+			gamestage.y = -Y;
+			Background.y = Y;
+			OBackground.y = Background.y;
+		}*/
+		//if (scrollY==0)
+		{
+			var spd = 10;
+			var Y = Math.min(Math.max(myplayer.y - 150, -100), 0);
+			if (scrollY != 0 || gamestage.scaleY!=1)
+			{
+				//Y = 600;
+				Y = 0;
+			}
+			if (camera.y != -Y)
+			{
+				var D = Math.abs(( -camera.y) - Y);
+				if (D >= spd && (camera.y != 0 || D>90))
+				{
+					if (camera.y > -Y)
+					{
+						camera.y -= spd;
+					}
+					else
+					{
+						camera.y += spd;
+					}
+					//camera.y = -Y;
+					Background.y = -camera.y;
+					OBackground.y = Background.y;
+				}
+				else
+				{
+					if (Y == 0)
+					{
+						camera.y = 0;
+						Background.y = -camera.y;
+						OBackground.y = Background.y;
+					}
+				}
+			}
+		}
+		/*else
+		{
+			camera.y = 0;
+			Background.y = -camera.y;
+			OBackground.y = Background.y;
+		}*/
 		if (platformformation != currentformation)
 		{
 			setformation();
@@ -4903,13 +6422,21 @@ class GameView extends Sprite
 			myplayer.lives = (useablelist.length - 1);
 			if (myplayer.killed && myplayer.y>600)
 			{
-				if (useablelist.indexOf(playerspick) >= 0)
+				var name = playerspick;
+				if (name.indexOf("ALT") > -1)
 				{
-					useablelist.remove(playerspick);
+					//alt = true;
+					name = name.substr(0, name.length - 3);
+					//i = Player.characters.indexOf(name);
+				}
+				if (useablelist.indexOf(name) >= 0)
+				{
+					useablelist.remove(name);
 				}
 				if (useablelist.length < 1)
 				{
-					ProcessEvent("GameOver", "Myself", null);
+					//ProcessEvent("GameOver", "Myself", null);
+					SendEvent("GameOver", null);
 				}
 				else if (!menu)
 				{
@@ -4919,6 +6446,109 @@ class GameView extends Sprite
 		}
 		updatelifeicon();
 		updateprogressbar();
+		
+		if (lvllogic == null)
+		{
+			lvllogic = GetLogic();
+			
+		}
+		if (lvllogic != null && !lvllogic.started)
+		{
+			var A = ((lvllogic.horizontalscrolling) || scrollX == 0);
+			var B = ((lvllogic.verticalscrolling) || scrollY == 0);
+			if (A && B)
+			{
+			lvllogic.start();
+			if (Hoster)
+			{
+				lvllogic.hosterstart();
+			}
+			lvllogic.started = true;
+			}
+			else
+			{
+				//var D = 3;
+				//var D = 4;
+				var D = 5;
+				if (!lvllogic.horizontalscrolling && scrollX != 0)
+				{
+					scrollspeedX = 0;
+					if (Math.abs(scrollX) <= D)
+					{
+						scrollX = 0;
+					}
+					else
+					{
+						var dist = Math.abs(scrollX);
+						var dist2 = Math.abs(scrollX - 1312);
+						if (dist2 < dist)
+						{
+							scrollX -= 1312;
+						}
+						var A = (scrollX < 0);
+						/*if (Math.abs(scrollX) > 500)
+						{
+							A = !A;
+						}*/
+						if (A)
+						{
+							scrollX += D;
+						}
+						else
+						{
+							scrollX -= D;
+						}
+						scrollwrap();
+					}
+				}
+				//D = 1;
+				//D = 2;
+				D = 3;
+				if (!lvllogic.verticalscrolling && scrollY != 0)
+				{
+					scrollspeedY = 0;
+					var B = scrollY;
+					/*while (B > 80)
+					{
+						B -= 160;
+					}*/
+					while (B > 160)
+					{
+						B -= 320;
+					}
+					//if (Math.abs(scrollY) <= D || Math.abs(scrollY-300) <= D)
+					if (Math.abs(B) <= D)
+					{
+						scrollY = 0;
+					}
+					else
+					{
+						var A = (scrollY < 0);
+						/*if (Math.abs(scrollY) > 300)
+						{
+							A = !A;
+						}*/
+						A = false;
+						if (A)
+						{
+							scrollY += D;
+						}
+						else
+						{
+							scrollY -= D;
+						}
+						
+						//scrollY = 0;
+						scrollwrap();
+					}
+				}
+			}
+		}
+		if (lvllogic != null && lvllogic.started)
+		{
+			lvllogic.update();
+		}
+		autoscroll();
 		collisiondata = new Array<Dynamic>();
 		collisiondangerousdata = new Array<Dynamic>();
 		var col = 0;
@@ -4951,12 +6581,12 @@ class GameView extends Sprite
 			}
 			if (totalenemies == 1 && Hoster)
 			{
-				if (activeEnemies.length > 0 && !activeEnemies[0].enraged && activeEnemies[0].needtokill && activeEnemies[0].subtype!="boss")
+				if (activeEnemies.length > 0 && !activeEnemies[0].enraged && activeEnemies[0].needtokill && activeEnemies[0].subtype!="boss" && activeEnemies[0].enrageable)
 				{
 					SendEvent("Enrage", activeEnemies[0].UID);
 				}
 			}
-			if (!spawnedChar && CombinedScore > PointsToLife >> 1)
+			/*if (!spawnedChar && CombinedScore > PointsToLife >> 1)
 			{
 				if (totalenemies > 0)
 				{
@@ -4966,14 +6596,11 @@ class GameView extends Sprite
 					}
 					else
 					{
-						/*var enemy = new Imposter();
-						enemy.UID = 0;
-						SpawnList.add(enemy);*/
 						imposterbonus++;
 						spawnedChar = true;
 					}
 				}
-			}
+			}*/
 			//check for silly amounts of unspent score.(may stop "quit glitch" from happening)
 			if (CombinedScore > PointsToLife+PointsToLife)
 			{
@@ -5013,7 +6640,8 @@ class GameView extends Sprite
 					}
 				}
 				var D:Dynamic = { };
-				D.type = "1up";
+				//D.type = "1up";
+				D.type = "Mini1up";
 				D.UID = Math.random();
 				if (Math.random() > 0.5)
 				{
@@ -5026,8 +6654,8 @@ class GameView extends Sprite
 					D.Ldir = 1;
 				}
 				D.y = -100;
-				spawnedChar = false;
-				if (Main._this.canlivesspawn)
+				////spawnedChar = false;
+				if (gamemode.canlivesspawn)
 				{
 					SendEvent("SpawnItem", D);
 				}
@@ -5041,6 +6669,10 @@ class GameView extends Sprite
 		if (Sealed > 0)
 		{
 			Sealed--;
+		}
+		if (ufoseal > 0)
+		{
+			ufoseal--;
 		}
 		var i:Int = 0;
 		while (i < entities.length)
@@ -5086,7 +6718,10 @@ class GameView extends Sprite
 						{
 							var D:Dynamic = E;
 							var EE:Enemy = D;
-							SpawnList.add(EE);
+							if (EE.respawn)
+							{
+								SpawnList.add(EE);
+							}
 						}
 					}
 					else
@@ -5100,7 +6735,8 @@ class GameView extends Sprite
 							D.type = "Point";
 							if (EE.rewarditem != null)
 							{
-								D.type = EE.rewarditem;
+								//D.type = EE.rewarditem;
+								D.type = EntityItem.getitem(EE.rewarditem);
 							}
 							D.UID = Math.random();
 							if (Math.random() > 0.5)
@@ -5112,6 +6748,20 @@ class GameView extends Sprite
 							{
 								D.x = -16;
 								D.Ldir = 1;
+							}
+							points++;
+							var max = 12;
+							if (online)
+							{
+								max -= Math.floor(GetPlayers().length / 2);
+							}
+							//if (Math.random() < 0.12/* || true*/)
+							//if (Math.random() < 0.07/* || true*/)
+							if (points>=max && totalenemies > 3 && gamemode.ufoitemsenabled)
+							{
+								points -= max;
+								D.type = "UFOItem";
+								D.x = 800 * Math.random();
 							}
 							D.y = -100;
 							SendEvent("SpawnItem", D);
@@ -5206,15 +6856,76 @@ class GameView extends Sprite
 		}
 		if (Hoster)
 		{
-			//chances per minute(avg)
-			if (totalenemies > 0)
+			if (lvllogic != null)
 			{
-			var R = ept;
+				lvllogic.hosterupdate();
+			}
+			//chances per minute(avg)
+			
+			//do obstacles
+			if (totalenemies > 0 && ept>0)
+			{
+				DoObstacles();
+			}
+			//replace start music and spawning with events that trigger it instead.
+		if (SpawnTimer <= 0)
+		{
+			if (lvllogic != null && lvllogic.started)
+			{
+				lvllogic.tick();
+			}
+		}
+		}
+		else
+		{
+			//if not hosting ensure spawnlist has at least something in it, to help against hoster logging out with no enemies left causing game to stop progressing
+			if (SpawnList.length == 0)
+			{
+				var enemy = new RedFairy();
+				SpawnList.add(enemy);
+			}
+		}
+		i = 0;
+		while (i < queuedevents.length)
+		{
+			var Q = queuedevents[i];
+			Q.update();
+			if (!Q.alive)
+			{
+				queuedevents.remove(Q);
+				i--;
+			}
+			i++;
+		}
+	}
+	public function AddToArrayMultiple(array:Dynamic, value:Dynamic, times:Int)
+	{
+		var i = 0;
+		while (i < times)
+		{
+			array[array.length] = value;
+			i++;
+		}
+	}
+	public function CreateArrayOfMultiple(value:Dynamic, times:Int):Array<Dynamic>
+	{
+		var array = new Array<Dynamic>();
+		var i = 0;
+		while (i < times)
+		{
+			array[array.length] = value;
+			i++;
+		}
+		return array;
+	}
+	public function DoObstacles()
+	{
+		var R = ept;
 			if ((spawns > (maxspawns + (maxspawns))) && boss == null)
 			{
 				R = rept;
 			}
-			if (Sealed<1 && R>0 && enemyspawn && frame & 2 > 0 && Math.random()<R)
+			if (Sealed<1 && ufoseal<1 && R>0 && enemyspawn && frame & 2 > 0 && Math.random()<R)
 			{
 				//var evt = Math.random();
 				var E = "";
@@ -5234,6 +6945,8 @@ class GameView extends Sprite
 					//E = "MrGhosty";
 					//E = "Reimu";
 					//E = "UnzanFist";
+					//E = "UFOItem";
+					//E = "Explosives";
 				}
 				#end
 				if (E == "Gap")
@@ -5280,7 +6993,8 @@ class GameView extends Sprite
 						D.x = Math.random() * 800;
 						D.Ldir = 1;
 					}
-					D.y = -100;
+					//D.y = -100;
+					D.y = -200;
 					D.alive = true;
 					D.Hspeed = 0;
 					D.Vspeed = 0;
@@ -5291,9 +7005,10 @@ class GameView extends Sprite
 					ufos++;
 					SendEvent("SpawnEnemy", D);
 				}
-				else if (E == "GiantSuika" && thegiant != null && !thegiant.active)
+				else if (E == "GiantSuika" && thegiant != null && !thegiant.active && scrollspeedX==0 && scrollspeedY == 0)
 				{
-					SendEvent("GiantSuikaAttack", null);
+					//SendEvent("GiantSuikaAttack", null);
+					activategiant();
 				}
 				else if (E == "Trophy" && !trophyactive)
 				{
@@ -5340,7 +7055,8 @@ class GameView extends Sprite
 					D.spawns = 0;
 					SendEvent("SpawnEnemy", D);
 				}
-				else if (E == "Yuuka" && !yuukaactive)
+				//else if (E == "Yuuka" && !yuukaactive)
+				else if (E == "Yuuka" && yuukasactive<maxyuuka)
 				{
 					var A = Players.iterator();
 					var ok = false;
@@ -5382,7 +7098,7 @@ class GameView extends Sprite
 					D.spawns = 0;
 					SendEvent("SpawnEnemy", D);
 				}
-				else if (E == "MiniPowBlock" && !minipowactive && minipowspawns < maxminipowspawns)
+				/*else if (E == "MiniPowBlock" && !minipowactive && minipowspawns < maxminipowspawns && scrollspeedX == 0 && scrollspeedY == 0 && allowpowblock)
 				{
 					var D:Dynamic = { };
 					var R = Math.random();
@@ -5398,7 +7114,7 @@ class GameView extends Sprite
 						}
 					}
 					SendEvent("SpawnMiniPowBlock", D);
-				}
+				}*/
 				else if (E == "MrGhosty")
 				{
 					var D:Dynamic = { };
@@ -5442,159 +7158,334 @@ class GameView extends Sprite
 					D.x = Math.floor(Math.random() * 750);
 					SendEvent("UnzanFist", D);
 				}
-			}
-			}
-			//replace start music and spawning with events that trigger it instead.
-		if (SpawnTimer <= 0)
-		{
-			if (SpawnList.length > 1)
-			{
-				ResetSpawnTimer();
-			}
-			
-			if (!SpawnList.isEmpty())
-			{
-				var E = SpawnList.pop();
-				enemyspawn = true;
-				var data:Dynamic = { };
-				data.UID = E.UID;
-				if (data.UID == 0)
+				else if (E == "UFOItem")
 				{
-					//if blank enemy(made in spawnlist) then populate id info
-					data.UID = Math.random();
-				}
-				if (Math.random() > 0.5)
-				{
-					data.x = 800;
-					data.Ldir = -1;
-				}
-				else
-				{
-					data.x = -16;
-					data.Ldir = 1;
-				}
-				data.y = -100;
-				data.alive = true;
-				data.Hspeed = 0;
-				data.Vspeed = 0;
-				data.visible = true;
-				data.enraged = E.enraged;
-				data.type = E.charname;
-				data.rank = E.rank;
-				data.spawns = E.spawns;
-				if (E.HP > -1)
-				{
-					data.HP = E.HP;
-				}
-				SendEvent("SpawnEnemy", data);
-			}
-			else
-			{
-				var count = getenemycount();
-				if (count < 1)
-				{
-					ResetSpawnTimer();
-					SpawnTimer = SpawnTimer >> 1;
-					if (gamestarted)
-					{
-						level += Main._this.levelincrement;
-					}
-				var tmp = 0;
-				if (Hoster)
-				{
-					powblock.HP = 4;
-					SendStatus();
-					//if (level % 5 == 1)
-					/*
-					if (RoundType != TypeofRound.Normal)
-					{
-						var D:Dynamic = { };
-				D.type = "Bomb";
-				D.UID = Math.random();
-				if (Math.random() > 0.5)
-				{
-					D.x = 800;
-					D.Ldir = -1;
-				}
-				else
-				{
-					D.x = -16;
+					var D:Dynamic = { };
+							
+					D.type = "UFOItem";
+					D.UID = Math.random();
+					D.x = -32;
+					D.y = -200;
+					//D.platform = E.UID;
 					D.Ldir = 1;
-				}
-				D.y = -100;
-				spawnedChar = false;
-				SendEvent("SpawnItem", D);
-				
+					/*if (dir)
+					{
+						D.Ldir = -1;
+					}
+					else	
+					{
+						D.Ldir = 1;
 					}*/
+					//D.x = E.x;
+					//D.y = E.y;
+					SendEvent("SpawnItem", D);
 				}
-				enemyspawn = false;
-				CalculateLevelData();
-				var data:Dynamic = { };
-				data.level = level;
-				data.RoundType = RoundType.getIndex();
-				if (level > 1 && roundstarted)
+				else if (E == "Explosives")
 				{
-					SendEvent("NextLevel", data);
+					var D:Dynamic = { };
+					D.type = "Explosives";
+					D.UID = Math.random();
+					D.x = 800 * Math.random();
+					D.y = 500 * Math.random();
+					D.alive = true;
+					D.Hspeed = 0;
+					D.Vspeed = 0;
+					D.enraged = false;
+					D.visible = true;
+					D.rank = rank;
+					D.spawns = 0;
+					SendEvent("SpawnEnemy", D);
 				}
-				if (RoundType == TypeofRound.Table && Hoster)
+				else if (E == "Nitori")
 				{
-					ProcessEvent("Spawntables", "Myself", null);
-					//SendEvent("Spawntables", null);
-				}
-				if (RoundType == TypeofRound.NoWrap && Hoster)
-				{
-					ProcessEvent("NoWrap", "Myself", null);
-					//SendEvent("Spawntables", null);
-				}
-				
-				settotalenemies();
-				
-				SendEvent("TotalEnemies", totalenemies);
-				}
-				else if (boss != null && count == 1)
-				{
-					boss.outofminions();
+					var D:Dynamic = { };
+					D.type = "Nitori";
+					D.UID = Math.random();
+					if (Math.random() > 0.5)
+					{
+						D.x = 800;
+						D.Ldir = -1;
+					}
+					else
+					{
+						D.x = -16;
+						D.Ldir = 1;
+					}
+					D.y = -100;
+					D.alive = true;
+					D.Hspeed = 0;
+					D.Vspeed = 0;
+					D.enraged = false;
+					D.visible = true;
+					D.rank = rank;
+					D.spawns = 0;
+					SendEvent("SpawnEnemy", D);
 				}
 			}
-		}
-		}
-		else
-		{
-			//if not hosting ensure spawnlist has at least something in it, to help against hoster logging out with no enemies left causing game to stop progressing
-			if (SpawnList.length == 0)
-			{
-				var enemy = new RedFairy();
-				SpawnList.add(enemy);
-			}
-		}
 	}
-	public function AddToArrayMultiple(array:Dynamic, value:Dynamic, times:Int)
+	
+	public function CalculateLevelData()
 	{
-		var i = 0;
-		while (i < times)
+		if (lvllogic != null)
 		{
-			array[array.length] = value;
-			i++;
+			lvllogic.end();
+			lvllogic = null;
 		}
-	}
-	public function CreateArrayOfMultiple(value:Dynamic, times:Int):Array<Dynamic>
-	{
-		var array = new Array<Dynamic>();
-		var i = 0;
-		while (i < times)
-		{
-			array[array.length] = value;
-			i++;
-		}
-		return array;
-	}
-	private function CalculateLevelData()
-	{
+		updatelevelinfo();
+		
 		gamestarted = true;
 		boss = null;
 		ufolimit = 8;
 		
+		/*var L = level - 1;
+		var stage = Math.floor((L) / 5);
+
+		var generalstage = stage % 6;
+		if (L < 0)
+		{
+			L = 0;
+		}
+		var lvl = ((level - 1) % 5);
+		lvl++;*/
 		var L = level - 1;
+		var stage = currentstage;
+		var generalstage = currentgeneralstage;
+		var lvl = currentstagelevel;
+		
+		//count number of players(since it doesnt have a .length property :/ )
+		var A = Players.keys();
+		var P = 0;
+		while (A.hasNext())
+		{
+			A.next();
+			P+=1;
+		}
+		var EVT = Math.random();
+		/*var LV:Int = level;
+		while (LV >= 30)
+		{
+			LV -= 30;
+		}*/
+		var LV = currentranklevel;
+		//if (level == 9)
+		if (LV == 9)
+		{
+			//double chance of event
+			//EVT *= 0.25;
+			
+			
+			//EVT *= 0.1;
+			EVT = 0;
+		}
+		RoundType = TypeofRound.EventNormal;
+		//points *= 1.35;
+		
+		var T = level % levelsperstage;
+		
+		if (T == 0)
+		{
+			EVT = 0;
+		}
+		if (GameFlags.get(Main.EventRoundsOnly))
+		{
+			EVT = 0;
+		}
+		if (EVT < 0.05)
+		{
+			var E:Array<TypeofRound> = new Array<TypeofRound>();
+			if (level != 9 || GameFlags.get(Main.EventRoundsOnly))
+			{
+				var BossRush = GameFlags.get(Main.Bossrush);
+				if (!BossRush)
+				{
+				E[E.length] = TypeofRound.EventRumia;
+				E[E.length] = TypeofRound.EventTable;
+				if (level >= 9 || GameFlags.get(Main.EventRoundsOnly))
+				{
+					E[E.length] = TypeofRound.EventCirno;
+				}
+				E[E.length] = TypeofRound.EventBalloon;
+				if (Math.random() < 0.5)
+				{
+					E[E.length] = TypeofRound.EventCharacters;
+				}
+				if (level >= 11 || GameFlags.get(Main.EventRoundsOnly))
+				{
+					E[E.length] = TypeofRound.EventNue;
+				}
+				if (level > 5 || GameFlags.get(Main.EventRoundsOnly))
+				{
+					E[E.length] = TypeofRound.EventSeija;
+					E[E.length] = TypeofRound.EventMarisa;
+				}
+				if (level > 15 || GameFlags.get(Main.EventRoundsOnly))
+				{
+					E[E.length] = TypeofRound.EventFireCirno;
+					E[E.length] = TypeofRound.EventNoWrap;
+					E[E.length] = TypeofRound.EventSuwako;
+					if (generalstage != 2)
+					{
+						E[E.length] = TypeofRound.EventExplosive;
+					}
+					if (generalstage == 3)
+					{
+						E.push(TypeofRound.EventLava);
+					}
+				}
+				if (level > 20 || GameFlags.get(Main.EventRoundsOnly))
+				{
+					E[E.length] = TypeofRound.EventYukari;
+				}
+				if (level > 25 || GameFlags.get(Main.EventRoundsOnly))
+				{
+					E[E.length] = TypeofRound.EventYuuka;
+				}
+				if (level > 50 || GameFlags.get(Main.EventRoundsOnly))
+				{
+					E[E.length] = TypeofRound.EventElectricCirno;
+				}
+				}
+				else
+				{
+					E[E.length] = TypeofRound.EventYukari;
+				}
+				if ((level > 30) || GameFlags.get(Main.EventRoundsOnly) || BossRush)
+				{
+					if (generalstage == 0 || BossRush)
+					{
+						E[E.length] = TypeofRound.EventSanaeBoss;
+					}
+					if (generalstage == 3 || BossRush)
+					{
+						E[E.length] = TypeofRound.EventParseeBoss;
+					}
+					if (generalstage == 4 || BossRush)
+					{
+						E[E.length] = TypeofRound.EventMurasaBoss;
+					}
+					if (BossRush)
+					{
+						E[E.length] = TypeofRound.EventCirnoBoss;
+					}
+				}
+			}
+			else
+			{
+				E[E.length] = TypeofRound.EventCirno;
+			}
+			if (E.length > 1 && LRoundType != null && E.indexOf(LRoundType)>-1)
+			{
+				E.remove(LRoundType);
+			}
+			RoundType = E[(Math.floor(Math.random() * E.length))];
+			LRoundType = RoundType;
+			if (level > 30 && LV == 9 && !GameFlags.get(Main.EventRoundsOnly))
+			{
+				RoundType = TypeofRound.EventCirnoBoss;
+			}
+		}
+		//RoundType = TypeofRound.EventParseeBoss;
+		//RoundType = TypeofRound.EventLava;
+		//RoundType = TypeofRound.EventDescending;
+		//RoundType = TypeofRound.EventScrolling;
+		//RoundType = TypeofRound.EventExplosive;
+		
+		
+		var Ev:Array<TypeofRound> = new Array<TypeofRound>();
+		if (GameFlags.get(Main.TableEvent))
+		{
+			Ev[Ev.length] = TypeofRound.EventTable;
+		}
+		if (GameFlags.get(Main.CirnoEvent))
+		{
+			Ev[Ev.length] = TypeofRound.EventCirno;
+		}
+		if (GameFlags.get(Main.FireCirno))
+		{
+			Ev[Ev.length] = TypeofRound.EventFireCirno;
+		}
+		if (GameFlags.get(Main.ElectricCirno))
+		{
+			Ev[Ev.length] = TypeofRound.EventElectricCirno;
+		}
+		if (GameFlags.get(Main.NueEvent))
+		{
+			Ev[Ev.length] = TypeofRound.EventNue;
+		}
+		if (GameFlags.get(Main.BalloonEvent))
+		{
+			Ev[Ev.length] = TypeofRound.EventBalloon;
+		}
+		if (GameFlags.get(Main.YukariEvent))
+		{
+			Ev[Ev.length] = TypeofRound.EventYukari;
+		}
+		if (GameFlags.get(Main.Danmaku))
+		{
+			Ev[Ev.length] = TypeofRound.EventDanmaku;
+		}
+		if (GameFlags.get(Main.SanaeBoss))
+		{
+			Ev[Ev.length] = TypeofRound.EventSanaeBoss;
+		}
+		if (GameFlags.get(Main.ParseeEvent))
+		{
+			Ev[Ev.length] = TypeofRound.EventParseeBoss;
+		}
+		if (GameFlags.get(Main.LavaEvent))
+		{
+			Ev[Ev.length] = TypeofRound.EventLava;
+		}
+		if (GameFlags.get(Main.TruckHoarder))
+		{
+			Ev[Ev.length] = TypeofRound.EventTruck;
+		}
+		if (GameFlags.get(Main.PointCollecting))
+		{
+			Ev[Ev.length] = TypeofRound.EventPointCollecting;
+		}
+		if (GameFlags.get(Main.Explosive))
+		{
+			Ev[Ev.length] = TypeofRound.EventExplosive;
+		}
+		if (Ev.length > 0)
+		{
+			RoundType = Ev[Math.floor(Math.random() * Ev.length)];
+		}
+		if (GameFlags.get(Main.NoEvents))
+		{
+			RoundType = TypeofRound.EventNormal;
+		}
+		
+		if (RoundType == TypeofRound.EventNormal && GameFlags.get(Main.Adventure))
+		{
+			//if (Math.random() < 0.6/* || true*/)
+			if (/*false && */Math.random() < 0.7/* || true*/)
+			{
+				RoundType = TypeofRound.EventScrolling;
+			}
+			else
+			{
+				RoundType = TypeofRound.EventDescending;
+			}
+		}
+		//RoundType = TypeofRound.EventScrolling;
+		//RoundType = TypeofRound.EventYuuka;
+		//RoundType = TypeofRound.EventSuwako;
+		
+		lvllogic = GetLogic();
+		lvllogic.CalculateLevelData(level);
+		if (true)
+		{
+			lvllogic = null;
+		}
+		else
+		{
+			lvllogic.start();
+			lvllogic.hosterstart();
+		}
+		SpawnTimer = 30;
+		/*var L = level - 1;
 		var stage = Math.floor((L) / 5);
 
 		var generalstage = stage % 6;
@@ -5671,7 +7562,7 @@ class GameView extends Sprite
 			//EVT *= 0.25;
 			EVT *= 0.1;
 		}
-		RoundType = TypeofRound.Normal;
+		RoundType = TypeofRound.EventNormal;
 		enemytypes = new Array<Enemy>();
 		//points *= 1.35;
 		maxspawns = Math.ceil(points) + (P) + 1;
@@ -5679,7 +7570,7 @@ class GameView extends Sprite
 		Obstacles = new Array<String>();
 		var T = level % 5;
 		
-		if (T == 0/* && successstreak > 2*/)
+		if (T == 0)
 		{
 			EVT = 0;
 		}
@@ -5695,111 +7586,112 @@ class GameView extends Sprite
 				var BossRush = GameFlags.get(Main.Bossrush);
 				if (!BossRush)
 				{
-				E[E.length] = TypeofRound.Rumia;
-				E[E.length] = TypeofRound.Table;
-				E[E.length] = TypeofRound.Cirno;
-				E[E.length] = TypeofRound.Balloon;
-				E[E.length] = TypeofRound.Characters;
+				E[E.length] = TypeofRound.EventRumia;
+				E[E.length] = TypeofRound.EventTable;
+				E[E.length] = TypeofRound.EventCirno;
+				E[E.length] = TypeofRound.EventBalloon;
+				E[E.length] = TypeofRound.EventCharacters;
 				if (level >= 11 || GameFlags.get(Main.EventRoundsOnly))
 				{
-					E[E.length] = TypeofRound.Nue;
+					E[E.length] = TypeofRound.EventNue;
 				}
 				if (level > 5 || GameFlags.get(Main.EventRoundsOnly))
 				{
-					E[E.length] = TypeofRound.Seija;
-					E[E.length] = TypeofRound.Marisa;
+					E[E.length] = TypeofRound.EventSeija;
+					E[E.length] = TypeofRound.EventMarisa;
 				}
 				if (level > 15 || GameFlags.get(Main.EventRoundsOnly))
 				{
-					E[E.length] = TypeofRound.FireCirno;
-					E[E.length] = TypeofRound.NoWrap;
+					E[E.length] = TypeofRound.EventFireCirno;
+					E[E.length] = TypeofRound.EventNoWrap;
 				}
 				if (level > 20 || GameFlags.get(Main.EventRoundsOnly))
 				{
-					E[E.length] = TypeofRound.Yukari;
+					E[E.length] = TypeofRound.EventYukari;
 				}
 				if (level > 50 || GameFlags.get(Main.EventRoundsOnly))
 				{
-					E[E.length] = TypeofRound.ElectricCirno;
+					E[E.length] = TypeofRound.EventElectricCirno;
 				}
 				}
 				else
 				{
-					E[E.length] = TypeofRound.Yukari;
+					E[E.length] = TypeofRound.EventYukari;
 				}
 				if ((level > 30) || GameFlags.get(Main.EventRoundsOnly) || BossRush)
 				{
 					if (generalstage == 0 || BossRush)
 					{
-						E[E.length] = TypeofRound.SanaeBoss;
+						E[E.length] = TypeofRound.EventSanaeBoss;
 					}
 					if (generalstage == 3 || BossRush)
 					{
-						E[E.length] = TypeofRound.ParseeBoss;
+						E[E.length] = TypeofRound.EventParseeBoss;
 					}
 					if (generalstage == 4 || BossRush)
 					{
-						E[E.length] = TypeofRound.MurasaBoss;
+						E[E.length] = TypeofRound.EventMurasaBoss;
 					}
 					if (BossRush)
 					{
-						E[E.length] = TypeofRound.CirnoBoss;
+						E[E.length] = TypeofRound.EventCirnoBoss;
 					}
 				}
 			}
 			else
 			{
-				E[E.length] = TypeofRound.Cirno;
+				E[E.length] = TypeofRound.EventCirno;
 			}
 			RoundType = E[(Math.floor(Math.random() * E.length))];
 			
 			if (level > 30 && LV == 9 && !GameFlags.get(Main.EventRoundsOnly))
 			{
-				RoundType = TypeofRound.CirnoBoss;
+				RoundType = TypeofRound.EventCirnoBoss;
 			}
 		}
-		//RoundType = TypeofRound.ParseeBoss;
-		//RoundType = TypeofRound.Seija;
-		//RoundType = TypeofRound.Marisa;
+		//RoundType = TypeofRound.EventParseeBoss;
+		//RoundType = TypeofRound.EventSeija;
+		//RoundType = TypeofRound.EventMarisa;
+		//RoundType = TypeofRound.EventNoWrap;
 		
 		
 		
 		var Ev:Array<TypeofRound> = new Array<TypeofRound>();
 		if (GameFlags.get(Main.TableEvent))
 		{
-			Ev[Ev.length] = TypeofRound.Table;
+			Ev[Ev.length] = TypeofRound.EventTable;
 		}
 		if (GameFlags.get(Main.CirnoEvent))
 		{
-			Ev[Ev.length] = TypeofRound.Cirno;
+			Ev[Ev.length] = TypeofRound.EventCirno;
 		}
 		if (GameFlags.get(Main.FireCirno))
 		{
-			Ev[Ev.length] = TypeofRound.FireCirno;
+			Ev[Ev.length] = TypeofRound.EventFireCirno;
 		}
 		if (GameFlags.get(Main.ElectricCirno))
 		{
-			Ev[Ev.length] = TypeofRound.ElectricCirno;
+			Ev[Ev.length] = TypeofRound.EventElectricCirno;
 		}
 		if (GameFlags.get(Main.NueEvent))
 		{
-			Ev[Ev.length] = TypeofRound.Nue;
+			Ev[Ev.length] = TypeofRound.EventNue;
 		}
 		if (GameFlags.get(Main.BalloonEvent))
 		{
-			Ev[Ev.length] = TypeofRound.Balloon;
+			Ev[Ev.length] = TypeofRound.EventBalloon;
 		}
 		if (GameFlags.get(Main.YukariEvent))
 		{
-			Ev[Ev.length] = TypeofRound.Yukari;
+			Ev[Ev.length] = TypeofRound.EventYukari;
 		}
 		if (GameFlags.get(Main.Danmaku))
 		{
-			Ev[Ev.length] = TypeofRound.Danmaku;
+			Ev[Ev.length] = TypeofRound.EventDanmaku;
 		}
 		if (GameFlags.get(Main.SanaeBoss))
 		{
-			Ev[Ev.length] = TypeofRound.SanaeBoss;
+			Ev[Ev.length] = TypeofRound.EventSanaeBoss;
 		}
 		if (Ev.length > 0)
 		{
@@ -5807,11 +7699,11 @@ class GameView extends Sprite
 		}
 		if (GameFlags.get(Main.NoEvents))
 		{
-			RoundType = TypeofRound.Normal;
+			RoundType = TypeofRound.EventNormal;
 		}
 		//setup obstacles.
 		
-		if (RoundType == TypeofRound.Normal || RoundType == TypeofRound.Rumia || RoundType == TypeofRound.Table || RoundType == TypeofRound.Balloon || RoundType == TypeofRound.Characters || RoundType == TypeofRound.NoWrap)
+		if (RoundType == TypeofRound.EventNormal || RoundType == TypeofRound.EventRumia || RoundType == TypeofRound.EventTable || RoundType == TypeofRound.EventBalloon || RoundType == TypeofRound.EventCharacters || RoundType == TypeofRound.EventNoWrap)
 		{
 			if (level > 5)
 			{
@@ -5855,7 +7747,7 @@ class GameView extends Sprite
 			D.y = -100;
 			SendEvent("SpawnItem", D);
 		}
-		if (RoundType == TypeofRound.Danmaku)
+		if (RoundType == TypeofRound.EventDanmaku)
 		{
 			ufolimit = 10;
 			AddToArrayMultiple(Obstacles, "Gap", 60);
@@ -5865,31 +7757,31 @@ class GameView extends Sprite
 			AddToArrayMultiple(Obstacles, "Yinyangorb", 7);
 			epm *= 1.5;
 		}
-		if (RoundType == TypeofRound.Nue)
+		if (RoundType == TypeofRound.EventNue)
 		{
 			Obstacles[Obstacles.length] = "UFO";
 			AddToArrayMultiple(enemytypes, new Imposter(), 2);
 		}
-		if (RoundType == TypeofRound.Yukari)
+		if (RoundType == TypeofRound.EventYukari)
 		{
 			Obstacles[Obstacles.length] = "Gap";
 			AddToArrayMultiple(enemytypes, new Imposter(), 2);
 			epm *= 0.75;
 		}
-		if (RoundType == TypeofRound.Balloon)
+		if (RoundType == TypeofRound.EventBalloon)
 		{
 			AddToArrayMultiple(Obstacles, "Balloon", Math.round(Obstacles.length * 2));
 			epm *= 2.5;
 		}
-		if (RoundType == TypeofRound.Cirno || RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.ElectricCirno || RoundType == TypeofRound.CirnoBoss)
+		if (RoundType == TypeofRound.EventCirno || RoundType == TypeofRound.EventFireCirno || RoundType == TypeofRound.EventElectricCirno || RoundType == TypeofRound.EventCirnoBoss)
 		{
 			AddToArrayMultiple(Obstacles, "Cirno", 8);
-			if (RoundType == TypeofRound.Cirno)
+			if (RoundType == TypeofRound.EventCirno)
 			{
 				AddToArrayMultiple(Obstacles, "GiantSuika", 1);
 			}
 			AddToArrayMultiple(enemytypes, new Imposter(), 1);
-			if (RoundType == TypeofRound.FireCirno/* || RoundType == TypeofRound.ElectricCirno*/)
+			if (RoundType == TypeofRound.EventFireCirno)
 			{
 				epm += 7;
 			}
@@ -5906,27 +7798,27 @@ class GameView extends Sprite
 			}
 			else
 			{
-				if (!(RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.ElectricCirno || RoundType == TypeofRound.CirnoBoss))
+				if (!(RoundType == TypeofRound.EventFireCirno || RoundType == TypeofRound.EventElectricCirno || RoundType == TypeofRound.EventCirnoBoss))
 				{
 					maxspawns = 9;
 				}
 			}
 			}
-			SendEvent("FreezeWorld", null);
+			//SendEvent("FreezeWorld", null);
 		}
 		//setup enemytypes.
 		
-		if (RoundType == TypeofRound.Rumia)
+		if (RoundType == TypeofRound.EventRumia)
 			{
 				AddToArrayMultiple(enemytypes, new Rumia(), 125);
 				AddToArrayMultiple(enemytypes, new Imposter(), 3);
 			}
-			if (RoundType == TypeofRound.Seija)
+			if (RoundType == TypeofRound.EventSeija)
 			{
 				AddToArrayMultiple(enemytypes, new Seija(), 62);
 				AddToArrayMultiple(enemytypes, new Imposter(), 3);
 			}
-		if (RoundType == TypeofRound.Normal || RoundType == TypeofRound.Rumia || RoundType == TypeofRound.Seija || RoundType == TypeofRound.Nue || RoundType == TypeofRound.Table || RoundType == TypeofRound.FireCirno || RoundType == TypeofRound.Balloon || RoundType == TypeofRound.ElectricCirno || RoundType == TypeofRound.NoWrap || RoundType == TypeofRound.SanaeBoss || RoundType == TypeofRound.ParseeBoss || RoundType == TypeofRound.MurasaBoss)
+		if (RoundType == TypeofRound.EventNormal || RoundType == TypeofRound.EventRumia || RoundType == TypeofRound.EventSeija || RoundType == TypeofRound.EventNue || RoundType == TypeofRound.EventTable || RoundType == TypeofRound.EventFireCirno || RoundType == TypeofRound.EventBalloon || RoundType == TypeofRound.EventElectricCirno || RoundType == TypeofRound.EventNoWrap || RoundType == TypeofRound.EventSanaeBoss || RoundType == TypeofRound.EventParseeBoss || RoundType == TypeofRound.EventMurasaBoss)
 		{
 			var types = new Array<Array<Dynamic>>();
 			if (generalstage < 2)
@@ -6022,53 +7914,8 @@ class GameView extends Sprite
 				AddToArrayMultiple(enemytypes, T[0], T.length);
 				i++;
 			}
-			/*AddToArrayMultiple(enemytypes, new RedFairy(), 60);
-			
-			if (level > 3)
-			{
-				AddToArrayMultiple(enemytypes, new Keine(), 20);
-			}
-			if (level > 5)
-			{
-				AddToArrayMultiple(enemytypes, new Meiling(), 6);
-			}
-			if (level > 10)
-			{
-				AddToArrayMultiple(enemytypes, new Tenshi(), 5);
-			}
-			if (level > 15)
-			{
-				AddToArrayMultiple(enemytypes, new Utsuho(), 4);
-			}
-			AddToArrayMultiple(enemytypes, new Mystia(), 34);
-			if (level > 25)
-			{
-				AddToArrayMultiple(enemytypes, new Tewi(), 37);
-				AddToArrayMultiple(enemytypes, new Reisen(), 15);
-				AddToArrayMultiple(enemytypes, new Imposter(), 1);
-			}
-			if (level > 30)
-			{
-				AddToArrayMultiple(enemytypes, new Marisa(), 5);
-			}
-			if (level > 35)
-			{
-				AddToArrayMultiple(enemytypes, new Scarlet(), 3);
-			}
-			if (level > 40)
-			{
-				AddToArrayMultiple(enemytypes, new Hecatia(), 3);
-			}
-			if (level > 45)
-			{
-				AddToArrayMultiple(enemytypes, new Satori(), 3);
-			}
-			if (level > 50)
-			{
-				AddToArrayMultiple(enemytypes, new Kogasa(), 1);
-			}*/
 		}
-		if (RoundType == TypeofRound.Danmaku)
+		if (RoundType == TypeofRound.EventDanmaku)
 		{
 			if (generalstage < 2)
 			{
@@ -6086,32 +7933,31 @@ class GameView extends Sprite
 			{
 				AddToArrayMultiple(enemytypes, new Mystia(), 15);
 			}
-			//AddToArrayMultiple(enemytypes, new RedFairy(), 60);
 			AddToArrayMultiple(enemytypes, new Tewi(), 25);
 			AddToArrayMultiple(enemytypes, new Utsuho(), 2);
 			AddToArrayMultiple(enemytypes, new Kogasa(), 2);
 			AddToArrayMultiple(enemytypes, new Marisa(), 3);
 			AddToArrayMultiple(enemytypes, new Imposter(), 3);
 		}
-		if (RoundType == TypeofRound.Marisa)
+		if (RoundType == TypeofRound.EventMarisa)
 		{
 			AddToArrayMultiple(Obstacles, "Yuuka", 5);
 			AddToArrayMultiple(enemytypes, new Marisa(), 600);
 		}
-		if (RoundType == TypeofRound.Nue)
+		if (RoundType == TypeofRound.EventNue)
 		{
 			AddToArrayMultiple(enemytypes, new Nue(), 62);
 			AddToArrayMultiple(enemytypes, new Imposter(), 3);
 			epm *= 0.5;
 			maxspawns = Math.ceil(maxspawns * 0.7);
 		}
-		if (RoundType == TypeofRound.Table)
+		if (RoundType == TypeofRound.EventTable)
 		{
 			epm *= 0.5;
 			maxspawns = Math.ceil(maxspawns * 0.7);
 		}
 		AddToArrayMultiple(enemytypes, new Imposter(), 2);
-		if (RoundType == TypeofRound.Characters)
+		if (RoundType == TypeofRound.EventCharacters)
 		{
 			//enemytypes = new Array<Enemy>();
 			AddToArrayMultiple(enemytypes, new Imposter(), 50);
@@ -6138,23 +7984,23 @@ class GameView extends Sprite
 			C -= 35000;
 		}
 		var bosstime = true;
-		if (RoundType == TypeofRound.CirnoBoss)
+		if (RoundType == TypeofRound.EventCirnoBoss)
 		{
 			SpawnList.add(new BossCirno());
 		}
-		if (RoundType == TypeofRound.Yukari)
+		if (RoundType == TypeofRound.EventYukari)
 		{
 			SpawnList.add(new BossYukari());
 		}
-		else if (RoundType == TypeofRound.SanaeBoss)
+		else if (RoundType == TypeofRound.EventSanaeBoss)
 		{
 			SpawnList.add(new BossSanae());
 		}
-		else if (RoundType == TypeofRound.ParseeBoss)
+		else if (RoundType == TypeofRound.EventParseeBoss)
 		{
 			SpawnList.add(new BossParsee());
 		}
-		else if (RoundType == TypeofRound.MurasaBoss)
+		else if (RoundType == TypeofRound.EventMurasaBoss)
 		{
 			SpawnList.add(new BossMurasa());
 		}
@@ -6167,23 +8013,19 @@ class GameView extends Sprite
 			maxspawns = Std.int(maxspawns * 0.6);
 		}
 		populatespawnlist();
-		/*var tmp = 0;
-		while (tmp < maxspawns)
-		{
-			var enemy = enemytypes[Math.floor(Math.random() * enemytypes.length)];
-			enemy.UID = 0;
-			SpawnList.add(enemy);
-			tmp++;
-		}*/
 		
 				
 		epm += epmmodifier;
 		ept = epm * (onetickperminutechance2);//the times 2 is for equalling "frame & 2>0" out above
-		rept = (epm + 3 + (Math.floor(epm) >> 1)) * (onetickperminutechance2);
+		rept = (epm + 3 + (Math.floor(epm) >> 1)) * (onetickperminutechance2);*/
 	}
 	public function populatespawnlist()
 	{
-		while (imposterbonus > 0)
+		if (lvllogic != null)
+		{
+			lvllogic.populatespawnlist();
+		}
+		/*while (imposterbonus > 0)
 		{
 			var enemy = new Imposter();
 			enemy.UID = 0;
@@ -6212,7 +8054,7 @@ class GameView extends Sprite
 					tmp++;
 				}
 			}
-		}
+		}*/
 	}
 	
 }

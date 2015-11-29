@@ -40,6 +40,8 @@ class ShopView extends Sprite
 		custompanel.view = this;
 		shoppanel = new Shop();
 		shoppanel.visible = false;
+		
+		this.scrollRect = new Rectangle(0, 0, 800, 600);
 	}
 	public function start() {
 		//playername = getdnapart(avatardna, 1);
@@ -58,35 +60,46 @@ class ShopView extends Sprite
 		buttons = new Sprite();
 		//background = new Sprite();
 		//addChild(background);
-		SoundManager.PlayMusic("shop");
+		SoundManager.PlayMusic("customize");
 		
 		customizetab = new MenuButton("Customize");
 		customizetab.x = customizetab.outlinesize;
-		customizetab.y = 545;
-		customizetab.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		customizetab.y = 535;
+		customizetab.addclick( function( ev ) {
+				if (!custompanel.visible)
+				{
 				shoptab.setcolors();
 				customizetab.setcolors(0xFF0000, 0xFFFFFF, 1);
 				shoppanel.visible = false;
 				custompanel.visible = true;
+				SoundManager.StopMusic();
+				SoundManager.PlayMusic("customize");
+				}
 				 } 
 				);
 		buttons.addChild(customizetab);
 		shoptab = new MenuButton("Shop");
 		//shoptab.visible = false;
 		shoptab.x = 250 + shoptab.outlinesize;
-		shoptab.y = 545;
-		shoptab.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		shoptab.y = 535;
+		shoptab.addclick( function( ev ) {
+				if (!shoppanel.visible)
+				{
 				customizetab.setcolors();
 				shoptab.setcolors(0xFF0000, 0xFFFFFF, 1);
 				custompanel.visible = false;
 				shoppanel.visible = true;
+				SoundManager.StopMusic();
+				SoundManager.PlayMusic("shop");
+				}
 				 } 
 				);
 		buttons.addChild(shoptab);
 		exitbutton = new MenuButton("Title Screen");
+		exitbutton.sound = "cancel";
 		exitbutton.x = 550 + exitbutton.outlinesize;
-		exitbutton.y = 545;
-		exitbutton.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		exitbutton.y = 535;
+		exitbutton.addclick( function( ev ) {
 				status = "TitleScreen";
 				 } 
 				);
@@ -102,6 +115,10 @@ class ShopView extends Sprite
 		if (shoppanel.visible)
 		{
 			shoppanel.update();
+		}
+		if (custompanel.visible)
+		{
+			custompanel.update();
 		}
 	}
 	

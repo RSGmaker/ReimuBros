@@ -101,6 +101,10 @@ class SekibankiBullet extends PlayerBullet
 				gravY = 0;
 				Hspeed = 0;
 				Vspeed = 0;
+				if (!explosion.visible)
+				{
+					SoundManager.Play("explode");
+				}
 				explosion.visible = true;
 			}
 			}

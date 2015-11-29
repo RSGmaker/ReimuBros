@@ -82,6 +82,10 @@ package;
 		{
 			return twist(seed, 1, TTmaxSize)[0];
 		}
+		public function bool():Bool
+		{
+			return (quick(100) < 50);
+		}
         public function twist(TTseed:UInt=0,TTreturnLength:Int,TTmaxSize:Int):Array<Int> {    //    seed number, number of values to return ,max size of returned number
             if (TTseed != 0)
 			{

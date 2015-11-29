@@ -1,4 +1,5 @@
 package;
+import openfl.display.Sprite;
 
 /**
  * ...
@@ -12,10 +13,29 @@ class GiantSuika extends Entity
 	public var step:Int;
 	public var timetostep:Int;
 	public var unlock:String;
+	public var translated:Sprite;
 	public function new()
 	{
-		super("giantsuika");
 		unlock = "suika";
+		var D = CharHelper.getCharPreset(unlock);
+		D = CharHelper.changednascale(D, 800);
+		super(D);
+		removeChild(image);
+		translated = new Sprite();
+		translated.addChild(image);
+		addChild(translated);
+		UID = -9000;
+		//super("giantsuika");
+		
+	}
+	override public function CustomEvent(data:Dynamic) 
+	{
+		//super.CustomEvent(data);
+		if (data.type == "activate")
+		{
+			unlock = data.unlock;
+			activate();
+		}
 	}
 	public override function update():Void 
 	{
@@ -24,11 +44,14 @@ class GiantSuika extends Entity
 		{
 			x = -width;
 			y = 0;
-			rotation = 0;
+			//rotation = 0;
+			translated.rotation = 0;
 		}
 		else
 		{
-			if (rotation == 0)
+			translated.y = -(game.camera.y / 2);
+			//if (rotation == 0)
+			if (translated.rotation == 0)
 			{
 			if (timetostep > 0)
 			{
@@ -65,9 +88,10 @@ class GiantSuika extends Entity
 			else
 			{
 				var Y = y;
-				rotateentity(rotation + 4);
+				//rotateentity(rotation + 4);
+				rotatesprite(translated,translated.rotation + 4);
 				y = Y + 32;
-				if (rotation > 90)
+				if (translated.rotation > 90)
 				{
 					active = false;
 					if (game.Hoster)
@@ -96,25 +120,37 @@ class GiantSuika extends Entity
 	}
 	public function tipover()
 	{
-		rotateentity(1);
+		//rotateentity(1);
+		rotatesprite(translated,1);
 	}
 	public function activate()
 	{
 		active = true;
-		rotation = 0;
+		//rotation = 0;
+		translated.rotation = 0;
 		y = 0;
 		step = 0;
 		timetostep = 120;
-		if (game.RoundType == GameView.TypeofRound.Cirno)
+		/*if (game.RoundType == GameView.TypeofRound.EventCirno)
 		{
-			ChangeAnimation("giantcirno");
+			//ChangeAnimation("giantcirno");
 			unlock = "cirno";
+			
+			var D = CharHelper.getCharPreset(unlock);
+			D = CharHelper.changednascale(D, 800);
+			ChangeAnimation(D);
 		}
 		else
 		{
-			ChangeAnimation("giantsuika");
+			//ChangeAnimation("giantsuika");
 			unlock = "suika";
-		}
+			var D = CharHelper.getCharPreset(unlock);
+			D = CharHelper.changednascale(D, 800);
+			ChangeAnimation(D);
+		}*/
+		var D = CharHelper.getCharPreset(unlock);
+		D = CharHelper.changednascale(D, 800);
+		ChangeAnimation(D,true,unlock=="suika");
 		x = -width;
 	}
 }

@@ -22,6 +22,7 @@ class Cirno extends Enemy
 	public var rename:String;
 	public var mxtimer:Int;
 	public var killedby:Player;
+	public var death:Bool;
 	
 	public function new() 
 	{
@@ -69,22 +70,30 @@ class Cirno extends Enemy
 			rng = new MersenneTwister();
 			var seed:UInt = Math.floor(UID * 100000);
 			timer = (60) + rng.twist(seed, 1, 30 * 30)[0];
-			if (game.RoundType == GameView.TypeofRound.FireCirno || rng.twist(rng.seed, 1, 100)[0] > 90)
+			if (game.RoundType == GameView.TypeofRound.EventFireCirno || rng.twist(rng.seed, 1, 100)[0] > 90)
 			{
 				flaming = true;
 				rename = "firecirno";
 				mxtimer = 120;
 			}
-			else if (game.RoundType == GameView.TypeofRound.ElectricCirno || (game.level>30 && rng.twist(rng.seed, 1, 100)[0] > 97))
+			else if (game.RoundType == GameView.TypeofRound.EventElectricCirno || (game.level>30 && rng.twist(rng.seed, 1, 100)[0] > 97))
 			{
 				electric = true;
 				flaming = true;
 				rename = "electriccirno";
 				mxtimer = 180;
 			}
+			else if ((game.level>60 && rng.twist(rng.seed, 1, 1000)[0] > 985))
+			{
+				//electric = true;
+				//flaming = true;
+				death = true;
+				rename = "deathcirno";
+				mxtimer = 330;
+			}
 			countdown = mxtimer;
 		}
-		if (ground != null && !flaming && !electric)
+		if (ground != null && !flaming && !electric && !death)
 		{
 			 if (ground.type == "Block") 
 			 {
@@ -110,10 +119,12 @@ class Cirno extends Enemy
 		{
 			timer -= 1;
 		}
-		if (selfdestruct)
+		doingability = false;
+		if (selfdestruct && ((y<500) || (!flaming && !electric && !death)))
 		{
 			countdown -= 1;
-			visuallyEnraged = !visuallyEnraged;
+			//visuallyEnraged = !visuallyEnraged;
+			doingability = true;
 			if (countdown <= 0)
 			{
 			if (game.Hoster && ground != null && ((!ground.icy && !flaming) || (!ground.dangerous && flaming && y<500)))

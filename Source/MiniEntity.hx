@@ -20,12 +20,15 @@ class MiniEntity extends Sprite
 	public var bounced:Bool;
 	public var behavior:Int;
 	public var frame:Int;
+	public var image:Bitmap;
 	public function new(x:Float,y:Float,bitmap:BitmapData,speed:Float,dangerous:Bool,pointvalue:Int) 
 	{
 		super();
+		mouseEnabled = false;
 		this.x = x;
 		this.y = y;
 		var B = new Bitmap(bitmap);
+		image = B;
 		addChild(B);
 		this.dangerous = dangerous;
 		this.pointvalue = pointvalue;
@@ -56,12 +59,18 @@ class MiniEntity extends Sprite
 			Vspeed = -speed;
 		}
 	}
+	public function flip()
+	{
+		image.x += (image.width * image.scaleX);
+		image.scaleX *= -1;
+	}
 	public function update()
 	{
 		
 		x += Hspeed;
 		y += Vspeed;
-		if ((Hspeed < 0 && x < -width) || (Hspeed > 0 && x > 800) || (Vspeed < 0 && y < -height) || (Vspeed > 0 && y > 600))
+		//if ((Hspeed < 0 && x < -width) || (Hspeed > 0 && x > 800) || (Vspeed < 0 && y < -height) || (Vspeed > 0 && y > 600))
+		if ((Hspeed < -100 && x < -width) || (Hspeed > 0 && x > 900) || (Vspeed < -100 && y < -height) || (Vspeed > 0 && y > 700))
 		{
 			alive =  false;
 		}
@@ -75,8 +84,9 @@ class MiniEntity extends Sprite
 					frame++;
 					if (frame > 15)
 					{
-						x += (width * scaleX);
-						scaleX *= -1;
+						//x += (width * scaleX);
+						//scaleX *= -1;
+						flip();
 						Hspeed *= -3;
 						behavior = 0;
 					}
@@ -128,8 +138,9 @@ class MiniEntity extends Sprite
 				else if (frame < 301)
 				{
 					x -= Hspeed;
-					x += (width * scaleX);
-					scaleX *= -1;
+					//x += (width * scaleX);
+					//scaleX *= -1;
+					flip();
 				}
 				else if (frame < 315)
 				{
@@ -138,8 +149,25 @@ class MiniEntity extends Sprite
 				else if (frame < 316)
 				{
 					x -= Hspeed;
-					x += (width * scaleX);
-					scaleX *= -1;
+					//x += (width * scaleX);
+					//scaleX *= -1;
+					flip();
+				}
+			}
+			if (behavior == 4)
+			{
+				//fly
+				if (frame == 0)
+				{
+					var D = 1;
+					if (x > 400)
+					{
+						D = -1;
+					}
+					rotation = 30 * D;
+					y -= 150;
+					Hspeed *= 2.5;
+					bounce = false;
 				}
 			}
 		}

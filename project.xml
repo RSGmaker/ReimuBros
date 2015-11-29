@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	
-	<meta title="ReimuBros" package="RSG.Game" version="1.6.0" company="RSGmaker" />
-	<app file="ReimuBros" main="Main" path="Export" preloader="Preloader"/>
+	<meta title="ReimuBros" package="RSG.Game" version="1.7.0" company="RSGmaker" />
+	<app file="ReimuBros" main="Main" path="Export"/>
 	
 	<source path="Source" />
 	<haxeflag name="-D network-sandbox" />
@@ -13,6 +13,6 @@
 	<library path="Assets/Char.swf" id="Char" type="swf" preload="true" generate="true" />
 	<library path="Assets/Background.swf" id="Background" type="swf" preload="true" generate="true" />
 	<icon path="Assets/openfl.svg" />
-	<window width="800" height="600" fps="30" hardware="true" vsync="true"/>
+	<window width="800" height="600" fps="60" hardware="true" vsync="false"/>
 	
 </project>

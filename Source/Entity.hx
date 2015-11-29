@@ -3,6 +3,7 @@ import openfl.display.Sprite;
 import openfl.geom.Matrix;
 import openfl.geom.Rectangle;
 import openfl.geom.Point;
+import openfl.display.BitmapData;
 /**
  * ...
  * @author RSGmaker
@@ -64,18 +65,55 @@ class Entity extends Sprite
 	public var interacttext:String = null;
 	public var image:Animation = null;
 	public var game:GameView;
+	public var removeonlevelend:Bool = false;
 	
 	public var invincibility:Int;
-	public function ChangeAnimation(ani:String,reset:Bool=true)
+	public var lani:String = "!undefined";
+	public var maxfallspd:Float = 12;
+	//default layer to put this entity on
+	public var layer:Int = 1;
+	public function ChangeAnimation(ani:String,reset:Bool=true,StoreImages:Bool=true)
 	{
+		if (ani == lani)
+		{
+			return;
+		}
 		if (image == null)
 		{
-			image = new Animation(game.AL.GetAnimation(ani));
+			//image = new Animation(game.AL.GetAnimation(ani));
+			if (StoreImages)
+			{
+				image = new Animation(game.AL.GetAnimation(ani));
+			}
+			else
+			{
+				image = new Animation(getbitmapdata(ani, StoreImages));
+			}
 			addChild(image);
+			lani = ani;
 		}
 		else
 		{
-			image.ChangeAnimation(game.AL.GetAnimation(ani),reset);
+			if (StoreImages)
+			{
+				image.ChangeAnimation(game.AL.GetAnimation(ani), reset);
+			}
+			else
+			{
+				image.ChangeAnimation(getbitmapdata(ani, StoreImages), reset);
+			}
+			lani = ani;
+		}
+	}
+	private function getbitmapdata(ani:String,StoreImages:Bool=true):Array<BitmapData>
+	{
+		if (StoreImages)
+		{
+			return game.AL.GetAnimation(ani);
+		}
+		else
+		{
+			return game.AL.getBitmapData(ani);
 		}
 	}
 	public function animate()
@@ -179,15 +217,36 @@ class Entity extends Sprite
 		return ret;
 	}
 	//execute a rotation with crude stabilizing.(has a bit of jitter)
-	public function rotateentity(rot:Float)
+	public function rotatesprite(sprite:Sprite,rot:Float)
 	{
 		{
+		var B = sprite.getBounds(game.gamestage);
+		sprite.rotation = rot;
+		var B2 = sprite.getBounds(game.gamestage);
+		sprite.x += B.left - B2.left;
+		sprite.y += B.top - B2.top;
+		}
+		/*var matrix:Matrix = transform.matrix;
+		var rect:Rectangle = getBounds(parent);
+
+		matrix.translate(-(rect.left + (rect.width / 2)), -(rect.top + (rect.height / 2)));
+		matrix.rotate((rot / 180) * Math.PI);
+		matrix.translate(rect.left + (rect.width / 2), rect.top + (rect.height / 2));
+		transform.matrix = matrix;
+
+		rotation = Math.round(rotation);*/
+	}
+	//execute a rotation with crude stabilizing.(has a bit of jitter)
+	public function rotateentity(rot:Float)
+	{
+		rotatesprite(this, rot);
+		/*{
 		var B = getBounds(game.gamestage);
 		rotation = rot;
 		var B2 = getBounds(game.gamestage);
 		x += B.left - B2.left;
 		y += B.top - B2.top;
-		}
+		}*/
 		/*var matrix:Matrix = transform.matrix;
 		var rect:Rectangle = getBounds(parent);
 
@@ -223,7 +282,7 @@ class Entity extends Sprite
 		{
 			dir = -1;
 		}
-		if (Vspeed < 12)
+		if (Vspeed < maxfallspd)
 		{
 			{
 				Vspeed += fallaccel;
@@ -239,20 +298,31 @@ class Entity extends Sprite
 			var B = getBounds(game.gamestage);
 			ground = game.CollisionDetectPoint(B.left + middle, B.bottom+2/* + (height + 2)*/);
 		}
+		if (game.scrollframe)
+			{
+				x += game.scrollspeedX;
+				y += game.scrollspeedY;
+			}
 		if (ground != null)
 		{
 			if (Vspeed > 0)
 			{
 				bonking = false;
 				Vspeed = 0;
-				y = ground.y - feetposition;
+				if (Math.abs(y - (ground.y - feetposition)) < 100)
+				{
+					y = ground.y - feetposition;
+				}
 			}
 			var D:Dynamic = ground;
 			if (type != "Player" && ground.type == "Block" && D.poison)
 			{
 				Hspeed *= 0.80;
 			}
+			
+			
 		}
+		
 		headbonk = null;
 		if (Vspeed < 0)
 		{
@@ -306,12 +376,12 @@ class Entity extends Sprite
 			}
 		}
 		wrapped = false;
-		if (x < -width)
+		if (x < -width && Hspeed<=0)
 		{
 			wrapped = true;
 			x += 800+width;
 		}
-		if (x > 800+width)
+		if (x > 800+width && Hspeed>=0)
 		{
 			wrapped = true;
 			x -= 800+width+width;

@@ -76,6 +76,11 @@ class Boss extends Enemy
 		
 		firingdanmaku = true;
 		ChangeAnimation(rename);
+		
+		pointvalue = 8000;
+		
+		reward = true;
+		rewarditem = "GiantPoint";
 	}
 	
 	private function RadianToDegree(angle:Float):Float
@@ -134,6 +139,11 @@ class Boss extends Enemy
 			game.SendKillAll();
 			var D:Dynamic = { };
 			game.SendEvent("ClearSpawnList", D);
+			if (!game.GameFlags.get(Main.Bossrush))
+			{
+				P.lives += 1;
+			}
+			SoundManager.Play("extend");
 		}
 	}
 	public function dodanmaku()
@@ -174,11 +184,13 @@ class Boss extends Enemy
 				shottime = 10;
 			}
 		}
+		doingability = false;
 		if (game.rank > 0 || true)
 		{
 		if (frame % 350 < 25)
 		{
-			visuallyEnraged = !visuallyEnraged;
+			//visuallyEnraged = !visuallyEnraged;
+			doingability = true;
 		}
 		
 		if (frame % 350 == 25)

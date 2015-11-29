@@ -10,6 +10,7 @@ class BombItem extends EntityItem
 	public function new() 
 	{
 		super("bomb");
+		charname = "Bomb";
 	}
 	public override function Collect(player:Player)
 	{

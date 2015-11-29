@@ -10,7 +10,7 @@ class LifeItem extends EntityItem
 	public function new() 
 	{
 		super("1up");
-		if (!Main._this.canlivesspawn)
+		if (!game.gamemode.canlivesspawn)
 		{
 			alive = false;
 		}

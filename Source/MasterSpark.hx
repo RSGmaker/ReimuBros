@@ -79,7 +79,8 @@ class MasterSpark extends Entity
 			game.gamestage.removeChild(ray);
 			ray = null;
 			alive = false;
-			game.yuukaactive = false;
+			//game.yuukaactive = false;
+			
 		}
 		colorray.graphics.clear();
 		hue += 10;
@@ -122,6 +123,10 @@ class MasterSpark extends Entity
 			}
 		}
 		}
+		}
+		if (!alive)
+		{
+			game.yuukasactive--;
 		}
 	}
 	

@@ -9,7 +9,7 @@ class StarBulletY extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Wide shot";
+		description = "Covers nearly half\nthe stage in bullets";
 	}
 	override public function init() 
 	{

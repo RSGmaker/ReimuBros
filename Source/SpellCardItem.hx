@@ -6,89 +6,26 @@ package;
  */
 class SpellCardItem extends CarryItem
 {
-	public var ammo:Int;
-	public var cooldown:Int;
-	private var maxammo:Int = 1;
 	public function new() 
 	{
 		super("spellcard");
-		DestroyOnRoundEnd = false;
+		charname = "SpellCard";
+		removeonlevelend = false;
 		interactable = true;
 		Dropable = false;
-		//OffsetX = 32;
-		//OffsetY = 48;
 		OffsetX = 12;
 		OffsetY = 37;
-		ammo = maxammo;
+		canuse = true;
+		itemtype = 2;
+		maxcooldown = 500;
+		maxuses = 2;
+		uses = maxuses;
 	}
-	override public function Collect(player:Player) 
+	override public function Use(player:Player) 
 	{
-		//super.Collect(player);
-		OffsetX = 12;
-		OffsetY = 48;
-		var ok = false;
-		if (player.equipment == null)
-		{
-			ok = true;
-		}
-		else if (!player.equipment.alive)
-		{
-			ok = true;
-		}
-		if (ok)
-		{
-			super.Collect(player);
-			player.equipment = this;
-		}
-		else if (player.equipment != null)
-		{
-			//if (Type.typeof(player.equipment).getName() == Type.typeof(this).getName())
-			if (Std.is(player.equipment,SpellCardItem))
-			{
-				var D:Dynamic = player.equipment;
-				var M:SpellCardItem = D;
-				if (M.ammo < maxammo)
-				{
-					M.ammo = maxammo;
-					alive = false;
-				}
-				//killed = true;
-				
-			}
-		}
-	}
-	override public function update():Void 
-	{
-		super.update();
-		readyinteract = (holder == game.myplayer && cooldown<1);
-		interacttext = "Use Spell Card";
-		cooldown--;
-		if (holder != null && holder.type == "Player")
-		{
-			OffsetY = holder.height - 20;
-		}
-	}
-	override public function CustomEvent(data:Dynamic) 
-	{
-		//super.CustomEvent(data);
-		alive = false;
-		killed = true;
-	}
-	override public function interact(P:Player):Void 
-	{
-		//super.interact(P);
-		if (cooldown > 0)
-		{
-			return;
-		}
-		cooldown = 15;
-		if (P == holder && P == game.myplayer)
-		{
-		if (ammo > 0)
-		{
-			//fire a beam.
-			ammo--;
-			var spd = 8;
+		super.Use(player);
+		var P:Player = player;
+		var spd = 8;
 			var D:Dynamic = { };
 			D.x = P.x;
 			D.y = P.y + 30;
@@ -148,18 +85,19 @@ class SpellCardItem extends CarryItem
 			game.SendPlayerDanmaku(D);
 			D.Vspeed = -8;
 			game.SendPlayerDanmaku(D);
-		}
-		if (ammo <= 0)
+	}
+	override public function Collect(player:Player) 
+	{
+		super.Collect(player);
+		OffsetX = 12;
+		OffsetY = 48;
+	}
+	override public function update():Void 
+	{
+		super.update();
+		if (holder != null && holder.type == "Player")
 		{
-			//alive = false;
-			SendCustomEvent(null);
-			//if (holder is Player)
-			{
-				var D:Dynamic = holder;
-				var P:Player = D;
-				P.equipment = null;
-			}
-		}
+			OffsetY = holder.height - 20;
 		}
 	}
 }

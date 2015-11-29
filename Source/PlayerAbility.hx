@@ -19,6 +19,33 @@ class PlayerAbility
 	public var initialized:Bool;
 	public var game:GameView;
 	public var description:String = "";
+	///public var type:String = "none";
+	public var flags:FlagManager;
+	//You have to press ability to activate
+	public static inline var Castable = 1;
+	//This ability can damage/kill enemies
+	public static inline var Offense = 2;
+	//This ability is considered a bomb(kill all enemies on screen)
+	public static inline var Bomb = 3;
+	//This ability has a constant effect
+	public static inline var Passive = 4;
+	//fires some sort of bullet
+	public static inline var Projectile = 5;
+	//some sort of close ranged effect
+	public static inline var Melee = 6;
+	//effect causes a "super power" transformation.
+	public static inline var SuperForm = 7;
+	//affects mobility in some way.
+	public static inline var Movement = 8;
+	
+	
+	public var hascooldown:Bool;
+	public var cooldowntimer:Float;
+	public var maxcooldown:Float;
+	
+	public var hastransformation:Bool;
+	public var maxtransformation:Float;
+	public var transformationtimer:Float;
 	//public var cooldown:Int;
 	//public var timepowered:Int;
 	//public var poweractive:Bool;
@@ -29,6 +56,7 @@ class PlayerAbility
 		{
 			game = player.game;
 		}
+		flags = new FlagManager(1);
 	}
 	public function init()
 	{
@@ -70,7 +98,7 @@ class PlayerAbility
 		
 	}
 	
-	public function onattacked()
+	public function onattacked(fatal:Bool)
 	{
 		
 	}
@@ -81,6 +109,11 @@ class PlayerAbility
 	}
 	//when you bump something
 	public function onbump(E:Entity)
+	{
+		
+	}
+	//when you use an item and it loses 1 uses
+	public function onchargeused(E:CarryItem)
 	{
 		
 	}

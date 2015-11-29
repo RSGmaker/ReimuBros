@@ -49,6 +49,10 @@ class Hecatia extends Enemy
 		{
 			started = true;
 		}
+		if (invincibility > 0)
+		{
+			invincibility--;
+		}
 		if (!killed)
 		{
 			

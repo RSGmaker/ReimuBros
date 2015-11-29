@@ -10,6 +10,7 @@ class MiniBombItem extends EntityItem
 	public function new() 
 	{
 		super("bomb");
+		charname = "MiniBomb";
 		scaleX = 0.5;
 		scaleY = 0.5;
 	}

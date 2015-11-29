@@ -43,7 +43,7 @@ class CharacterSelectView extends Sprite
 	public var ButtonsPage:Array<Array<Sprite>>;
 	public var currentpage:Int;
 	public var selected:String;*/
-	public var ExitButton:Sprite;
+	public var ExitButton:MenuButton;
 	
 	public var AL:Animationloader;
 	public var Lselected:String;
@@ -54,7 +54,7 @@ class CharacterSelectView extends Sprite
 	//the list of pages of characters(this is what the arrow buttons cycle trhough)
 	
 	public var Nameinput:TextField;
-	public var StartButton:Sprite;
+	public var StartButton:MenuButton;
 	
 	//main reads this to determine what we're doing
 	public var status:String;
@@ -91,7 +91,7 @@ class CharacterSelectView extends Sprite
 	public var gamespeed:Float;
 	public var points:Int;
 	public var GUI:Sprite;
-	public var startminigamebutton:Sprite;
+	public var startminigamebutton:MenuButton;
 	public var minigamestarted:Bool;
 	public var highscore:Int;
 	public var newscore:Bool;
@@ -111,6 +111,15 @@ class CharacterSelectView extends Sprite
 	public var format:TextFormat;
 	
 	public var errortime:Int;
+	
+	public var maxlevel:Int = 1;
+	
+	public var P1T:TextField;
+	public var P2T:TextField;
+	public var P3T:TextField;
+	public var frame:Int = 0;
+	public var MX:Float = 0;
+	public var MY:Float = 0;
 	
 	
 	
@@ -145,12 +154,13 @@ class CharacterSelectView extends Sprite
 		level = 1;
 	}
 	public function start() {
-		level = Main._this.level;
+		level = Main._this.gamemode.level;
 		GUI = new Sprite();
+		maxlevel = getmaxlevel();
 		entities = new Array<MiniEntity>();
 		//select = new CharacterSelect(selected,null,true);
 		select = new CharacterSelect(selected,null,Main._this.savedata.data.avatar!="");
-		if (!Main._this.canselectcharacter)
+		if (!(Main._this.gamemode.forcedcharacter == ""))
 		{
 			select.ButtonDisplay.visible = false;
 		}
@@ -210,7 +220,7 @@ class CharacterSelectView extends Sprite
 		startminigamebutton.x += 400;
 		startminigamebutton.y = 140;
 		startminigamebutton.visible = false;
-		startminigamebutton.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		startminigamebutton.addclick( function( ev ) {
 					minigamestarted = true;
 					startminigamebutton.visible = false;
 					highestpointcounter.visible = true;
@@ -226,7 +236,7 @@ class CharacterSelectView extends Sprite
 		charpreview.scaleX = 1.5;
 		charpreview.scaleY = 1.5;
 		char.buttonMode = true;
-		char.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		char.addEventListener( MouseEvent.CLICK, function( ev ) {
 					if (Vspeed == 0)
 					{
 					if (newscore)
@@ -288,10 +298,10 @@ class CharacterSelectView extends Sprite
 		
 		
 		ExitButton = AddButton("Title Screen");
-		
+		ExitButton.sound = "cancel";
 		ExitButton.x = 554;
 		ExitButton.y = 530;
-		ExitButton.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		ExitButton.addclick( function( ev ) {
 					status = "TitleScreen";
 					ExitButton.x -= 10;
 				 } 
@@ -303,7 +313,8 @@ class CharacterSelectView extends Sprite
 					var Y = 100;
 					if (online)
 					{
-						Y += 140;
+						//Y += 140;
+						Y += 144;
 					}
 				leveltitle = new TextField();
 					leveltitle.mouseEnabled = false;
@@ -337,8 +348,10 @@ class CharacterSelectView extends Sprite
 					GUI.addChild(leveltitle);
 					
 					var B = AddButton("+ ");
+					B.sound = "";
 					var B2 = AddButton(" - ");
-					if (!Main._this.levelselect)
+					B2.sound = "";
+					if (!Main._this.gamemode.levelselect)
 					{
 						B.visible = false;
 						B2.visible = false;
@@ -346,21 +359,21 @@ class CharacterSelectView extends Sprite
 					B.x = 700;
 					B.y = Y+90;
 					//if (Main._this.savedata.data.maxlevel < 6)
-					if (getmaxlevel() < 6)
+					if (maxlevel < 6)
 					{
 						B.visible = false;
 					}
 					GUI.addChild(B);
-					B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					B.addclick( function( ev ) {
 						//if (level + 5 <= Main._this.savedata.data.maxlevel)
-						if (level + 5 <= getmaxlevel())
+						if (level + 5 <= maxlevel)
 						{
 							level += 5;
 							var tmp = leveltitle.getTextFormat();
 							leveltitle.text = GameView.GetLevelTitle(level, false);
 							leveltitle.setTextFormat(tmp);
 							B2.visible = true;
-							if (!(level + 5 <= Main._this.savedata.data.maxlevel))
+							if (!(level + 5 <= maxlevel))
 							{
 								B.visible = false;
 							}
@@ -375,7 +388,7 @@ class CharacterSelectView extends Sprite
 					B2.y = Y+90;
 					B2.visible = false;
 					GUI.addChild(B2);
-					B2.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					B2.addclick( function( ev ) {
 						if (level > 1)
 						{
 					level -= 5;
@@ -398,19 +411,20 @@ class CharacterSelectView extends Sprite
 					
 		
 					StartButton = AddButton("Start Game");
+					StartButton.sound = "ok";
 					StartButton.x = 554;
 					StartButton.y = 6;
 					
 					
 				 
 					
-					StartButton.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					StartButton.addclick( function( ev ) {
 						var T = select.selectedcharacter.getTextFormat();
 						if (errortime<1)
 						{
 							status = "PlayGame";
-							StartButton.x -= 10;
-							select.selectedcharacter.text = "Cheat code toggled!\nyou may enter more codes\nor start the game";
+							//StartButton.x -= 10;
+							//select.selectedcharacter.text = "Cheat code toggled!\nyou may enter more codes\nor start the game";
 						}
 					
 					select.selectedcharacter.setTextFormat(T);
@@ -419,27 +433,66 @@ class CharacterSelectView extends Sprite
 				else
 				{
 					var B = AddButton("Room#1");
+					B.sound = "ok";
 					B.x = 554;
 					B.y = 6;
-					B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					B.addclick( function( ev ) {
 					status = "PlayGame";
-					Room = "public1";});
+					Room = "public1"; } );
+					var tf = new TextField();
+					P1T = tf;
+					tf.text = "Players:" + 0 + "/" + "4";
+					tf.textColor = 0xFFFFFF;
+					tf.mouseEnabled = false;
+					tf.x = B.x + 100;
+					tf.y = B.y + B.height-5;
+					GUI.addChild(tf);
 					
 					B = AddButton("Room#2");
+					B.sound = "ok";
 					B.x = 554;
 					B.y = 91;
-					B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					B.addclick( function( ev ) {
 						Room = "public2";
 					status = "PlayGame";
 					 } );
+					tf = new TextField();
+					P2T = tf;
+					tf.text = "Players:" + 0 + "/" + "4";
+					tf.textColor = 0xFFFFFF;
+					tf.mouseEnabled = false;
+					tf.x = B.x + 100;
+					tf.y = B.y + B.height-5;
+					GUI.addChild(tf);
 					
 					B = AddButton("Room#3");
+					B.sound = "ok";
 					B.x = 554;
 					B.y = 176;
-					B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					B.addclick( function( ev ) {
 						Room = "public3";
 					status = "PlayGame";
 					});
+					tf = new TextField();
+					P3T = tf;
+					tf.text = "Players:" + 0 + "/" + "4";
+					tf.textColor = 0xFFFFFF;
+					tf.mouseEnabled = false;
+					tf.x = B.x + 100;
+					tf.y = B.y + B.height-5;
+					GUI.addChild(tf);
+					
+					/*B = AddButton("Refresh");
+					B.sound = "ok";
+					B.x = 800 - B.width;
+					B.y = 0;
+					B.scaleX = 0.7;
+					B.scaleY = B.scaleX;
+					B.addclick( function( ev ) {
+						frame = 0;
+						Main._this.startnetlobby();
+					});*/
+					
 					CustomRoom = new TextField();
 					CustomRoom.width = 200;
 					CustomRoom.height = 30;
@@ -458,9 +511,10 @@ class CharacterSelectView extends Sprite
 					CustomRoom.backgroundColor = 0xFFFFFF;
 					GUI.addChild(CustomRoom);
 					B = AddButton("Custom");
+					B.sound = "ok";
 					B.x = 554;
 					B.y = 450;
-					B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+					B.addclick( function( ev ) {
 						Room = CustomRoom.text;
 						if (Room != "public1" && Room != "public2" && Room != "public3" && Room != "CustomRoom")
 						{
@@ -525,6 +579,30 @@ class CharacterSelectView extends Sprite
 			this_onEnterFrame();
 			i++;
 		}
+		frame = 0;
+		MX = stage.mouseX;
+		MY = stage.mouseY;
+	}
+	public function roomreport(D:Dynamic)
+	{
+		var tmp:TextField=null;
+		if (D.room == "public1")
+		{
+			tmp = P1T;
+		}
+		if (D.room == "public2")
+		{
+			tmp = P2T;
+		}
+		if (D.room == "public3")
+		{
+			tmp = P3T;
+		}
+		if (tmp != null)
+		{
+			tmp.text = "Players:" + D.players + "/" + "4";
+			tmp.textColor = 0xFFFFFF;
+		}
 	}
 	private function stage_onKeyDown (event:KeyboardEvent):Void {
 		var A = Nameinput.getTextFormat();
@@ -539,6 +617,36 @@ class CharacterSelectView extends Sprite
 	}
 	
 	public function this_onEnterFrame ():Void {
+		frame++;
+		if (frame > 600 && online)
+		{
+			var NL = Main._this.netlobby;
+			//netlobby.group.neighborCount>10
+			if (frame > 900 || (NL != null && NL.group.neighborCount <= 10))
+			{
+			if (MX != stage.mouseX || MY != stage.mouseY)
+			{
+				if (NL == null)
+				{
+					Main._this.startnetlobby();
+				}
+				else
+				{
+					NL.SendMessage("ping");
+					NL.Flush();
+				}
+				P1T.text = "Players:" + 0 + "/" + "4";
+				P1T.textColor = 0xFFFFFF;
+				P2T.text = "Players:" + 0 + "/" + "4";
+				P2T.textColor = 0xFFFFFF;
+				P3T.text = "Players:" + 0 + "/" + "4";
+				P3T.textColor = 0xFFFFFF;
+				frame = 0;
+			}
+			}
+		}
+		MX = stage.mouseX;
+		MY = stage.mouseY;
 		if (selected != select.selected && select.selected != null)
 		{
 			selected = select.selected;
@@ -663,7 +771,8 @@ class CharacterSelectView extends Sprite
 					E.bounce = true;
 					if (Math.random() > 0.5)
 					{
-						E.behavior = Math.floor(4 * Math.random());
+						//E.behavior = Math.floor(4 * Math.random());
+						E.behavior = Math.floor(5 * Math.random());
 					}
 					backlayerentities[backlayerentities.length] = E;
 					if (E != null)
@@ -713,6 +822,17 @@ class CharacterSelectView extends Sprite
 	
 	public function sortentities(A:MiniEntity, B:MiniEntity):Int
 	{
+		if (A.rotation != B.rotation)
+		{
+			if (A.rotation == 0)
+			{
+				return 1;
+			}
+			if (B.rotation == 0)
+			{
+				return -1;
+			}
+		}
 		if (A.scaleX > 1.3 && !(B.scaleX > 1.3))
 		{
 			return -1;
@@ -926,7 +1046,7 @@ class CharacterSelectView extends Sprite
 				}
 			}
 	}
-	private function AddButton(text:String):Sprite
+	private function AddButton(text:String):MenuButton
 	{
 		var buttonSprite = new MenuButton(text);
 		GUI.addChild(buttonSprite);

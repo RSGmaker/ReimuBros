@@ -9,7 +9,7 @@ class BasicShot extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Fires a magic bullet";
+		description = "Fires magic bullets";
 	}
 	override public function init() 
 	{
@@ -31,7 +31,7 @@ class BasicShot extends PlayerAbility
 			var D:Dynamic = { };
 			D.x = player.x;
 			D.y = player.y + 30;
-			D.type = "bullet";
+			D.type = "pbullet";
 			D.scale = 0.8;
 			D.dir = player.Ldir;
 			D.Vspeed = 0;

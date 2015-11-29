@@ -70,7 +70,10 @@ class Marisa extends Enemy
 					D.item = items[rng.quick(items.length)];
 			//canfire = (D.item == "MiniHakkero");
 			canfire = true;
-			game.SendEvent("AttachItem", D);
+			if (game.Hoster)
+			{
+				game.SendEvent("AttachItem", D);
+			}
 		}
 		if (!killed)
 		{
@@ -105,13 +108,16 @@ class Marisa extends Enemy
 				Hspeed = -mxspd;
 			}
 		}
+		doingability = false;
 		if (flipped <= 0)
 		{
 			timetofire--;
-			if (timetofire < 140 && canfire)
+			//if (timetofire < 140 && canfire)
+			if (timetofire < 110 && canfire)
 			{
 				Hspeed = 0;
-				visuallyEnraged = !visuallyEnraged;
+				//visuallyEnraged = !visuallyEnraged;
+				doingability = true;
 				if (timetofire < 1)
 				{
 					if (game.Hoster)
@@ -132,6 +138,7 @@ class Marisa extends Enemy
 						//D.user = P.UID;
 						D.antiplayer = true;
 						D.antienemy = false;
+						D.color = 0xFF0000;
 						D.user = UID;
 						game.SendEvent("LaserBeam",D);
 					}

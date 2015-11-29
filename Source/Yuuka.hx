@@ -16,6 +16,7 @@ class Yuuka extends Entity
 		Time = 150;
 		OY = 0;
 		type = "Yuuka";
+		removeonlevelend = true;
 	}
 	override public function update():Void 
 	{
@@ -34,6 +35,7 @@ class Yuuka extends Entity
 			{
 				x = -width;
 			}
+			game.yuukasactive++;
 		}
 		Time--;
 		var spd = 3;
@@ -90,10 +92,19 @@ class Yuuka extends Entity
 							D.y = OY-56;
 							GameView._this.SendEvent("MasterSpark", D);
 						}
+						
 						alive = false;
 					}
 				}
 			}
 		}
+		if (Time == 0)
+		{
+			var T = 120;
+			game.AddWarningSign(96, OY, T);
+			game.AddWarningSign(400-32, OY, T);
+			game.AddWarningSign(800-128, OY, T);
+		}
+
 	}
 }

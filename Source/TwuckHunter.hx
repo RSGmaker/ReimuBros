@@ -17,9 +17,9 @@ class TwuckHunter extends Enemy
 	public var mokou:Bool;
 	
 	
-	public function new(mokou:Bool) 
+	public function new(ismokou:Bool) 
 	{
-		if (!mokou)
+		if (!ismokou)
 		{
 			super("kaguya");
 			rename = "Ekaguya";
@@ -33,6 +33,7 @@ class TwuckHunter extends Enemy
 		accel = 0.25;
 		deccel = 0.1;
 		mxspd = 4.0;
+		//mxspd = 3.5;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -46,9 +47,9 @@ class TwuckHunter extends Enemy
 	}
 	public override function increaserank()
 	{
-			accel += 0.05;
+			/*accel += 0.05;
 			mxspd += 0.25;
-			pointvalue += 500;
+			pointvalue += 500;*/
 	}
 	
 	override public function update():Void 
@@ -65,10 +66,12 @@ class TwuckHunter extends Enemy
 			if (mokou)
 			{
 				//mokou = true;
+				charname = "mokou";
 			}
 			else
 			{
 				mxspd += 0.5;
+				charname = "kaguya";
 			}
 		}
 		if (!killed)
@@ -272,11 +275,11 @@ class TwuckHunter extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 30 * 4;
+				flipped = 30 * 6;
 			}
 			else
 			{
-				flipped = 30 * 7;
+				flipped = 30 * 10;
 			}
 			if (mokou)
 			{

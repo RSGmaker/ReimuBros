@@ -67,8 +67,8 @@ class Nue extends Enemy
 				have = Main._this.savedata.data.alts[unlock];
 			}
 			isChar = true;
-			this.scaleX = 0.8;
-			this.scaleY = 0.8;
+			//this.scaleX = 0.8;
+			//this.scaleY = 0.8;
 			}
 			else
 			{
@@ -80,6 +80,8 @@ class Nue extends Enemy
 				else
 				{
 					rename = "1up";
+					this.scaleX = 0.5;
+					this.scaleY = 0.5;
 				}
 			}
 			disguised = true;
@@ -96,6 +98,8 @@ class Nue extends Enemy
 		{
 			S = S + "U";
 		}
+			this.scaleX = 0.8;
+			this.scaleY = 0.8;
 		}
 		enraged = false;
 		

@@ -37,8 +37,8 @@ class CharacterSelect extends Sprite
 {
 	public var AL:Animationloader;
 	public var ExitButton:Sprite;
-	public var NextButton:Sprite;
-	public var PrevButton:Sprite;
+	public var NextButton:MenuButton;
+	public var PrevButton:MenuButton;
 	public var Buttons:Array<MenuButton>;
 	public var ButtonsPage:Array<Array<MenuButton>>;
 	public var ButtonDisplay:Sprite;
@@ -101,7 +101,7 @@ class CharacterSelect extends Sprite
 		
 		NextButton.x = 284;
 		NextButton.y = 530;
-		NextButton.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		NextButton.addclick( function( ev ) {
 					//if (!following)
 					{
 					currentpage++;
@@ -119,7 +119,7 @@ class CharacterSelect extends Sprite
 		
 		PrevButton.x = 144;
 		PrevButton.y = 530;
-		PrevButton.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		PrevButton.addclick( function( ev ) {
 					//if (!following)
 					{
 					currentpage--;
@@ -135,7 +135,7 @@ class CharacterSelect extends Sprite
 		
 		
 	}
-	private function AddButton(text:String):Sprite
+	private function AddButton(text:String):MenuButton
 	{
 		var buttonSprite = new MenuButton(text);
 		ButtonDisplay.addChild(buttonSprite);
@@ -173,14 +173,19 @@ class CharacterSelect extends Sprite
 			//var i = 0;
 			while (c < AL.length)
 			{
-				dsc = dsc + AL[c].description;
+				dsc = dsc + AL[c].description+"\n";
 				c++;
+			}
+			if (!Main._this.gamemode.abilitiesenabled)
+			{
+				dsc = "(Abilities are disabled.)";
 			}
 			var tmp = new TextFormat();
 			tmp.font = "Arial";
 			tmp.size = 22;
 			tmp.color = 0xFFFFFF;
-			var SS = (disp.charAt(0).toUpperCase() + disp.substr(1)).split("ALT").join("☆");
+			var SS = Player.getname(disp);
+			/*var SS = (disp.charAt(0).toUpperCase() + disp.substr(1)).split("ALT").join("☆");
 			var SA = SS.split("_");
 			var i = 0;
 			SS = "";
@@ -197,7 +202,7 @@ class CharacterSelect extends Sprite
 					SS = SS + " " + str;
 				}
 				i++;
-			}
+			}*/
 			//.split("_").join(" ")
 			//var basic = S.split("ALT").join("");
 			var SC = tmp;
@@ -221,8 +226,10 @@ class CharacterSelect extends Sprite
 		while (i < Buttons.length)
 		{
 			var B = Buttons[i];
+			
 			B.visible = (ButtonsPage[currentpage].indexOf(B) > -1);
-			var tf:Dynamic = (B.getChildByName("textField"));
+			//var tf:Dynamic = (B.getChildByName("textField"));
+			var tf = B.textfield;
 		#if html5
 			var S = "";
 			if (i < charlist.length)
@@ -358,6 +365,7 @@ class CharacterSelect extends Sprite
 					if (O[charlist.indexOf(PC[i])] || PC[i] == "customavatar")
 					{
 						B = AddCharacterButton(PC[i], true);
+						B.sound = "";
 						ok = true;
 					}
 				}
@@ -409,10 +417,26 @@ class CharacterSelect extends Sprite
 		buttonSprite.setanimation(text, BH, BH);
 		buttonSprite.textfield.visible = false;
 		buttonSprite.button.alpha = 0.65;
+		var ani = Main._this.AL.GetAnimation(text + "ALT");
+		
+		if (Main._this.savedata.data.alts[Buttons.length] && ani != null && ani.length>0)
+		{
+			var TF = new TextField();
+			TF.text = "★";
+			TF.textColor = 0xFFFF00;
+			TF.x = 5;
+			TF.y = 5;
+			TF.scaleX = 1.3;
+			TF.scaleY = TF.scaleX;
+			TF.width = 30;
+			TF.height = 30;
+			TF.mouseEnabled = false;
+			buttonSprite.display.addChild(TF);
+		}
 		
 		//if (unlocked || charlist != Player.characters)
 		{
-		buttonSprite.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		buttonSprite.addclick( function( ev ) {
 					//var D:Dynamic = buttonSprite;
 					var tf = buttonSprite.textfield;
 					//var tf:Dynamic = (D.getChildByName("textField"));
@@ -448,10 +472,10 @@ class CharacterSelect extends Sprite
 				
 			var LL = PlayerAbilityManager.GetAbilities2(text);
 			var AA = false;
-			if (LL.length == 1 && Std.is(LL[0], BasicShot) )
+			/*if (LL.length == 1 && Std.is(LL[0], BasicShot) )
 			{
 				AA = true;
-			}
+			}*/
 			if (AA)
 			{
 				buttonSprite.innercolor = 0x00AA33;

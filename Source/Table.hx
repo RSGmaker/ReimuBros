@@ -24,6 +24,7 @@ class Table extends Entity
 		respawn = 240;
 		interactable = true;
 		interacttext = "Throw";
+		removeonlevelend = true;
 	}
 	public override function interact(P:Player)
 	{

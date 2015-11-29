@@ -17,6 +17,9 @@ class Chen extends Enemy
 	public var rename:String;
 	public var danmaku:Int;
 	public var reducetime:Int;
+	public var ran:Bool = false;
+	public var spd:Float = 4;
+	public var aspd:Float = 3;
 	public function new() 
 	{
 		super("Chen");
@@ -67,28 +70,41 @@ class Chen extends Enemy
 			var seed:UInt = Math.floor(UID * 100000);
 			ascend = rng.twist(seed, 1, 100)[0] > 50;
 			
-			if (rng.twist(seed, 1, 10)[0] > 6)
+			//if (rng.twist(seed, 1, 10)[0] > 6)
+			if (UID>0.6)
 			{
 				rename = "ERan";
+				ran = true;
+			}
+			else
+			{
+				scaleX = 0.8;
+				scaleY = 0.8;
+				spd = 4.5;
+				aspd = 3.35;
 			}
 			//reducetime = rank * 30;
 			reducetime = rank * 20;
-			if (game.RoundType == GameView.TypeofRound.Yukari || game.RoundType == GameView.TypeofRound.Danmaku)
+			if (game.RoundType == GameView.TypeofRound.EventYukari || game.RoundType == GameView.TypeofRound.EventDanmaku)
 			{
 				reducetime += 150;
 			}
-			if (game.RoundType == GameView.TypeofRound.Yukari || rank>0 || game.RoundType == GameView.TypeofRound.Danmaku)
+			if (game.RoundType == GameView.TypeofRound.EventYukari || rank>0 || game.RoundType == GameView.TypeofRound.EventDanmaku)
 			{
 				//danmaku = 15+rng.twist(rng.seed, 1, 540-reducetime)[0];
-				danmaku = 15+rng.twist(rng.seed, 1, 740-reducetime)[0];
+				////danmaku = 15+rng.twist(rng.seed, 1, 740-reducetime)[0];
 			}
-			if (game.RoundType == GameView.TypeofRound.Table)
+			danmaku = 15+rng.twist(rng.seed, 1, 740-reducetime)[0];
+			if (game.RoundType == GameView.TypeofRound.EventTable)
 			{
 				rename = "table";
 			}
 		}
 		rot += 0.25;
-		if (danmaku == -1000 && rank > 0)
+		doingability = false;
+		if (ran)
+		{
+		if (danmaku == -1000/* && rank > 0*/)
 		{
 			danmaku = 15+rng.twist(rng.seed, 1, 740-reducetime)[0];
 		}
@@ -110,21 +126,23 @@ class Chen extends Enemy
 				danmaku -= 1;
 				if (danmaku < 8)
 				{
-					visuallyEnraged = !visuallyEnraged;
+					//visuallyEnraged = !visuallyEnraged;
+					doingability = true;
 				}
 			}
+		}
 		}
 		animate();
 		dangerous = true;
 		killable = false;
-		x += (4 * Ldir);
+		x += (spd * Ldir);
 		if (ascend)
 		{
-			y -= 3;
+			y -= aspd;
 		}
 		else
 		{
-			y += 3;
+			y += aspd;
 		}
 		iter -= 1;
 		if (iter <= 0)

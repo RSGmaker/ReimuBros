@@ -23,6 +23,7 @@ class EntityGap extends Entity
 			readyinteract = true;
 			interacttext = "Manipulate";
 		}
+		removeonlevelend = true;
 	}
 	override public function interact(P:Player):Void 
 	{
@@ -48,7 +49,7 @@ class EntityGap extends Entity
 		{
 			SoundManager.Play("fireballspawn");
 			readyinteract = false;
-			if (y > 300 && UID > 0.5 && game.RoundType != GameView.TypeofRound.Yukari && game.RoundType != GameView.TypeofRound.Danmaku)
+			if (y > 300 && UID > 0.5 && game.RoundType != GameView.TypeofRound.EventYukari && game.RoundType != GameView.TypeofRound.EventDanmaku)
 			{
 				if (game.Hoster)
 				{
@@ -76,6 +77,10 @@ class EntityGap extends Entity
 			var D:Dynamic = { };
 			D.type = "Chen";
 			D.UID = Math.random();
+			if ((game.rank < 1) && !(game.RoundType == GameView.TypeofRound.EventYukari || game.RoundType == GameView.TypeofRound.EventDanmaku))
+			{
+				D.UID *= 0.5;
+			}
 			D.y = y+32;
 			D.x = x;
 			D.Ldir = Ldir;

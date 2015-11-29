@@ -10,6 +10,7 @@ class GiantPointItem extends EntityItem
 	public function new() 
 	{
 		super("Point");
+		charname = "GiantPoint";
 		scaleX = 2;
 		scaleY = 2;
 	}

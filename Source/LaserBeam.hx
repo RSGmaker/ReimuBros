@@ -22,6 +22,9 @@ class LaserBeam extends Entity
 	public var user:Entity;
 	public var offsetX:Float;
 	public var offsetY:Float;
+	public var lasercolor:Int = 0xFFFF00;
+	public var piercing:Bool = true;
+	public var following:Bool = true;
 	public function new() 
 	{
 		super("black");
@@ -48,7 +51,7 @@ class LaserBeam extends Entity
 	override public function update():Void 
 	{
 		super.update();
-		if (user != null)
+		if (user != null && following)
 		{
 		x = user.x + offsetX + (user.width);
 		y = user.y + offsetY;
@@ -59,6 +62,10 @@ class LaserBeam extends Entity
 			///x -= 800 + 9;
 			x -= 800;
 		}
+		}
+		if (rotation != 0)
+		{
+			ray.rotation = rotation;
 		}
 		/*if (ray != null)
 		{
@@ -115,15 +122,18 @@ class LaserBeam extends Entity
 			ray = null;
 			alive = false;
 		}
-		var c = 0xFFFF00;
+		//var c = 0xFFFF00;
+		var c = lasercolor;
 		colorray.graphics.clear();
 		//colorray.graphics.beginFill(c[0] <<16 | c[1] <<8 | c[2]);
-		colorray.graphics.beginFill(c);
-		colorray.graphics.drawRect(0, 0, 800, 10);
+		colorray.graphics.beginFill(c);//scaleY
+		//colorray.graphics.drawRect(0, 0, 800, 10);
+		colorray.graphics.drawRect(0, 0, 800, scaleY);
 		colorray.graphics.endFill();
 		whiteray.graphics.clear();
 		whiteray.graphics.beginFill(0xffffff);
-		whiteray.graphics.drawRect(0, 2, 800, 6);
+		whiteray.graphics.drawRect(0, scaleY*0.2, 800, scaleY*0.6);
+		//whiteray.graphics.drawRect(0, 2, 800, 6);
 		whiteray.graphics.endFill();
 		var T:GameView = game;
 		var B = getBounds(T.gamestage);
@@ -148,7 +158,14 @@ class LaserBeam extends Entity
 				//if (B.containsPoint(new Point(E.x, E.y)) && E.invincibility<=0)
 				if (B.intersects(E.GetHitbox()) && E.invincibility<=0)
 				{
-					game.SendEvent("Kill", E.UID);
+					if (piercing)
+					{
+						game.SendEvent("Kill", E.UID);
+					}
+					else
+					{
+						game.SendEvent("Attack", E.UID);
+					}
 				}
 				i++;
 			}

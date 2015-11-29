@@ -13,9 +13,10 @@ class Nazrin extends Enemy
 	public function new() 
 	{
 		super("nazrin");
+		charname = "Nazrin";
 		accel = 0.4;
 		deccel = 0.1;
-		mxspd = 5;
+		mxspd = 4;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;

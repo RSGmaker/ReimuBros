@@ -56,6 +56,7 @@ class Animationloader
    }
 	public function GetAnimation(path:String):Array<BitmapData> {
 		var DNA = null;
+		var flipped = false;
 		if (path == "customavatar")
 		{
 			path = "dna-"+Main._this.savedata.data.avatar;
@@ -70,6 +71,27 @@ class Animationloader
 			if (DNA != null)
 			{
 				//path = DNA;
+			}
+			else
+			{
+				if (path.indexOf("flipped") > -1)
+				{
+					DNA = CharHelper.getCharPreset(path.split("flipped").join(""));
+					if (DNA != null)
+					{
+						flipped = true;
+						DNA = CharHelper.changednapart(DNA, AvatarEditor.partlist.indexOf("Eyes"), "8");
+					}
+				}
+				else if (path.indexOf("dropped") > -1)
+				{
+					DNA = CharHelper.getCharPreset(path.split("dropped").join(""));
+					if (DNA != null)
+					{
+						flipped = true;
+						//DNA = CharHelper.changednapart(DNA, AvatarEditor.partlist.indexOf("Eyes"), "8");
+					}
+				}
 			}
 		}
 		if (Dictionary.exists(path))
@@ -86,7 +108,7 @@ class Animationloader
 				P = path.substr(0, index) +"::0"+ path.substr(index, path.length - index);
 			}
 			//check if we need to edit this image
-			if (DNA == null && (P.lastIndexOf("E") == P.length-1 || P.lastIndexOf("U") == P.length-1 || P.lastIndexOf("S") == P.length - 1))
+			if (DNA == null && P!="" && (P.lastIndexOf("E") == P.length-1 || P.lastIndexOf("U") == P.length-1 || P.lastIndexOf("S") == P.length - 1) || P.lastIndexOf("]") == P.length-1)
 			{
 				//recolor the image
 				var color:UInt = 0xff0000;
@@ -105,6 +127,11 @@ class Animationloader
 				else if (path.lastIndexOf("S") == path.length - 1)
 				{
 					green = 255;
+				}
+				else if (path.lastIndexOf("]") == path.length - 1)
+				{
+					red = 255;
+					value = 70;
 				}
 
 				var mul:Float=value/100;
@@ -156,6 +183,19 @@ class Animationloader
 				P = DNA;
 			}
 			var lst = getBitmapData(P);
+			if (flipped)
+			{
+				var B = lst[0];
+				var R = new BitmapData(B.height, B.width,true, 0x00000000);
+				var matrix:Matrix = new Matrix();
+				matrix.translate(-B.width / 2, -B.height / 2);
+				matrix.rotate(270 * (Math.PI / 180));
+				matrix.translate(B.height / 2, B.width / 2);
+				
+				R.draw(B, matrix);
+				lst.remove(B);
+				lst.push(R);
+			}
 			Dictionary.set(path, lst);
 			return lst;
 			}
@@ -169,7 +209,7 @@ class Animationloader
 		{
 			if (data.indexOf("background-") < 0)
 			{
-		var str = "assets/Sprites/" + data + i + ".png";
+			var str = "assets/Sprites/" + data + i + ".png";
 			var bd = Assets.getBitmapData (str);
 			while (bd != null) {
 				lst[lst.length] = bd;
@@ -177,6 +217,16 @@ class Animationloader
 				str = "assets/Sprites/" + data + i + ".png";
 				bd = Assets.getBitmapData (str);
 			}
+			if (lst.length == 0)
+			{
+				str = "assets/Sprites/" + data + ".png";
+				bd = Assets.getBitmapData (str);
+				if (bd != null)
+				{
+					lst[lst.length] = bd;
+				}
+			}
+			
 			return lst;
 			}
 			else
@@ -190,8 +240,10 @@ class Animationloader
 				D.gotoAndStop(dst);
 				
 				//var CHR = new Background;
-				CHR.scaleX = 1.5;
-				CHR.scaleY = 1.5;
+				//CHR.scaleX = 1.5+0.0075;
+				CHR.scaleX = 1.5+0.01;
+				CHR.scaleY = CHR.scaleX;
+				//CHR.y = 1;
 				CHR.y = -2;
 			spr.addChild(CHR);
 			/*var R = CHR.getBounds(spr);
@@ -201,7 +253,12 @@ class Animationloader
 			//var bitmapData:BitmapData = new BitmapData(Std.int(CHR.width), Std.int(CHR.height),true, 0x00000000);
 			var bitmapData:BitmapData = new BitmapData(Std.int(800), Std.int(600),true, 0x00000000);
 			//bitmapData.draw(spr);
+			//bitmapData.draw(spr);
+			Main._this.stage.quality = flash.display.StageQuality.BEST;
+			//lst.push(CharHelper.makeCharImage(data));
 			bitmapData.draw(spr);
+			
+			Main._this.stage.quality = flash.display.StageQuality.LOW;
 			lst[lst.length] = bitmapData;
 			return lst;
 			}
@@ -213,7 +270,7 @@ class Animationloader
 				lst[lst.length] =new BitmapData(1, 1, true, 0);
 				return lst;
 			}*/
-			var spr:Sprite = new Sprite();
+			/*var spr:Sprite = new Sprite();
 			var CHR = CharHelper.makeChar(data);
 			CHR.scaleX *= 0.24;
 			CHR.scaleY *= 0.24;
@@ -228,7 +285,10 @@ class Animationloader
 			//var bitmapData:BitmapData = new BitmapData(Std.int((R.right + CHR.x)), Std.int(R.height),true, 0x00000000);
 			var bitmapData:BitmapData = new BitmapData(Std.int(Math.max(bounds.width,1)), Std.int(Math.max(bounds.height,1)),true, 0x00000000);
 			bitmapData.draw(spr);
-			lst[lst.length] = bitmapData;
+			lst[lst.length] = bitmapData;*/
+			Main._this.stage.quality = flash.display.StageQuality.BEST;
+			lst.push(CharHelper.makeCharImage(data));
+			Main._this.stage.quality = flash.display.StageQuality.LOW;
 			return lst;
 		}
 		

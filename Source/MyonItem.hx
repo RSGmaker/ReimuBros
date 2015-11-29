@@ -14,7 +14,7 @@ class MyonItem extends CarryItem
 	public function new() 
 	{
 		super("myon");
-		DestroyOnRoundEnd = false;
+		removeonlevelend = false;
 		OffsetX = 40;
 		//OffsetY = 5;
 		Dropable = false;
@@ -23,6 +23,7 @@ class MyonItem extends CarryItem
 		facedirection = false;
 		dualcarry = false;
 		HP = 1;
+		autocollect = true;
 	}
 	override public function Collect(player:Player) 
 	{

@@ -9,9 +9,11 @@ class BalloonItem extends EntityItem
 
 	public var drift:Int;
 	public var dir:Int;
+	public var started:Bool;
 	public function new() 
 	{
 		super("balloon");
+		charname = "Balloon";
 		fallaccel = 0;
 		drift = 45;
 		dir = 0;
@@ -35,6 +37,14 @@ class BalloonItem extends EntityItem
 	}
 	override public function update() 
 	{
+		if (!started)
+		{
+			started = true;
+			image.image_speed = Math.round(UID * 4);
+			ChangeAnimation("balloon");
+			animate();
+			image.image_speed = 0;
+		}
 		if (dir == 0)
 		{
 			if (UID > 0.5)
@@ -67,7 +77,7 @@ class BalloonItem extends EntityItem
 			}
 		}
 		y -= 1.5;
-		if (y < -height)
+		if (y < -(height+100))
 		{
 			alive = false;
 		}

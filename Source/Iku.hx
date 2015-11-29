@@ -75,11 +75,13 @@ class Iku extends Enemy
 		{
 			timer -= 1;
 		}
+		doingability = false;
 		if (selfdestruct)
 		{
 			rename = "ikuikudance";
 			countdown -= 1;
-			visuallyEnraged = !visuallyEnraged;
+			//visuallyEnraged = !visuallyEnraged;
+			doingability = true;
 			if (countdown < 31)
 			{
 				if (countdown % 5 == 0)

@@ -38,6 +38,7 @@ class Keine extends Enemy
 	}
 	public override function increaserank()
 	{
+		fallaccel += 0.1;
 		accel += 0.04;
 		mxspd += 0.5;
 		pointvalue += 150;

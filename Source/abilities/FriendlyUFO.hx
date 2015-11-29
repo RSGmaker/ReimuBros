@@ -17,4 +17,9 @@ class FriendlyUFO extends PlayerAbility
 		super.init();
 		player.flags.set(Player.FriendlyUFO, true);
 	}
+	override public function lostability() 
+	{
+		super.lostability();
+		player.flags.set(Player.FriendlyUFO, false);
+	}
 }

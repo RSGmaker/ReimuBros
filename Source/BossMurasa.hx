@@ -106,9 +106,11 @@ class BossMurasa extends Boss
 				}
 			}
 		}
+		doingability = false;
 		if (shottime < 25)
 		{
-			visuallyEnraged = !visuallyEnraged;
+			//visuallyEnraged = !visuallyEnraged;
+			doingability = true;
 		}
 		else
 		{

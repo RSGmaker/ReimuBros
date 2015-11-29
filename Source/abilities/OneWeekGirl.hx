@@ -108,9 +108,9 @@ class OneWeekGirl extends PlayerAbility
 			}
 		}
 	}
-	override public function onattacked() 
+	override public function onattacked(fatal:Bool) 
 	{
-		super.onattacked();
+		super.onattacked(fatal);
 		if (hp > 0)
 		{
 			hp--;

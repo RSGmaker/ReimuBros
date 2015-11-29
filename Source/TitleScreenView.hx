@@ -6,6 +6,7 @@ import openfl.display.Sprite;
 import openfl.display.Shape;
 import openfl.Assets;
 import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import openfl.geom.Transform;
 import openfl.Lib;
 import openfl.text.Font;
@@ -34,12 +35,13 @@ class TitleScreenView extends Sprite
 {
 
 	public var img_titlescreen:Bitmap;
+	public var background:TitleScreenBackground;
 	public var AL:Animationloader;
 	public var menu:Bool;
 	public var MSE:Bool;
-	public var startgame:Sprite;
+	public var startgame:MenuButton;
 	public var singleplayer:Sprite;
-	public var options:Sprite;
+	public var options:MenuButton;
 	public var _exit:Sprite;
 	public var status:String;
 	
@@ -49,12 +51,51 @@ class TitleScreenView extends Sprite
 	
 	public var Description:TextField;
 	
-	public var pages:Array<Sprite>;
+	public var Logo:Bitmap;
+	
+	public var clickmessage:TextField;
+	public var clickpulse:Bool;
+	
+	//public var pages:Array<Sprite>;
+	public var pages:Array<Menu>;
+	
+	public var MP:MenuButton;
+	
+	public var preloadindex:Int = 0;
 	public function new() 
 	{
 		super();
 		menu = false;
 		status = "";
+		scrollRect = new Rectangle(0, 0, 800, 600);
+	}
+	public function update() {
+	background.update();
+	if (clickmessage.visible)
+	{
+		if (clickpulse)
+		{
+			clickmessage.alpha += 0.015;
+			if (clickmessage.alpha >= 1)
+			{
+				clickpulse = false;
+			}
+		}
+		else
+		{
+			clickmessage.alpha -= 0.015;
+			if (clickmessage.alpha <= 0)
+			{
+				clickpulse = true;
+			}
+		}
+	}
+	if (preloadindex < Player.characters.length)
+	{
+		var B = AL.GetAnimation(Player.characters[preloadindex]);
+		B = AL.GetAnimation(Player.characters[preloadindex]+"ALT");
+		preloadindex++;
+	}
 	}
 	public function start() {
 		
@@ -64,8 +105,12 @@ class TitleScreenView extends Sprite
 		img_titlescreen = new Bitmap(AL.GetAnimation("titlescreen")[0]);
 		img_titlescreen.x = 0;
 		img_titlescreen.y = 0;
-		addChild(img_titlescreen);
-		SoundManager.PlayJingle("titlescreen");
+		///addChild(img_titlescreen);
+		background = new TitleScreenBackground();
+		addChild(background);
+		background.start();
+		//SoundManager.PlayJingle("titlescreen");
+		SoundManager.PlayMusic("titlescreen");
 		if (Main._this.DEBUG)
 		{
 			//warn the developer that they are using debug mode(so they won't accidently upload it)
@@ -75,6 +120,7 @@ class TitleScreenView extends Sprite
 			tmp.color = 0xFF0000;
 			var warning = new TextField();
 			warning.text = "DEBUG MODE ACTIVE!!!";
+			warning.mouseEnabled = false;
 			warning.setTextFormat(tmp);
 			warning.width = warning.textWidth;
 			warning.y = 500;
@@ -91,14 +137,24 @@ class TitleScreenView extends Sprite
 		tmp.color = 0x000000;
 		var textField:TextField = new TextField();
 		textField.setTextFormat(tmp);
-		textField.text = "Coded by:RSGmaker";
+		textField.text = "Coded by: RSGmaker";
 		textField.setTextFormat(tmp);
 		textField.mouseEnabled = false;
 		S.x = 340;
 		S.y = 560;
 		S.buttonMode = true;
 		textField.width = textField.textWidth+16;
-		textField.height = textField.textHeight+16;
+		textField.height = textField.textHeight + 16;
+		var AB = new flash.filters.GlowFilter();
+					AB.blurX = 35;
+					AB.blurY = 35;
+					//AB.color = 0x66AAFF;
+					AB.color = 0x3377CC;
+			
+					AB.strength = 3.25;
+					var FA = new Array<flash.filters.BitmapFilter>();
+					FA.push(AB);
+					textField.filters = FA;
 		S.addChild(textField);
 		addChild(S);
 		statusmsg = null;
@@ -123,6 +179,19 @@ class TitleScreenView extends Sprite
 			addChild(B);
 			statusmsg = B;
 		}
+		Logo = new Bitmap(Assets.getBitmapData("assets/Sprites/logo.png"));
+		addChild(Logo);
+		clickmessage = new TextField();
+		clickmessage.x = 270;
+		clickmessage.y = 250;
+		clickmessage.text = "Click to start";
+		clickmessage.mouseEnabled = false;
+		clickmessage.scaleX = 4;
+		clickmessage.scaleY = clickmessage.scaleX;
+		clickmessage.textColor = 0xFFFFFF;
+		clickmessage.filters = FA;
+		clickmessage.alpha = 0;
+		addChild(clickmessage);
 	}
 	public function setpage(page:Int)
 	{
@@ -130,6 +199,12 @@ class TitleScreenView extends Sprite
 		pages[currentpage].visible = false;
 		lastpage = currentpage;
 		currentpage = page;
+		var i = 0;
+		/*if (!Main._this.cancontinue)
+		{
+			i = 1;
+		}*/
+		MP.usecolorscheme(i);
 	}
 	public function setdescription(text:String)
 	{
@@ -137,9 +212,23 @@ class TitleScreenView extends Sprite
 		tmp.font = "Arial";
 		tmp.size = 22;
 		tmp.color = 0xFFFFFF;
+		Description.width = 2000;
+		Description.wordWrap = false;
+		Description.text = text;
+		Description.setTextFormat(tmp);
+		if (Description.textWidth >= 800)
+		{
+			Description.width = 800;
+			Description.wordWrap = true;
+		}
+		else
+		{
+			Description.wordWrap = false;
+		}
 		Description.text = text;
 		Description.setTextFormat(tmp);
 		Description.x = -Description.textWidth / 2;
+		Description.x += 400;
 		Description.width = Description.textWidth + 8;
 		Description.height = Description.textHeight + 8;
 		
@@ -154,6 +243,7 @@ class TitleScreenView extends Sprite
 				removeChild(statusmsg);
 				statusmsg = null;
 			}
+			clickmessage.visible = false;
 			var tmp = new TextFormat();
 		tmp.font = "Arial";
 		tmp.size = 24;
@@ -163,8 +253,10 @@ class TitleScreenView extends Sprite
 		textField.text = "Version" + Main._this.gameversion;
 		textField.setTextFormat(tmp);
 		textField.mouseEnabled = false;
-		textField.x = 360;
-		textField.y = 0;
+		//textField.x = 360;
+		//textField.y = 0;
+		textField.x = 600;
+		textField.y = 140;
 		
 		textField.width = textField.textWidth+16;
 		textField.height = textField.textHeight;
@@ -260,15 +352,24 @@ class TitleScreenView extends Sprite
 			PA.x += 700;
 			PA.y = 10;*/
 			var main = new Sprite();
-			main.x = 400;
-			main.y = 225;
+			main.x = 0;
+			main.y = 150;
+			//main.x = 400;
+			//main.y = 225+25;
 			addChild(main);
 			
-			pages = new Array<Sprite>();
+			//pages = new Array<Sprite>();
+			pages = new Array<Menu>();
 			var i = 0;
 			while (i < 4)
 			{
-				pages[i] = new Sprite();
+				pages[i] = new Menu();
+				pages[i].menuoffsetx = -100;
+				pages[i].menuwidth = 800 - (main.x * 2);
+				pages[i].menuwidth -= (pages[i].menuoffsetx * 2);
+				//pages[i].y = 200;
+				//pages[i].menuheight = 600 - main.y;
+				pages[i].menuheight = 520 - main.y;
 				main.addChild(pages[i]);
 				i++;
 			}
@@ -281,110 +382,132 @@ class TitleScreenView extends Sprite
 			var P = pages[0];
 			
 			
-			var Y = 0;
-			var X = 0;
-			//if (Main._this.savedata.data.avatar != "")
-			//if (CharHelper.getdnapart(Main._this.savedata.data.avatar,0)!="-1")
-			{
-				Y -= 96;
-			}
 			startgame = AddButton("Play Game",P);
-			startgame.y = Y;
-			startgame.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			startgame.addclick(function( ev ) {
 				//status = "SinglePlayer";
 					setpage(1);
 				 } 
 				);
-			options = AddButton("Options",P);
-			Y += 96;
-			options.y = Y;
-			options.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			options = AddButton("Options", P);
+			options.sound = "ok";
+			options.addclick(function( ev ) {
 				status = "Options";
 				 } 
 				);
-			Y += 96;
-			var B = AddButton("Manual",P);
-			B.y = Y;
-			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			var B = AddButton("Manual", P);
+			B.sound = "ok";
+			B.addclick(function( ev ) {
 				Lib.getURL (new openfl.net.URLRequest ("http://sta.sh/0t7u3ibw7dl"));
 				 } 
 				);
 				
-				Y += 96;
 				//if (Main._this.savedata.data.avatar != "")
 				//if (CharHelper.getdnapart(Main._this.savedata.data.avatar,0)!="-1")
 				{
-			B = AddButton("Customize",P);
-			B.y = Y;
-			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			B = AddButton("Customize", P);
+			B.sound = "ok";
+			B.addclick(function( ev ) {
 				status = "Shop";
 				 } 
 				);
 				}
 				
-			Y = 0;
+			P.finish(4);
+			var seperation = 160;
 			P = pages[1];
 			P.visible = false;
-			if (Main._this.savedata.data.challenges[3])
-			{
-				Y -= 96;
-			}
-			//P.y = -96;
-			B = AddButton("Classic Mode", P);
-			B.y = Y;
-			Y += 96;
-			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			/*B = AddButton("Classic Mode", P);
+			B.addclick(function( ev ) {
 				//status = "SinglePlayer";
 					Main._this.roomprefix = "Classic";
-					Main._this.GameFlags.clearall();
+					Main._this.resetgamesettings();
+					//setdescription("Classic Mode:Clear levels by defeating enemies.Hit blocks with enemies on top of them to flip them over,touching a flipped over enemy defeats them.");
 					setdescription("Classic Mode:\nClear levels by defeating enemies.\nHit blocks with enemies on top of them to flip them over,\ntouching a flipped over enemy defeats them.");
+					setpage(2);
+				 } 
+				);
+				B = AddButton("Adventure Mode", P);
+			B.addclick(function( ev ) {
+					Main._this.roomprefix = "Adventure";
+					Main._this.resetgamesettings();
+					Main._this.GameFlags.set(Main.Adventure, true);
+					Main._this.abilitiesenabled = false;
+					Main._this.canmyonspawn = false;
+					///GameView.levelsperstage = 6;
+					//Main._this.playerspick = "red_fairy";
+					//Main._this.canselectcharacter = false;
+					//Main._this.cancontinue = false;
+					//Main._this.canlivesspawn = false;
+					setdescription("Adventure Mode:\nTravel through Gensokyo.\nCharacter abilities are replaced with powerup items.");
 					setpage(2);
 				 } 
 				);
 			if (Main._this.savedata.data.challenges[3])
 			{
 				B = AddButton("All Star Mode", P);
-			B.y = Y;
-			Y += 96;
-			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			B.addclick(function( ev ) {
 					Main._this.roomprefix = "AllStar";
-					Main._this.GameFlags.clearall();
+					Main._this.resetgamesettings();
 					Main._this.GameFlags.set(Main.AllStar, true);
 					Main._this.playerspick = "red_fairy";
 					Main._this.canselectcharacter = false;
 					Main._this.cancontinue = false;
 					Main._this.canlivesspawn = false;
-					setdescription("All Star Mode:\nThere are no lives in this mode.\nYou can switch to characters unlocked in this play session.\nLosing a life means losing a character.\nRun out of characters and it's game over.");
+					setdescription("All Star Mode:\nThere are no lives in this mode.\nYou can switch to characters unlocked in this play session.\nLosing a life means losing a character.\nRun out of characters and it's game over.\nFurthermore, continues are not available.");
 					setpage(2);
 				 } 
 				);
+			}*/
+			{
+				var i = 0;
+				var C:Array<GameMode> = GameMode.Categories[""];
+				while (i < C.length)
+				{
+					var G = C[i];
+					AddGameMode(G, P);
+					i++;
+				}
 			}
-			/*B = AddButton("Single Player", P);
-			B.y = Y;
-			Y += 96;
-			B = AddButton("Multiplayer", P);
-			B.y = Y;
-			Y += 96;*/
+			var showchallenges = false;
+			{
+				var i = 0;
+				var C:Array<GameMode> = GameMode.Categories["Challenge"];
+				while (i < C.length)
+				{
+					var G = C[i];
+					if (G.getunlocked())
+					{
+						showchallenges = true;
+					}
+					//AddGameMode(G, P);
+					i++;
+				}
+			}
+			if (showchallenges)
+			{
 			B = AddButton("Challenges", P);
-			B.y = Y;
-			Y += 96;
-			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			B.addclick(function( ev ) {
 					setpage(3);
 				 } 
 				);
+			}
+			else
+			{
+				B = AddButton("Locked", P);
+				B.sound = "bonk";
+			}
 			B = AddButton("Back", P);
-			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			B.sound = "cancel";
+			B.addclick(function( ev ) {
 					setpage(0);
 				 } 
 				);
-			B.y = Y;
-			Y += 96;
-			
-			Y = 0;
+			P.finish(4);
 			P = pages[2];
 			P.visible = false;
 			var dimmer = new Shape();
-			dimmer.graphics.beginFill(0, 0.3);
+			//dimmer.graphics.beginFill(0, 0.3);
+			dimmer.graphics.beginFill(0, 0.4);
 			dimmer.graphics.drawRect( 0, 0, 800, 600);
 			dimmer.graphics.endFill();
 			dimmer.x = -main.x;
@@ -392,42 +515,55 @@ class TitleScreenView extends Sprite
 			P.addChild(dimmer);
 			
 			Description = new TextField();
-			Description.y = -200;
+			//Description.wordWrap = true;
+			
+			Description.mouseEnabled = false;
 			P.addChild(Description);
+			Description.y = (-Description.getBounds(this).y)+20;
 			
 			B = AddButton("Single Player", P);
-			B.y = Y;
-			Y += 96;
-			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-					/*#if flash
-					status = "OpenPlay";
-					#else
-					status = "SinglePlayer";
-					#end*/
+			B.sound = "ok";
+			B.addclick(function( ev ) {
 					status = "SinglePlayer";
 				 } 
 				);
 			B = AddButton("Multiplayer", P);
-			B.y = Y;
-			Y += 96;
-			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-					status = "OpenPlay";
+			B.changecolorscheme(1, 0xAAAAAA, 0x888888);
+			MP = B;
+			B.sound = "";
+			B.addclick(function( ev ) {
+					//if (Main._this.cancontinue)
+					{
+						status = "OpenPlay";
+						SoundManager.Play("ok");
+					}
+					/*else
+					{
+						SoundManager.Play("bonk");
+					}*/
 				 } 
 				);
 			B = AddButton("Back", P);
-			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			B.sound = "cancel";
+			B.addclick(function( ev ) {
 				Main._this.resetsettings();
 				setpage(lastpage);
 				 } 
 				);
-			B.y = Y;
-			Y += 96;
-			
-			Y = 0;
+			P.finish(4);
 			P = pages[3];
 			P.visible = false;
-			
-			var T = "Danmaku";
+			{
+				var i = 0;
+				var C:Array<GameMode> = GameMode.Categories["Challenge"];
+				while (i < C.length)
+				{
+					var G = C[i];
+					AddGameMode(G, P);
+					i++;
+				}
+			}
+			/*var T = "Danmaku";
 			if (!Main._this.savedata.data.challenges[0])
 			{
 				T = "???";
@@ -435,7 +571,8 @@ class TitleScreenView extends Sprite
 			B = AddButton(T, P);
 			if (T != "???")
 			{
-			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			//B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			B.addclick(function( ev ) {
 				Main._this.roomprefix = "Danmaku";
 				Main._this.GameFlags.clearall();
 				Main._this.GameFlags.set(Main.Danmaku, true);
@@ -449,8 +586,6 @@ class TitleScreenView extends Sprite
 				 } 
 				);
 			}
-				B.y = Y;
-			Y += 96;
 			T = "Boss Rush";
 			if (!Main._this.savedata.data.challenges[1])
 			{
@@ -459,7 +594,7 @@ class TitleScreenView extends Sprite
 			B = AddButton(T, P);
 			if (T != "???")
 			{
-			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			B.addclick(function( ev ) {
 				Main._this.roomprefix = "Boss Rush";
 				Main._this.GameFlags.clearall();
 				Main._this.GameFlags.set(Main.Bossrush, true);
@@ -473,8 +608,6 @@ class TitleScreenView extends Sprite
 				 } 
 				);
 			}
-			B.y = Y;
-			Y += 96;
 			T = "Truck Hoarder";
 			if (!Main._this.savedata.data.challenges[2])
 			{
@@ -483,7 +616,7 @@ class TitleScreenView extends Sprite
 			B = AddButton(T, P);
 			if (T != "???")
 			{
-			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			B.addclick(function( ev ) {
 				Main._this.roomprefix = "Truck Hoarder";
 				Main._this.GameFlags.clearall();
 				Main._this.GameFlags.set(Main.TruckHoarder, true);
@@ -496,17 +629,15 @@ class TitleScreenView extends Sprite
 				setpage(2);
 				 } 
 				);
-			}
-			B.y = Y;
-			Y += 96;
+			}*/
 			
 			B = AddButton("Back", P);
-			B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			B.sound = "cancel";
+			B.addclick(function( ev ) {
 				setpage(1);
 				 } 
 				);
-			B.y = Y;
-			Y += 96;
+			P.finish(4);
 		}
 		else
 		{
@@ -522,14 +653,92 @@ class TitleScreenView extends Sprite
 		}
 		}
 	}
-	private function AddButton(text:String,sprite:Sprite):Sprite
+	private function AddGameMode(gamemode:GameMode, menu:Menu)
+	{
+		var unlocked = gamemode.getunlocked();
+		/*var unlocked:Bool = true;
+		if (gamemode.preunlocked)
+		{
+			unlocked = true;
+		}*/
+		var text = gamemode.fullname;
+		if (!unlocked)
+		{
+			text = "Locked";
+			if (gamemode.hidden)
+			{
+				return;
+			}
+		}
+		var B = AddButton(text, menu);
+		if (!unlocked)
+		{
+			B.sound = "bonk";
+			return;
+		}
+		B.addclick(function( ev ) {
+					Main._this.roomprefix = gamemode.name;
+					Main._this.resetgamesettings();
+					
+					Main._this.changeGameMode(gamemode);
+					//Main._this.gamemode = gamemode;
+					//Main._this.updateflags();
+					
+					//Main._this.GameFlags.set(Main.AllStar, true);
+					//Main._this.playerspick = "red_fairy";
+					//Main._this.canselectcharacter = false;
+					//Main._this.cancontinue = false;
+					//Main._this.canlivesspawn = false;
+					//setdescription("All Star Mode:\nThere are no lives in this mode.\nYou can switch to characters unlocked in this play session.\nLosing a life means losing a character.\nRun out of characters and it's game over.\nFurthermore, continues are not available.");
+					var nm = gamemode.fullname;
+					if (!gamemode.getcleared())
+					{
+						nm = nm + "(not yet cleared)";
+					}
+					else
+					{
+						nm = nm + "(cleared!)";
+					}
+					var D = nm+":\n" + gamemode.description;
+					if (gamemode.reward > 0 && gamemode.rewardrequirement > 0)
+					{
+						D = D + "\n\nObjective:Clear " + gamemode.rewardrequirement + " levels";
+						if (gamemode.cancontinue)
+						{
+							//D = D + " without getting a game over";
+							D = D + "(Resets on game over)";
+						}
+						D = D + ".\nReward:" + gamemode.reward + "Mon";
+					}
+					setdescription(D);
+					setpage(2);
+				 } 
+				);
+		/*B = AddButton("All Star Mode", P);
+			B.addclick(function( ev ) {
+					Main._this.roomprefix = "AllStar";
+					Main._this.resetgamesettings();
+					Main._this.GameFlags.set(Main.AllStar, true);
+					Main._this.playerspick = "red_fairy";
+					Main._this.canselectcharacter = false;
+					Main._this.cancontinue = false;
+					Main._this.canlivesspawn = false;
+					setdescription("All Star Mode:\nThere are no lives in this mode.\nYou can switch to characters unlocked in this play session.\nLosing a life means losing a character.\nRun out of characters and it's game over.\nFurthermore, continues are not available.");
+					setpage(2);
+				 } 
+				);*/
+	}
+	private function AddButton(text:String,sprite:Menu):MenuButton
 	{
 		var buttonSprite = new MenuButton(text);
 		if (sprite == null)
 		{
-			sprite = this;
+			//sprite = this;
+			this.addChild(buttonSprite);
+			return buttonSprite;
 		}
-		sprite.addChild(buttonSprite);
+		sprite.addbutton(buttonSprite);
+		//sprite.addChild(buttonSprite);
 		/*var tmp = new TextFormat();
 		tmp.font = "Arial";
 		tmp.size = 44;

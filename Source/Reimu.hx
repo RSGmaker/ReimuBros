@@ -12,9 +12,12 @@ class Reimu extends Enemy
 	
 	public var target:EntityItem;
 	
+	public var collected:Int;
+	
 	public function new() 
 	{
 		super("reimu");
+		charname == "Reimu";
 		accel = 0.25;
 		deccel = 0.1;
 		mxspd = 4.5;
@@ -24,7 +27,18 @@ class Reimu extends Enemy
 		pointvalue = 1100;
 		needtokill = false;
 		reward = true;
-		rewarditem = "MiniBomb";
+		hascustomspawn = true;
+		//rewarditem = "MiniBomb";
+	}
+	override public function customspawn():Dynamic 
+	{
+		var D:Dynamic = { };
+		if (game.RoundType == GameView.TypeofRound.EventPointCollecting)
+		{
+			D.y = 450;
+		}
+		return D;
+		//return super.customspawn();
 	}
 	public override function increaserank()
 	{
@@ -41,6 +55,13 @@ class Reimu extends Enemy
 	if (!started)
 		{
 			started = true;
+			var D:Dynamic = { };
+			D.UID = UID;
+			D.item = "yinyangorbitem";
+			if (game.Hoster && UID<0.5)
+			{
+				game.SendEvent("AttachItem", D);
+			}
 		}
 		if (!killed)
 		{
@@ -92,6 +113,7 @@ class Reimu extends Enemy
 		if (game.Hoster && getBounds(game.gamestage).intersects(target.getBounds(game.gamestage)))
 		{
 			game.SendEvent("Collect", -target.UID);
+			collected++;
 			target = null;
 		}
 		}
@@ -116,7 +138,7 @@ class Reimu extends Enemy
 				Hspeed = -mxspd;
 			}
 		}
-		if (ground != null && Vspeed == 0 && flipped <= 0 && target != null && target.y < y)
+		if (ground != null && Vspeed == 0 && flipped <= 0 && ((target != null && target.y < y) || (target == null && game.RoundType == GameView.TypeofRound.EventPointCollecting && UID<0.65)))
 		{
 			if (game.CollisionDetectPoint(x + (Math.floor(width) >> 1), y - (192-96)) == null)
 			{
@@ -164,7 +186,7 @@ class Reimu extends Enemy
 			}
 			
 		}
-			if (target == null && wrapped && (y>408 || y<200))
+			if (target == null && wrapped && (y>408 || y<200) && game.RoundType != GameView.TypeofRound.EventPointCollecting)
 			{
 				alive = false;
 			}

@@ -23,9 +23,9 @@ class AbsorbDamage extends PlayerAbility
 		super.onframe();
 		player.cooldown--;
 	}
-	override public function onattacked() 
+	override public function onattacked(fatal:Bool) 
 	{
-		super.onattacked();
+		super.onattacked(fatal);
 		if (player.cooldown <= 0)
 		{
 			player.cooldown = player.maxcooldown;

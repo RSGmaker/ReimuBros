@@ -63,10 +63,12 @@ class Seija extends Enemy
 		{
 			timer -= 1;
 		}
+		doingability = false;
 		if (flipping)
 		{
 			countdown -= 1;
-			visuallyEnraged = !visuallyEnraged;
+			//visuallyEnraged = !visuallyEnraged;
+			doingability = true;
 			if (countdown <= 0)
 			{
 				if (game.Hoster && ground != null)

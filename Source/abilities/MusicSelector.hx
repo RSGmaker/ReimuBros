@@ -36,7 +36,7 @@ class MusicSelector extends PlayerAbility
 			{
 				song -= 13;
 			}
-			SoundManager.StopAll();
+			SoundManager.StopMusic();
 			if (song < 13 && song>0)
 			{
 				GameView._this.musicchannel = SoundManager.PlayMusic("theme" +song);

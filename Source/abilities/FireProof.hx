@@ -17,4 +17,9 @@ class FireProof extends PlayerAbility
 		super.init();
 		player.flags.set(Player.FireProof, true);
 	}
+	override public function lostability() 
+	{
+		player.flags.set(Player.FireProof, false);
+		super.lostability();
+	}
 }

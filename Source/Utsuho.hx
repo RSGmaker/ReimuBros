@@ -32,7 +32,8 @@ class Utsuho extends Enemy
 		scaleY = 0.7;
 		HP = 2;
 		pointvalue = 300;
-		rename = "okuu";
+		rename = "utsuho";
+		//rename = "okuu";
 	}
 	override public function attack():Bool 
 	{
@@ -98,13 +99,15 @@ class Utsuho extends Enemy
 				Hspeed = -mxspd;
 			}
 		}
+		doingability = false;
 		if (flipped <= 0)
 		{
 			timetofire--;
 			if (timetofire < 140)
 			{
 				Hspeed = 0;
-				visuallyEnraged = !visuallyEnraged;
+				//visuallyEnraged = !visuallyEnraged;
+				doingability = true;
 				if (timetofire < 1)
 				{
 					if (game.Hoster)
@@ -128,13 +131,14 @@ class Utsuho extends Enemy
 		}
 		if (HP > 1)
 		{
-			rename = "okuu";
+			rename = "utsuho";
 		}
 		else
 		{
-			rename = "utsuho";
+			rename = "okuu";
 		}
 		updphysics();
+		//ChangeAnimation(rename);
 		updateanimation(rename);
 		
 		if (ground != null)

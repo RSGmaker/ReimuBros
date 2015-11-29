@@ -16,4 +16,9 @@ class GapManipulator extends PlayerAbility
 		super.init();
 		player.flags.set(Player.GapManipulator, true);
 	}
+	override public function lostability() 
+	{
+		player.flags.set(Player.GapManipulator, false);
+		super.lostability();
+	}
 }

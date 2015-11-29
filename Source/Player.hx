@@ -21,8 +21,11 @@ class Player extends Entity
 	public var Ideccel:Float;
 	//public var deccel:Float;
 	public var mxspd:Float;
+	public var lcontroller:Array<Bool>;
 	public var controller:Array<Bool>;
 	public var charname:String;
+	public var Lcharname:String="";
+	public var lifefragments:Int;
 	public var lives:Int;
 	public var ID:String;
 	public var score:Int;
@@ -52,14 +55,69 @@ class Player extends Entity
 	
 	public var equipment:EntityItem;
 	public var CHR:MovieClip;
+	
+	public var message:String="";
+	public var messagetime:Int = 0;
+	
+	public var ufos:Array<String>;
+	
+	public var baseexpression:String = "";
+	public var expression:String = "";
+	public var expressiontime:Int = 0;
+	
+	public var Lheight:Float = 0;
+	
+	public var ofeetposition:Float;
+	
+	public var combo:Int = 0;
+	public var combotime:Int = 0;
+	//whether or not the character will express emotions.
+	public var expressive:Bool = true;
+	
+	public var hide:Bool = false;
+	
+	public var airjump:Bool = false;
+	
+	public function ChangeExpression(feature:String, value:String,time:Int=60,reset:Bool=false,emotion:Bool=true):Bool
+	{
+		//if ((charname == "kokoro" || charactersoul == "kokoro") && emotion)
+		if ((!expressive || charname == "kokoro") && emotion)
+		{
+			return false;
+		}
+		var E = expression;
+		if (E == "" || reset)
+		{
+			if (baseexpression == "")
+			{
+				E = charname;
+				E = CharHelper.getCharPreset(E);
+			}
+			else
+			{
+				E = baseexpression;
+			}
+		}
+		if (E != null)
+		{
+			E = CharHelper.changednapart(E, AvatarEditor.partlist.indexOf(feature), value);
+			expression = E;
+			expressiontime = time;
+			return true;
+		}
+		return false;
+		//CharHelper.changednapart(
+	}
+	
+	public static var powerups:Array<String> = ["reimu", "marisa","sanae", "suwako", "flandre", "satori", "meiling", "chen","raiko","ran","rumia","komachi","wriggle","mystia","yuugi","sariel","sunny_milk", "nitori","yuuka","cirno","mystia","aya","hatate","momiji","sumireko","seiran","konngara","rikako","yumeko","futo"];
 
 	//list of character in order of savedata
-	public static var characters:Array<String> = ["reimu", "marisa", "patchouli", "remilia", "sanae", "sakuya", "suwako", "yuyuko", "tenshi", "iku", "aya", "alice", "youmu", "shikieiki", "flandre", "satori", "koishi", "momiji", "nitori", "udongein", "komachi", "yuuka", "mokou", "meiling", "parsee", "kokoro", "kogasa", "kasen", "utsuho", "suika", "kaguya", "eirin", "nazrin", "orin", "hina", "byakuren", "chiyuri", "ellen", "elly", "gengetsu", "kana", "kotohime", "elis", "louise", "mai", "meira", "mugetsu", "orange", "rika", "rikako", "sara", "yuki", "yumeko", "yumemi", "akyu", "futo", "kagerou", "keine", "kosuzu", "luna_child", "mamizou", "medicine", "minoriko", "murasa", "seiga", "sekibanki", "shanghai", "shinmyoumaru", "shizuha", "shou", "sunny_milk", "tokiko", "wriggle", "yoshika", "star_sapphire", "lily", "letty", "mika", "senkou", "ayana", "matenshi", "noroiko", "mystia", "lunasa", "lyrica", "merlin", "maribel", "renko", "miko", "reisen", "ruukoto", "tojiko", "toyohime", "yorihime", "wakasagihime", "yatsuhashi", "mima", "konngara","tewi","kanako","ringo","doremy","seiran","sumireko","rin","raiko","shingyoku","hatate","daiyousei","kurumi","yuugi","benben","ichirin","kyouko","yamame","koakuma","shinki","rengeteki","sariel","yukari", "seija", "rumia","cirno","nue","chen","ran","clownpiece","hecatia","junko","sagume"];
+	public static var characters:Array<String> = ["reimu", "marisa", "patchouli", "remilia", "sanae", "sakuya", "suwako", "yuyuko", "tenshi", "iku", "aya", "alice", "youmu", "shikieiki", "flandre", "satori", "koishi", "momiji", "nitori", "udongein", "komachi", "yuuka", "mokou", "meiling", "parsee", "kokoro", "kogasa", "kasen", "utsuho", "suika", "kaguya", "eirin", "nazrin", "orin", "hina", "byakuren", "chiyuri", "ellen", "elly", "gengetsu", "kana", "kotohime", "elis", "louise", "mai", "meira", "mugetsu", "orange", "rika", "rikako", "sara", "yuki", "yumeko", "yumemi", "akyu", "futo", "kagerou", "keine", "kosuzu", "luna_child", "mamizou", "medicine", "minoriko", "murasa", "seiga", "sekibanki", "shanghai", "shinmyoumaru", "shizuha", "shou", "sunny_milk", "tokiko", "wriggle", "yoshika", "star_sapphire", "lily_white", "letty", "mika", "senkou", "ayana", "matenshi", "noroiko", "mystia", "lunasa", "lyrica", "merlin", "maribel", "renko", "miko", "reisen", "ruukoto", "tojiko", "toyohime", "yorihime", "wakasagihime", "yatsuhashi", "mima", "konngara","tewi","kanako","ringo","doremy","seiran","sumireko","rin","raiko","shingyoku","hatate","daiyousei","kurumi","yuugi","benben","ichirin","kyouko","yamame","koakuma","shinki","rengeteki","sariel","yukari", "seija", "rumia","cirno","nue","chen","ran","clownpiece","hecatia","junko","sagume"];
 	
 	//list of characters sorted by game(from touhou wiki's character format)
 	public static var charorder:Array<String> = ["customavatar",
 	"reimu", "marisa", "rumia", "daiyousei", "cirno", "meiling", "koakuma", "patchouli", "sakuya", "remilia", "flandre", "rin",
-	"letty", "chen", "alice", "shanghai"/*,"hourai"*/, "lily", "lyrica", "lunasa", "merlin", "youmu", "yuyuko", "ran", "yukari",
+	"letty", "chen", "alice", "shanghai"/*,"hourai"*/, "lily_white", "lyrica", "lunasa", "merlin", "youmu", "yuyuko", "ran", "yukari",
 	"suika",
 	"wriggle", "mystia", "keine", "tewi", "udongein", "eirin", "kaguya", "mokou",
 	"aya", "medicine", "yuuka", "komachi", "shikieiki",
@@ -123,6 +181,8 @@ class Player extends Entity
 	public static inline var FlipResistance = 9;
 	public static inline var ElectricProof = 10;
 	public static inline var GapManipulator = 11;
+	public static inline var DeathResistence = 12;
+	public static inline var WaterAffinity = 13;
 	
 	
 	
@@ -156,16 +216,20 @@ class Player extends Entity
 	
 	//public static inline var base_deccel = 0.5+0.4;
 	public static inline var base_deccel = 0.5+0.55;
-	public static inline var base_accel = 0.8 + base_deccel;
+	//public static inline var base_accel = 0.8 + base_deccel;
+	public static inline var base_accel = 0.82 + base_deccel;
 	//public static inline var base_mxspd = 7+1.55;
 	//public static inline var base_mxspd = 7+1.55-0.9;
 	public static inline var base_fallaccel = 1.0+0.1;
 	//public static inline var base_jumpspd = -19 - 0.5;
 	public static inline var base_jumpspd = -21;
-	public static inline var base_mxspd = 6.00;
+	//public static inline var base_mxspd = 6.00;
+	public static inline var base_mxspd = 6.50;
 	
 	public var inactive:Bool;
-	public var charactersoul:String="";
+	public var charactersoul:String = "";
+	
+	public var helditems:Array<CarryItem>;
 	
 	public function getabilityalias()
 	{
@@ -180,9 +244,14 @@ class Player extends Entity
 	public function new(charname:String,controller:Array<Bool>,soul:String="") 
 	{
 		super(charname);
+		
+		helditems = new Array<CarryItem>();
+		ufos = new Array<String>();
+		
 		elavation = 0;
 		type = "Player";
 		this.controller = controller;
+		this.lcontroller = this.controller.copy();
 		Ldir = 1;
 		allmyons = new Array<MyonItem>();
 		scaleX = 0.85;
@@ -217,6 +286,9 @@ class Player extends Entity
 			
 			AB.strength = 1.25;
 			glow = AB;
+			glow.strength = 1.4;
+			glow.blurX = 23;
+			glow.blurY = 23;
 		
 		filterArr = new Array();
 		filterArr[0] = AB;
@@ -242,10 +314,36 @@ class Player extends Entity
 		steps = 0;
 		invincibility = 0;
 		playername = "";
-		charactersoul = soul;
+		if (!game.GameFlags.get(Main.Adventure))
+		{
+			charactersoul = soul;
+		}
 		//charname = "dna-" + "3.39:RSGmaker:100:0:192:324:232:24:0:0:0:1:0:321A00";
 		//charactersoul = "meiling";
 		init(charname);
+	}
+	public function setscale(scale:Float)
+	{
+		if (scaleX == scale)
+		{
+			return;
+		}
+		//var F = (scale - scaleX);
+		var F = (scale * 0.85);
+		var of = feetposition;
+		scaleX = scale;
+		scaleY = scaleX;
+		feetposition = height+(ofeetposition * F);
+		y -= (of - feetposition);
+		
+		Lheight = height;
+		/*var H = height;
+		scaleX = scale;
+		scaleY = scaleX;
+		H = height - H;
+		//H = H / 2;
+		feetposition += (H);
+		y -= H;*/
 	}
 	
 	public function init(charname:String)
@@ -254,9 +352,11 @@ class Player extends Entity
 		{
 			ability.lostability();
 		}
+		baseexpression = "";
+		expressive = true;
 		alpha = 1;
 		this.charname = charname;
-		if (charname.indexOf("dna-") < 0 && charname!="customavatar")
+		if ((charname.indexOf("dna-") < 0 && charname!="customavatar") && !game.GameFlags.get(Main.Adventure))
 		{
 			charactersoul = "";
 		}
@@ -283,6 +383,7 @@ class Player extends Entity
 		ability.SetAbilities();
 		flags.set(Player.SpawnZombieFairies, true);
 		feetposition = 0;
+		
 		middle = 0;
 		hasotherhitbox = false;
 		switch (charname)
@@ -301,6 +402,7 @@ class Player extends Entity
 				feetposition -= 1;
 			default:
 		}
+		ofeetposition = feetposition;
 		
 		var H = height;
 		if (Ldir > 0)
@@ -321,6 +423,9 @@ class Player extends Entity
 		Ofallaccel = fallaccel;
 		fallaccel2 = fallaccel / 16;
 		fallaccel3 = fallaccel / 3;
+		Lheight = height;
+		updphysics();
+		
 	}
 	
 	public static var myplayer(get, null):Player;
@@ -334,51 +439,10 @@ class Player extends Entity
 	{
 		return game.myplayer == this;
 	}
-	
-	public override function update()
+	private function domovement()
 	{
-		frames++;
-		if (CHR != null)
-		{
-			CHR.scaleX = Math.abs(CHR.scaleX) * Ldir;
-		}
-		if (!killed && lives>-1)
-		{
-			if (!started)
-			{
-				started = true;
-				ability.init();
-				if (cooldown == 0)
-				{
-					cooldown = maxcooldown;
-				}
-				baseflags = flags.clone();
-			}
-			if (!game.Hoster && game.online)
-			{
-				//since we don't manage rewards on client side we should have this reset.(this might fix the "quit glitch")
-				spentscore = score;
-			}
-			ability.onbeginframe();
-			if (Ldir > 0)
-			{
-				ChangeAnimation(charname);
-			}
-			if (Ldir < 0)
-			{
-				ChangeAnimation(charname+"F");
-			}
-			if (invincibility > 1000)
-			{
-				invincibility = 10001;
-			}
-			if (myMyon != null && !myMyon.alive)
-			{
-				myMyon = null;
-			}
-			var DCL = deccel;
-			
-			if (ground == null)
+		var DCL = deccel;
+		if (ground == null)
 			{
 				deccel = Hdeccel;
 			}
@@ -386,30 +450,22 @@ class Player extends Entity
 			{
 				deccel = Ideccel;
 			}
+			if (ground != null)
+			{
+				if (ground.type == "Block")
+				{
+					var B:Dynamic = ground;
+					if (B.step)
+					{
+						x += ground.Hspeed;
+						y += ground.Vspeed;
+					}
+				}
+			}
 			updphysics();
-			ability.onframe();
-			if (controller[1])
-			{
-				ability.onuse();
-			}
 			deccel = DCL;
-			if (!catchingup)
-			{
-			if (invincibility > 0)
-			{
-				visible = (invincibility & 1 > 0);
-				invincibility -= 1;
-			}
-			else
-			{
-				visible = true;
-			}
-			}
-			if (rotation != 0)
-			{
-				this.rotation = 0;
-			}
-		if (Hspeed < mxspd && controller[3] && !controller[2])
+			
+			if (Hspeed < mxspd && controller[3] && !controller[2])
 		{
 			if (Hspeed >= 0)
 			{
@@ -496,6 +552,7 @@ class Player extends Entity
 			feetposition -= 0.5;
 		}
 		
+		
 		if (ground != null && Vspeed == 0)
 		{
 			if (!catchingup)
@@ -549,8 +606,6 @@ class Player extends Entity
 			}
 			else
 			{
-				/*var modo:Array<Int> = [1, 0, 1, 1, 1, 0, 1,0, 2, 0, 1, 0, 2, 0, 1, 0,
-				2, 0, 2, 2, 2, 0, 2, 0, 3, 0, 2, 0, 3, 0, 2, 0];*/
 				if (midi == null)
 				{
 					if (UID < 0.5 || true)
@@ -567,8 +622,6 @@ class Player extends Entity
 						midi = [3, 0, 3, 0, 3, 3, 0, 3, 0, 3, 0, 3, 3, 0, 3, 0,
 						2, 0, 2, 0, 2, 2, 0, 2, 0, 2, 0, 2, 2, 0, 2, 0];
 						
-						/*midi = [1, 0, 1, 2, 1, 2, 1, 0, 2,
-						2, 0, 2, 3, 2, 3, 2, 0, 3];*/
 					}
 				}
 				if (midi[note] > 0)
@@ -603,17 +656,196 @@ class Player extends Entity
 					y -= 2.5;
 				}
 			}
-		}
-		}
-		}
-		/*if (Hspeed > 0)
+		}}}
+	}
+	
+	//formats a character name string for human reading.
+	public static function getname(name:String):String
+	{
+		var SS = (name.charAt(0).toUpperCase() + name.substr(1)).split("ALT").join("☆");
+		var SA = SS.split("_");
+		var i = 0;
+		SS = "";
+		while (i < SA.length)
 		{
-			ChangeAnimation(charname);
+			var str = SA[i];
+			str = (str.charAt(0).toUpperCase() + str.substr(1));
+			if (SS == "")
+			{
+				SS = str;
+			}
+			else
+			{
+				SS = SS + " " + str;
+			}
+			i++;
 		}
-		if (Hspeed < 0)
+		return SS;
+	}
+	
+	public override function update()
+	{
+		frames++;
+		if (hide)
 		{
-			ChangeAnimation(charname+"F");
-		}*/
+			visible = false;
+			y = 1000;
+			return;
+		}
+		if (combotime > 0)
+		{
+			combotime--;
+		}
+		else
+		{
+			combo = 0;
+		}
+		if (CHR != null)
+		{
+			//CHR.scaleX = Math.abs(CHR.scaleX) * Ldir;
+			//if ((CHR.scaleX > 0 && Ldir < 0) || (CHR.scaleX > 0 && Ldir < 0))
+			if ((CHR.scaleX > 0) != (Ldir>0))
+			{
+				CHR.scaleX = -CHR.scaleX;
+			}
+		}
+		if (!killed && lives>-1)
+		{
+			if (!started)
+			{
+				started = true;
+				ability.init();
+				if (cooldown == 0)
+				{
+					cooldown = maxcooldown;
+				}
+				baseflags = flags.clone();
+			}
+			if (!game.Hoster && game.online)
+			{
+				//since we don't manage rewards on client side we should have this reset.(this might fix the "quit glitch")
+				spentscore = score;
+			}
+			if (Vspeed > 0 && y > 600 && isme)
+			{
+				game.SendEvent("PlayerDeath", false);
+			}
+			ability.onbeginframe();
+			var ren = charname;
+			if (expressiontime > 0)
+			{
+				if (charname == Lcharname)
+				{
+				expressiontime--;
+				ren = expression;
+				if (expressiontime <= 0)
+				{
+					expression = "";
+				}
+				}
+				else
+				{
+					expressiontime = 0;
+				}
+			}
+			else if (baseexpression != "")
+			{
+				ren = baseexpression;
+			}
+			var H = height;
+			if (Ldir > 0)
+			{
+				ChangeAnimation(ren);
+			}
+			if (Ldir < 0)
+			{
+				ChangeAnimation(ren+"F");
+			}
+			if (Lheight != height)
+			{
+				var Y = height - Lheight;
+				feetposition += Y;
+				y -= Y;
+				Lheight = height;
+			}
+			if (invincibility > 1000)
+			{
+				invincibility = 10001;
+			}
+			if (myMyon != null && !myMyon.alive)
+			{
+				myMyon = null;
+			}
+			if (expressiontime < 1 && expression == "" && Math.random()<0.003)
+			{
+				//blink
+				ChangeExpression("Eyes", "10",3+Math.round(6 * Math.random()),false,false);
+			}
+
+			domovement();
+			ability.onframe();
+			if (equipment != null && !equipment.alive)
+			{
+				equipment = null;
+			}
+			if (controller[1])
+			{
+				controller[1] = false;
+				var i = 0;
+				var ok = true;
+				while (i < helditems.length)
+				{
+					var E = helditems[i];
+					if (E.alive && E.holder == this)
+					{
+					if (E.canuse)
+					{
+						ok = false;
+						if (E.cooldown <= 0)
+						{
+							var U = E.uses;
+							E.Use(this);
+							if (E.alive && E.uses > 0 && E.uses == (U - 1))
+							{
+								ability.onchargeused(E);
+							}
+						}
+					}
+					}
+					else
+					{
+						helditems.remove(E);
+						if (E == equipment)
+						{
+							equipment = null;
+						}
+						i--;
+					}
+					i++;
+					
+				}
+				if (ok)
+				{
+					ability.onuse();
+				}
+			}
+			///deccel = DCL;
+			if (!catchingup)
+			{
+			if (invincibility > 0)
+			{
+				visible = (invincibility & 1 > 0);
+				invincibility -= 1;
+			}
+			else
+			{
+				visible = true;
+			}
+			}
+			if (rotation != 0)
+			{
+				this.rotation = 0;
+			}
 		if (!controller[0] && Vspeed < 0)
 		{
 			//Vspeed += fallaccel2+fallaccel2;
@@ -646,7 +878,14 @@ class Player extends Entity
 			}
 			
 		}
-		if (headbonk != null && this == game.myplayer && headbonk.bonked==-1000 && (game.RoundType != GameView.TypeofRound.Table || headbonk.type != "Block"))
+		else if (airjump)
+		{
+			if ((controller[0]))
+			{
+				Vspeed = jumpspd;
+			}
+		}
+		if (headbonk != null && this == game.myplayer && headbonk.bonked==-1000 && (game.RoundType != GameView.TypeofRound.EventTable || (headbonk.type != "Block")))
 			{
 				
 				game.SendEvent("Headbonk", headbonk.UID);
@@ -669,11 +908,31 @@ class Player extends Entity
 				enemy = game.CollisionDetectTouchEnemy(this);
 			}
 		var eItem = game.CollisionDetectPointItem(x + W, y + (feetposition - 1));
+		//var eItem = game.CollisionDetectTouchItem(x + W, y + (feetposition - 1));
 		if (eItem != null && eItem.collectable)
 		{
+			if (eItem.autocollect || controller[4])
+			{
+				controller[4] = false;
 			if (!(flags.get(CanHide) && cooldown <= 0))
 			{
-				game.SendEvent("Collect", eItem.UID);
+				if (!eItem.clientcollect)
+				{
+					game.SendEvent("Collect", eItem.UID);
+				}
+				else
+				{
+					eItem.Collect(this);
+				}
+			}
+			}
+			else
+			{
+				if (messagetime < 1)
+				{
+					messagetime = 2;
+					message = eItem.interacttext;
+				}
 			}
 		}
 		if (danger != null && lives>=0 && game.myplayer == this)
@@ -703,7 +962,7 @@ class Player extends Entity
 			{
 				enemy.kick();
 				//game.SendEvent("Kill", enemy.UID);
-				if (enemy.charname == "RedFairy" && flags.get(SpawnZombieFairies) && Math.random()<zombiefairychance)
+				if (enemy.charname == "RedFairy" && flags.get(SpawnZombieFairies) && game.gamemode.canmyonspawn && Math.random()<zombiefairychance)
 				{
 					var i = 0;
 				var count = 0;
@@ -742,6 +1001,36 @@ class Player extends Entity
 		}
 		else
 		{
+			var ren = charname;
+			
+			if (expressiontime > 0)
+			{
+				if (charname == Lcharname)
+				{
+				expressiontime--;
+				ren = expression;
+				if (expressiontime <= 0)
+				{
+					expression = "";
+				}
+				}
+				else
+				{
+					expressiontime = 0;
+				}
+			}
+			else if (baseexpression != "")
+			{
+				ren = baseexpression;
+			}
+			if (Ldir > 0)
+			{
+				ChangeAnimation(ren);
+			}
+			if (Ldir < 0)
+			{
+				ChangeAnimation(ren+"F");
+			}
 			//unequip stuff when dead.
 			equipment = null;
 			if (rotation == 0)
@@ -766,7 +1055,7 @@ class Player extends Entity
 					D.y = 0;
 					cancel = false;
 					ability.onloselife();
-					if (!cancel)
+					if (!cancel && !game.gamemode.infinitelives)
 					{
 						lives--;
 					}
@@ -822,9 +1111,12 @@ class Player extends Entity
 				}
 				else
 				{
-					glow.strength = 1.25;
+					/*glow.strength = 1.25;
 					glow.blurX = 20;
-					glow.blurY = 20;
+					glow.blurY = 20;*/
+					glow.strength = 1.4;
+					glow.blurX = 23;
+					glow.blurY = 23;
 				}
 				filterArr = new Array();
 				filterArr[0] = glow;
@@ -895,12 +1187,54 @@ class Player extends Entity
 			nameplate.visible = false;
 			if (this == game.myplayer)
 			{
-				glow.strength = 1.25;
+				/*glow.strength = 1.25;
 				glow.blurX = 20;
-				glow.blurY = 20;
+				glow.blurY = 20;*/
+				glow.strength = 1.4;
+				glow.blurX = 23;
+				glow.blurY = 23;
 				filterArr = new Array();
 				filterArr[0] = glow;
 			}
+		}
+		if (this == game.myplayer)
+		{
+			var i = 0;
+			while (i < helditems.length)
+			{
+				var E = helditems[i];
+				if (E.alive && E.holder == this)
+				{
+					if (E.canuse)
+					{
+						nameplate.visible = false;
+						cooldownbar.visible = false;
+					}
+				}
+				else
+				{
+					helditems.remove(E);
+					if (E == equipment)
+					{
+						equipment = null;
+					}
+					i--;
+				}
+				i++;
+			}
+		}
+		if (messagetime > 0 && this == game.myplayer && message != "")
+		{
+			messagetime--;
+			nameplatetext.text = message;
+			cooldownbar.visible = false;
+			nameplate.visible = true;
+			
+			nameplatetext.setTextFormat(format);
+			var B = getBounds(game.gamestage);
+			nameplatetext.width = nameplatetext.textWidth+8;
+			nameplate.x = B.left - (Math.floor(nameplatetext.textWidth) >> 1) + (Math.floor(B.width) >> 1);
+			nameplate.y = B.top - 20;
 		}
 		if (true)
 		{
@@ -928,7 +1262,20 @@ class Player extends Entity
 			if (controller[4])
 			{
 				interact.interact(this);
+				controller[4] = false;
 			}
+			}
+			else if (controller[4] && equipment != null)
+			{
+				if (Std.is(equipment, CarryItem))
+				{
+					var DD:Dynamic = equipment;
+					var C:CarryItem = DD;
+					var D:Dynamic = { };
+					D.type = "Drop";
+					C.SendCustomEvent(D);
+					controller[4] = false;
+				}
 			}
 		}
 		if (Hspeed > 0)
@@ -941,5 +1288,8 @@ class Player extends Entity
 		}
 		flags.copy(baseflags);
 		allmyons = new Array<MyonItem>();
+		Lcharname = charname;
+		airjump = false;
+		lcontroller = controller.copy();
 	}
 }

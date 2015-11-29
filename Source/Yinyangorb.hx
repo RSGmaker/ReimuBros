@@ -13,6 +13,7 @@ class Yinyangorb extends Enemy
 	public function new() 
 	{
 		super("yinyangorb");
+		charname = "Yinyangorb";
 		accel = 0.4;
 		deccel = 0.1;
 		mxspd = 5;
@@ -27,7 +28,7 @@ class Yinyangorb extends Enemy
 	}
 	public override function increaserank()
 	{
-			pointvalue += 50;
+		pointvalue += 50;
 	}
 	override public function update():Void 
 	{
@@ -76,7 +77,7 @@ class Yinyangorb extends Enemy
 			Vspeed = -8;
 		}
 		updphysics();
-		updateanimation();
+		updateanimation("yinyangorb");
 		animate();
 		
 		if (ground != null)

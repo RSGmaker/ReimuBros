@@ -99,7 +99,7 @@ class Rumia extends Enemy
 		var LY = y;
 		flipped = 0;
 		updphysics();
-		updateanimation();
+		updateanimation("erumia");
 		flipped = F;
 		if (darkness != null)
 		{

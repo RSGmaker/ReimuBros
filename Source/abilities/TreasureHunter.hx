@@ -29,7 +29,8 @@ class TreasureHunter extends PlayerAbility
 					var D:Dynamic = { };
 					var items:Array<String> = ["Trophy","MiniHakkero", "Camera","SpellCard"];
 					//D.type = "Trophy";
-					D.type = items[Std.int(Math.random() * items.length)];
+					///D.type = items[Std.int(Math.random() * items.length)];
+					D.type = EntityItem.getitem("list:valuable");
 					D.UID = Math.random();
 					D.x = B.x;
 					D.y = B.y-64;

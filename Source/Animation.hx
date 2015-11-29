@@ -2,6 +2,7 @@ package;
 
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
+import openfl.display.PixelSnapping;
 //import flash.display.BitmapData;
 
 import openfl.display.Sprite;
@@ -31,6 +32,8 @@ class Animation extends Bitmap
 	public var image_index:Float;
 	public var image_speed:Float;
 	public function new(ani:Array<BitmapData>) {
+		//super(ani[0],PixelSnapping.NEVER,true);
+		//super(ani[0],PixelSnapping.NEVER);
 		super(ani[0]);
 		image_index = 0;
 		image_speed = 0;

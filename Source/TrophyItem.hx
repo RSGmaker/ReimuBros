@@ -17,11 +17,14 @@ class TrophyItem extends CarryItem
 		game.trophyactive = true;
 		started = false;
 		twuck = false;
+		autocollect = true;
 	}
 	override public function Collect(player:Player) 
 	{
 		//prevent someone camping on pow block from grabbing it.
 		//if (player.y < y || x != 400)
+		player.ChangeExpression("Mouth", "32", 80, true);
+		player.ChangeExpression("Eyes", "4", 80, false);
 		if (game.GameFlags.get(Main.TruckHoarder))
 		{
 			game.spawnpaused = false;
@@ -48,6 +51,9 @@ class TrophyItem extends CarryItem
 			if ((UID < 0.22 && game.level>15 && game.RoundType.getName() == "Normal") || game.GameFlags.get(Main.TruckHoarder))
 			{
 				ChangeAnimation("truck");
+				autocollect = false;
+				interacttext = "Claim truck...";
+				//interacttext = interacttext+"...";
 				twuck = true;
 				if (game.GameFlags.get(Main.TruckHoarder))
 				{
@@ -64,8 +70,11 @@ class TrophyItem extends CarryItem
 		{
 			despawntime = maxdespawntime;
 		}
-		if (holder != null && holder.type == "Player" && holder == game.myplayer)
+		if (holder != null && holder.type == "Player")
 		{
+			autocollect = true;
+			if (holder == game.myplayer)
+			{
 			if (holder.ground == null || holder.ground.type == "PowBlock")
 			{
 				timer++;
@@ -82,6 +91,7 @@ class TrophyItem extends CarryItem
 			{
 				timer = 0;
 				visible = true;
+			}
 			}
 		}
 	}

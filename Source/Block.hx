@@ -25,6 +25,12 @@ class Block extends Entity
 	public var LeftBlock:Block;
 	public var RightBlock:Block;
 	public var searched:Bool;
+	public var OX:Float;
+	public var OY:Float;
+	public var step:Bool;
+	
+	//prevents reset spamming in autoscrolling levels
+	public var hasreset:Bool;
 	
 	public function new(ani:String) 
 	{
@@ -117,10 +123,43 @@ class Block extends Entity
 	{
 		Clean();
 		searched = false;
+		
+		step = false;
+		//x = OX;
+		//y = OY;
+		Vspeed = 0;
+		Hspeed = 0;
+		hb = null;
+	}
+	public function ResetPosition()
+	{
+		
+		if (!Math.isNaN(OX) && !Math.isNaN(OY))
+		{
+		x = OX;
+		y = OY;
+		}
+	}
+	public function ResetPositionX()
+	{
+		
+		if (!Math.isNaN(OX))
+		{
+		x = OX;
+		}
+	}
+	public function ResetPositionY()
+	{
+		
+		if (!Math.isNaN(OY))
+		{
+		y = OY;
+		}
 	}
 	public function Clean()
 	{
 		dangerous = false;
+		hb = null;
 		if (icy || charred || poison)
 		{
 			icy = false;
@@ -196,7 +235,14 @@ class Block extends Entity
 			LeftBlock = B;
 			B = game.CollisionDetectPoint(x + 48, y);
 			RightBlock = B;
+			
+			OX = x;
+			OY = y;
+			
+			this.visible = solid;
+			Visual.visible = solid;
 		}
+		cacheAsBitmap = !dangerous;
 		if (respawn > 0)
 		{
 			respawn--;
@@ -221,8 +267,33 @@ class Block extends Entity
 		Flames.visible = dangerous;
 		Flames.animate();
 		//Flames.update();
-		this.visible = solid;
-		Visual.visible = solid;
+		if (solid)
+		{
+			if (!visible)
+			{
+				visible = true;
+				alpha = 0;
+			}
+			if (alpha < 1)
+			{
+				alpha += 0.1;
+			}
+			Visual.visible = true;
+		}
+		else
+		{
+			if (visible)
+			{
+				alpha -= 0.1;
+				if (alpha <= 0)
+				{
+					visible = false;
+					Visual.visible = false;
+				}
+			}
+		}
+		//this.visible = solid;
+		//Visual.visible = solid;
 		if (!solid)
 		{
 			Flames.visible = false;
@@ -251,6 +322,114 @@ class Block extends Entity
 				Visual.y = 0;
 				bonked = -1000;
 			}
+		}
+		//if (Hspeed != 0 || Vspeed != 0)
+		if (/*solid && */(game.scrollX != game.LscrollX || game.scrollY != game.LscrollY))
+		{
+			
+			if (step)
+			{
+				var OB = false;
+				if (x<=-32 || x>=800 || y<=-32 || y>=600)
+				{
+					OB = true;
+				}
+				hb = null;
+				if (game.scrollX != game.LscrollX)
+				{
+				x = OX + Math.floor(game.scrollX);
+				//while (x <= -288)
+				//while (x < -288)
+				var D = 1312;
+				var O = -32;
+				while (x < O)
+				{
+					x += D;
+				}
+				while (x > 1312+O)
+				{
+					x -= D;
+				}
+				/*while (x > 1344)
+				{
+					x -= 1312+96;
+				}*/
+				}
+				if (game.scrollY != game.LscrollY)
+				{
+					y = OY + Math.floor(game.scrollY);
+				while (y <= -32)
+				{
+					y += 632;
+				}
+				while (y >= 600)
+				{
+					y -= 632;
+				}
+				}
+				if (x <= -32 || y >= 600 || y <= -32 || x > 800)
+				{
+					if (!hasreset)
+					{
+						Reset();
+						hasreset = true;
+					}
+				}
+				else
+				{
+					hasreset = false;
+				}
+				if (OB && solid)
+				{
+					if (x<=-32 || x>=800 || y<=-32 || y>=600)
+					{
+						
+					}
+					else
+					{
+						visible = true;
+						alpha = 1;
+					}
+				}
+			}
+			//}
+		/*if (Vspeed != 0)
+		{
+			y += Vspeed;
+			hb = null;
+			//Visual.y += Vspeed;
+			if (y <= -32 && Vspeed < 0)
+			{
+				y += 632;
+			}
+			else if (y >= 600 && Vspeed > 0)
+			{
+				y -= 632;
+			}
+		}
+		if (Hspeed != 0)
+		{
+			x += Hspeed;
+			hb = null;
+			//Visual.x += Hspeed;
+			//if (x <= -32 && Hspeed < 0)
+			if (x <= -288 && Hspeed < 0)
+			{
+				x += 1312;
+			}
+			else if (x >= 1344 && Hspeed > 0)
+			{
+				x -= 1312;
+			}
+		}*/
+		
+		//}
+		step = !step;
+		}
+		
+		if (x<=-32 || x>=800 || y<=-32 || y>=600)
+		{
+			visible = false;
 		}
 	}
 }

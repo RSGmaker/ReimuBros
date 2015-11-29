@@ -14,6 +14,11 @@ class Floating extends PlayerAbility
 		super(player);
 		description = "Hovers briefly";
 	}
+	override public function lostability() 
+	{
+		player.fallaccel = player.Ofallaccel;
+		super.lostability();
+	}
 	override public function onbeginframe() 
 	{
 		super.onbeginframe();

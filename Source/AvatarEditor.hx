@@ -46,6 +46,13 @@ class AvatarEditor extends Sprite
 	public static var partlist:Array<String> = ["Version", "Name", "Scale", "Hat", "Hair", "Body", "Arms", "Shoes", "Eyes", "Mouth", "Prop", "Accessory", "Back", "Hair Color", "Skin Color"];
 	public var playername:String;
 	public var view:ShopView;
+	
+	//public var generatelimit:Int = 20;
+	public var generatelimit:Int = 14;
+	public var generateindex:Int;
+	public var generateX:Float;
+	public var generateY:Float;
+	public var generatedone:Bool=true;
 	//public var parent:ShopView;
 	public function new() 
 	{
@@ -54,6 +61,11 @@ class AvatarEditor extends Sprite
 		soul = "none";
 		avatardna = "3.39:RSGmaker:100:0:192:324:232:24:0:0:0:1:0:321A00";
 		AL = Main._this.AL;
+		
+		if (CharHelper.optimize)
+		{
+			generatelimit *= 2;
+		}
 	}
 	public static function pickpart(type:Array<String>):Dynamic
 	{
@@ -107,6 +119,12 @@ class AvatarEditor extends Sprite
 			custompiece = type;
 			setdescription(custompiece+":");
 			customindex = partlist.indexOf(custompiece);
+			
+			generateX = 3;
+			generateY = 3;
+			generateindex = 0;
+			generatedone = false;
+			piececontainer.removeChildren();
 			generatepieces();
 			outerpiececontainer.scrollRect = new Rectangle(0, 0, outerpiececontainer.scrollRect.width, outerpiececontainer.scrollRect.height);
 			updatescrollbar();
@@ -301,8 +319,12 @@ class AvatarEditor extends Sprite
 	}
 	private function generatepieces()
 	{
+		if (generatedone)
+		{
+			return;
+		}
 		//Version#:Name:Scale:Hat:Hair:Body:Arm:Shoes:Eyes:Mouth:Item:Accessory:Back:this.HairColor
-		piececontainer.removeChildren();
+		///piececontainer.removeChildren();
 		var index = customindex;
 		var DAT:Array<Dynamic> = null;
 		var U:Array<Bool> = null;
@@ -374,26 +396,43 @@ class AvatarEditor extends Sprite
 		
 		var DNA = "3.4:faceman:100:0:240:0:0:0:128:0:0:0:0:C0FFEE:FFF1DD";
 		DNA = avatardna;
-		var i = 0;
-		var X = 3;
-		var Y = 3;
+		var i = generateindex;
+		var limit = generatelimit;
+		//var X = 3;
+		//var Y = 3;
+		var X = generateX;
+		var Y = generateY;
 		
 		var W = 76;
 		var H = 76;
 		DNA = changednascale(DNA, 83);
+		var uncolorhair:Bool = !Main._this.savedata.data.unlockables_haircolor && index == partlist.indexOf("Hair");
+		
 		if (DAT != null)
 		{
+			piececontainer.visible = false;
 			var total = DAT.length;
 			var ind = getdnapart(DNA, index);
-		while (i < total)
+		while (i < total && limit>=0)
 		{
 			if (U == null || U[i])
 			{
-			var M = new MenuButton("",8,"Arial",3);
+			var M = new MenuButton("", 8, "Arial", 3);
+			M.sound = "";
 			var data = DAT[i];
 			M.manualwidth = W-2;
-			M.manualheight = H-2;
-			M.setbitmapdata(AL.getBitmapData("dna-" + changednapart(DNA, index, ""+i))[0]);
+			M.manualheight = H - 2;
+			var TD = changednapart(DNA, index, "" + i);
+			if (uncolorhair)
+			{
+				//if you don't have hair dye then force the default color.
+				TD = changednapart(TD, partlist.indexOf("Hair Color"), "" + CharHelper.Hairdata[i][6]);
+					//setavatardna(changednapart(avatardna, partlist.indexOf("Hair Color"), "" + CharHelper.Hairdata[index][6]));
+			}
+			Main._this.stage.quality = flash.display.StageQuality.MEDIUM;
+			M.setbitmapdata(CharHelper.makeCharImage("dna-" + TD,false));
+			Main._this.stage.quality = flash.display.StageQuality.LOW;
+			//M.setbitmapdata(AL.getBitmapData("dna-" + TD)[0]);
 			M.x = X;
 			M.y = Y;
 			var desc = data[0];
@@ -404,7 +443,7 @@ class AvatarEditor extends Sprite
 				selectedpiece = M;
 			}
 			var ii = i;
-			M.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+			M.addclick( function( ev ) {
 				selectedpiece = M;
 				selectpiece(ii);
 				setdescription(desc);
@@ -420,7 +459,10 @@ class AvatarEditor extends Sprite
 			}
 			}
 			i++;
+			limit--;
 		}
+		piececontainer.visible = true;
+		generatedone = i >= total;
 		}
 		else
 		{
@@ -444,9 +486,17 @@ class AvatarEditor extends Sprite
 					}
 				 } 
 				);
+				generatedone = true;
 			}
+			generatedone = true;
 		}
+		
 		scrollbar.visible = (type == "Part");
+		
+		//if (generatedone)
+		{
+			updatescrollbar();
+		}
 		outerpiececontainer.graphics.clear();
 		if (scrollbar.visible)
 		{
@@ -454,6 +504,11 @@ class AvatarEditor extends Sprite
 			outerpiececontainer.graphics.drawRect(0, 0, outerpiececontainer.width, piececontainer.height);
 			outerpiececontainer.graphics.endFill();
 		}
+		generateX = X;
+		generateY = Y;
+		generateindex = i;
+		
+		//generatedone = i >= total;
 	}
 	private function selectpiece(index:Int)
 	{
@@ -463,6 +518,14 @@ class AvatarEditor extends Sprite
 		}
 		selectedpiece.setcolors(0xFF0000, 0xFFFFFF);
 		setavatardna(changednapart(avatardna, customindex, "" + index));
+		if (!Main._this.savedata.data.unlockables_haircolor)
+		{
+			//if you don't have hair dye then force the default color.
+			if (customindex == partlist.indexOf("Hair"))
+			{
+				setavatardna(changednapart(avatardna, partlist.indexOf("Hair Color"), "" + CharHelper.Hairdata[index][6]));
+			}
+		}
 		//avatardna = changednapart(avatardna, customindex, "" + index);
 		//avatarpreview.setbitmapdata(AL.getBitmapData("dna-" + changednascale(avatardna, 200))[0]);
 		lselectedpiece = selectedpiece;
@@ -471,12 +534,31 @@ class AvatarEditor extends Sprite
 	{
 		avatardna = dna;
 		dnadisplay.text = dna;
+		/*Main._this.stage.quality = flash.display.StageQuality.BEST;
+		avatarpreview.setbitmapdata(CharHelper.makeCharImage(data,false));
+		Main._this.stage.quality = flash.display.StageQuality.LOW;*/
 		avatarpreview.setbitmapdata(AL.getBitmapData("dna-" + changednascale(avatardna, 200))[0]);
 	}
 	public function start()
 	{
 		var bg = new Bitmap(AL.GetAnimation("background-" + CharHelper.GetBG("Empty Room"))[0]);
 		addChild(bg);
+		var mirror = new Bitmap(AL.GetAnimation("mirror")[0]);
+		mirror.y = 170;
+		mirror.x = 160;
+		addChild(mirror);
+		var dresser = new Bitmap(AL.GetAnimation("dresser")[0]);
+		dresser.y = 280;
+		dresser.x = 410;
+		addChild(dresser);
+		var chest = new Bitmap(AL.GetAnimation("chest")[0]);
+		chest.y = 260;
+		chest.x = 650;
+		addChild(chest);
+		/*var window = new Bitmap(AL.GetAnimation("window")[0]);
+		window.y = 200;
+		window.x = 650;
+		addChild(window);*/
 		//background.addChild(bg);
 		var filterArr:Array<flash.filters.BitmapFilter>;
 		filterArr = new Array();
@@ -511,11 +593,12 @@ class AvatarEditor extends Sprite
 		Nameinput.y = avatarpreview.y+200;
 		//Nameinput.width = (512 - (Nameinput.x));
 		Nameinput.width = (200);
-		if (playername == null || playername == "")
+		/*if (playername == null || playername == "")
 		{
 			playername = "PlayerName";
-		}
-		Nameinput.text = playername;
+		}*/
+		//Nameinput.text = playername;
+		Nameinput.text = CharHelper.getdnapart(avatardna, 1);
 		Nameinput.border = true;
 		Nameinput.background = true;
 		Nameinput.setTextFormat(tmp);
@@ -532,7 +615,7 @@ class AvatarEditor extends Sprite
 		Description = new TextField();
 		Description.x = Nameinput.x;
 		Description.y = Nameinput.y + 32+32;
-		Description.text = "Ability:" + soul;
+		Description.text = "Ability:" + Player.getname(soul);
 		Description.mouseEnabled = false;
 		Description.textColor = 0xFFFFFF;
 		Description.scaleX = 2;
@@ -543,7 +626,7 @@ class AvatarEditor extends Sprite
 		dnadisplay = new TextField();
 		dnadisplay.x = Nameinput.x;
 		dnadisplay.y = Nameinput.y + 32;
-		dnadisplay.text = "Ability:" + soul;
+		dnadisplay.text = "Ability:" + Player.getname(soul);
 		//dnadisplay.mouseEnabled = false;
 		dnadisplay.textColor = 0xFFFFFF;
 		dnadisplay.scaleX = 2;
@@ -570,7 +653,7 @@ class AvatarEditor extends Sprite
 		P.addChild(B);
 		B.update();
 		Y += B.textfield.textHeight + H;
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		B.addclick( function( ev ) {
 				selectcustomization("Eyes");
 				 } 
 				);
@@ -580,7 +663,7 @@ class AvatarEditor extends Sprite
 		P.addChild(B);
 		B.update();
 		Y += B.textfield.textHeight + H;
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		B.addclick( function( ev ) {
 				selectcustomization("Mouth");
 				 } 
 				);
@@ -590,7 +673,7 @@ class AvatarEditor extends Sprite
 		P.addChild(B);
 		B.update();
 		Y += B.textfield.textHeight + H;
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		B.addclick( function( ev ) {
 				selectcustomization("Hair");
 				 } 
 				);
@@ -600,7 +683,7 @@ class AvatarEditor extends Sprite
 		P.addChild(B);
 		B.update();
 		Y += B.textfield.textHeight + H;
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		B.addclick( function( ev ) {
 				selectcustomization("Hat");
 				 } 
 				);
@@ -610,7 +693,7 @@ class AvatarEditor extends Sprite
 		P.addChild(B);
 		B.update();
 		Y += B.textfield.textHeight + H;
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		B.addclick( function( ev ) {
 				selectcustomization("Accessory");
 				 } 
 				);
@@ -620,7 +703,7 @@ class AvatarEditor extends Sprite
 		P.addChild(B);
 		B.update();
 		Y += B.textfield.textHeight + H;
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		B.addclick( function( ev ) {
 				selectcustomization("Body");
 				 } 
 				);
@@ -632,7 +715,7 @@ class AvatarEditor extends Sprite
 		P.addChild(B);
 		B.update();
 		Y += B.textfield.textHeight + H;
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		B.addclick( function( ev ) {
 				selectcustomization("Arms");
 				 } 
 				);
@@ -642,7 +725,7 @@ class AvatarEditor extends Sprite
 		P.addChild(B);
 		B.update();
 		Y += B.textfield.textHeight + H;
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		B.addclick( function( ev ) {
 				selectcustomization("Shoes");
 				 } 
 				);
@@ -652,7 +735,7 @@ class AvatarEditor extends Sprite
 		P.addChild(B);
 		B.update();
 		Y += B.textfield.textHeight + H;
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		B.addclick( function( ev ) {
 				selectcustomization("Back");
 				 } 
 				);
@@ -662,7 +745,7 @@ class AvatarEditor extends Sprite
 		P.addChild(B);
 		B.update();
 		Y += B.textfield.textHeight + H;
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		B.addclick( function( ev ) {
 				selectcustomization("Prop");
 				 } 
 				);*/
@@ -672,10 +755,26 @@ class AvatarEditor extends Sprite
 		P.addChild(B);
 		B.update();
 		Y += B.textfield.textHeight + H;
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				selectcustomization("Hair Color");
+		B.sound = "";
+		B.addclick( function( ev ) {
+			if (Main._this.savedata.data.unlockables_haircolor)
+				{
+					SoundManager.Play("click");
+					selectcustomization("Hair Color");
+				}
+				else
+				{
+					SoundManager.Play("bonk");
+				}
+				
 				 } 
 				);
+		if (!Main._this.savedata.data.unlockables_haircolor)
+		{
+			//B.setcolors(0xAAAAAA, 0x888888);
+			B.changecolorscheme(1, 0xAAAAAA, 0x888888);
+			B.usecolorscheme(1);
+		}
 		B = new MenuButton("Skin Color",size,"Arial",5,innercolor,outercolor);
 		B.x += X;
 		B.y = Y;
@@ -683,7 +782,7 @@ class AvatarEditor extends Sprite
 		//P.addChild(B);
 		//Y += B.textfield.textHeight + H;
 		B.update();
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		B.addclick( function( ev ) {
 				selectcustomization("Skin Color");
 				 } 
 				);
@@ -693,9 +792,11 @@ class AvatarEditor extends Sprite
 		P.addChild(B);
 		B.update();
 		Y += B.textfield.textHeight + H;
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		B.sound = "";
+		B.addclick( function( ev ) {
 				if (Main._this.savedata.data.avatarabilities)
 				{
+					SoundManager.Play("click");
 					selectcustomization("Ability");
 				}
 				else
@@ -706,7 +807,9 @@ class AvatarEditor extends Sprite
 				);
 		if (!Main._this.savedata.data.avatarabilities)
 		{
-			B.setcolors(0xAAAAAA, 0x888888);
+			//B.setcolors(0xAAAAAA, 0x888888);
+			B.changecolorscheme(1, 0xAAAAAA, 0x888888);
+			B.usecolorscheme(1);
 		}
 		addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
 				scrolling = false;
@@ -716,9 +819,10 @@ class AvatarEditor extends Sprite
 		P = new Sprite();
 		P.visible = false;
 		B = new MenuButton("Back to selection", size);
+		B.sound = "cancel";
 		B.x = 450;
 		B.y = 10;
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		B.addclick( function( ev ) {
 				custompages[1].visible = false;
 				custompages[0].visible = true;
 				 } 
@@ -788,9 +892,10 @@ class AvatarEditor extends Sprite
 		dimmer.graphics.endFill();
 		P.addChild(dimmer);
 		B = new MenuButton("Cancel", size);
+		B.sound = "cancel";
 		B.x = 620;
 		B.y = 100;
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		B.addclick( function( ev ) {
 				custompages[2].visible = false;
 				custompages[0].visible = true;
 				if (view != null)
@@ -801,11 +906,12 @@ class AvatarEditor extends Sprite
 				);
 		P.addChild(B);
 		B = new MenuButton("Select", size);
+		B.sound = "ok";
 		B.x = 620;
 		B.y = 170;
-		B.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
+		B.addclick( function( ev ) {
 				soul = soulselect.selected;
-				Description.text = "Ability:" + soul;
+				Description.text = "Ability:" + Player.getname(soul);
 				custompages[2].visible = false;
 				custompages[0].visible = true;
 				if (view != null)
@@ -828,6 +934,13 @@ class AvatarEditor extends Sprite
 		avatarpreview.x = 30;
 		AP.addChild(avatarpreview);*/
 		setavatardna(avatardna);
+	}
+	public function update()
+	{
+		if (!generatedone)
+		{
+			generatepieces();
+		}
 	}
 	private function updatescrollbar()
 	{

@@ -32,12 +32,14 @@ class BoomerangScythe extends PlayerAbility
 			D.x = player.x;
 			D.y = player.y + 10;
 			D.type = "scythe";
+			D.image_speed = 2;
+			D.spin = true;
 			D.scale = 1;
 			D.dir = player.Ldir;
 			D.Vspeed = 0;
 			D.HP = 999999;
 			D.gravX = -0.5;
-			D.image_speed = 2;
+			
 			if (player.Ldir >= 0)
 			{
 				D.Hspeed = 18;

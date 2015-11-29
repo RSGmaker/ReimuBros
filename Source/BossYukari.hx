@@ -131,16 +131,18 @@ class BossYukari extends Boss
 			}
 		}
 		}
+		doingability = false;
 		if (game.rank > 0 || true)
 		{
 		if (frame % 350 < 25)
 		{
-			visuallyEnraged = !visuallyEnraged;
+			//visuallyEnraged = !visuallyEnraged;
+			doingability = true;
 		}
 		
 		if (frame % 350 == 25)
 		{
-			visuallyEnraged = false;
+			//visuallyEnraged = false;
 			var i = 0;
 			var X = cx - 200+(rng.quick(300));
 			while (i < 5)

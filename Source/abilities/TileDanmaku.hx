@@ -6,7 +6,8 @@ package abilities;
  */
 class TileDanmaku extends PlayerAbility
 {
-
+	//public var destroytime:Int = 1300;
+	public var destroytime:Int = 100;
 	public function new(player:Player) 
 	{
 		super(player);
@@ -15,7 +16,8 @@ class TileDanmaku extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 150;
+		//player.maxcooldown = 150;
+		player.maxcooldown = 500;
 		player.warncooldown = true;
 	}
 	override public function onframe() 
@@ -35,9 +37,11 @@ class TileDanmaku extends PlayerAbility
 			{
 			var D:Dynamic = { };
 			//D.Destroy = 1400;
-			D.Destroy = 1300;
-			D.x = player.ground.x;
-			D.y = player.ground.y;
+			//D.Destroy = 1300;
+			D.Destroy = destroytime;
+			D.UID = player.ground.UID;
+			//D.x = player.ground.x;
+			//D.y = player.ground.y;
 			game.SendEvent("DestroyBlock", D);
 			D = { };
 			D.x = player.x;

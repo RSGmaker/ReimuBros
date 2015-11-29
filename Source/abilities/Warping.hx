@@ -11,7 +11,8 @@ class Warping extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Top row warp";
+		//description = "Top row warp";
+		description = "Walking off the top row\nwarps you back down";
 	}
 	override public function onframe() 
 	{

@@ -11,7 +11,9 @@ class RedFairy extends Enemy
 	
 	public var mxspd:Float;
 	
+	public var rename:String;
 	
+	public var recovery:Int=4;
 	
 	public function new() 
 	{
@@ -22,6 +24,7 @@ class RedFairy extends Enemy
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
+		rename = "red_fairy";
 	}
 	
 	public override function increaserank()
@@ -35,6 +38,36 @@ class RedFairy extends Enemy
 		if (!started)
 		{
 			started = true;
+			//UID = UID * 0.09;
+			UID = UID * 0.7;
+			if (UID < 0.4)
+			{
+				if (UID < 0.1)
+				{
+					if (UID < 0.01/* && spawns<1*/)
+					{
+						rename = "gold_fairy";
+						recovery -= 1;
+						accel += 0.2;
+						mxspd += 1;
+						pointvalue += 200;
+					}
+					else
+					{
+						rename = "green_fairy";
+						recovery -= 1;
+						pointvalue += 100;
+					}
+				}
+				else
+				{
+					rename = "blue_fairy";
+					accel += 0.1;
+					mxspd += 0.5;
+					pointvalue += 50;
+					recovery += 1;
+				}
+			}
 		}
 		if (!killed)
 		{
@@ -70,7 +103,7 @@ class RedFairy extends Enemy
 			}
 		}
 		updphysics();
-		updateanimation("red_fairy");
+		updateanimation(rename);
 		
 		if (ground != null)
 		{
@@ -119,11 +152,11 @@ class RedFairy extends Enemy
 		{
 			if (enraged)
 			{
-				flipped = 30 * 4;
+				flipped = 30 * recovery;
 			}
 			else
 			{
-				flipped = 30 * 7;
+				flipped = 30 * (recovery+2);
 			}
 		}
 		else
