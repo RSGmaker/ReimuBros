@@ -84,6 +84,11 @@ class Main extends Sprite {
 	public var customroom:Bool = false;
 	
 	public var netlobby:NetPlay = null;
+	
+	public var ltime:Float;
+	
+	public var missingTime:Float;
+	
 	//time spent as host.
 	public var hosttime:Int = 0;
 	//time spent as client.
@@ -198,6 +203,7 @@ class Main extends Sprite {
 	}
 	public function init()
 	{
+		ltime = Timer.stamp ();
 		if (DEBUG)
 		{
 			//Haxe doesn't support this external files easily.
@@ -525,8 +531,8 @@ class Main extends Sprite {
 			cheating = false;
 		}
 	}
-	//check if the view is done interacting with the player, and show the new view eg; character select->main game(aka gameview)
-	private function this_onEnterFrame (event:Event):Void {
+	public function update(event:Event)
+	{
 		if (game != null)
 		{
 			game.this_onEnterFrame(event);
@@ -568,14 +574,14 @@ class Main extends Sprite {
 				shopscreen.this_onEnterFrame();
 			}
 		}
-		if (frameskipenabled)
+		/*if (frameskipenabled)
 		{
 			frameskip = !frameskip;
 			if (frameskip)
 			{
 				return;
 			}
-		}
+		}*/
 		if (titlescreen != null)
 		{
 			titlescreen.update();
@@ -674,9 +680,14 @@ class Main extends Sprite {
 						else if (gamecode == UnlockAllChallenges)
 						{
 							var i = 0;
-							while (i < 4)
+							/*while (i < 4)
 							{
-								savedata.data.challenges[i] = true;
+								//savedata.data.challenges[i] = true;
+								i++;
+							}*/
+							while (i < GameMode.Modes.length)
+							{
+								GameMode.Modes[i].setunlocked(true);
 								i++;
 							}
 							i = 0;
@@ -829,6 +840,63 @@ class Main extends Sprite {
 				showoptions();
 			}
 		}
+	}
+	//check if the view is done interacting with the player, and show the new view eg; character select->main game(aka gameview)
+	private function this_onEnterFrame (event:Event):Void {
+		var currentTime = Timer.stamp ();
+		var T = currentTime - ltime;
+		missingTime += T;
+		if (missingTime > 3 /* && !online*/)
+		{
+			missingTime = 0.041;
+		}
+		if (!(missingTime > 0 || missingTime < 0))
+		{
+			missingTime = 0;
+		}
+		var spr:Sprite = null;
+		spr = this;
+		if (game != null)
+		{
+			spr = game;
+		}
+		/*if (characterselect != null)
+		{
+			spr = characterselect;
+		}
+		if (titlescreen != null)
+		{
+			spr = titlescreen;
+		}
+		if (optionscreen != null)
+		{
+			spr = optionscreen;
+		}
+		if (shopscreen != null)
+		{
+			spr = shopscreen;
+		}*/
+		ltime = currentTime;
+		//visible = false;
+		spr.visible = false;
+		if (missingTime > 0.0334)
+		{
+			//updategame(event);
+			update(event);
+			missingTime -= 0.0334;
+		}
+		if (missingTime < 0)
+		{
+			missingTime = 0;
+		}
+		
+		while (missingTime > 0.04)
+		{
+			update(event);
+			missingTime -= 0.0334;
+		}
+		spr.visible = true;
+		//visible = true;
 		
 	}
 	public function changeGameMode(gamemode:GameMode)
