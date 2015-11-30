@@ -181,6 +181,10 @@ class Chen extends Enemy
 				visible = false;
 			}
 	}
+	if (killed)
+	{
+		alive = false;
+	}
 	}
 	public override function bump()
 	{

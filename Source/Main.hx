@@ -858,7 +858,8 @@ class Main extends Sprite {
 		spr = this;
 		if (game != null)
 		{
-			spr = game;
+			//spr = game;
+			spr = game.gamestage;
 		}
 		/*if (characterselect != null)
 		{

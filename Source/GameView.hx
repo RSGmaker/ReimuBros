@@ -5941,10 +5941,10 @@ class GameView extends Sprite
 		{
 			missingTime = 0.041;
 		}
-		if (missingTime > 0.04)
+		/*if (missingTime > 0.04)
 		{
 			gamestage.visible = false;
-		}
+		}*/
 		
 		{
 		updategame(event);
@@ -5964,10 +5964,10 @@ class GameView extends Sprite
 			updategame(event);
 			missingTime -= 0.0334;
 		}*/
-		if (!gamestage.visible)
+		/*if (!gamestage.visible)
 		{
 			gamestage.visible = true;
-		}
+		}*/
 		var cameraenabled = false;
 		if (cameraenabled)
 		{
