@@ -10,7 +10,7 @@ class BriefInvisibility extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Turns invisible briefly";
+		description = "Briefly turns invisible";
 	}
 	override public function init() 
 	{

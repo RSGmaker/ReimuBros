@@ -9,7 +9,7 @@ class EnergyWave extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Fires a wave of energy that\nknocks enemies off their feet";
+		description = "Fires a wave of energy that\nknocks enemies off their\nfeet";
 	}
 	override public function init() 
 	{

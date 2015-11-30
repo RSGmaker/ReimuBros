@@ -9,7 +9,7 @@ class DownwardShot extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Fires bullets downwards";
+		description = "Fires bullets downward";
 	}
 	override public function init() 
 	{

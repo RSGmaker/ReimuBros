@@ -9,7 +9,7 @@ class VampiricTouch2 extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Gains lives from defeating\nenemies, and point items";
+		description = "Gains lives from defeating\nenemies and collecting\npoint items";
 	}
 	override public function init() 
 	{

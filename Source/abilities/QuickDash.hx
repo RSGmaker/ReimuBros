@@ -20,7 +20,7 @@ class QuickDash extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Double tap left or right\nto dash(immune to damage)";
+		description = "Double tap left or right\nto dash";
 	}
 	override public function init() 
 	{

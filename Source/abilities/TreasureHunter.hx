@@ -10,7 +10,7 @@ class TreasureHunter extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "May find hidden items\ninside blocks\n(resets each level)";
+		description = "May find hidden items\ninside blocks (resets\neach level)";
 	}
 	override public function onheadbonk() 
 	{
