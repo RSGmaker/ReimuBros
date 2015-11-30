@@ -9,7 +9,7 @@ class SymmetryLaser extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Hitting a block causes a\nlaser to strike";
+		description = "Hitting a block summons a\nlaser beam";
 	}
 	override public function init() 
 	{

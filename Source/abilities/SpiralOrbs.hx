@@ -9,7 +9,7 @@ class SpiralOrbs extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Fires spiralling orbs";
+		description = "Fires spiraling orbs";
 	}
 	override public function init() 
 	{

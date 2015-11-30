@@ -9,7 +9,7 @@ class CrossPlacer extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Places cross";
+		description = "Places a cross";
 	}
 	override public function init() 
 	{

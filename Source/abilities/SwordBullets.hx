@@ -9,7 +9,7 @@ class SwordBullets extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Throws sword bullets";
+		description = "Throws swords";
 	}
 	override public function init() 
 	{

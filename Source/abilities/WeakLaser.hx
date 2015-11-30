@@ -9,7 +9,7 @@ class WeakLaser extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Fires a weak laser\n(lacks piercing damage)";
+		description = "Fires a weak laser";
 	}
 	override public function init() 
 	{

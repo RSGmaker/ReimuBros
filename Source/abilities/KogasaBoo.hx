@@ -10,7 +10,7 @@ class KogasaBoo extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "flipping an enemy can\ndefeat them instantly";
+		description = "Flipping an enemy can\ndefeat them instantly";
 	}
 	override public function onbump(E:Entity) 
 	{

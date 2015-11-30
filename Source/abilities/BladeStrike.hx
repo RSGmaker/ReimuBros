@@ -9,7 +9,7 @@ class BladeStrike extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Strikes with a blade";
+		description = "Cuts down foes with blade\nand vigor";
 	}
 	override public function init() 
 	{

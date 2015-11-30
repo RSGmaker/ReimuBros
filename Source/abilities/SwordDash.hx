@@ -9,7 +9,7 @@ class SwordDash extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Dashes instantly to the edge\nof the screen you're facing\nkills enemies you pass by";
+		description = "Dashes instantly to the edge\nof the screen";
 	}
 	override public function init() 
 	{

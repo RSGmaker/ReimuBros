@@ -9,7 +9,7 @@ class SummonTelephonePole extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Drops a telephone pole\non your enemies";
+		description = "Drops a telephone pole";
 	}
 	override public function init() 
 	{

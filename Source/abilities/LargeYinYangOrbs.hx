@@ -9,7 +9,7 @@ class LargeYinYangOrbs extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Fires a large Yin-yang orb";
+		description = "Fires a large yin-yang orb";
 	}
 	override public function init() 
 	{

@@ -9,7 +9,7 @@ class DiscLauncher extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Throws discs";
+		description = "Throws plates";
 	}
 	override public function init() 
 	{

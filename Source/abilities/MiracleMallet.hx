@@ -9,7 +9,7 @@ class MiracleMallet extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
-		description = "Converts all life fragments\non stage into full 1ups\nand restores the pow block";
+		description = "Converts all life fragments\non stage into full 1ups\nand restores the POW Block";
 	}
 	override public function init() 
 	{
