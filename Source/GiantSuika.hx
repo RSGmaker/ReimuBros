@@ -13,17 +13,17 @@ class GiantSuika extends Entity
 	public var step:Int;
 	public var timetostep:Int;
 	public var unlock:String;
-	public var translated:Sprite;
+	//public var translated:Sprite;
 	public function new()
 	{
 		unlock = "suika";
 		var D = CharHelper.getCharPreset(unlock);
 		D = CharHelper.changednascale(D, 800);
 		super(D);
-		removeChild(image);
+		/*removeChild(image);
 		translated = new Sprite();
 		translated.addChild(image);
-		addChild(translated);
+		addChild(translated);*/
 		UID = -9000;
 		//super("giantsuika");
 		
@@ -44,14 +44,15 @@ class GiantSuika extends Entity
 		{
 			x = -width;
 			y = 0;
-			//rotation = 0;
-			translated.rotation = 0;
+			rotation = 0;
+			//translated.rotation = 0;
 		}
 		else
 		{
-			translated.y = -(game.camera.y / 2);
-			//if (rotation == 0)
-			if (translated.rotation == 0)
+			image.y = -(game.camera.y / 2);
+			//translated.y = -(game.camera.y / 2);
+			if (rotation == 0)
+			//if (translated.rotation == 0)
 			{
 			if (timetostep > 0)
 			{
@@ -88,10 +89,10 @@ class GiantSuika extends Entity
 			else
 			{
 				var Y = y;
-				//rotateentity(rotation + 4);
-				rotatesprite(translated,translated.rotation + 4);
+				rotateentity(rotation + 4);
+				//rotatesprite(translated,translated.rotation + 4);
 				y = Y + 32;
-				if (translated.rotation > 90)
+				if (rotation > 90)
 				{
 					active = false;
 					if (game.Hoster)
@@ -120,14 +121,14 @@ class GiantSuika extends Entity
 	}
 	public function tipover()
 	{
-		//rotateentity(1);
-		rotatesprite(translated,1);
+		rotateentity(1);
+		//rotatesprite(translated,1);
 	}
 	public function activate()
 	{
 		active = true;
-		//rotation = 0;
-		translated.rotation = 0;
+		rotation = 0;
+		//translated.rotation = 0;
 		y = 0;
 		step = 0;
 		timetostep = 120;
