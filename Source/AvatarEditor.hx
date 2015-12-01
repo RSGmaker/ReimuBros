@@ -572,6 +572,10 @@ class AvatarEditor extends Sprite
 		
 		
 		avatarpreview = new MenuButton("");
+		avatarpreview.mouseEnabled = false;
+		avatarpreview.buttonMode = false;
+		avatarpreview.button.buttonMode = false;
+		avatarpreview.sound = "";
 		avatarpreview.manualheight = 200;
 		avatarpreview.manualwidth = 200;
 		avatarpreview.setcolors(0x444444, 0x00BBDD);
