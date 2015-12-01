@@ -53,6 +53,7 @@ class CharacterSelect extends Sprite
 	public var GUI:Sprite;
 	public var charlist:Array<String>;
 	public var customavatar:Bool;
+	public var checkgamemode:Bool = true;
 	public function new(startingselection:String="reimu",list:Array<String> = null,customavatar:Bool=false) 
 	{
 		super();
@@ -176,11 +177,11 @@ class CharacterSelect extends Sprite
 				dsc = dsc + AL[c].description+"\n";
 				c++;
 			}*/
-			dsc = PlayerAbilityManager.getdescriptionfromlist(AL);
-			if (!Main._this.gamemode.abilitiesenabled)
+			dsc = PlayerAbilityManager.getdescriptionfromlist(AL,checkgamemode);
+			/*if (!Main._this.gamemode.abilitiesenabled && checkgamemode)
 			{
 				dsc = "(Abilities are disabled.)";
-			}
+			}*/
 			var tmp = new TextFormat();
 			tmp.font = "Arial";
 			tmp.size = 22;

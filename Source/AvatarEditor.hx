@@ -922,6 +922,7 @@ class AvatarEditor extends Sprite
 				);
 		P.addChild(B);
 		soulselect = new CharacterSelect(soul);
+		soulselect.checkgamemode = false;
 		soulselect.ButtonDisplay.x = 130;
 		//soulselect.y = -30;
 		//soulselect.x = 100;

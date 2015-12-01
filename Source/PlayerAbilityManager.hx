@@ -143,11 +143,11 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.NoAbility(null), names:["red_fairy","none","customavatar"] };
 		L[L.length] = { type:new abilities.BasicShot(null), names:["benben", "yatsuhashi", "hecatia"] };
 	}
-	public function getdescription():String
+	public function getdescription(checkgamemode:Bool=true):String
 	{
-		return getdescriptionfromlist(abilities);
+		return getdescriptionfromlist(abilities,checkgamemode);
 	}
-	public static function getdescriptionfromlist(PA:Array<PlayerAbility>):String
+	public static function getdescriptionfromlist(PA:Array<PlayerAbility>,checkgamemode:Bool=true):String
 	{
 		var ret = "";
 		var i = 0;
@@ -164,7 +164,7 @@ class PlayerAbilityManager
 			}
 			i++;
 		}
-		if (!Main._this.gamemode.abilitiesenabled)
+		if (!Main._this.gamemode.abilitiesenabled && checkgamemode)
 		{
 			ret = "(Abilities are disabled.)";
 		}

@@ -361,7 +361,7 @@ class ScrollingArena extends ArenaLogic
 				///if (Math.random() < 0.2/* && false*/)
 				if (game.ufoseal < 1)
 				{
-					if (Math.random() < 0.5 && false)
+					if (Math.random() < 0.5)
 					{
 						generatewall();
 					}

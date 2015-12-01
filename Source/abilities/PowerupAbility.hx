@@ -160,7 +160,7 @@ class PowerupAbility extends PlayerAbility
 		player.ability.SetAbilities(true);
 		player.ability.init();
 		
-		var S = player.ability.getdescription();
+		var S = player.ability.getdescription(false);
 		S = S.split(description).join("").split("\n\n").join("\n");
 		if (S != "No ability\n")
 		{
