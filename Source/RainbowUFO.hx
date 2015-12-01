@@ -58,7 +58,7 @@ class RainbowUFO extends Enemy// extends UFO
 		enrageable = false;
 		//filters = FA;
 	}
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		//return super.attack();
 		return false;

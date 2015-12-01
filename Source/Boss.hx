@@ -378,7 +378,7 @@ class Boss extends Enemy
 	}
 	frame++;
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		
 		if (!firingdanmaku)

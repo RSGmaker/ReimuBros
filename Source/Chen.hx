@@ -46,7 +46,7 @@ class Chen extends Enemy
 		subtype = "chen";
 	}
 	
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		//return super.attack();
 		alive = false;
@@ -186,7 +186,7 @@ class Chen extends Enemy
 		alive = false;
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		alive = false;
 		killed = true;

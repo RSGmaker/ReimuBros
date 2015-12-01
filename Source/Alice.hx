@@ -28,7 +28,7 @@ class Alice extends Enemy
 		HP = 1;
 		reward = true;
 	}
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		/*HP--;
 		if (HP > 0)
@@ -184,7 +184,7 @@ class Alice extends Enemy
 	rightshanghai.alive = alive && !killed && rightshanghai.alive;
 	}
 	
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		if (flipped < 1)
 		{

@@ -191,7 +191,7 @@ class Nue extends Enemy
 		game.unlockcharacter("nue");
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		if (disguised)
 		{

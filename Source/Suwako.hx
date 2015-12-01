@@ -51,7 +51,7 @@ class Suwako extends Enemy
 		}*/
 		//super.CustomEvent(data);
 	}
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		//HP--;
 		if (HP > 1)
@@ -276,7 +276,7 @@ class Suwako extends Enemy
 	}
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		if (HP > 1)
 		{

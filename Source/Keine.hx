@@ -23,11 +23,11 @@ class Keine extends Enemy
 		ex = false;
 		pointvalue = 300;
 	}
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		if (!ex)
 		{
-			bump();
+			bump(player);
 			invincibility = 10;
 			Hspeed = 0;
 			return false;
@@ -143,7 +143,7 @@ class Keine extends Enemy
 	}
 	Ldir = dir;
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		if (!ex)
 		{

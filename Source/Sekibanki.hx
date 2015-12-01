@@ -28,7 +28,7 @@ class Sekibanki extends Enemy
 		pointvalue = 400;
 	}
 	
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		HP--;
 		if (HP > 0)
@@ -160,7 +160,7 @@ class Sekibanki extends Enemy
 		O.spinspeed = 8.0 * Ldir;
 		game.AddObject(O);
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		if (HP == 2)
 		{

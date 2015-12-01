@@ -33,7 +33,7 @@ class Marisa extends Enemy
 		HP = 1;
 		pointvalue = 300;
 	}
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		HP--;
 		if (HP > 0)
@@ -196,7 +196,7 @@ class Marisa extends Enemy
 	}
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		rng.seed += rng.twist(rng.seed, 1, 500)[0];
 		timetofire = 200 + (rng.seed % 500);

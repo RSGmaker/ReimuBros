@@ -48,7 +48,7 @@ class Hina extends Enemy
 		this.scaleY = 0.8;
 	}
 	
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		return spinning<1;
 	}
@@ -207,7 +207,7 @@ class Hina extends Enemy
 	}
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		if (spinning > 0)
 		{

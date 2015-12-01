@@ -59,7 +59,7 @@ class Wakasagihime extends Enemy
 		timetofire = 45;
 		//super.CustomEvent(data);
 	}
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		HP--;
 		if (HP > 0)
@@ -275,7 +275,7 @@ class Wakasagihime extends Enemy
 	}
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		//recharge = 100 + rng.quick(400);
 		recharge = 50 + rng.quick(200);

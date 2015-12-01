@@ -404,7 +404,17 @@ class PlayerBullet extends Entity
 					{
 						if (enemy.flipped <= 0)
 						{
-							enemy.bump();
+							if (tossedBy == game.myplayer)
+							{
+								var D:Dynamic = { };
+								D.UID = enemy.UID;
+								D.x = enemy.x;
+								D.y = enemy.y;
+								D.Hspeed = enemy.Hspeed;
+								D.Vspeed = enemy.Vspeed;
+								game.SendEvent("Bump", D);
+							}
+							//enemy.bump();
 							HP--;
 						}
 					}

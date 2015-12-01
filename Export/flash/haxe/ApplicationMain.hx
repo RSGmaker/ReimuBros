@@ -418,6 +418,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/broom.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/bullet0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -891,6 +895,10 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/logo.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/magibullet.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		

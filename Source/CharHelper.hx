@@ -2669,6 +2669,8 @@ addDNA("3.39:Blue Fairy:63:0:185:298:209:46:0:0:0:0:86:F3F3FF", "Blue_Fairy");
 addDNA("3.39:Gold Fairy:63:0:185:176:209:46:0:0:0:0:86:FFFFF3", "Gold_Fairy");
 addDNA("3.39:Green Fairy:63:0:185:270:209:46:0:0:0:0:86:F3FFF3", "Green_Fairy");
 addDNA("3.39:Red Fairy:63:0:185:201:209:46:0:0:0:0:86:FFF3F3", "Red_Fairy");
+//addDNA("3.39:Magi Fairy:63:158:158:238:154:20:0:0:0:0:86:FFF3F3", "Magi_Fairy");
+addDNA("3.39:Magi Fairy:63:158:158:238:154:20:0:0:89:15:86:FFF3F3", "Magi_Fairy");
 
 addDNA("3.39:MoonRabbit:100:130:181:215:120:17:0:0:0:0:51:FCE24E", "MoonRabbit");
 	}
@@ -2993,13 +2995,22 @@ addHair(["Hecatia", 282, 0, 0, 0, 0, "A10000"]);
 		return null;
 	}
 		var i = 0;
+		var items = false;
+		if (name.indexOf("W/Items") > -1)
+		{
+			name = name.split("W/Items").join("");
+			items = true;
+		}
 		name = name.toLowerCase();
 		var ind = Presets[name];
 		var dna = null;
 		if (ind != null)
 		{
 			dna = "dna-" + DNAdata[ind][0];
-			dna = changednapart(dna, 10, "0");
+			if (!items)
+			{
+				dna = changednapart(dna, 10, "0");
+			}
 			return dna;
 		}
 		return null;
@@ -3020,7 +3031,10 @@ addHair(["Hecatia", 282, 0, 0, 0, 0, "A10000"]);
 				dna = "dna-" + DNAdata[i][0];
 				//Version#:Name:Scale:Hat:Hair:Body:Arm:Shoes:Eyes:Mouth:Item:Accessory:Back:this.HairColor
 				//remove items
+				if (str == name)
+				{
 				dna = changednapart(dna, 10, "0");
+				}
 				return dna;
 			}
 			i++;

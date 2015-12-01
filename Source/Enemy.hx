@@ -72,7 +72,7 @@ class Enemy extends Entity
 		return rank;
 	}
 	//damage this enemy, function should return if the enemy should die now.
-	public function attack():Bool
+	public function attack(player:Player):Bool
 	{
 		return invincibility <= 0;
 	}

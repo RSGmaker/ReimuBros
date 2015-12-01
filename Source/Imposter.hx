@@ -294,7 +294,7 @@ class Imposter extends Enemy
 	}
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		if (HP > 0)
 		{

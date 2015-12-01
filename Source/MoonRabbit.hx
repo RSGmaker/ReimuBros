@@ -116,7 +116,7 @@ class MoonRabbit extends Enemy
 	}
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		if (flipped < 1)
 		{

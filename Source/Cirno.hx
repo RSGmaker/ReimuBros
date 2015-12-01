@@ -230,7 +230,7 @@ class Cirno extends Enemy
 			}
 		}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		killed = true;
 		if (ground != null && ground.bonkedby != null && ground.bonkedby.type=="Player")

@@ -64,7 +64,7 @@ class Scarlet extends Enemy
 			HP = 1;
 		}
 	}
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		return !transformed;
 	}
@@ -250,7 +250,7 @@ class Scarlet extends Enemy
 		game.unlockcharacter(who);
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		if (!transformed)
 		{

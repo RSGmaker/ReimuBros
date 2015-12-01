@@ -32,7 +32,7 @@ class Satori extends Enemy
 		pointvalue = 1000;
 	}
 	
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		if (rename == "koishi")
 		{
@@ -226,7 +226,7 @@ class Satori extends Enemy
 		game.unlockcharacter("satori");
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		//Vspeed = -4;
 		if (flipped < 1)

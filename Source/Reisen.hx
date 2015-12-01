@@ -33,7 +33,7 @@ class Reisen extends Enemy
 			mxspd += 0.5;
 			pointvalue += 100;
 	}
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		if (dissappearing)
 		{
@@ -193,7 +193,7 @@ class Reisen extends Enemy
 	}
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		if (dissappearing)
 		{

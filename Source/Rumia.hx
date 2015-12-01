@@ -170,7 +170,7 @@ class Rumia extends Enemy
 		game.unlockcharacter("rumia");
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		if (flipped < 1)
 		{

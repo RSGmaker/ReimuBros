@@ -123,7 +123,7 @@ class Yinyangorb extends Enemy
 	}
 	}
 	
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		alive = false;
 		killed = true;

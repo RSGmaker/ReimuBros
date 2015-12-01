@@ -29,7 +29,7 @@ class Orin extends Enemy
 		pointvalue = 400;
 	}
 	
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		HP--;
 		if (HP > 0)
@@ -206,7 +206,7 @@ class Orin extends Enemy
 	}
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		HP--;
 		if (HP < 1)

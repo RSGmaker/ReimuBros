@@ -27,7 +27,7 @@ class Hecatia extends Enemy
 		pointvalue = 800;
 	}
 	
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		HP--;
 		if (HP > 0)
@@ -145,7 +145,7 @@ class Hecatia extends Enemy
 	}
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		HP--;
 		if (HP < 1)

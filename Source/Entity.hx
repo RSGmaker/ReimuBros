@@ -411,7 +411,7 @@ class Entity extends Sprite
 		}*/
 		catchingup = false;
 	}
-	public function bump() {
+	public function bump(player:Player) {
 		
 	}
 	

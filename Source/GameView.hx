@@ -70,6 +70,7 @@ enum TypeofRound {
 		EventTruck;
 		EventSuwako;
 		EventPointCollecting;
+		EventMagiFairy;
 	}
 class GameView extends Sprite
 {
@@ -2551,14 +2552,14 @@ class GameView extends Sprite
 		}
 		if (evt == "Attack") {
 			var E:Enemy = todyn(EntityFromUID(data));
-			if (E.attack())
+			if (E.attack(P))
 			{
 				ProcessEvent("Kill", ID, data);
 			}
 		}
 		if (evt == "Explodify") {
 			var E:Enemy = todyn(EntityFromUID(data));
-			if (E.attack())
+			if (E.attack(P))
 			{
 				//ProcessEvent("Kill", ID, data);
 				ProcessEvent("Remove", ID, data);
@@ -2990,7 +2991,7 @@ class GameView extends Sprite
 				E.y = data.y;
 				E.Hspeed = data.Hspeed;
 				E.Vspeed = data.Vspeed;
-				E.bump();
+				E.bump(P);
 				if (E != P)
 				{
 					P.ability.onbump(E);
@@ -5379,6 +5380,7 @@ class GameView extends Sprite
 			LE.push( { T:"wakasagihime", C:Wakasagihime } );
 			LE.push( { T:"sekibanki", C:Sekibanki } );
 			LE.push( { T:"alice", C:Alice } );
+			LE.push( { T:"magifairy", C:MagiFairy } );
 			
 			//Items 
 			LE.push( { T:"Point", C:PointItem } );
@@ -5648,7 +5650,14 @@ class GameView extends Sprite
 		}
 		else
 		{
+			if (S != "")
+			{
 			S = S +"\n" + S2;
+			}
+			else
+			{
+				S = S2;
+			}
 		}
 		return S;
 	}
@@ -5658,7 +5667,14 @@ class GameView extends Sprite
 		var M = messages.length;
 		if (displaymessage)
 		{
-			ShowMessage(S);
+			if (gamemode.levelincrement == 5)
+			{
+				ShowMessage(GetLevelTitle(level,false,false));
+			}
+			else
+			{
+				ShowMessage(S);
+			}
 		}
 		var mode = "Solo";
 		if (online)
@@ -6868,7 +6884,7 @@ class GameView extends Sprite
 			//chances per minute(avg)
 			
 			//do obstacles
-			if (totalenemies > 0 && ept>0)
+			if (totalenemies > 0 && ept>0 && Obstacles.length>0)
 			{
 				DoObstacles();
 			}
@@ -7340,6 +7356,7 @@ class GameView extends Sprite
 				if (level > 20 || GameFlags.get(Main.EventRoundsOnly))
 				{
 					E[E.length] = TypeofRound.EventYukari;
+					E[E.length] = TypeofRound.EventMagiFairy;
 				}
 				if (level > 25 || GameFlags.get(Main.EventRoundsOnly))
 				{
@@ -7394,9 +7411,10 @@ class GameView extends Sprite
 		//RoundType = TypeofRound.EventDescending;
 		//RoundType = TypeofRound.EventScrolling;
 		//RoundType = TypeofRound.EventExplosive;
-		
+		//RoundType = TypeofRound.EventMagiFairy;
 		
 		var Ev:Array<TypeofRound> = new Array<TypeofRound>();
+		
 		if (GameFlags.get(Main.TableEvent))
 		{
 			Ev[Ev.length] = TypeofRound.EventTable;
@@ -7452,6 +7470,14 @@ class GameView extends Sprite
 		if (GameFlags.get(Main.Explosive))
 		{
 			Ev[Ev.length] = TypeofRound.EventExplosive;
+		}
+		if (GameFlags.get(Main.YuukaEvent))
+		{
+			Ev[Ev.length] = TypeofRound.EventYuuka;
+		}
+		if (GameFlags.get(Main.SuwakoEvent))
+		{
+			Ev[Ev.length] = TypeofRound.EventSuwako;
 		}
 		if (Ev.length > 0)
 		{

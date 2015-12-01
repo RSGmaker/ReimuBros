@@ -35,7 +35,7 @@ class Utsuho extends Enemy
 		rename = "utsuho";
 		//rename = "okuu";
 	}
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		HP--;
 		if (HP > 0)
@@ -182,7 +182,7 @@ class Utsuho extends Enemy
 	}
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		rng.seed += rng.twist(rng.seed, 1, 700)[0];
 		timetofire = 250 + (rng.seed % 700);

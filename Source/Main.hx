@@ -152,6 +152,8 @@ class Main extends Sprite {
 	public static inline var ParseeEvent = 32;
 	public static inline var Explosive = 33;
 	public static inline var PointCollecting = 34;
+	public static inline var YuukaEvent = 35;
+	public static inline var SuwakoEvent = 36;
 	//cheatcodes are stored as md5 hashcodes, so cheatcodes cannot be obtained via hacking, you can press f9 in the character select to convert your player name to an md5 hash requires in game debug mode (Main.DEBUG=true)
 	//75efc70c0e990c49b8ee4fbdaca89dae = firecirno
 	//6718c4714daa73a63e1e4ea54757449c = upupdowndownleftrightleftrightbastart
@@ -187,7 +189,9 @@ class Main extends Sprite {
 	//c357bef743f927a4baa4806f19868c8f = parseebros
 	//170fa0be197479f2e10280f483300cca = /explosive
 	//7a16c4a81660276b789cd58d6666315f = /pointcollection
-	public static var codes:Array<String> = ["75efc70c0e990c49b8ee4fbdaca89dae", "6718c4714daa73a63e1e4ea54757449c", "9e6122001ea0464018c634c285233853", "7d51b214e0069ac6361aaaf2034279a6", "2b59c79dfe67f2a5d0f17c646ae894ed", "fa55036379520473353e15548f2a388e", "69034dbf1b3882954b3a9b8bf9686d1c","c16404177908ade1a1f1b0e3f8835ec9","6170e8e40fdf20f6fbeefd88815a2086","525afc6a26124022359a9ad101e71e99","5aed71982de151ff05492c9babb533ea","45c48cce2e2d7fbdea1afc51c7c6ad26","1c0108249de204153f4e296913fcacea","09e1ca57cc1c4e73bd7fc9f5642883db","f9df7933994ea2e532cc30a842d36766","151115624f4a47252d316c30d1ccbced","4b54a629dbc0c68ab8312740ae3d1e84","b32092f7b9e04c12abb373a257ba16fe","fda28399f82b488a33807573a2d670c5","1b9b7d20ce44ad2f880f677deefd711b","0c22948e07710faa0ad65b83053d77e0","0f6a8fa3f3985858ebc1debc5ce61f7e","c022be00cb710d03d98d67fb6cbf6d7a","42fa0e8cfd0cb2102c7d23ebd7ada199","2f4581b3456a9c99e51b0237fe9bde0a","5e19e32cb6c2a71bec4fed4135f2785f","1a723cfc8a28af39a97b5c0f497e52c4","b330c71bd2c3ca1f4c6ecea06838ce2f","0d32665af25beb996ee1c2b6b33f4d74","1dceddadb5d8f6174e0a829cdeb56b35","e77933862aef3c8fd9a60cffde17344e","c357bef743f927a4baa4806f19868c8f","170fa0be197479f2e10280f483300cca","7a16c4a81660276b789cd58d6666315f"];
+	//313c425d9c08cc21fa8d4f00edb1dae8 = mastersparksolveseverything
+	//9ba9243cdef27edf9c8fcd2c729c40c6 = cheep rocks
+	public static var codes:Array<String> = ["75efc70c0e990c49b8ee4fbdaca89dae", "6718c4714daa73a63e1e4ea54757449c", "9e6122001ea0464018c634c285233853", "7d51b214e0069ac6361aaaf2034279a6", "2b59c79dfe67f2a5d0f17c646ae894ed", "fa55036379520473353e15548f2a388e", "69034dbf1b3882954b3a9b8bf9686d1c","c16404177908ade1a1f1b0e3f8835ec9","6170e8e40fdf20f6fbeefd88815a2086","525afc6a26124022359a9ad101e71e99","5aed71982de151ff05492c9babb533ea","45c48cce2e2d7fbdea1afc51c7c6ad26","1c0108249de204153f4e296913fcacea","09e1ca57cc1c4e73bd7fc9f5642883db","f9df7933994ea2e532cc30a842d36766","151115624f4a47252d316c30d1ccbced","4b54a629dbc0c68ab8312740ae3d1e84","b32092f7b9e04c12abb373a257ba16fe","fda28399f82b488a33807573a2d670c5","1b9b7d20ce44ad2f880f677deefd711b","0c22948e07710faa0ad65b83053d77e0","0f6a8fa3f3985858ebc1debc5ce61f7e","c022be00cb710d03d98d67fb6cbf6d7a","42fa0e8cfd0cb2102c7d23ebd7ada199","2f4581b3456a9c99e51b0237fe9bde0a","5e19e32cb6c2a71bec4fed4135f2785f","1a723cfc8a28af39a97b5c0f497e52c4","b330c71bd2c3ca1f4c6ecea06838ce2f","0d32665af25beb996ee1c2b6b33f4d74","1dceddadb5d8f6174e0a829cdeb56b35","e77933862aef3c8fd9a60cffde17344e","c357bef743f927a4baa4806f19868c8f","170fa0be197479f2e10280f483300cca","7a16c4a81660276b789cd58d6666315f","313c425d9c08cc21fa8d4f00edb1dae8","9ba9243cdef27edf9c8fcd2c729c40c6"];
 	public var GameFlags:FlagManager;
 	public var CheatFlags:FlagManager;
 	public function new () {

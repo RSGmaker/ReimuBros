@@ -43,7 +43,7 @@ class UFO extends Enemy
 		movement = -2;
 	}
 	
-	override public function attack():Bool 
+	override public function attack(player:Player):Bool
 	{
 		//return super.attack();
 		fuel = 0;
@@ -201,7 +201,7 @@ class UFO extends Enemy
 			}
 	}
 	}
-	public override function bump()
+	public override function bump(player:Player)
 	{
 		alive = false;
 		killed = true;
