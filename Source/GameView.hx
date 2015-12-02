@@ -5146,21 +5146,35 @@ class GameView extends Sprite
 				//var B = new BossParsee();
 				//var B = new BossMurasa();
 				
+				var E:Enemy = null;
+				if (Math.random() < 0.3)
+				{
+					E = new Aya();
+				}
+				else if (Math.random() < 0.4)
+				{
+					E = new Youmu();
+				}
+				else
+				{
+					E = new Reimu();
+				}
 				//var B = new Meiling();
 				//var B = new Marisa();
-				/*var B = new Reimu();
-				AddEnemy(B);*/
+				//var B = new Youmu();
+				//var B = new Reimu();
+				AddEnemy(E);
 				//var B:PowerupItem = new PowerupItem();
 				//B.power = "reimu";
 				//var B = new Roukanken();
 				//var B = new Bow();
 				//var B = new MiniHakkero();
-				var B = new CameraItem();
+				//var B = new CameraItem();
 				//var B = new SpellCardItem();
 				
-				B.x = 400;
+				/*B.x = 400;
 				B.Ldir = 0;
-				AddEntityItem(B);
+				AddEntityItem(B);*/
 				//AddObject(B);
 			}
 		case Keyboard.F8:

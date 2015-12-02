@@ -278,6 +278,11 @@ class CarryItem extends EntityItem
 				centering = (holder.width / 2) - (width / 2);
 				LWidth = holder.width;
 			}
+			else if (holder.width != LWidth)
+			{
+				centering = (holder.width / 2) - (width / 2);
+				LWidth = holder.width;
+			}
 			despawntime = maxdespawntime;
 			collectable = false;
 			if (holder.alive && game.entities.indexOf(holder) >= 0 && (/*holder.type != "Enemy" || */(!holder.killed)))

@@ -19,7 +19,8 @@ class YinYangOrbItem extends CarryItem
 		
 		itemtype = 2;
 		Dropable = false;
-		OffsetX = 12;
+		//OffsetX = 12;
+		OffsetX = 10;
 		OffsetY = 23;
 		maxcooldown = 60;
 		

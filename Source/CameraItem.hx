@@ -13,7 +13,8 @@ class CameraItem extends CarryItem
 		removeonlevelend = false;
 		interactable = true;
 		Dropable = false;
-		OffsetX = 12;
+		//OffsetX = 12;
+		OffsetX = 10;
 		OffsetY = 37;
 		maxuses = 5;
 		itemtype = 2;
