@@ -91,7 +91,8 @@ class Imposter extends Enemy
 				}
 			}
 			have = Main._this.savedata.data.unlock[unlock];
-			if (!have && alternate)
+			//if (!have && alternate)
+			if (have && alternate)
 			{
 				have = Main._this.savedata.data.alts[unlock];
 			}
