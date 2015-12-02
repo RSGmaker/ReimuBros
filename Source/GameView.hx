@@ -435,7 +435,7 @@ class GameView extends Sprite
 						}
 						i++;
 					}*/
-					ShowMessage("Unlocked " + SS + "!");
+					ShowMessage("Unlocked " + SS + "☆!");
 					//ShowMessage("Unlocked " + name.charAt(0).toUpperCase() + name.substr(1) + "☆!");
 					moneyreward = false;
 				}
@@ -443,7 +443,7 @@ class GameView extends Sprite
 			if (!savedata.data.unlock[i])
 			{
 				savedata.data.unlock[i] = true;
-				var SS = (name.charAt(0).toUpperCase() + name.substr(1)).split("ALT").join("☆");
+				/*var SS = (name.charAt(0).toUpperCase() + name.substr(1)).split("ALT").join("☆");
 				var SA = SS.split("_");
 				var i = 0;
 				SS = "";
@@ -460,7 +460,8 @@ class GameView extends Sprite
 						SS = SS + " " + str;
 					}
 					i++;
-				}
+				}*/
+				var SS = Player.getname(name);
 				ShowMessage("Unlocked " + SS + "!");
 				//ShowMessage("Unlocked " + name.charAt(0).toUpperCase() + name.substr(1) + "!");
 				moneyreward = false;
@@ -470,6 +471,8 @@ class GameView extends Sprite
 		{
 			awardmoney(1);
 		}
+		//flushing the savedata causes lag, so using it here may not be the best idea.
+		//savedata.flush();
 	}
 	public function awardmoney(amount:Int)
 	{
@@ -2023,7 +2026,7 @@ class GameView extends Sprite
 			}
 		if (musicchannel == null || !myplayer.flags.get(Player.MusicSelector))
 		{
-			if (currentstagelevel < 4 && GameFlags.get(Main.Adventure))
+			if (currentstagelevel < 4/* && GameFlags.get(Main.Adventure)*/ && level>20)
 			{
 				musicchannel = SoundManager.PlayMusic("adv" + A[L % 6]);
 			}

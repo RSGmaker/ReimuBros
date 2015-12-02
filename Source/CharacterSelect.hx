@@ -420,8 +420,11 @@ class CharacterSelect extends Sprite
 		buttonSprite.textfield.visible = false;
 		buttonSprite.button.alpha = 0.65;
 		var ani = Main._this.AL.GetAnimation(text + "ALT");
+		//var ind = Player.characters.indexOf(text);
+		var j = Player.characters.indexOf(text);
+		buttonSprite.data.ind = j;
 		
-		if (Main._this.savedata.data.alts[Buttons.length] && ani != null && ani.length>0)
+		if (j>-1 && Main._this.savedata.data.alts[j] && ani != null && ani.length>0)
 		{
 			var TF = new TextField();
 			TF.text = "★";
@@ -445,10 +448,12 @@ class CharacterSelect extends Sprite
 					buttonSprite.setcolors(0xFF0000, 0xFFFFFF, 1);
 					//var S = gettext(Buttons.indexOf(D)).toLowerCase();
 					var ind = Buttons.indexOf(buttonSprite);
+					var j = buttonSprite.data.ind;
+					//var j = Player.characters.indexOf(text);
 					if (buttonSprite.textfield.text == selected)
 					{
 						var A = Main._this.AL.GetAnimation(selected + "ALT");
-						if (A != null && A.length > 0 && (Main._this.savedata.data.alts[ind] || ind>=Player.characters.length))
+						if (A != null && A.length > 0 && ((j>-1 && Main._this.savedata.data.alts[j]) || ind>=Player.characters.length))
 						{
 							selected = selected + "ALT";
 							buttonSprite.setcolors(0xFF00FF, 0x0000FF, 1);
@@ -459,7 +464,7 @@ class CharacterSelect extends Sprite
 					{
 						selected = buttonSprite.textfield.text;
 						var A = Main._this.AL.GetAnimation(selected + "ALT");
-						if (A != null && A.length > 0 && (Main._this.savedata.data.alts[ind] || ind>=Player.characters.length))
+						if (A != null && A.length > 0 && ((j>-1 && Main._this.savedata.data.alts[j]) || ind>=Player.characters.length))
 						{
 							buttonSprite.buttonMode = true;
 						}
