@@ -19,6 +19,8 @@ class Meiling extends Enemy
 	
 	public var speedup:Bool;
 	
+	public var alert:Bool;
+	
 	public function new() 
 	{
 		super("meiling");
@@ -38,6 +40,7 @@ class Meiling extends Enemy
 	{
 		super.CustomEvent(data);
 		speedup = true;
+		alert = true;
 	}
 	
 	public override function increaserank()
@@ -79,7 +82,7 @@ class Meiling extends Enemy
 					{
 						SendCustomEvent(null);
 					}
-					if (!speedup)
+					if (!speedup && !alert)
 			{
 				awake--;
 				if (awake == 0)

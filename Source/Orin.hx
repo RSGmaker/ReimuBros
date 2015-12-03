@@ -67,6 +67,7 @@ class Orin extends Enemy
 				D.UID = UID;
 				game.SendEvent("AttachZombieFairy", D);
 				spawnedfairy = true;
+				HP -= 2;
 			}
 			rewarditem = "Point";
 		}
@@ -192,7 +193,7 @@ class Orin extends Enemy
 				visible = false;
 				if (spawnedfairy)
 				{
-					HP = 2;
+					HP += 2;
 				}
 			}
 		killable = flipped > 0;
