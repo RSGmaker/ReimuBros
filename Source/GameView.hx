@@ -5398,6 +5398,7 @@ class GameView extends Sprite
 			LE.push( { T:"sekibanki", C:Sekibanki } );
 			LE.push( { T:"alice", C:Alice } );
 			LE.push( { T:"magifairy", C:MagiFairy } );
+			LE.push( { T:"Eirin", C:Eirin } );
 			
 			//Items 
 			LE.push( { T:"Point", C:PointItem } );

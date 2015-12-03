@@ -441,6 +441,7 @@ class LevelLogic
 		//AddToArrayMultiple(enemytypes, new Sekibanki(), 500);
 		//AddToArrayMultiple(enemytypes, new Alice(), 500);
 		//AddToArrayMultiple(enemytypes, new MagiFairy(), 500);
+		//AddToArrayMultiple(enemytypes, new Eirin(), 500);
 		//if (RoundType == GameView.TypeofRound.EventNormal || RoundType == GameView.TypeofRound.EventRumia || RoundType == GameView.TypeofRound.EventSeija || RoundType == GameView.TypeofRound.EventNue || RoundType == GameView.TypeofRound.EventTable || RoundType == GameView.TypeofRound.EventFireCirno || RoundType == GameView.TypeofRound.EventBalloon || RoundType == GameView.TypeofRound.EventElectricCirno || RoundType == GameView.TypeofRound.EventNoWrap || RoundType == GameView.TypeofRound.EventSanaeBoss || RoundType == GameView.TypeofRound.EventParseeBoss || RoundType == GameView.TypeofRound.EventMurasaBoss || RoundType == GameView.TypeofRound.EventScrolling || RoundType == GameView.TypeofRound.EventDescending || RoundType == GameView.TypeofRound.EventYuuka || RoundType == GameView.TypeofRound.EventExplosive || RoundType == GameView.TypeofRound.EventTruck)
 		//if (["EventNormal","EventRumia","EventSeija","EventNue","EventTable","EventFireCirno","EventBalloon","EventElectricCirno","EventNoWrap","EventSanaeBoss","EventParseeBoss","EventMurasaBoss","EventScrolling","EventDescending","EventYuuka","EventExplosive","EventTruck"].indexOf(RoundType.getName())>-1)
 		if ([GameView.TypeofRound.EventNormal,GameView.TypeofRound.EventRumia,GameView.TypeofRound.EventSeija,GameView.TypeofRound.EventNue,GameView.TypeofRound.EventTable,GameView.TypeofRound.EventFireCirno,GameView.TypeofRound.EventBalloon,GameView.TypeofRound.EventElectricCirno,GameView.TypeofRound.EventNoWrap,GameView.TypeofRound.EventSanaeBoss,GameView.TypeofRound.EventParseeBoss,GameView.TypeofRound.EventMurasaBoss,GameView.TypeofRound.EventScrolling,GameView.TypeofRound.EventDescending,GameView.TypeofRound.EventYuuka,GameView.TypeofRound.EventExplosive,GameView.TypeofRound.EventTruck,GameView.TypeofRound.EventSuwako,GameView.TypeofRound.EventPointCollecting,GameView.TypeofRound.EventMagiFairy].indexOf(RoundType)>-1)
@@ -499,6 +500,7 @@ class LevelLogic
 										types[types.length] = CreateArrayOfMultiple(new Tewi(), 34);
 										types[types.length] = CreateArrayOfMultiple(new Reisen(), 15);
 									}
+									types[types.length] = CreateArrayOfMultiple(new Eirin(), 5);
 									if (level > 30)
 									{
 										types[types.length] = CreateArrayOfMultiple(new Marisa(), 5);
