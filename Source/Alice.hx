@@ -94,14 +94,13 @@ class Alice extends Enemy
 		{
 			spr = spr + "F";
 		}
+		var Y = (y + height) - leftshanghai.height;
 		leftshanghai.x = x - 30;
-		leftshanghai.y = y + 14;
+		leftshanghai.y = Y;
 		leftshanghai.ChangeAnimation(spr);
-		//leftshanghai.Ldir = Ldir;
 		
 		rightshanghai.x = x + 30+20;
-		rightshanghai.y = y + 14;
-		//rightshanghai.Ldir = Ldir;
+		rightshanghai.y = Y;
 		rightshanghai.ChangeAnimation(spr);
 		if (!killed)
 		{
