@@ -137,6 +137,8 @@ class Player extends Entity
 	"sara", "louise"/*,"alice"*/, "yuki", "mai", "ayana", "yumeko", "shinki", "mika", "senkou",
 	
 	"red_fairy"];
+	//banned characters.
+	public static var cheatcharacters:Array<String> = ["vivit"];
 	//yukari:idk maybe a rare event that has something to do with the chen gaps.
 	//rumia rare round event where rumias spawn(they have a large darkness around them making it hard to see, beating the round unlocks rumia for all players)
 	//seija rare event only seijas spawn and the view flips during the round.
@@ -361,7 +363,7 @@ class Player extends Entity
 			charactersoul = "";
 		}
 		flags = new FlagManager(1);
-		
+		superpower = false;
 		
 		maxcooldown = 300;
 		cooldown = 0;

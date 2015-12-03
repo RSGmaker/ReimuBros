@@ -52,7 +52,7 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.StarBulletG(null), names:["sanae"] };
 		L[L.length] = { type:new abilities.StarBulletY(null), names:["marisa","mima"] };
 		L[L.length] = { type:new abilities.EnemyEater(null), names:["rumia"] };
-		L[L.length] = { type:new abilities.Teleporter(null), names:["komachi"] };
+		L[L.length] = { type:new abilities.Teleporter(null), names:["komachi","vivit"] };
 		L[L.length] = { type:new abilities.FriendlyUFO(null), names:["nue"] };
 		L[L.length] = { type:new abilities.LightDashAttack(null), names:["wriggle"] };
 		L[L.length] = { type:new abilities.HeavyBonk(null), names:["yuugi"] };
@@ -138,6 +138,7 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.EnergyWave(null), names:["kotohime"] };
 		L[L.length] = { type:new abilities.SummonBlueBird(null), names:["kana"] };
 		L[L.length] = { type:new abilities.EmotionController(null), names:["kokoro"] };
+		L[L.length] = { type:new abilities.NoCooldown(null), names:["vivit"] };
 		
 		
 		L[L.length] = { type:new abilities.NoAbility(null), names:["red_fairy","none","customavatar"] };

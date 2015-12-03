@@ -717,6 +717,31 @@ class CharacterSelectView extends Sprite
 			}
 			T = select.selectedcharacter.getTextFormat();
 		}
+		if (status == "Error:Character")
+		{
+			select.selectedcharacter.text = "You cannot enter a public room with cheat characters!\nUse a uniquely named custom room instead!";
+			select.selectedcharacter.textColor = 0xFF0000;
+			
+			errortime++;
+			if (errortime > 15)
+			{
+				status = "";
+				errortime = 0;
+				CustomRoom.backgroundColor = 0xFFFFFF;
+			}
+			else
+			{
+				if (errortime & 2 != 0)
+				{
+					CustomRoom.backgroundColor = 0xFF0000;
+				}
+				else
+				{
+					CustomRoom.backgroundColor = 0xFFFFFF;
+				}
+			}
+			T = select.selectedcharacter.getTextFormat();
+		}
 		
 		select.selectedcharacter.setTextFormat(T);
 		//backlayer stuff
