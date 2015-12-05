@@ -50,7 +50,9 @@ class SanaeStickItem extends CarryItem
 	override public function Collect(player:Player) 
 	{
 		super.Collect(player);
-		OffsetX = 12;
+		//OffsetX = 12;
+		//OffsetX = 32;
+		OffsetX = 27;
 		OffsetY = 48;
 	}
 	override public function update():Void 
@@ -58,7 +60,8 @@ class SanaeStickItem extends CarryItem
 		super.update();
 		if (holder != null && holder.type == "Player")
 		{
-			OffsetY = holder.height - 20;
+			//OffsetY = holder.height - 20;
+			OffsetY = holder.height - 27;
 		}
 	}
 }
