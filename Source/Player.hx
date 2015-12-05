@@ -78,6 +78,8 @@ class Player extends Entity
 	
 	public var airjump:Bool = false;
 	
+	public var charge:Int;
+	
 	public function ChangeExpression(feature:String, value:String,time:Int=60,reset:Bool=false,emotion:Bool=true):Bool
 	{
 		//if ((charname == "kokoro" || charactersoul == "kokoro") && emotion)
@@ -688,6 +690,16 @@ class Player extends Entity
 	public override function update()
 	{
 		frames++;
+		if (game.online && playername == "[Hoster]")
+		{
+			//y = -1000;ma
+			y = 500;
+			x = 400;
+			invincibility = 900;
+			visible = false;
+			killed = true;
+			return;
+		}
 		if (hide)
 		{
 			visible = false;
@@ -785,6 +797,40 @@ class Player extends Entity
 			}
 
 			domovement();
+			//if (!superpower && cooldown>1 && charge>0 && ability.hasactiveability())
+			if (!superpower && cooldown>1 && charge>0 && maxcooldown>300)
+			{
+				/*if (charge > cooldown)
+				{
+					charge -= cooldown;
+					cooldown = 1;
+				}
+				else
+				{
+					cooldown -= charge;
+					charge = 0;
+				}*/
+				var C = Std.int(Math.min(Math.min(charge, 100),cooldown));
+				if (C >= cooldown)
+				{
+					charge -= cooldown;
+					cooldown = 1;
+				}
+				else
+				{
+					cooldown -= C;
+					//charge = 0;
+					charge -= C;
+				}
+			}
+			else
+			{
+				if (charge > 0 && !(maxcooldown>300))
+				{
+					score += Std.int(Std.int(charge * 0.01)*10);
+					charge = 0;
+				}
+			}
 			ability.onframe();
 			if (equipment != null && !equipment.alive)
 			{

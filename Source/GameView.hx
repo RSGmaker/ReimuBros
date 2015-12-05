@@ -2026,7 +2026,7 @@ class GameView extends Sprite
 			}
 		if (musicchannel == null || !myplayer.flags.get(Player.MusicSelector))
 		{
-			if (currentstagelevel < 4/* && GameFlags.get(Main.Adventure)*/ && level>20)
+			if (currentstagelevel < 4/* && GameFlags.get(Main.Adventure)*/ && (level>20 || GameFlags.get(Main.Adventure)))
 			{
 				musicchannel = SoundManager.PlayMusic("adv" + A[L % 6]);
 			}
@@ -2672,7 +2672,7 @@ class GameView extends Sprite
 				{
 					E.catchup();
 				}
-				if (P != null && evt == "Kill")
+				if (P != null && (evt == "Kill" || evt == "Obliterate"))
 				{
 					if (E.type == "Enemy")
 					{
@@ -2851,7 +2851,8 @@ class GameView extends Sprite
 				if (T == 1)
 				{
 					awardmoney((rank + 1) * 3);
-					Main._this.savedata.data.shop_ticks = Main._this.savedata.data.shop_ticks + 2;
+					//Main._this.savedata.data.shop_ticks = Main._this.savedata.data.shop_ticks + 2;
+					Main._this.savedata.data.shop_ticks = Main._this.savedata.data.shop_ticks + 3;
 				}
 			}
 			if (myplayer.score > HighScore && !Main._this.cheating/* && GameFlags.getactiveflags().length==0*/)
@@ -5142,6 +5143,8 @@ class GameView extends Sprite
 				ept = 0;
 				rept = 0;
 				//SendYuuka();
+				if (false)
+				{
 				//var B = new BossCirno();
 				//var B = new BossYukari();
 				
@@ -5149,7 +5152,7 @@ class GameView extends Sprite
 				//var B = new BossParsee();
 				//var B = new BossMurasa();
 				
-				var E:Enemy = null;
+				/*var E:Enemy = null;
 				if (Math.random() < 0.3)
 				{
 					E = new Aya();
@@ -5166,18 +5169,23 @@ class GameView extends Sprite
 				//var B = new Marisa();
 				//var B = new Youmu();
 				//var B = new Reimu();
-				AddEnemy(E);
+				AddEnemy(E);*/
+				}
+				else 
+				{
 				//var B:PowerupItem = new PowerupItem();
 				//B.power = "reimu";
 				//var B = new Roukanken();
+				var B = new SanaeStickItem();
 				//var B = new Bow();
 				//var B = new MiniHakkero();
 				//var B = new CameraItem();
 				//var B = new SpellCardItem();
 				
-				/*B.x = 400;
+				B.x = 400;
 				B.Ldir = 0;
-				AddEntityItem(B);*/
+				AddEntityItem(B);
+				}
 				//AddObject(B);
 			}
 		case Keyboard.F8:
@@ -5422,6 +5430,7 @@ class GameView extends Sprite
 			LE.push( { T:"UFOItem", C:UFOItem } );
 			LE.push( { T:"Bomb", C:BombItem } );
 			LE.push( { T:"MiniBomb", C:MiniBombItem } );
+			LE.push( { T:"Power", C:PowerItem } );
 			var T:String = D.type;
 			T = T.toLowerCase();
 			var i = 0;
@@ -5871,9 +5880,9 @@ class GameView extends Sprite
 		{
 			ZaWarudo.visible = false;
 		}
-		var currentTime = Timer.stamp ();
+		/*var currentTime = Timer.stamp ();
 		var T = currentTime - ltime;
-		missingTime += T;
+		missingTime += T;*/
 		TF.blendMode = openfl.display.BlendMode.INVERT;
 		if (online)
 		{
@@ -5971,10 +5980,10 @@ class GameView extends Sprite
 				CTF.visible = false;
 			}
 		}
-		if (missingTime > 3 /* && !online*/)
+		/*if (missingTime > 3)
 		{
 			missingTime = 0.041;
-		}
+		}*/
 		/*if (missingTime > 0.04)
 		{
 			gamestage.visible = false;
@@ -6237,7 +6246,7 @@ class GameView extends Sprite
 		addChild(BGCRight);
 		addChild(Dpad);
 		addChild(colorflash);*/
-		ltime = currentTime;
+		/*ltime = currentTime;*/
 	}
 	public function LoseFocus() {
 		if (!online && !paused)
@@ -6370,10 +6379,10 @@ class GameView extends Sprite
 		}
 	}
 	private function updategame (event:Event):Void {
-		if (missingTime < 0.01)
+		/*if (missingTime < 0.01)
 		{
 			return;
-		}
+		}*/
 		if (Background.alpha < 1)
 		{
 			Background.alpha += 0.03;
@@ -6772,6 +6781,7 @@ class GameView extends Sprite
 							var D:Dynamic = { };
 							
 							D.type = "Point";
+							
 							if (EE.rewarditem != null)
 							{
 								//D.type = EE.rewarditem;
@@ -6788,7 +6798,7 @@ class GameView extends Sprite
 								D.x = -16;
 								D.Ldir = 1;
 							}
-							points++;
+							
 							var max = 12;
 							if (online)
 							{
@@ -6796,11 +6806,19 @@ class GameView extends Sprite
 							}
 							//if (Math.random() < 0.12/* || true*/)
 							//if (Math.random() < 0.07/* || true*/)
+							if (D.type == "Point")
+							{
+								if (Math.random() < 0.03)
+							{
+								D.type = "Power";
+							}
+							points++;
 							if (points>=max && totalenemies > 3 && gamemode.ufoitemsenabled)
 							{
 								points -= max;
 								D.type = "UFOItem";
 								D.x = 800 * Math.random();
+							}
 							}
 							D.y = -100;
 							SendEvent("SpawnItem", D);

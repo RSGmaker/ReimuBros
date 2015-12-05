@@ -182,6 +182,20 @@ class PlayerAbilityManager
 			i++;
 		}
 	}
+	public function hasactiveability():Bool
+	{
+		var i = 0;
+		var ret = false;
+		while (i < abilities.length)
+		{
+			if (abilities[i].maxcooldown > 300)
+			{
+				ret = true;
+			}
+			i++;
+		}
+		return ret;
+	}
 	public function onbeginframe()
 	{
 		var i = 0;
