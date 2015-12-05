@@ -291,7 +291,7 @@ class PlayerBullet extends Entity
 		LY = y;
 		if (allowwrap)
 		{
-			if (x < -width)
+			if (x < -width && (!wrapdrain || HP>0))
 		{
 			x += 800 + width;
 			if (wrapdrain)
@@ -299,7 +299,7 @@ class PlayerBullet extends Entity
 				HP--;
 			}
 		}
-		if (x > 800+width)
+		if (x > 800+width && (!wrapdrain || HP>0))
 		{
 			x -= 800 + width + width;
 			if (wrapdrain)
