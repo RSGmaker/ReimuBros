@@ -62,7 +62,7 @@ class GameMode
 		var G:GameMode = new GameMode();
 		G.name = "Classic";
 		G.fullname = "Classic Mode";
-		G.description = "Clear levels by defeating enemies.\nHit blocks with enemies on top of them to flip them over,\ntouching a flipped over enemy defeats them.";
+		G.description = "Clear levels by defeating enemies.\nHit blocks with enemies on top of them to flip them over;\ntouching a flipped-over enemy defeats them.";
 		G.preunlocked = true;
 		G.reward = 30;
 		G.rewardrequirement = 30;
@@ -80,7 +80,7 @@ class GameMode
 		G.rewardrequirement = 20;
 		G.unlock = "AllStar";
 		//G.description = "Travel through Gensokyo.\nCharacter abilities are replaced with powerup items.";
-		G.description = "Levels aren't stationary as you're used to in this mode,\nbe careful there are many traps and enemy movement can be tricky.\nYou don't have standard abilities in this mode, instead you can look for powerup items which are found in special blocks.";
+		G.description = "Levels aren't stationary as you're used to in this mode.\nYou also don't have standard abilities in this mode. Instead, you can look for powerupas which are found in special blocks.";
 		M.push(G);
 		
 		G = new GameMode();
@@ -94,7 +94,7 @@ class GameMode
 		G.cancontinue = false;
 		G.canlivesspawn = false;
 		//G.hidden = true;
-		G.description = "There are no lives in this mode.\nYou can switch to characters unlocked in this play session.\nLosing a life means losing a character.\nRun out of characters and it's game over.\nFurthermore, continues are not available.";
+		G.description = "There are no lives in this mode.\nYou can switch to characters unlocked in this play session.\nLosing a life means losing a character.\nIf you run out of characters, it's game over.";
 		M.push(G);
 		
 		//challenges
@@ -112,7 +112,7 @@ class GameMode
 		G.level = 35;
 		G.levelincrement = 5;
 		G.cancontinue = false;
-		G.description = "Difficulty ramps up quickly in this mode.\nEnemy bullets are everywhere in this mode.";
+		G.description = "Difficulty ramps up quickly in this mode.";
 		M.push(G);
 		
 		G = new GameMode();
@@ -161,7 +161,7 @@ class GameMode
 		//G.description = "In order to progress you must collect point items.\nReimus are known for stealing point items,\nwatch out as they will reduce your progress.\ngetting 100% clears the level, whilst 0% results in a game over.";
 		//G.description = "In order to progress you must collect items.\nReimus are known for stealing point items,\nwatch out as they will reduce your progress.\nwatch out as enemies will spawn without limit,\nand getting a progress of 0% results in a game over.";
 		//G.description = "In order to progress you must collect items.\nReimus spawn from below to get your point items,\nif they take any you'll be penalized on your progress.\nwatch out as enemies will spawn without limit,\nand getting a progress of 0% results in a game over.";
-		G.description = "In order to progress you must collect items.\nReimus spawn from below, you're penalized if they collect point items.\nEnemies spawn infinitely, reaching a progress of 0% results in a game over.\nBut you have infinite lives and Pow Block uses.";
+		G.description = "You must collect items in order to progress.\nReimus spawn from below, and you're penalized if they collect point items.\nEnemies spawn infinitely, reaching a progress of 0% results in a game over.\nHowever, you have infinite lives and POW Block uses.";
 		M.push(G);
 		
 		G = new GameMode();
@@ -180,7 +180,7 @@ class GameMode
 		G.levelincrement = 5;
 		G.cancontinue = false;
 		//G.description = "Every level is a boss event.\nSurvive as many as you can.";
-		G.description = "Every level is a boss.\nNormally bosses have plenty of myons and 1ups to take advantage of...\nnot in this mode however.\nSurvive as best you can.";
+		G.description = "Every level is a boss.\nResources are scarce.\nSurvive as best you can.";
 		M.push(G);
 		
 		G = new GameMode();
@@ -198,7 +198,7 @@ class GameMode
 		G.levelselect = false;
 		G.level = 56;
 		G.cancontinue = false;
-		G.description = "In this mode you have to beat each level while protecting a toy truck.";
+		G.description = "Protect the truck.";
 		M.push(G);
 		
 		
@@ -288,7 +288,7 @@ class GameMode
 	{
 		name = "Unknown";
 		fullname = "Unknown Mode";
-		description = "This game mode lacks a description...";
+		description = "Description not found.";
 		category = "";
 		GameFlags = new FlagManager(1);
 		abilitiesenabled = true;
