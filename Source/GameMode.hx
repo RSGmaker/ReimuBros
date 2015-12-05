@@ -80,7 +80,7 @@ class GameMode
 		G.rewardrequirement = 20;
 		G.unlock = "AllStar";
 		//G.description = "Travel through Gensokyo.\nCharacter abilities are replaced with powerup items.";
-		G.description = "Levels aren't stationary as you're used to in this mode.\nYou also don't have standard abilities in this mode. Instead, you can look for powerupas which are found in special blocks.";
+		G.description = "Levels aren't stationary as you're used to in this mode.\nYou also don't have standard abilities in this mode. Instead, you can look for powerups which are found in special blocks.";
 		M.push(G);
 		
 		G = new GameMode();
@@ -161,7 +161,7 @@ class GameMode
 		//G.description = "In order to progress you must collect point items.\nReimus are known for stealing point items,\nwatch out as they will reduce your progress.\ngetting 100% clears the level, whilst 0% results in a game over.";
 		//G.description = "In order to progress you must collect items.\nReimus are known for stealing point items,\nwatch out as they will reduce your progress.\nwatch out as enemies will spawn without limit,\nand getting a progress of 0% results in a game over.";
 		//G.description = "In order to progress you must collect items.\nReimus spawn from below to get your point items,\nif they take any you'll be penalized on your progress.\nwatch out as enemies will spawn without limit,\nand getting a progress of 0% results in a game over.";
-		G.description = "You must collect items in order to progress.\nReimus spawn from below, and you're penalized if they collect point items.\nEnemies spawn infinitely, reaching a progress of 0% results in a game over.\nHowever, you have infinite lives and POW Block uses.";
+		G.description = "You must collect items in order to progress.\nReimus spawn from below, and you're penalized if they collect point items.\nEnemies spawn infinitely, reaching 0% progress results in a game over.\nHowever, you have infinite lives and POW Block uses.";
 		M.push(G);
 		
 		G = new GameMode();
