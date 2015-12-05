@@ -878,17 +878,19 @@ class Main extends Sprite {
 	}
 	//check if the view is done interacting with the player, and show the new view eg; character select->main game(aka gameview)
 	private function this_onEnterFrame (event:Event):Void {
+		if (!(missingTime > 0 || missingTime < 0))
+		{
+			missingTime = 0;
+		}
 		var currentTime = Timer.stamp ();
 		var T = currentTime - ltime;
+		ltime = currentTime;
 		missingTime += T;
 		if (missingTime > 3 /* && !online*/)
 		{
 			missingTime = 0.041;
 		}
-		if (!(missingTime > 0 || missingTime < 0))
-		{
-			missingTime = 0;
-		}
+		
 		var spr:Sprite = null;
 		spr = this;
 		if (game != null)
@@ -912,26 +914,31 @@ class Main extends Sprite {
 		{
 			spr = shopscreen;
 		}*/
-		ltime = currentTime;
+		
 		//visible = false;
-		spr.visible = false;
-		if (missingTime > 0.0334)
+		////spr.visible = false;
+		if (missingTime > 0.033334)
 		{
 			//updategame(event);
 			update(event);
-			missingTime -= 0.0334;
-		}
-		if (missingTime < 0)
-		{
-			missingTime = 0;
+			missingTime -= 0.033334;
 		}
 		
-		while (missingTime > 0.04)
+		//while (missingTime > 0.04)
+		//while (missingTime > 0.033334)
+		//while (missingTime >= 0)
+		//while (missingTime > 0.04)
+		while (missingTime > 0.05)
 		{
 			update(event);
-			missingTime -= 0.0334;
+			missingTime -= 0.033334;
+			//missingTime -= 0.01666667;
 		}
-		spr.visible = true;
+		/*if (missingTime < 0)
+		{
+			missingTime = 0;
+		}*/
+		////spr.visible = true;
 		//visible = true;
 		
 	}
