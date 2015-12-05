@@ -5803,7 +5803,7 @@ class GameView extends Sprite
 				if (gamemode.rewardrequirement > 0)
 				{
 				var TT = new TextField();
-				TT.text = "Levels to objective:" + (gamemode.rewardrequirement - objectiveprogress);
+				TT.text = "Levels to goal: " + (gamemode.rewardrequirement - objectiveprogress);
 				TT.mouseEnabled = false;
 				//TT.blendMode = openfl.display.BlendMode.INVERT;
 				var FA:Array<flash.filters.BitmapFilter> = new Array<flash.filters.BitmapFilter>();

@@ -693,22 +693,22 @@ class TitleScreenView extends Sprite
 					var nm = gamemode.fullname;
 					if (!gamemode.getcleared())
 					{
-						nm = nm + "(not yet cleared)";
+						nm = nm + " (not yet cleared)";
 					}
 					else
 					{
-						nm = nm + "(cleared!)";
+						nm = nm + " (cleared!)";
 					}
 					var D = nm+":\n" + gamemode.description;
 					if (gamemode.reward > 0 && gamemode.rewardrequirement > 0)
 					{
-						D = D + "\n\nObjective:Clear " + gamemode.rewardrequirement + " levels";
+						D = D + "\n\nGoal: Clear " + gamemode.rewardrequirement + " levels";
 						if (gamemode.cancontinue)
 						{
 							//D = D + " without getting a game over";
-							D = D + "(Resets on game over)";
+							D = D + " (Resets on game over)";
 						}
-						D = D + ".\nReward:" + gamemode.reward + "Mon";
+						D = D + ".\nReward: " + gamemode.reward + "Mon";
 					}
 					setdescription(D);
 					setpage(2);
