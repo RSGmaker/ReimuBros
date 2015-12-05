@@ -17,7 +17,7 @@ class OneWeekGirl extends PlayerAbility
 	
 	public var hp:Int;
 	
-	public var shape:Shape;
+	//public var shape:Shape;
 	//(fire)tuesday:increase maxspeed
 	//(water)wednesday:cleans all blocks
 	//(wood)thursday:gives 1 life
@@ -36,20 +36,21 @@ class OneWeekGirl extends PlayerAbility
 	override public function init() 
 	{
 		super.init();
-		player.maxcooldown = 4500;
+		player.maxcooldown = 4000;
+		//player.maxcooldown = 4500;
 		//player.maxcooldown = 200;
 		cooldown = player.maxcooldown;
 		speedboost = -1;
 		hp = 0;
 		player.warncooldown = true;
-		shape = new Shape();
-		game.gamestage.addChild(shape);
+		/*shape = new Shape();
+		game.gamestage.addChild(shape);*/
 		
 	}
 	override public function lostability() 
 	{
 		super.lostability();
-		game.gamestage.removeChild(shape);
+		//game.gamestage.removeChild(shape);
 	}
 	override public function onframe() 
 	{
@@ -84,27 +85,30 @@ class OneWeekGirl extends PlayerAbility
 		}
 		if (player.isme)
 		{
-			shape.x = player.x;
-			shape.y = player.y + player.feetposition;
-			shape.graphics.clear();
+			//shape.x = player.x;
+			//shape.y = player.y + player.feetposition;
+			//shape.graphics.clear();
+			var G = game.gui.graphics;
+			var X = player.x + game.camera.x;
+			var Y = player.y + player.feetposition + game.camera.y;
 			if (speedboost > 0)
 			{
-				shape.graphics.beginFill(0xFF0000, 1);
-				shape.graphics.drawRect(0, 0, speedboost >> 6, 3);
-				shape.graphics.endFill();
+				G.beginFill(0xFF0000, 1);
+				G.drawRect(X, Y, speedboost >> 6, 3);
+				G.endFill();
 			}
 			if (pointboost > 0)
 			{
-				shape.graphics.beginFill(0xAAAAAA, 1);
-				shape.graphics.drawRect(0, 5, pointboost >> 6, 3);
-				shape.graphics.endFill();
+				G.beginFill(0xAAAAAA, 1);
+				G.drawRect(X, Y+5, pointboost >> 6, 3);
+				G.endFill();
 			}
 			var S = hp + player.allmyons.length;
 			if (S > 0)
 			{
-				shape.graphics.beginFill(0xAAAAFF, 1);
-				shape.graphics.drawRect(0, 10, S << 3, 3);
-				shape.graphics.endFill();
+				G.beginFill(0xAAAAFF, 1);
+				G.drawRect(X, Y+10, S << 3, 3);
+				G.endFill();
 			}
 		}
 	}
@@ -144,10 +148,12 @@ class OneWeekGirl extends PlayerAbility
 			}
 			else if (R < 0.42)
 			{
-				player.cooldowntext = "1up(wood)";
-				player.lives++;
-				if (player == game.myplayer)
+				player.cooldowntext = "Life fragments(wood)";
+				//player.lives++;
+				player.lifefragments += 2;
+				if (player == game.myplayer && player.lifefragments>3)
 				{
+					player.lifefragments -= 4;
 					SoundManager.Play("extend");
 				}
 			}
@@ -169,7 +175,8 @@ class OneWeekGirl extends PlayerAbility
 			}
 			else
 			{
-				if (hp < 2)
+				//if (hp < 2)
+				if (hp < 1)
 				{
 					hp++;
 				}
@@ -177,7 +184,8 @@ class OneWeekGirl extends PlayerAbility
 				{
 					cooldown = cooldown >> 1;
 				}
-				player.cooldowntext = "Shields:"+hp+"(moon)";
+				//player.cooldowntext = "Shields:"+hp+"(moon)";
+				player.cooldowntext = "Shield:(moon)";
 			}
 		}
 	}
