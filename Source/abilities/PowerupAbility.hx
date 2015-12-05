@@ -156,6 +156,7 @@ class PowerupAbility extends PlayerAbility
 		this.soul = soul;
 		player.ability.lostability();
 		removeabilities();
+		player.init(player.charname);
 		player.charactersoul = soul;
 		player.ability.SetAbilities(true);
 		player.ability.init();
@@ -168,6 +169,7 @@ class PowerupAbility extends PlayerAbility
 			player.message = S;
 			player.messagetime = 150;
 		}
+		player.cooldown = 1;
 		//player.cooldowntext = S;
 	}
 	override public function oncollect(E:EntityItem) 

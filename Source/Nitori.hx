@@ -10,6 +10,7 @@ class Nitori extends Enemy
 	public var accel:Float;
 	
 	public var mxspd:Float;
+	public var rename:String;
 	public function new() 
 	{
 		super("nitori");
@@ -26,6 +27,7 @@ class Nitori extends Enemy
 		reward = true;
 		rewarditem = "Mini1up";
 		alpha = 0.12;
+		rename = "nitori";
 	}
 	public override function increaserank()
 	{
@@ -41,6 +43,11 @@ class Nitori extends Enemy
 	if (!started)
 		{
 			started = true;
+			if (UID < 0.2)
+			{
+				rename = "sunny_milk";
+				pointvalue += 500;
+			}
 		}
 		if (!killed)
 		{
