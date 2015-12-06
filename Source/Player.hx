@@ -79,6 +79,7 @@ class Player extends Entity
 	public var airjump:Bool = false;
 	
 	public var charge:Int;
+	public var maxcharge:Int=3000;
 	
 	public function ChangeExpression(feature:String, value:String,time:Int=60,reset:Bool=false,emotion:Bool=true):Bool
 	{

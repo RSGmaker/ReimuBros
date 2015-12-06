@@ -18,7 +18,12 @@ class PowerItem extends EntityItem
 		player.ChangeExpression("Mouth", "39", 80, true);
 		//player.ChangeExpression("Eyes", "93", 80, false);
 		player.ChangeExpression("Eyes", "93", 30, false);
-		player.charge = Std.int(Math.min(player.charge+1500, 3000));
+		player.charge += Std.int(player.maxcharge / 2);
+		if (player.charge > player.maxcharge)
+		{
+			player.score += Std.int(Std.int((player.charge - player.maxcharge) * 0.01) * 10);
+			player.charge = player.maxcharge;
+		}
 		
 		{
 			SoundManager.Play("collectcoin");
