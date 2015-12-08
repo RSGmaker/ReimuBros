@@ -115,7 +115,7 @@ class Player extends Entity
 	public static var powerups:Array<String> = ["reimu", "marisa","sanae", "suwako", "flandre", "satori", "meiling", "chen","raiko","ran","rumia","komachi","wriggle","mystia","yuugi","sariel","sunny_milk", "nitori","yuuka","cirno","mystia","aya","hatate","momiji","sumireko","seiran","konngara","rikako","yumeko","futo"];
 
 	//list of character in order of savedata
-	public static var characters:Array<String> = ["reimu", "marisa", "patchouli", "remilia", "sanae", "sakuya", "suwako", "yuyuko", "tenshi", "iku", "aya", "alice", "youmu", "shikieiki", "flandre", "satori", "koishi", "momiji", "nitori", "udongein", "komachi", "yuuka", "mokou", "meiling", "parsee", "kokoro", "kogasa", "kasen", "utsuho", "suika", "kaguya", "eirin", "nazrin", "orin", "hina", "byakuren", "chiyuri", "ellen", "elly", "gengetsu", "kana", "kotohime", "elis", "louise", "mai", "meira", "mugetsu", "orange", "rika", "rikako", "sara", "yuki", "yumeko", "yumemi", "akyu", "futo", "kagerou", "keine", "kosuzu", "luna_child", "mamizou", "medicine", "minoriko", "murasa", "seiga", "sekibanki", "shanghai", "shinmyoumaru", "shizuha", "shou", "sunny_milk", "tokiko", "wriggle", "yoshika", "star_sapphire", "lily_white", "letty", "mika", "senkou", "ayana", "matenshi", "noroiko", "mystia", "lunasa", "lyrica", "merlin", "maribel", "renko", "miko", "reisen", "ruukoto", "tojiko", "toyohime", "yorihime", "wakasagihime", "yatsuhashi", "mima", "konngara","tewi","kanako","ringo","doremy","seiran","sumireko","rin","raiko","shingyoku","hatate","daiyousei","kurumi","yuugi","benben","ichirin","kyouko","yamame","koakuma","shinki","rengeteki","sariel","yukari", "seija", "rumia","cirno","nue","chen","ran","clownpiece","hecatia","junko","sagume"];
+	public static var characters:Array<String> = ["reimu", "marisa", "patchouli", "remilia", "sanae", "sakuya", "suwako", "yuyuko", "tenshi", "iku", "aya", "alice", "youmu", "shikieiki", "flandre", "satori", "koishi", "momiji", "nitori", "udongein", "komachi", "yuuka", "mokou", "meiling", "parsee", "kokoro", "kogasa", "kasen", "utsuho", "suika", "kaguya", "eirin", "nazrin", "orin", "hina", "byakuren", "chiyuri", "ellen", "elly", "gengetsu", "kana", "kotohime", "elis", "louise", "mai", "meira", "mugetsu", "orange", "rika", "rikako", "sara", "yuki", "yumeko", "yumemi", "akyu", "futo", "kagerou", "keine", "kosuzu", "luna_child", "mamizou", "medicine", "minoriko", "murasa", "seiga", "sekibanki", "shanghai", "shinmyoumaru", "shizuha", "shou", "sunny_milk", "tokiko", "wriggle", "yoshika", "star_sapphire", "lily_white", "letty", "mika", "senkou", "ayana", "matenshi", "noroiko", "mystia", "lunasa", "lyrica", "merlin", "maribel", "renko", "miko", "reisen", "ruukoto", "tojiko", "toyohime", "yorihime", "wakasagihime", "yatsuhashi", "mima", "konngara","tewi","kanako","ringo","doremy","seiran","sumireko","rin","raiko","shingyoku","hatate","daiyousei","kurumi","yuugi","benben","ichirin","kyouko","yamame","koakuma","shinki","rengeteki","sariel","yukari", "seija", "rumia","cirno","nue","chen","ran","clownpiece","hecatia","junko","sagume","kisume"];
 	
 	//list of characters sorted by game(from touhou wiki's character format)
 	public static var charorder:Array<String> = ["customavatar",
@@ -126,7 +126,7 @@ class Player extends Entity
 	"aya", "medicine", "yuuka", "komachi", "shikieiki",
 	"shizuha", "minoriko", "hina", "nitori", "momiji", "sanae", "kanako", "suwako",
 	"iku", "tenshi", "hatate", "kokoro",
-	/*"kisume", */"yamame", "parsee", "yuugi", "satori", "orin", "utsuho", "koishi",
+	"kisume", "yamame", "parsee", "yuugi", "satori", "orin", "utsuho", "koishi",
 	"nazrin", "kogasa", "ichirin"/*,"unzan"*/, "murasa", "shou", "byakuren", "nue",
 	"kyouko", "yoshika", "seiga", "tojiko", "futo", "miko", "mamizou",
 	"wakasagihime", "sekibanki", "kagerou", "benben", "yatsuhashi", "seija", "shinmyoumaru", "raiko",
@@ -191,6 +191,8 @@ class Player extends Entity
 	
 	
 	
+	
+	
 	//public var zombiefairychance = 0.04;
 	public var zombiefairychance = 0.02;
 	public var zombiefairytype = "zombiefairy";
@@ -216,6 +218,8 @@ class Player extends Entity
 	
 	//for new "footstep" mechanic.
 	public var elavation:Float;
+	//disables effects pertaining to contact with the floor.
+	public var hover:Bool;
 	
 	public var glow:flash.filters.GlowFilter;
 	
@@ -467,7 +471,61 @@ class Player extends Entity
 					}
 				}
 			}
+			var G = ground;
+			var V = Vspeed;
 			updphysics();
+			if (Math.abs(image.scaleY) != 1)
+		{
+			var H = image.height;
+			if (Math.abs(image.scaleY) < 1)
+			{
+				var b = (image.scaleY < 0);
+				image.scaleY = Math.abs(image.scaleY)+0.03;
+				if (Math.abs(image.scaleY) > 1)
+				{
+					image.scaleY = 1;
+				}
+				
+				if (b)
+				{
+					image.scaleY = -image.scaleY;
+				}
+			}
+			else
+			{
+				var b = (image.scaleY < 0);
+				image.scaleY = Math.abs(image.scaleY)-0.03;
+				if (Math.abs(image.scaleY) < 1)
+				{
+					image.scaleY = 1;
+				}
+				
+				if (b)
+				{
+					image.scaleY = -image.scaleY;
+				}
+			}
+			image.y -= (image.height - H);
+		}
+		else
+		{
+			image.y = 0;
+		}
+		if (G == null && G != ground && V>0)
+		{
+			//do landing sound effect.
+			//scaleY *= 0.85;
+			
+			if (image.scaleY == 1 && image.y == 0)
+			{
+				var H = image.height;
+				image.scaleY = 0.85;
+				//image.y = (image.height - H);
+				//image.y = (H - image.height);
+				image.y = (H * (1 - image.scaleY));
+			}
+		}
+		
 			deccel = DCL;
 			
 			if (Hspeed < mxspd && controller[3] && !controller[2])
@@ -491,7 +549,7 @@ class Player extends Entity
 				Hspeed = mxspd;
 			}
 			}
-			else if (frames % 2==1 && ground != null)
+			else if (frames % 2==1 && ground != null && !hover)
 			{
 				//play skidding noise
 				var P = new Particle("cloud");
@@ -529,7 +587,7 @@ class Player extends Entity
 				Hspeed = -mxspd;
 			}
 			}
-			else if (frames % 2==1 && ground != null)
+			else if (frames % 2==1 && ground != null && !hover)
 			{
 				//play skidding noise
 				var P = new Particle("cloud");
@@ -558,7 +616,7 @@ class Player extends Entity
 		}
 		
 		
-		if (ground != null && Vspeed == 0)
+		if (ground != null && Vspeed == 0 && !hover)
 		{
 			if (!catchingup)
 			{
@@ -900,13 +958,22 @@ class Player extends Entity
 			//Vspeed += fallaccel2+fallaccel2;
 			Vspeed += fallaccel3;
 		}
+		if (bonked > 0)
+		{
+			bonked--;
+		}
 		
 		if (ground != null)
 		{
 			if (ground.bonked > -1000)
 			{
-				Vspeed = -4;
-				ability.onbumped(ground.bonkedby);
+				if (bonked < 1)
+				{
+					bonked = 8;
+					bonkedby = ground.bonkedby;
+					Vspeed = -4;
+					ability.onbumped(ground.bonkedby);
+				}
 			}
 			else
 			{
@@ -1340,5 +1407,6 @@ class Player extends Entity
 		Lcharname = charname;
 		airjump = false;
 		lcontroller = controller.copy();
+		ability.onendframe();
 	}
 }

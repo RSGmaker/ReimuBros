@@ -2408,8 +2408,10 @@ addDNA("3.39:Kasen:100:273:214:272:215:58:0:0:0:0:0:DA5899","Kasen");
 addDNA("3.39:Keine (2):100:131:130:131:117:18:0:0:0:0:0:A0ADDE","Keine (2)");
 addDNA("3.39:Keine (EX):100:39:38:39:39:39:0:0:0:0:19:D2D2DC","Keine (EX)");
 addDNA("3.39:Keine (EX2):100:132:131:132:117:39:0:0:0:0:52:89E063","Keine (EX2)");
-addDNA("3.39:Keine:100:18:17:18:18:18:0:0:0:0:0:D2D2DC","Keine");
-addDNA("3.39:Kisume (2A):100:64:205:233:0:0:0:0:0:0:106:20AD79","Kisume (2A)");
+addDNA("3.39:Keine:100:18:17:18:18:18:0:0:0:0:0:D2D2DC", "Keine");
+addDNA("3.39:Kisume (2A):100:64:205:233:0:0:0:0:0:0:0:20AD79", "Kisume (2A)");
+addDNA("3.39:EKisume (2A):100:64:205:233:0:0:0:0:0:0:106:20AD79","EKisume (2A)");
+//addDNA("3.39:Kisume (2A):100:64:205:233:0:0:0:0:0:0:106:20AD79","Kisume (2A)");
 addDNA("3.39:Kisume (2B):100:64:206:233:0:0:0:0:0:0:106:20AD79","Kisume (2B)");
 addDNA("3.39:Kisume:100:64:63:64:0:0:0:0:0:0:0:20AD79","Kisume");
 addDNA("3.39:Koakuma (2):100:150:152:153:147:33:0:0:0:0:66:9C1F1F","Koakuma (2)");
@@ -2990,9 +2992,18 @@ addHair(["Hecatia", 282, 0, 0, 0, 0, "A10000"]);
 	{
 		init();
 	}
+	if (name == "customavatar")
+	{
+		return "dna-" + Main._this.savedata.data.avatar;
+		//charname.indexOf("dna-") < 0 && charname != "customavatar")
+	}
 	if (name.indexOf("background-") == 0)
 	{
 		return null;
+	}
+	if (name.indexOf("dna-") == 0)
+	{
+		return name;
 	}
 		var i = 0;
 		var items = false;

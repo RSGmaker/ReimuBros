@@ -10,6 +10,7 @@ class Expressionless extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
+		aesthetic = true;
 		//description = "Does not express emotions";
 	}
 	override public function init() 

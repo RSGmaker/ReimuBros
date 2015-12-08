@@ -139,6 +139,8 @@ class PlayerAbilityManager
 		L[L.length] = { type:new abilities.SummonBlueBird(null), names:["kana"] };
 		L[L.length] = { type:new abilities.EmotionController(null), names:["kokoro"] };
 		L[L.length] = { type:new abilities.NoCooldown(null), names:["vivit"] };
+		L[L.length] = { type:new abilities.Hover(null), names:["kisume"] };
+		L[L.length] = { type:new abilities.BucketRider(null), names:["kisume"] };
 		
 		
 		L[L.length] = { type:new abilities.NoAbility(null), names:["red_fairy","none","customavatar"] };
@@ -211,6 +213,15 @@ class PlayerAbilityManager
 		while (i < abilities.length)
 		{
 			abilities[i].onframe();
+			i++;
+		}
+	}
+	public function onendframe()
+	{
+		var i = 0;
+		while (i < abilities.length)
+		{
+			abilities[i].onendframe();
 			i++;
 		}
 	}
@@ -341,6 +352,18 @@ class PlayerAbilityManager
 		else
 		{
 			abilities = new Array<PlayerAbility>();
+			/*abilities = GetAbilities(player);
+			var i = 0;
+			while (i < abilities.length)
+			{
+				var A = abilities[i];
+				if (!A.aesthetic)
+				{
+					abilities.remove(A);
+					i--;
+				}
+				i++;
+			}*/
 		}
 		if (Main._this.GameFlags.get(Main.Adventure))
 		{

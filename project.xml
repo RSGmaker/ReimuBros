@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	
-	<meta title="ReimuBros" package="RSG.Game" version="1.7.0" company="RSGmaker" />
-	<app file="ReimuBros" main="Main" path="Export"/>
+	<meta title="ReimuBros" package="RSG.Game" version="2.0.1" company="RSGmaker" />
+	<app file="ReimuBros" main="Main" path="Export" />
 	
 	<source path="Source" />
 	<haxeflag name="-D network-sandbox" />

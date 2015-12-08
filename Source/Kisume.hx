@@ -93,7 +93,7 @@ class Kisume extends Enemy
 			}
 		}
 		updphysics();
-		updateanimation();
+		updateanimation("ekisume");
 		if (rope != null)
 		{
 			rope.x = x+0.5;

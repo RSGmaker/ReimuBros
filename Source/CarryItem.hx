@@ -287,15 +287,18 @@ class CarryItem extends EntityItem
 			collectable = false;
 			if (holder.alive && game.entities.indexOf(holder) >= 0 && (/*holder.type != "Enemy" || */(!holder.killed)))
 			{
-				if (!(holder.ground != null && (holder.ground.bonked>0)) || (!Dropable))
+				//if (!(holder.ground != null && (holder.ground.bonked>0)) || (!Dropable))
+				//if (!(holder.bonked>0) || (!Dropable))
+				if (!(holder.bonked>0 && Dropable))
 				{
 					x = holder.x + OffsetX+centering;
 					y = holder.y + OffsetY;
 					
 					if (holder.type == "Player")
 					{
-						var D:Dynamic = holder;
-						var P:Player = D;
+						//var D:Dynamic = holder;
+						//var P:Player = D;
+						var P:Player = cast(holder);
 						if (P.helditems.indexOf(this) < 0)
 						{
 							P.helditems.push(this);

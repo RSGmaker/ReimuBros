@@ -5173,10 +5173,10 @@ class GameView extends Sprite
 				}
 				else 
 				{
-				//var B:PowerupItem = new PowerupItem();
+				var B:PowerupItem = new PowerupItem();
 				//B.power = "reimu";
 				//var B = new Roukanken();
-				var B = new SanaeStickItem();
+				//var B = new SanaeStickItem();
 				//var B = new Bow();
 				//var B = new MiniHakkero();
 				//var B = new CameraItem();
@@ -6400,7 +6400,10 @@ class GameView extends Sprite
 		}
 		#end
 		gui.graphics.clear();
-		gamestage.graphics.clear();
+		//gamestage.graphics.clear();
+		backlayer.graphics.clear();
+		entitylayer.graphics.clear();
+		frontlayer.graphics.clear();
 		Background.cacheAsBitmap = Background.alpha >= 1;
 		/*if (gamestage.scaleY > 0)
 		{

@@ -46,6 +46,8 @@ class PlayerAbility
 	public var hastransformation:Bool;
 	public var maxtransformation:Float;
 	public var transformationtimer:Float;
+	
+	public var aesthetic:Bool = false;
 	//public var cooldown:Int;
 	//public var timepowered:Int;
 	//public var poweractive:Bool;
@@ -77,7 +79,12 @@ class PlayerAbility
 	{
 		
 	}
-	//called just after onframe if the player has ability pressed
+	//called at the end of the update
+	public function onendframe()
+	{
+		
+	}
+	//called just after onframe if the player has ability pressed, also gets called even if killed.
 	public function onuse()
 	{
 		

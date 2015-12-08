@@ -846,6 +846,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/kisumehandle.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/knife0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -991,6 +995,10 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/POWalt0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/Power.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -1391,7 +1399,7 @@ class ApplicationMain {
 			resizable: true,
 			stencilBuffer: true,
 			title: "ReimuBros",
-			version: "1.7.0",
+			version: "2.0.1",
 			vsync: false,
 			width: Std.int (800),
 			

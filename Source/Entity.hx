@@ -51,6 +51,7 @@ class Entity extends Sprite
 	public var useotherhitbox:Bool;
 	public var hasotherhitbox:Bool;
 	public var feetposition:Float;
+	public var headposition:Float=0;
 	public var middle:Float;
 	
 	public var myMyon:MyonItem;
@@ -147,7 +148,6 @@ class Entity extends Sprite
 		bonking = false;
 		hitbox = null;
 		hasotherhitbox = false;
-		useotherhitbox = false;
 		middle = 0;
 		feetposition = 0;
 		
@@ -289,6 +289,7 @@ class Entity extends Sprite
 			}
 			
 		}
+		//var G = ground;
 		if (rotation == 0)
 		{
 		ground = game.CollisionDetectPoint(x + middle, y + feetposition+2);
@@ -298,6 +299,44 @@ class Entity extends Sprite
 			var B = getBounds(game.gamestage);
 			ground = game.CollisionDetectPoint(B.left + middle, B.bottom+2/* + (height + 2)*/);
 		}
+		
+		/*if (Math.abs(scaleY) != Math.abs(scaleX))
+		{
+			if (Math.abs(scaleY) < Math.abs(scaleX))
+			{
+				var b = (scaleY < 0);
+				scaleY = Math.abs(scaleY)+0.05;
+				if (Math.abs(scaleY) > Math.abs(scaleX))
+				{
+					scaleY = Math.abs(scaleX);
+				}
+				
+				if (b)
+				{
+					scaleY = -scaleY;
+				}
+			}
+			else
+			{
+				var b = (scaleY < 0);
+				scaleY = Math.abs(scaleY)-0.05;
+				if (Math.abs(scaleY) < Math.abs(scaleX))
+				{
+					scaleY = Math.abs(scaleX);
+				}
+				
+				if (b)
+				{
+					scaleY = -scaleY;
+				}
+			}
+		}
+		if (G == null && G != ground)
+		{
+			//do landing sound effect.
+			scaleY *= 0.8;
+		}*/
+		
 		if (game.scrollframe)
 			{
 				x += game.scrollspeedX;
@@ -326,7 +365,8 @@ class Entity extends Sprite
 		headbonk = null;
 		if (Vspeed < 0)
 		{
-			headbonk = game.CollisionDetectPoint(x + middle, y+20);
+			//headbonk = game.CollisionDetectPoint(x + middle, y+20);
+			headbonk = game.CollisionDetectPoint(x + middle, y+20+headposition);
 			if (headbonk != null && headbonk.platform)
 			{
 				headbonk = null;

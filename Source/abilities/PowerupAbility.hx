@@ -132,7 +132,7 @@ class PowerupAbility extends PlayerAbility
 		var i = 0;
 		while (i < A.length)
 		{
-			if (A[i] != this)
+			if (A[i] != this/* && !A[i].aesthetic*/)
 			{
 				A.remove(A[i]);
 				i--;

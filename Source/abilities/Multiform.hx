@@ -10,6 +10,7 @@ class Multiform extends PlayerAbility
 	public function new(player:Player) 
 	{
 		super(player);
+		aesthetic = true;
 		//description = "Changes appearence upon\nlosing a life";
 	}
 	override public function lostability() 
