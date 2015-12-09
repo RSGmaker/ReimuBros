@@ -37,9 +37,11 @@ class MenuButton extends Sprite
 	public var data:Dynamic;
 	public var display:Sprite;
 	public var hitbox:Sprite;
-	public function new(text:String=" ",fontsize:Int=44,fontname:String="Arial",outlinesize:Int=5,innercolor:UInt=0x11CC55,outlinecolor:UInt=0x00AA33) 
+	public var elavation:Bool;
+	public function new(text:String=" ",fontsize:Int=44,fontname:String="Arial",outlinesize:Int=5,innercolor:UInt=0x11CC55,outlinecolor:UInt=0x00AA33,elavation:Bool=true) 
 	{
 		super();
+		this.elavation = elavation;
 		data = { };
 		colorschemes = new Array<UInt>();
 		addcolorscheme(innercolor, outlinecolor);
@@ -219,10 +221,18 @@ class MenuButton extends Sprite
 		var SZ = outlinesize;
 		var SZ2 = SZ + SZ;
 		var SZ3 = SZ + SZ + SZ;
+		
+		var WShadow = SZ / 2;
+		var HShadow = SZ * 0.75;
+		if (!elavation)
+		{
+			WShadow = 0;
+			HShadow = 0;
+		}
 		textfield.setTextFormat(textformat);
 		
-		textfield.x = SZ;
-		textfield.y = SZ;
+		textfield.x = SZ-(WShadow / 2);
+		textfield.y = SZ-(HShadow / 2);
 		textfield.width = textfield.textWidth + SZ2+8;
 		textfield.height = textfield.textHeight + SZ2;
 		
@@ -247,15 +257,23 @@ class MenuButton extends Sprite
 		//inner.graphics.drawRect(0, 0, width-SZ2, height-SZ2);
 		inner.graphics.drawRoundRect(0, 0, width-SZ2, height-SZ2,5);
 		inner.graphics.endFill();*/
+		var OC = Std.int((outlinecolor & 255) / 2) + (Std.int(((outlinecolor >> 8) & 255) / 2) << 8) + (Std.int(((outlinecolor >> 16) & 255) / 2) << 16);
+		//outline.graphics.beginFill(cast(Std.int(outlinecolor/2)));
+		outline.graphics.beginFill(OC);
+		outline.graphics.drawRoundRect(0, 0, width, height,5);
+		outline.graphics.endFill();
 		//non negative border logic.
 		outline.graphics.beginFill(outlinecolor);
 		//outline.graphics.drawRect(-SZ, -SZ, width, height);
-		outline.graphics.drawRoundRect(0, 0, width, height,5);
+		//outline.graphics.drawRoundRect(0, 0, width-2, height-4,5);
+		outline.graphics.drawRoundRect(0, 0, width-WShadow, height-HShadow,5);
 		outline.graphics.endFill();
+		
 		inner.graphics.clear();
 		inner.graphics.beginFill(innercolor);
-		//inner.graphics.drawRect(0, 0, width-SZ2, height-SZ2);
-		inner.graphics.drawRoundRect(SZ, SZ, width-SZ2, height-SZ2,5);
+		//inner.graphics.drawRoundRect(SZ, SZ, width-SZ2, height-SZ2,5);
+		//inner.graphics.drawRoundRect(SZ, SZ, (width-SZ2)-1, (height-SZ2)-2,5);
+		inner.graphics.drawRoundRect(SZ, SZ, (width-SZ2)-(WShadow/2), (height-SZ2)-(HShadow/2),5);
 		inner.graphics.endFill();
 		
 		var fillType:flash.display.GradientType = flash.display.GradientType.LINEAR;
