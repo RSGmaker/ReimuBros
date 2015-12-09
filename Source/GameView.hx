@@ -4472,6 +4472,7 @@ class GameView extends Sprite
 			P.Hspeed = 0;
 			P.Vspeed = 0;
 			pausetime = 5.000;
+			ltime = Timer.stamp ();
 			ZaWarudoCaster = P;
 		}
 		if (evt == "TelephonePole")
@@ -5407,6 +5408,7 @@ class GameView extends Sprite
 			LE.push( { T:"alice", C:Alice } );
 			LE.push( { T:"magifairy", C:MagiFairy } );
 			LE.push( { T:"Eirin", C:Eirin } );
+			LE.push( { T:"Lily White", C:LilyWhite } );
 			
 			//Items 
 			LE.push( { T:"Point", C:PointItem } );
@@ -5860,7 +5862,7 @@ class GameView extends Sprite
 		}
 		if (pausetime>0)
 		{
-			/*TF.text = "Time has\nstopped";
+			//F.text = "Time has\nstopped";
 			var currentTime = Timer.stamp ();
 		var T = currentTime - ltime;
 		pausetime -= T;
@@ -5873,7 +5875,7 @@ class GameView extends Sprite
 				ZaWarudoKnives(ZaWarudoCaster);
 				ZaWarudoCaster = null;
 			}
-		}*/
+		}
 			return;
 		}
 		if (ZaWarudo.visible)
@@ -7007,6 +7009,7 @@ class GameView extends Sprite
 					//E = "UnzanFist";
 					//E = "UFOItem";
 					//E = "Explosives";
+					//E = "Lily White";
 				}
 				#end
 				if (E == "Gap")
@@ -7260,6 +7263,31 @@ class GameView extends Sprite
 				{
 					var D:Dynamic = { };
 					D.type = "Nitori";
+					D.UID = Math.random();
+					if (Math.random() > 0.5)
+					{
+						D.x = 800;
+						D.Ldir = -1;
+					}
+					else
+					{
+						D.x = -16;
+						D.Ldir = 1;
+					}
+					D.y = -100;
+					D.alive = true;
+					D.Hspeed = 0;
+					D.Vspeed = 0;
+					D.enraged = false;
+					D.visible = true;
+					D.rank = rank;
+					D.spawns = 0;
+					SendEvent("SpawnEnemy", D);
+				}
+				else if (E == "Lily White")
+				{
+					var D:Dynamic = { };
+					D.type = "Lily White";
 					D.UID = Math.random();
 					if (Math.random() > 0.5)
 					{

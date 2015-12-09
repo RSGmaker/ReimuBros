@@ -333,6 +333,10 @@ class LevelLogic
 			{
 				AddToArrayMultiple(Obstacles, "Iku", 3);
 			}
+			if (level > 30)
+			{
+				AddToArrayMultiple(Obstacles, "Lily White", 1);
+			}
 		}
 		/*if (RoundType == GameView.TypeofRound.EventPointCollecting)
 		{
