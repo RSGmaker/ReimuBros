@@ -571,7 +571,7 @@ class AvatarEditor extends Sprite
 		filterArr[filters.length] = AA;
 		
 		
-		avatarpreview = new MenuButton("");
+		avatarpreview = new MenuButton("",44,"Arial",5,0x11CC55,0x00AA33,false);
 		avatarpreview.mouseEnabled = false;
 		avatarpreview.buttonMode = false;
 		avatarpreview.button.buttonMode = false;
