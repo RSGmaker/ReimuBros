@@ -275,6 +275,10 @@ class Suwako extends Enemy
 	alive = false;
 	}
 	}
+	if (!alive && game.myplayer == bonkedby)
+	{
+		game.unlockcharacter("suwako");
+	}
 	}
 	public override function bump(player:Player)
 	{
