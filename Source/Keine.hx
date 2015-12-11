@@ -157,8 +157,9 @@ class Keine extends Enemy
 		{
 			//Hspeed = accel * ( -Ldir);
 			//Hspeed *= 0.5;
-			var M = 5;
-			Hspeed = Math.min(Math.max(-M,Hspeed * 0.5),M);
+			var M = 6;
+			//Hspeed = Math.min(Math.max(-M,Hspeed * 0.5),M);
+			Hspeed = Math.min(Math.max(-M,Hspeed * 0.75),M);
 		}
 		if (flipped < 1)
 		{
