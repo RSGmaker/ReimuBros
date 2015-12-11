@@ -3058,6 +3058,12 @@ addHair(["Hecatia", 282, 0, 0, 0, 0, "A10000"]);
 		S[2] = "" + scale;
 		return S.join(":");
 	}
+	public static function changednafeature(dna:String,feature:String, value:String):String
+	{
+		var S = dna.split(":");
+		S[AvatarEditor.partlist.indexOf(feature)] = "" + value;
+		return S.join(":");
+	}
 	public static function changednapart(dna:String,index:Int, value:String):String
 	{
 		var S = dna.split(":");
