@@ -172,7 +172,7 @@ class Youmu extends Enemy
 			{
 				Hspeed = 0;
 				//visuallyEnraged = !visuallyEnraged;
-				if (timetofire < 1)
+				if (timetofire < 1 && game.Hoster)
 				{
 					/*if (game.Hoster)
 					{
