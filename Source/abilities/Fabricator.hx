@@ -21,7 +21,7 @@ class Fabricator extends PlayerAbility
 	override public function onattacked(fatal:Bool) 
 	{
 		super.onattacked(fatal);
-		if (fatal)
+		if (fatal && item != null && item.alive)
 		{
 			var D:Dynamic = { };
 			D.type = "Destroy";
