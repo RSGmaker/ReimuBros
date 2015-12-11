@@ -274,6 +274,10 @@ class Wakasagihime extends Enemy
 	alive = false;
 	}
 	}
+	if (!alive && game.myplayer == bonkedby)
+	{
+		game.unlockcharacter("wakasagihime");
+	}
 	}
 	public override function bump(player:Player)
 	{
