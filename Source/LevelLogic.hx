@@ -446,9 +446,13 @@ class LevelLogic
 		//AddToArrayMultiple(enemytypes, new Alice(), 500);
 		//AddToArrayMultiple(enemytypes, new MagiFairy(), 500);
 		//AddToArrayMultiple(enemytypes, new Eirin(), 500);
+		//AddToArrayMultiple(enemytypes, new Letty(), 500);
+		//AddToArrayMultiple(enemytypes, new Yoshika(), 500);
+		//AddToArrayMultiple(enemytypes, new Wriggle(), 500);
+		//AddToArrayMultiple(enemytypes, new Mamizou(), 500);
 		//if (RoundType == GameView.TypeofRound.EventNormal || RoundType == GameView.TypeofRound.EventRumia || RoundType == GameView.TypeofRound.EventSeija || RoundType == GameView.TypeofRound.EventNue || RoundType == GameView.TypeofRound.EventTable || RoundType == GameView.TypeofRound.EventFireCirno || RoundType == GameView.TypeofRound.EventBalloon || RoundType == GameView.TypeofRound.EventElectricCirno || RoundType == GameView.TypeofRound.EventNoWrap || RoundType == GameView.TypeofRound.EventSanaeBoss || RoundType == GameView.TypeofRound.EventParseeBoss || RoundType == GameView.TypeofRound.EventMurasaBoss || RoundType == GameView.TypeofRound.EventScrolling || RoundType == GameView.TypeofRound.EventDescending || RoundType == GameView.TypeofRound.EventYuuka || RoundType == GameView.TypeofRound.EventExplosive || RoundType == GameView.TypeofRound.EventTruck)
 		//if (["EventNormal","EventRumia","EventSeija","EventNue","EventTable","EventFireCirno","EventBalloon","EventElectricCirno","EventNoWrap","EventSanaeBoss","EventParseeBoss","EventMurasaBoss","EventScrolling","EventDescending","EventYuuka","EventExplosive","EventTruck"].indexOf(RoundType.getName())>-1)
-		if ([GameView.TypeofRound.EventNormal,GameView.TypeofRound.EventRumia,GameView.TypeofRound.EventSeija,GameView.TypeofRound.EventNue,GameView.TypeofRound.EventTable,GameView.TypeofRound.EventFireCirno,GameView.TypeofRound.EventBalloon,GameView.TypeofRound.EventElectricCirno,GameView.TypeofRound.EventNoWrap,GameView.TypeofRound.EventSanaeBoss,GameView.TypeofRound.EventParseeBoss,GameView.TypeofRound.EventMurasaBoss,GameView.TypeofRound.EventScrolling,GameView.TypeofRound.EventDescending,GameView.TypeofRound.EventYuuka,GameView.TypeofRound.EventExplosive,GameView.TypeofRound.EventTruck,GameView.TypeofRound.EventSuwako,GameView.TypeofRound.EventPointCollecting,GameView.TypeofRound.EventMagiFairy].indexOf(RoundType)>-1)
+		if ([GameView.TypeofRound.EventNormal,GameView.TypeofRound.EventRumia,GameView.TypeofRound.EventSeija,GameView.TypeofRound.EventNue,GameView.TypeofRound.EventTable,GameView.TypeofRound.EventFireCirno,GameView.TypeofRound.EventBalloon,GameView.TypeofRound.EventElectricCirno,GameView.TypeofRound.EventNoWrap,GameView.TypeofRound.EventSanaeBoss,GameView.TypeofRound.EventParseeBoss,GameView.TypeofRound.EventMurasaBoss,GameView.TypeofRound.EventScrolling,GameView.TypeofRound.EventDescending,GameView.TypeofRound.EventYuuka,GameView.TypeofRound.EventExplosive,GameView.TypeofRound.EventTruck,GameView.TypeofRound.EventSuwako,GameView.TypeofRound.EventPointCollecting,GameView.TypeofRound.EventMagiFairy,GameView.TypeofRound.EventPatchouli,GameView.TypeofRound.EventElly].indexOf(RoundType)>-1)
 		{
 			var types = new Array<Array<Dynamic>>();
 			//types[types.length] = CreateArrayOfMultiple(new Yuyuko(), 400);
@@ -482,20 +486,27 @@ class LevelLogic
 					{
 						types[types.length] = CreateArrayOfMultiple(new Meiling(), 6);
 					}
+					if (level > 8)
+					{
+						types[types.length] = CreateArrayOfMultiple(new Letty(), 1);
+					}
 					types[types.length] = CreateArrayOfMultiple(new Hina(), 5);
 					types[types.length] = CreateArrayOfMultiple(new Sakuya(), 4);
 					if (level > 10)
 					{
 						types[types.length] = CreateArrayOfMultiple(new Tenshi(), 5);
 						types[types.length] = CreateArrayOfMultiple(new Youmu(), 2);
+						types[types.length] = CreateArrayOfMultiple(new Wriggle(), 2);
 						if (level > 15)
 						{
 							types[types.length] = CreateArrayOfMultiple(new Utsuho(), 4);
 							types[types.length] = CreateArrayOfMultiple(new Aya(), 1);
+							types[types.length] = CreateArrayOfMultiple(new Yoshika(), 2);
 							if (level > 20)
 							{
 								types[types.length] = CreateArrayOfMultiple(new Sekibanki(), 5);
 								types[types.length] = CreateArrayOfMultiple(new Alice(), 5);
+								types[types.length] = CreateArrayOfMultiple(new Mamizou(), 1);
 								if (level > 25)
 								{
 									types[types.length] = CreateArrayOfMultiple(new Imposter(), 1);
@@ -562,9 +573,22 @@ class LevelLogic
 				i++;
 			}
 		}
+		if (RoundType == GameView.TypeofRound.EventCirno || RoundType == GameView.TypeofRound.EventCirnoBoss)
+		{
+			AddToArrayMultiple(enemytypes, new Letty(), 3);
+			AddToArrayMultiple(enemytypes, new Imposter(), 4);
+		}
 		if (RoundType == GameView.TypeofRound.EventMagiFairy)
 		{
 			AddToArrayMultiple(enemytypes, new MagiFairy(), 550);
+		}
+		if (RoundType == GameView.TypeofRound.EventPatchouli)
+		{
+			AddToArrayMultiple(enemytypes, new Patchouli(), 450);
+		}
+		if (RoundType == GameView.TypeofRound.EventElly)
+		{
+			AddToArrayMultiple(enemytypes, new Elly(), 450);
 		}
 		if (RoundType == GameView.TypeofRound.EventDanmaku)
 		{

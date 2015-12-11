@@ -71,6 +71,8 @@ enum TypeofRound {
 		EventSuwako;
 		EventPointCollecting;
 		EventMagiFairy;
+		EventPatchouli;
+		EventElly;
 	}
 class GameView extends Sprite
 {
@@ -805,14 +807,14 @@ class GameView extends Sprite
 			//shrine
 			if (generalstage == 0)
 			{
-				L = L.concat(["reimu", "marisa", /*"sanae", */"kanako", "suwako", "alice", "shanghai"/*, "suika"*/]);
-				L = L.concat(["sara", "louise", "yuki", "mai", "ayana", "yumeko", "shinki", "mika", "senkou", "orange", "kurumi", "elly", "rengeteki"/*, "yuuka"*/, "mugetsu", "gengetsu", "ellen", "kotohime", "kana", "rikako", "chiyuri", "yumemi", "ruukoto", "rika", "noroiko", "meira", "matenshi", "shingyoku", "elis", "sariel", "mima", "konngara"]);
+				L = L.concat(["reimu", "marisa", /*"sanae", */"kanako"/*, "suwako"*/, "alice", "shanghai"/*, "suika"*/]);
+				L = L.concat(["sara", "louise", "yuki", "mai", "ayana", "yumeko", "shinki", "mika", "senkou", "orange", "kurumi"/*, "elly"*/, "rengeteki"/*, "yuuka"*/, "mugetsu", "gengetsu", "ellen", "kotohime", "kana", "rikako", "chiyuri", "yumemi", "ruukoto", "rika", "noroiko", "meira", "matenshi", "shingyoku", "elis", "sariel", "mima", "konngara"]);
 				L = L.concat(["lily_white", "lyrica", "lunasa", "merlin","youmu", "yuyuko"]);
 			}
 			//sdm
 			if (generalstage == 1)
 			{
-				L = L.concat(["daiyousei", "meiling", "koakuma", "patchouli", "sakuya",/* "remilia", "flandre",*/ "rin"]);
+				L = L.concat(["daiyousei", "meiling", "koakuma"/*, "patchouli"*/, "sakuya",/* "remilia", "flandre",*/ "rin"]);
 				L = L.concat(["luna_child", "star_sapphire", "sunny_milk"]);
 			}
 			//space
@@ -834,13 +836,13 @@ class GameView extends Sprite
 			if (generalstage == 4)
 			{
 				L = L.concat(["nazrin", "kogasa", "ichirin"/*,"unzan"*/, "murasa", "shou", "byakuren"]);
-				L = L.concat(["kyouko", "yoshika", "seiga", "tojiko", "futo", "miko", "mamizou"]);
+				L = L.concat(["kyouko", "yoshika", "seiga", "tojiko", "futo", "miko"/*, "mamizou"*/]);
 			}
 			//eintei
 			if (generalstage == 5)
 			{
 				L = L.concat(["wriggle", "mystia", "keine", "tewi", "udongein", "eirin"/*, "kaguya", "mokou"*/]);
-				L = L.concat(["wakasagihime", "sekibanki", "kagerou", "benben", "yatsuhashi", "seija", "shinmyoumaru", "raiko"]);
+				L = L.concat([/*"wakasagihime", */"sekibanki", "kagerou", "benben", "yatsuhashi", "seija", "shinmyoumaru", "raiko"]);
 			}
 			}
 			else
@@ -2841,20 +2843,26 @@ class GameView extends Sprite
 				}
 				Main._this.savedata.flush();
 			}
+			var T = level % levelsperstage;
 			if (mysuccessstreak > 4)
 			{
 				//var L = level - 1;
 				//var stage = Math.floor((L) / 5);
 
 				//var generalstage = stage % 6;
-				var T = level % levelsperstage;
+				
 				if (T == 1)
 				{
 					awardmoney((rank + 1) * 3);
 					//Main._this.savedata.data.shop_ticks = Main._this.savedata.data.shop_ticks + 2;
-					Main._this.savedata.data.shop_ticks = Main._this.savedata.data.shop_ticks + 3;
+					//Main._this.savedata.data.shop_ticks = Main._this.savedata.data.shop_ticks + 3;
 				}
 			}
+			/*if (T == 1)
+			{
+				Main._this.savedata.data.shop_ticks = Main._this.savedata.data.shop_ticks + 4;
+			}*/
+			Main._this.savedata.data.shop_ticks = Main._this.savedata.data.shop_ticks + 1;
 			if (myplayer.score > HighScore && !Main._this.cheating/* && GameFlags.getactiveflags().length==0*/)
 				{
 					HighScore = myplayer.score;
@@ -5409,6 +5417,12 @@ class GameView extends Sprite
 			LE.push( { T:"magifairy", C:MagiFairy } );
 			LE.push( { T:"Eirin", C:Eirin } );
 			LE.push( { T:"Lily White", C:LilyWhite } );
+			LE.push( { T:"patchouli", C:Patchouli } );
+			LE.push( { T:"elly", C:Elly } );
+			LE.push( { T:"letty", C:Letty } );
+			LE.push( { T:"yoshika", C:Yoshika } );
+			LE.push( { T:"wriggle", C:Wriggle } );
+			LE.push( { T:"Mamizou", C:Mamizou} );
 			
 			//Items 
 			LE.push( { T:"Point", C:PointItem } );
@@ -7392,6 +7406,10 @@ class GameView extends Sprite
 				{
 					E[E.length] = TypeofRound.EventCirno;
 				}
+				if (generalstage == 1)
+				{
+					E[E.length] = TypeofRound.EventPatchouli;
+				}
 				E[E.length] = TypeofRound.EventBalloon;
 				if (Math.random() < 0.5)
 				{
@@ -7400,6 +7418,7 @@ class GameView extends Sprite
 				if (level >= 11 || GameFlags.get(Main.EventRoundsOnly))
 				{
 					E[E.length] = TypeofRound.EventNue;
+					E[E.length] = TypeofRound.EventElly;
 				}
 				if (level > 5 || GameFlags.get(Main.EventRoundsOnly))
 				{
@@ -7479,6 +7498,8 @@ class GameView extends Sprite
 		//RoundType = TypeofRound.EventScrolling;
 		//RoundType = TypeofRound.EventExplosive;
 		//RoundType = TypeofRound.EventMagiFairy;
+		//RoundType = TypeofRound.EventPatchouli;
+		//RoundType = TypeofRound.EventElly;
 		
 		var Ev:Array<TypeofRound> = new Array<TypeofRound>();
 		
