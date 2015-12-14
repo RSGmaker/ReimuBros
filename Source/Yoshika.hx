@@ -15,14 +15,16 @@ class Yoshika extends Enemy
 	
 	public var recovery:Int = 6;
 	public var hopdelay:Int = 0;
-	public var maxhopdelay:Int = 10;
+	//public var maxhopdelay:Int = 10;
+	public var maxhopdelay:Int = 12;
 	
 	public function new() 
 	{
 		super("yoshika");
 		accel = 0.5;
 		deccel = 0.1;
-		mxspd = 5.5;
+		//mxspd = 5.5;
+		mxspd = 5.7;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
@@ -70,12 +72,14 @@ class Yoshika extends Enemy
 			if (hopdelay <= 0)
 			{
 				hopdelay = maxhopdelay;
-				Vspeed = -4.5;
+				//Vspeed = -4.5;
+				Vspeed = -4.6;
 				Hspeed = mxspd * Ldir;
 			}
 			else if (Vspeed>=0)
 			{
-				Hspeed *= 0.85;
+				//Hspeed *= 0.85;
+				Hspeed *= 0.70;
 			}
 		}
 		/*
