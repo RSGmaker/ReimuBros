@@ -30,6 +30,7 @@ class Wriggle extends Enemy
 		rename = "wriggle";
 		this.scaleX = 0.7;
 		this.scaleY = 0.7;
+		enrageable = false;
 	}
 	override public function CustomEvent(data:Dynamic) 
 	{
@@ -61,6 +62,7 @@ class Wriggle extends Enemy
 			//UID = UID * 0.09;
 			//UID = UID * 0.7;
 		}
+		enraged = false;
 		if (!killed)
 		{
 		var dir = Ldir;
