@@ -910,6 +910,21 @@ class LevelLogic
 			game.boss.outofminions();
 		}*/
 	}
+	public function SetSpawnPosition(object:Dynamic)
+	{
+		if (Math.random() > 0.5)
+		{
+			object.x = 800;
+			object.Ldir = -1;
+		}
+		else
+		{
+			//data.x = -16;
+			object.x = -64;
+			object.Ldir = 1;
+		}
+		object.y = -100;
+	}
 	public function DoSpawn()
 	{
 		if (game.Sealed > 0/* || game.ufoseal > 0*/)
@@ -942,7 +957,8 @@ class LevelLogic
 			//if blank enemy(made in spawnlist) then populate id info
 			data.UID = Math.random();
 		}
-		if (Math.random() > 0.5)
+		SetSpawnPosition(data);
+		/*if (Math.random() > 0.5)
 		{
 			data.x = 800;
 			data.Ldir = -1;
@@ -953,7 +969,7 @@ class LevelLogic
 			data.x = -64;
 			data.Ldir = 1;
 		}
-		data.y = -100;
+		data.y = -100;*/
 		if (E.hascustomspawn)
 		{
 			var CS = E.customspawn();
