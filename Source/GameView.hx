@@ -6,6 +6,7 @@ import levellogic.ExplosiveLogic;
 import levellogic.FreezeLogic;
 import levellogic.NoWrap;
 import levellogic.PointCollectingLogic;
+import levellogic.SoccerLogic;
 import levellogic.WaterLogic;
 import levellogic.YuukaLogic;
 import openfl.display.Bitmap;
@@ -73,6 +74,7 @@ enum TypeofRound {
 		EventMagiFairy;
 		EventPatchouli;
 		EventElly;
+		EventSoccer;
 	}
 class GameView extends Sprite
 {
@@ -225,6 +227,10 @@ class GameView extends Sprite
 		else if (R == TypeofRound.EventCirnoBoss || R == TypeofRound.EventYukari || R == TypeofRound.EventParseeBoss || R == TypeofRound.EventSanaeBoss || R == TypeofRound.EventMurasaBoss)
 		{
 			return new levellogic.BossArena();
+		}
+		else if (R == TypeofRound.EventSoccer)
+		{
+			return new levellogic.SoccerLogic();
 		}
 		return new levellogic.ArenaLogic();
 	}
@@ -830,7 +836,7 @@ class GameView extends Sprite
 			if (generalstage == 3)
 			{
 				L = L.concat([/*"kisume", */"yamame", /*"parsee", */"yuugi", /*"satori", "koishi",*/ "orin", "utsuho"]);
-				L = L.concat(["shizuha", "minoriko", "hina", "nitori", "momiji"/*, "sanae", "kanako", "suwako"*/]);
+				L = L.concat(["shizuha", "minoriko", "hina"/*, "nitori"*/, "momiji"/*, "sanae", "kanako", "suwako"*/]);
 			}
 			//palanquin ship
 			if (generalstage == 4)
@@ -3730,10 +3736,16 @@ class GameView extends Sprite
 				if (E.type == "Block" && E.y == data.y && E.x>=0 && E.x<800 && E.x >= data.minx  && E.x <= data.maxx)
 				{
 					//E.icy = true;
-					var D:Dynamic = E;
+					//var D:Dynamic = E;
+					var D:Block = cast(E);
 					if (C.flaming)
 					{
 						D.Burn();
+					}
+					else if (C.anti)
+					{
+						//D.Freeze();
+						D.Destroy(360);
 					}
 					else
 					{
@@ -5182,7 +5194,8 @@ class GameView extends Sprite
 				}
 				else 
 				{
-				var B:PowerupItem = new PowerupItem();
+					var B = new SoccerBall();
+				//var B:PowerupItem = new PowerupItem();
 				//B.power = "reimu";
 				//var B = new Roukanken();
 				//var B = new SanaeStickItem();
@@ -5193,7 +5206,8 @@ class GameView extends Sprite
 				
 				B.x = 400;
 				B.Ldir = 0;
-				AddEntityItem(B);
+				//AddEntityItem(B);
+				AddObject(B);
 				}
 				//AddObject(B);
 			}
@@ -7402,6 +7416,7 @@ class GameView extends Sprite
 				{
 				E[E.length] = TypeofRound.EventRumia;
 				E[E.length] = TypeofRound.EventTable;
+				E[E.length] = TypeofRound.EventSoccer;
 				if (level >= 9 || GameFlags.get(Main.EventRoundsOnly))
 				{
 					E[E.length] = TypeofRound.EventCirno;
@@ -7500,6 +7515,8 @@ class GameView extends Sprite
 		//RoundType = TypeofRound.EventMagiFairy;
 		//RoundType = TypeofRound.EventPatchouli;
 		//RoundType = TypeofRound.EventElly;
+		//RoundType = TypeofRound.EventSoccer;
+		//RoundType = TypeofRound.EventBalloon;
 		
 		var Ev:Array<TypeofRound> = new Array<TypeofRound>();
 		

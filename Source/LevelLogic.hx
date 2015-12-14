@@ -296,7 +296,7 @@ class LevelLogic
 		//setup obstacles.
 		
 		//--basic obstacles--
-		if ([GameView.TypeofRound.EventNormal,GameView.TypeofRound.EventRumia,GameView.TypeofRound.EventTable,GameView.TypeofRound.EventBalloon,GameView.TypeofRound.EventCharacters,GameView.TypeofRound.EventNoWrap,GameView.TypeofRound.EventScrolling,GameView.TypeofRound.EventDescending,GameView.TypeofRound.EventTruck,GameView.TypeofRound.EventSuwako,GameView.TypeofRound.EventPointCollecting].indexOf(RoundType)>-1)
+		if ([GameView.TypeofRound.EventNormal,GameView.TypeofRound.EventRumia,GameView.TypeofRound.EventTable,GameView.TypeofRound.EventBalloon,GameView.TypeofRound.EventCharacters,GameView.TypeofRound.EventNoWrap,GameView.TypeofRound.EventScrolling,GameView.TypeofRound.EventDescending,GameView.TypeofRound.EventTruck,GameView.TypeofRound.EventSuwako,GameView.TypeofRound.EventPointCollecting,GameView.TypeofRound.EventSoccer].indexOf(RoundType)>-1)
 		{
 			if (stage>0)
 			{
@@ -452,7 +452,7 @@ class LevelLogic
 		//AddToArrayMultiple(enemytypes, new Mamizou(), 500);
 		//if (RoundType == GameView.TypeofRound.EventNormal || RoundType == GameView.TypeofRound.EventRumia || RoundType == GameView.TypeofRound.EventSeija || RoundType == GameView.TypeofRound.EventNue || RoundType == GameView.TypeofRound.EventTable || RoundType == GameView.TypeofRound.EventFireCirno || RoundType == GameView.TypeofRound.EventBalloon || RoundType == GameView.TypeofRound.EventElectricCirno || RoundType == GameView.TypeofRound.EventNoWrap || RoundType == GameView.TypeofRound.EventSanaeBoss || RoundType == GameView.TypeofRound.EventParseeBoss || RoundType == GameView.TypeofRound.EventMurasaBoss || RoundType == GameView.TypeofRound.EventScrolling || RoundType == GameView.TypeofRound.EventDescending || RoundType == GameView.TypeofRound.EventYuuka || RoundType == GameView.TypeofRound.EventExplosive || RoundType == GameView.TypeofRound.EventTruck)
 		//if (["EventNormal","EventRumia","EventSeija","EventNue","EventTable","EventFireCirno","EventBalloon","EventElectricCirno","EventNoWrap","EventSanaeBoss","EventParseeBoss","EventMurasaBoss","EventScrolling","EventDescending","EventYuuka","EventExplosive","EventTruck"].indexOf(RoundType.getName())>-1)
-		if ([GameView.TypeofRound.EventNormal,GameView.TypeofRound.EventRumia,GameView.TypeofRound.EventSeija,GameView.TypeofRound.EventNue,GameView.TypeofRound.EventTable,GameView.TypeofRound.EventFireCirno,GameView.TypeofRound.EventBalloon,GameView.TypeofRound.EventElectricCirno,GameView.TypeofRound.EventNoWrap,GameView.TypeofRound.EventSanaeBoss,GameView.TypeofRound.EventParseeBoss,GameView.TypeofRound.EventMurasaBoss,GameView.TypeofRound.EventScrolling,GameView.TypeofRound.EventDescending,GameView.TypeofRound.EventYuuka,GameView.TypeofRound.EventExplosive,GameView.TypeofRound.EventTruck,GameView.TypeofRound.EventSuwako,GameView.TypeofRound.EventPointCollecting,GameView.TypeofRound.EventMagiFairy,GameView.TypeofRound.EventPatchouli,GameView.TypeofRound.EventElly].indexOf(RoundType)>-1)
+		if ([GameView.TypeofRound.EventNormal,GameView.TypeofRound.EventRumia,GameView.TypeofRound.EventSeija,GameView.TypeofRound.EventNue,GameView.TypeofRound.EventTable,GameView.TypeofRound.EventFireCirno,GameView.TypeofRound.EventBalloon,GameView.TypeofRound.EventElectricCirno,GameView.TypeofRound.EventNoWrap,GameView.TypeofRound.EventSanaeBoss,GameView.TypeofRound.EventParseeBoss,GameView.TypeofRound.EventMurasaBoss,GameView.TypeofRound.EventScrolling,GameView.TypeofRound.EventDescending,GameView.TypeofRound.EventYuuka,GameView.TypeofRound.EventExplosive,GameView.TypeofRound.EventTruck,GameView.TypeofRound.EventSuwako,GameView.TypeofRound.EventPointCollecting,GameView.TypeofRound.EventMagiFairy,GameView.TypeofRound.EventPatchouli,GameView.TypeofRound.EventElly,GameView.TypeofRound.EventSoccer].indexOf(RoundType)>-1)
 		{
 			var types = new Array<Array<Dynamic>>();
 			//types[types.length] = CreateArrayOfMultiple(new Yuyuko(), 400);
@@ -582,6 +582,10 @@ class LevelLogic
 		{
 			AddToArrayMultiple(enemytypes, new MagiFairy(), 550);
 		}
+		if (RoundType == GameView.TypeofRound.EventSoccer)
+		{
+			AddToArrayMultiple(enemytypes, new Wriggle(), 25);
+		}
 		if (RoundType == GameView.TypeofRound.EventPatchouli)
 		{
 			AddToArrayMultiple(enemytypes, new Patchouli(), 450);
@@ -649,7 +653,7 @@ class LevelLogic
 			epm *= 0.5;
 			maxspawns = Math.ceil(maxspawns * 0.7);
 		}
-		if (RoundType == GameView.TypeofRound.EventTable)
+		if (RoundType == GameView.TypeofRound.EventTable/* || RoundType == GameView.TypeofRound.EventSoccer*/)
 		{
 			epm *= 0.5;
 			maxspawns = Math.ceil(maxspawns * 0.7);
