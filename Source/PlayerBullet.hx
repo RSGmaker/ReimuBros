@@ -136,6 +136,7 @@ class PlayerBullet extends Entity
 				var degradian = Math.atan2(Vspeed, Hspeed);
 				rotationlayer.rotation = degradian * ( 180.0 / 3.14);
 			}
+			SoundManager.Play("playershot");
 		}
 		if (emerge && timelimit!=1 && image.scrollRect != null && image.scrollRect.x > 0)
 		{

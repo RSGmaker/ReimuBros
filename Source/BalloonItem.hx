@@ -33,7 +33,8 @@ class BalloonItem extends EntityItem
 		{
 			player.Vspeed -= 8;
 		}
-		SoundManager.Play("collectcoin");
+		SoundManager.Play("balloonpop");
+		//SoundManager.Play("collectcoin");
 	}
 	override public function update() 
 	{
