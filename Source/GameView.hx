@@ -2183,6 +2183,36 @@ class GameView extends Sprite
 		}
 		return ret;
 	}
+	public function CollisionMultiDetectPointItem(X:Float, Y:Float):Array<EntityItem> {
+		var ret = new Array<EntityItem>();
+		var i = 0;
+		var P = new Point(X, Y);
+		while (i < activeItems.length)
+		{
+			var E = activeItems[i];
+			var ok = true;
+			if (Std.is(E, CarryItem))
+			{
+				var D:Dynamic = E;
+				var C:CarryItem = D;
+				if (C.holder != null)
+				{
+					ok = false;
+				}
+			}
+			if (!E.killed && E.alive && ok)
+			{
+				if (E.GetHitbox().containsPoint(P))
+				{
+					//return E;
+					ret.push(E);
+				}
+			}
+			i += 1;
+		}
+		return ret;
+		//return null;
+	}
 	//retuns collectables at point
 	public function CollisionDetectPointItem(X:Float,Y:Float):EntityItem {
 		var i = 0;
@@ -5194,10 +5224,10 @@ class GameView extends Sprite
 				}
 				else 
 				{
-					var B = new SoccerBall();
+					//var B = new SoccerBall();
 				//var B:PowerupItem = new PowerupItem();
 				//B.power = "reimu";
-				//var B = new Roukanken();
+				var B = new Roukanken();
 				//var B = new SanaeStickItem();
 				//var B = new Bow();
 				//var B = new MiniHakkero();
@@ -5206,8 +5236,8 @@ class GameView extends Sprite
 				
 				B.x = 400;
 				B.Ldir = 0;
-				//AddEntityItem(B);
-				AddObject(B);
+				AddEntityItem(B);
+				//AddObject(B);
 				}
 				//AddObject(B);
 			}

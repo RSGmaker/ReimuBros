@@ -1023,7 +1023,7 @@ class Player extends Entity
 				danger = game.CollisionDetectTouchDangerous(this);
 				enemy = game.CollisionDetectTouchEnemy(this);
 			}
-		var eItem = game.CollisionDetectPointItem(x + W, y + (feetposition - 1));
+		/*var eItem = game.CollisionDetectPointItem(x + W, y + (feetposition - 1));
 		//var eItem = game.CollisionDetectTouchItem(x + W, y + (feetposition - 1));
 		if (eItem != null && eItem.collectable)
 		{
@@ -1050,6 +1050,39 @@ class Player extends Entity
 					message = eItem.interacttext;
 				}
 			}
+		}*/
+		var emi = game.CollisionMultiDetectPointItem(x + W, y + (feetposition - 1));
+		var i = 0;
+		while (i < emi.length)
+		{
+			var eItem = emi[i];
+			if (eItem != null && eItem.collectable)
+			{
+			if (eItem.autocollect || controller[4])
+			{
+				controller[4] = false;
+			if (!(flags.get(CanHide) && cooldown <= 0))
+			{
+				if (!eItem.clientcollect)
+				{
+					game.SendEvent("Collect", eItem.UID);
+				}
+				else
+				{
+					eItem.Collect(this);
+				}
+			}
+			}
+			else
+			{
+				if (messagetime < 1)
+				{
+					messagetime = 2;
+					message = eItem.interacttext;
+				}
+			}
+			}
+			i++;
 		}
 		if (danger != null && lives>=0 && game.myplayer == this)
 		{
