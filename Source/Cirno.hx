@@ -1,4 +1,5 @@
 package;
+import openfl.display.BlendMode;
 
 /**
  * ...
@@ -19,6 +20,7 @@ class Cirno extends Enemy
 	public var countdown:Int;
 	public var flaming:Bool;
 	public var electric:Bool;
+	public var anti:Bool;
 	public var rename:String;
 	public var mxtimer:Int;
 	public var killedby:Player;
@@ -70,6 +72,7 @@ class Cirno extends Enemy
 			rng = new MersenneTwister();
 			var seed:UInt = Math.floor(UID * 100000);
 			timer = (60) + rng.twist(seed, 1, 30 * 30)[0];
+			
 			if (game.RoundType == GameView.TypeofRound.EventFireCirno || rng.twist(rng.seed, 1, 100)[0] > 90)
 			{
 				flaming = true;
@@ -91,6 +94,23 @@ class Cirno extends Enemy
 				rename = "deathcirno";
 				mxtimer = 330;
 			}
+			else if ((game.level>90 && rng.twist(rng.seed, 1, 1000)[0] > 990))
+			{
+				anti = true;
+				mxtimer = 300;
+				rename = "AntiCirno";
+				image.blendMode = BlendMode.DIFFERENCE;
+				
+				var filterArr = new Array<flash.filters.BitmapFilter>();
+				var AB = new flash.filters.GlowFilter();
+				AB.blurX = 10;
+				AB.blurY = 10;
+				AB.color = 0xFFFFFF;
+				AB.strength = 1;
+				filterArr[filterArr.length] = AB;
+				
+				image.filters = filterArr;
+			}
 			countdown = mxtimer;
 		}
 		if (ground != null && !flaming && !electric && !death)
@@ -106,7 +126,7 @@ class Cirno extends Enemy
 		}
 		if (timer <= 0)
 		{
-			if (ground != null && ((!ground.icy && !flaming) || (!ground.dangerous && flaming && y<500)) && x>0 && x<780)
+			if (ground != null && ((!ground.icy && !flaming) || (!ground.dangerous && flaming && y<500) || (anti && y<500)) && x>0 && x<780)
 			{
 				selfdestruct = true;
 			}
@@ -120,14 +140,14 @@ class Cirno extends Enemy
 			timer -= 1;
 		}
 		doingability = false;
-		if (selfdestruct && ((y<500) || (!flaming && !electric && !death)))
+		if (selfdestruct && ((y<500) || (!flaming && !electric && !death && !anti)))
 		{
 			countdown -= 1;
 			//visuallyEnraged = !visuallyEnraged;
 			doingability = true;
 			if (countdown <= 0)
 			{
-			if (game.Hoster && ground != null && ((!ground.icy && !flaming) || (!ground.dangerous && flaming && y<500)))
+			if (game.Hoster && ground != null && ((!ground.icy && !flaming) || (((!ground.dangerous && flaming) || anti) && y<500)))
 			{
 				var D:Dynamic = { };
 				D.UID = UID;

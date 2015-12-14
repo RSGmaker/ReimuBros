@@ -2673,6 +2673,7 @@ addDNA("3.39:Green Fairy:63:0:185:270:209:46:0:0:0:0:86:F3FFF3", "Green_Fairy");
 addDNA("3.39:Red Fairy:63:0:185:201:209:46:0:0:0:0:86:FFF3F3", "Red_Fairy");
 //addDNA("3.39:Magi Fairy:63:158:158:238:154:20:0:0:0:0:86:FFF3F3", "Magi_Fairy");
 addDNA("3.39:Magi Fairy:63:158:158:238:154:20:0:0:89:15:86:FFF3F3", "Magi_Fairy");
+addDNA("3.39:AntiCirno:70:117:120:120:3:9:105:68:0:0:47:49CAE9","AntiCirno");
 
 addDNA("3.39:MoonRabbit:100:130:181:215:120:17:0:0:0:0:51:FCE24E", "MoonRabbit");
 	}
