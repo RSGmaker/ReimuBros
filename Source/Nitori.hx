@@ -147,6 +147,10 @@ class Nitori extends Enemy
 	alive = false;
 	}
 	}
+	if (!alive && game.myplayer == bonkedby)
+	{
+		game.unlockcharacter("nitori");
+	}
 	}
 	
 	public override function bump(player:Player)
