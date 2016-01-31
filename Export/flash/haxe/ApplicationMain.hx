@@ -70,6 +70,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
+		urls.push ("assets/Audio/Mp3/balloonpop.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
 		urls.push ("assets/Audio/Mp3/bonk.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
@@ -171,6 +175,10 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Audio/Mp3/optionsintro.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("assets/Audio/Mp3/playershot.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
@@ -906,6 +914,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("assets/Sprites/mamizoutail0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("assets/Sprites/matenshi0.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -1075,6 +1087,10 @@ class ApplicationMain {
 		
 		
 		urls.push ("assets/Sprites/skull0.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("assets/Sprites/soccerball.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		

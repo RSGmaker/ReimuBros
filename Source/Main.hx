@@ -65,7 +65,7 @@ class Main extends Sprite {
 	public var DEBUG:Bool = false;
 	#end
 	//info displayed in titlescreen
-	public var gameversion:String = "2.0.1beta";
+	public var gameversion:String = "2.0.1";
 	public var controlscheme:Array<UInt>;
 	//message shown to player should the host of that session make them leave
 	public var statusmessage:String = "";
@@ -252,6 +252,10 @@ class Main extends Sprite {
 		if (savedata.data.challenges == null)
 		{
 			savedata.data.challenges = new Array<Bool>();
+		}
+		if (savedata.data.tutorial == null)
+		{
+			savedata.data.tutorial = true;
 		}
 		if (savedata.data.avatar == null)
 		{
@@ -975,6 +979,14 @@ class Main extends Sprite {
 					lastsession = null;
 				}
 				session = null;
+			}
+			
+			if (!online && !game.online && game.myplayer != null)
+			{
+				if (game.myplayer.lives > game.startinglives)
+				{
+					savedata.data.money += (game.myplayer.lives - game.startinglives);
+				}
 			}
 			savedata.flush();
 			game = null;

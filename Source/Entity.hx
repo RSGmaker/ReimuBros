@@ -421,10 +421,12 @@ class Entity extends Sprite
 			wrapped = true;
 			x += 800+width;
 		}
-		if (x > 800+width && Hspeed>=0)
+		//if (x > 800+width && Hspeed>=0)
+		if (x > 800 && Hspeed>=0)
 		{
 			wrapped = true;
-			x -= 800+width+width;
+			//x -= 800+width+width;
+			x -= 800+width;
 		}
 	}
 	//obsolete multiplayer sync code(current netplay code is near instant results so we no longer have to account for massive delays)

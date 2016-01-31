@@ -68,6 +68,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Audio/Mp3/adv6.mp3", AssetType.MUSIC);
 		className.set ("assets/Audio/Mp3/anchor.mp3", __ASSET__assets_audio_mp3_anchor_mp3);
 		type.set ("assets/Audio/Mp3/anchor.mp3", AssetType.MUSIC);
+		className.set ("assets/Audio/Mp3/balloonpop.mp3", __ASSET__assets_audio_mp3_balloonpop_mp3);
+		type.set ("assets/Audio/Mp3/balloonpop.mp3", AssetType.MUSIC);
 		className.set ("assets/Audio/Mp3/bonk.mp3", __ASSET__assets_audio_mp3_bonk_mp3);
 		type.set ("assets/Audio/Mp3/bonk.mp3", AssetType.MUSIC);
 		className.set ("assets/Audio/Mp3/cancel.mp3", __ASSET__assets_audio_mp3_cancel_mp3);
@@ -120,6 +122,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Audio/Mp3/options.mp3", AssetType.MUSIC);
 		className.set ("assets/Audio/Mp3/optionsintro.mp3", __ASSET__assets_audio_mp3_optionsintro_mp3);
 		type.set ("assets/Audio/Mp3/optionsintro.mp3", AssetType.MUSIC);
+		className.set ("assets/Audio/Mp3/playershot.mp3", __ASSET__assets_audio_mp3_playershot_mp3);
+		type.set ("assets/Audio/Mp3/playershot.mp3", AssetType.MUSIC);
 		className.set ("assets/Audio/Mp3/pow.mp3", __ASSET__assets_audio_mp3_pow_mp3);
 		type.set ("assets/Audio/Mp3/pow.mp3", AssetType.MUSIC);
 		className.set ("assets/Audio/Mp3/powerdown.mp3", __ASSET__assets_audio_mp3_powerdown_mp3);
@@ -486,6 +490,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Sprites/logo.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/magibullet.png", __ASSET__assets_sprites_magibullet_png);
 		type.set ("assets/Sprites/magibullet.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/mamizoutail0.png", __ASSET__assets_sprites_mamizoutail0_png);
+		type.set ("assets/Sprites/mamizoutail0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/matenshi0.png", __ASSET__assets_sprites_matenshi0_png);
 		type.set ("assets/Sprites/matenshi0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/meilingsleeping0.png", __ASSET__assets_sprites_meilingsleeping0_png);
@@ -572,6 +578,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/Sprites/shingyokuorb0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/skull0.png", __ASSET__assets_sprites_skull0_png);
 		type.set ("assets/Sprites/skull0.png", AssetType.IMAGE);
+		className.set ("assets/Sprites/soccerball.png", __ASSET__assets_sprites_soccerball_png);
+		type.set ("assets/Sprites/soccerball.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/spectrum0.png", __ASSET__assets_sprites_spectrum0_png);
 		type.set ("assets/Sprites/spectrum0.png", AssetType.IMAGE);
 		className.set ("assets/Sprites/spellcard0.png", __ASSET__assets_sprites_spellcard0_png);
@@ -733,6 +741,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.MUSIC);
+		id = "assets/Audio/Mp3/balloonpop.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
 		id = "assets/Audio/Mp3/bonk.mp3";
 		path.set (id, id);
 		
@@ -834,6 +846,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		type.set (id, AssetType.MUSIC);
 		id = "assets/Audio/Mp3/optionsintro.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "assets/Audio/Mp3/playershot.mp3";
 		path.set (id, id);
 		
 		type.set (id, AssetType.MUSIC);
@@ -1569,6 +1585,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/mamizoutail0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "assets/Sprites/matenshi0.png";
 		path.set (id, id);
 		
@@ -1738,6 +1758,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		type.set (id, AssetType.IMAGE);
 		id = "assets/Sprites/skull0.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "assets/Sprites/soccerball.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -2316,6 +2340,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
@@ -2348,6 +2376,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("assets/Audio/Mp3/anchor.mp3", __ASSET__assets_audio_mp3_anchor_mp3);
 		type.set ("assets/Audio/Mp3/anchor.mp3", AssetType.MUSIC);
+		
+		className.set ("assets/Audio/Mp3/balloonpop.mp3", __ASSET__assets_audio_mp3_balloonpop_mp3);
+		type.set ("assets/Audio/Mp3/balloonpop.mp3", AssetType.MUSIC);
 		
 		className.set ("assets/Audio/Mp3/bonk.mp3", __ASSET__assets_audio_mp3_bonk_mp3);
 		type.set ("assets/Audio/Mp3/bonk.mp3", AssetType.MUSIC);
@@ -2426,6 +2457,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("assets/Audio/Mp3/optionsintro.mp3", __ASSET__assets_audio_mp3_optionsintro_mp3);
 		type.set ("assets/Audio/Mp3/optionsintro.mp3", AssetType.MUSIC);
+		
+		className.set ("assets/Audio/Mp3/playershot.mp3", __ASSET__assets_audio_mp3_playershot_mp3);
+		type.set ("assets/Audio/Mp3/playershot.mp3", AssetType.MUSIC);
 		
 		className.set ("assets/Audio/Mp3/pow.mp3", __ASSET__assets_audio_mp3_pow_mp3);
 		type.set ("assets/Audio/Mp3/pow.mp3", AssetType.MUSIC);
@@ -2976,6 +3010,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("assets/Sprites/magibullet.png", __ASSET__assets_sprites_magibullet_png);
 		type.set ("assets/Sprites/magibullet.png", AssetType.IMAGE);
 		
+		className.set ("assets/Sprites/mamizoutail0.png", __ASSET__assets_sprites_mamizoutail0_png);
+		type.set ("assets/Sprites/mamizoutail0.png", AssetType.IMAGE);
+		
 		className.set ("assets/Sprites/matenshi0.png", __ASSET__assets_sprites_matenshi0_png);
 		type.set ("assets/Sprites/matenshi0.png", AssetType.IMAGE);
 		
@@ -3104,6 +3141,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("assets/Sprites/skull0.png", __ASSET__assets_sprites_skull0_png);
 		type.set ("assets/Sprites/skull0.png", AssetType.IMAGE);
+		
+		className.set ("assets/Sprites/soccerball.png", __ASSET__assets_sprites_soccerball_png);
+		type.set ("assets/Sprites/soccerball.png", AssetType.IMAGE);
 		
 		className.set ("assets/Sprites/spectrum0.png", __ASSET__assets_sprites_spectrum0_png);
 		type.set ("assets/Sprites/spectrum0.png", AssetType.IMAGE);
@@ -3984,6 +4024,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_adv5_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_adv6_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_anchor_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_balloonpop_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_bonk_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_cancel_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_cash_mp3 extends flash.media.Sound { }
@@ -4010,6 +4051,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_ok_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_options_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_optionsintro_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_playershot_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_pow_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_powerdown_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__assets_audio_mp3_powerup_mp3 extends flash.media.Sound { }
@@ -4193,6 +4235,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_lightsword_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_logo_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_magibullet_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_mamizoutail0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_matenshi0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_meilingsleeping0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_meilingsleepingflipped0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -4236,6 +4279,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_senkou0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_shingyokuorb0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_skull0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__assets_sprites_soccerball_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_spectrum0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_spellcard0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__assets_sprites_spiderweb0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -4623,6 +4667,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
+
+
 #else
 
 
@@ -4639,6 +4687,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:file("Assets/Audio/Mp3/adv5.mp3") #if display private #end class __ASSET__assets_audio_mp3_adv5_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/adv6.mp3") #if display private #end class __ASSET__assets_audio_mp3_adv6_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/anchor.mp3") #if display private #end class __ASSET__assets_audio_mp3_anchor_mp3 extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Mp3/balloonpop.mp3") #if display private #end class __ASSET__assets_audio_mp3_balloonpop_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/bonk.mp3") #if display private #end class __ASSET__assets_audio_mp3_bonk_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/cancel.mp3") #if display private #end class __ASSET__assets_audio_mp3_cancel_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/cash.mp3") #if display private #end class __ASSET__assets_audio_mp3_cash_mp3 extends lime.utils.ByteArray {}
@@ -4665,6 +4714,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:file("Assets/Audio/Mp3/ok.mp3") #if display private #end class __ASSET__assets_audio_mp3_ok_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/options.mp3") #if display private #end class __ASSET__assets_audio_mp3_options_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/optionsintro.mp3") #if display private #end class __ASSET__assets_audio_mp3_optionsintro_mp3 extends lime.utils.ByteArray {}
+@:file("Assets/Audio/Mp3/playershot.mp3") #if display private #end class __ASSET__assets_audio_mp3_playershot_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/pow.mp3") #if display private #end class __ASSET__assets_audio_mp3_pow_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/powerdown.mp3") #if display private #end class __ASSET__assets_audio_mp3_powerdown_mp3 extends lime.utils.ByteArray {}
 @:file("Assets/Audio/Mp3/powerup.mp3") #if display private #end class __ASSET__assets_audio_mp3_powerup_mp3 extends lime.utils.ByteArray {}
@@ -4848,6 +4898,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("Assets/Sprites/lightsword.png") #if display private #end class __ASSET__assets_sprites_lightsword_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/logo.png") #if display private #end class __ASSET__assets_sprites_logo_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/magibullet.png") #if display private #end class __ASSET__assets_sprites_magibullet_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/mamizoutail0.png") #if display private #end class __ASSET__assets_sprites_mamizoutail0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/matenshi0.png") #if display private #end class __ASSET__assets_sprites_matenshi0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/meilingsleeping0.png") #if display private #end class __ASSET__assets_sprites_meilingsleeping0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/meilingsleepingflipped0.png") #if display private #end class __ASSET__assets_sprites_meilingsleepingflipped0_png extends lime.graphics.Image {}
@@ -4891,6 +4942,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("Assets/Sprites/senkou0.png") #if display private #end class __ASSET__assets_sprites_senkou0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/shingyokuorb0.png") #if display private #end class __ASSET__assets_sprites_shingyokuorb0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/skull0.png") #if display private #end class __ASSET__assets_sprites_skull0_png extends lime.graphics.Image {}
+@:image("Assets/Sprites/soccerball.png") #if display private #end class __ASSET__assets_sprites_soccerball_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/spectrum0.png") #if display private #end class __ASSET__assets_sprites_spectrum0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/spellcard0.png") #if display private #end class __ASSET__assets_sprites_spellcard0_png extends lime.graphics.Image {}
 @:image("Assets/Sprites/spiderweb0.png") #if display private #end class __ASSET__assets_sprites_spiderweb0_png extends lime.graphics.Image {}

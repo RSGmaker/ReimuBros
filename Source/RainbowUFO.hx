@@ -1,5 +1,7 @@
 package;
+import openfl.display.Bitmap;
 import openfl.display.Shape;
+import openfl.display.Sprite;
 import openfl.geom.Rectangle;
 
 /**
@@ -12,7 +14,7 @@ class RainbowUFO extends Enemy// extends UFO
 	public var maxpointsneeded:Int = 7;
 	public var pointsneeded:Int;
 	public var bonuscolor:String;
-	public var progressbar:Shape;
+	public var progressbar:Sprite;
 	public var lastprogress:Float = 0;
 	
 	public var bullets:Int;
@@ -395,9 +397,16 @@ class RainbowUFO extends Enemy// extends UFO
 				iter -= 15;
 			}
 			
-			progressbar = new Shape();
+			progressbar = new Sprite();
 			progressbar.x = -11;
 			progressbar.y = 50;
+			
+			var PB = new Bitmap(game.AL.GetAnimation("Point")[0]);
+			PB.scaleX = 0.6;
+			PB.scaleY = PB.scaleX;
+			PB.y = -5;
+			PB.x = -5;
+			progressbar.addChild(PB);
 			addChild(progressbar);
 			/*if (game.RoundType == GameView.TypeofRound.EventDanmaku)
 			{

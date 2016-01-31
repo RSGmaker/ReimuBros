@@ -11,6 +11,11 @@ class Keine extends Enemy
 	
 	public var mxspd:Float;
 	public var ex:Bool;
+	
+	//public var resist:Bool;
+	public var prefix:String = "";
+	public var skipresist:Bool = false;
+	public var rename:String;
 	public function new() 
 	{
 		super("Keine");
@@ -22,12 +27,31 @@ class Keine extends Enemy
 		flipped = -1;
 		ex = false;
 		pointvalue = 300;
+		scaleX = 0.625;
+		scaleY = scaleX;
 	}
 	override public function attack(player:Player):Bool
 	{
+		/*if (game.RoundType == GameView.TypeofRound.EventMegaKeine && !skipresist)
+		{
+			resist = !resist;
+			if (!resist)
+			{
+				invincibility = 10;
+				return false;
+			}
+		}*/
+		if (HP > 1)
+		{
+			HP--;
+			invincibility = 10;
+			return false;
+		}
 		if (!ex)
 		{
+			skipresist = true;
 			bump(player);
+			skipresist = false;
 			invincibility = 10;
 			Hspeed = 0;
 			return false;
@@ -48,6 +72,18 @@ class Keine extends Enemy
 		if (!started)
 		{
 			started = true;
+			if (game.RoundType == GameView.TypeofRound.EventMegaKeine)
+			{
+				//resist = true;
+				prefix = "giant";
+				mxspd += 1;
+				scaleX = 0.5;
+				scaleY = scaleX;
+				if (spawns <= 1)
+				{
+					HP = 2;
+				}
+			}
 		}
 		if (invincibility > 0)
 		{
@@ -63,6 +99,11 @@ class Keine extends Enemy
 			MXS += 4+rank;
 			acl += 0.1;
 			charname = charname + "ex";
+		}
+		rename = "E" + charname;
+		if (HP == 1 && game.RoundType == GameView.TypeofRound.EventMegaKeine)
+		{
+			rename = "EA" + charname;
 		}
 		if (!killed)
 		{
@@ -99,7 +140,8 @@ class Keine extends Enemy
 			}
 		}
 		updphysics();
-		updateanimation("E"+charname);
+		//updateanimation("E"+charname);
+		updateanimation(prefix+rename);
 		
 		if (ground != null)
 		{
@@ -145,6 +187,26 @@ class Keine extends Enemy
 	}
 	public override function bump(player:Player)
 	{
+		/*if (game.RoundType == GameView.TypeofRound.EventMegaKeine && !skipresist)
+		{
+			resist = !resist;
+			if (!resist)
+			{
+				//invincibility = 10;
+				//return false;
+				return;
+			}
+		}*/
+		if (!skipresist && HP > 1)
+		{
+			HP--;
+			Hspeed = mxspd+4+rank;
+			if (Ldir > 0)
+			{
+				Hspeed = -Hspeed;
+			}
+			return;
+		}
 		if (!ex)
 		{
 			Hspeed = mxspd+4+rank;
@@ -166,6 +228,10 @@ class Keine extends Enemy
 			if (!ex)
 			{
 				ex = true;
+				if (game.RoundType == GameView.TypeofRound.EventMegaKeine)
+				{
+					HP = 2;
+				}
 			}
 			else
 			{

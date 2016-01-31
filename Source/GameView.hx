@@ -75,6 +75,7 @@ enum TypeofRound {
 		EventPatchouli;
 		EventElly;
 		EventSoccer;
+		EventMegaKeine;
 	}
 class GameView extends Sprite
 {
@@ -176,6 +177,10 @@ class GameView extends Sprite
 	public var gameoverdescription:TextField;
 	
 	public var levelicon:Bitmap;
+	
+	public var maxdarkness:Float = 0.0;
+	public var darknesslevel:Float = 0.0;
+	public var lightradius:Float = 250;
 	
 	public function GetLogic():LevelLogic
 	{
@@ -654,6 +659,7 @@ class GameView extends Sprite
 	public var backlayer:Sprite;
 	public var entitylayer:Sprite;
 	public var frontlayer:Sprite;
+	public var effectlayer:Sprite;
 	public var gamestage:Sprite;
 	public var camera:Sprite;
 	
@@ -1108,6 +1114,8 @@ class GameView extends Sprite
 		gamestage.addChild(entitylayer);
 		frontlayer = new Sprite();
 		gamestage.addChild(frontlayer);
+		effectlayer = new Sprite();
+		gamestage.addChild(effectlayer);
 		//HighScore = Main._this.savedata.data.highscore;
 		HighScore = gethighscore();
 		ufos = 0;
@@ -1589,6 +1597,8 @@ class GameView extends Sprite
 		
 		addChild(go);
 		addChild(gameover);
+		
+		ShowLevel(false);
 	}
 	public function togglemenu()
 	{
@@ -2855,7 +2865,8 @@ class GameView extends Sprite
 				}
 				else
 				{
-					ShowMessage("Objective reached,");
+					//ShowMessage("Objective reached,");
+					ShowMessage("Goal reached,");
 				}
 				ShowMessage("awarded:" + gamemode.reward + "Mon!");
 				
@@ -3370,6 +3381,11 @@ class GameView extends Sprite
 					startinglives = 30;
 					myplayer.lives = 30;
 				}
+			}
+			if (GameFlags.get(Main.AllStar))
+			{
+				startinglives = 0;
+				myplayer.lives = 0;
 			}
 			//if (data.HP != powblock.HP)
 			if (allowpowblock)
@@ -5225,9 +5241,9 @@ class GameView extends Sprite
 				else 
 				{
 					//var B = new SoccerBall();
-				//var B:PowerupItem = new PowerupItem();
+				var B:PowerupItem = new PowerupItem();
 				//B.power = "reimu";
-				var B = new Roukanken();
+				//var B = new Roukanken();
 				//var B = new SanaeStickItem();
 				//var B = new Bow();
 				//var B = new MiniHakkero();
@@ -5466,7 +5482,9 @@ class GameView extends Sprite
 			LE.push( { T:"letty", C:Letty } );
 			LE.push( { T:"yoshika", C:Yoshika } );
 			LE.push( { T:"wriggle", C:Wriggle } );
-			LE.push( { T:"Mamizou", C:Mamizou} );
+			LE.push( { T:"Mamizou", C:Mamizou } );
+			LE.push( { T:"momiji", C:Momiji } );
+			LE.push( { T:"daiyousei", C:Daiyousei } );
 			
 			//Items 
 			LE.push( { T:"Point", C:PointItem } );
@@ -5664,6 +5682,10 @@ class GameView extends Sprite
 		var C = levelsperrank;
 		var rank = Math.floor(L / C);
 		var S = "";
+		if (rank == -1)
+		{
+			S = "Novice";
+		}
 		if (rank == 0)
 		{
 			S = "Easy:";
@@ -5750,7 +5772,11 @@ class GameView extends Sprite
 	}
 	public function ShowLevel(displaymessage:Bool=true)
 	{
-		var S = GetLevelTitle(level,true,false);
+		var S = GetLevelTitle(level, true, false);
+		/*if (IsTutorialLevel())
+		{
+			S = "Hakurei Shrine - 101";
+		}*/
 		var M = messages.length;
 		if (displaymessage)
 		{
@@ -5784,6 +5810,11 @@ class GameView extends Sprite
 			}
 		}
 		var R = GetRankTitle(level);
+		if (IsTutorialLevel())
+		{
+			//S = "Hakurei Shrine - 101";
+			R = "Novice";
+		}
 		if (!online || (NP.running && NP.group != null))
 		{
 			leveltitle.text = Main._this.roomprefix + "-" + R + ":" + mode;
@@ -6464,6 +6495,47 @@ class GameView extends Sprite
 		backlayer.graphics.clear();
 		entitylayer.graphics.clear();
 		frontlayer.graphics.clear();
+		effectlayer.graphics.clear();
+		if (darknesslevel != maxdarkness)
+		{
+			if (darknesslevel < maxdarkness)
+			{
+				darknesslevel += 0.05;
+				if (!(darknesslevel < maxdarkness))
+				{
+					darknesslevel = maxdarkness;
+				}
+			}
+			else
+			{
+				darknesslevel -= 0.05;
+				if (!(darknesslevel > maxdarkness))
+				{
+					darknesslevel = maxdarkness;
+				}
+			}
+		}
+		if (darknesslevel>0)
+		{
+			var G = effectlayer.graphics;
+			G.beginFill(0, darknesslevel);
+			G.drawRect(0, -100, 800, 700);
+			G.drawCircle(myplayer.x+myplayer.middle, myplayer.y+(Std.int(myplayer.feetposition)>>1), lightradius);
+			//G.drawRect(0, -100, 800, 700);
+			//G.drawCircle(myplayer.x+myplayer.middle, myplayer.y+(Std.int(myplayer.feetposition)>>1), lightradius);
+			
+			if (myplayer.x > 400)
+			{
+				var X = myplayer.x - (800 + myplayer.width);
+				G.drawCircle(X+myplayer.middle, myplayer.y+(Std.int(myplayer.feetposition)>>1), lightradius);
+			}
+			else
+			{
+				var X = myplayer.x + (800 + myplayer.width);
+				G.drawCircle(X+myplayer.middle, myplayer.y+(Std.int(myplayer.feetposition)>>1), lightradius);
+			}
+			G.endFill();
+		}
 		Background.cacheAsBitmap = Background.alpha >= 1;
 		/*if (gamestage.scaleY > 0)
 		{
@@ -6867,6 +6939,7 @@ class GameView extends Sprite
 							{
 								max -= Math.floor(GetPlayers().length / 2);
 							}
+							//max = 0;
 							//if (Math.random() < 0.12/* || true*/)
 							//if (Math.random() < 0.07/* || true*/)
 							if (D.type == "Point")
@@ -7369,6 +7442,15 @@ class GameView extends Sprite
 				}
 			}
 	}
+	//Determines if fairy enemies should display tutorial text(also nerfs fairies, and prevents events).
+	public function IsTutorialLevel():Bool
+	{
+		if (level == 1 && gamemode.preunlocked && gamemode.category == "")
+		{
+			return true;
+		}
+		return false;
+	}
 	
 	public function CalculateLevelData()
 	{
@@ -7436,6 +7518,11 @@ class GameView extends Sprite
 		{
 			EVT = 0;
 		}
+		if (IsTutorialLevel())
+		{
+			//if tutorial level, prevent random events from occuring.
+			EVT = 1;
+		}
 		if (EVT < 0.05)
 		{
 			var E:Array<TypeofRound> = new Array<TypeofRound>();
@@ -7492,6 +7579,7 @@ class GameView extends Sprite
 				if (level > 25 || GameFlags.get(Main.EventRoundsOnly))
 				{
 					E[E.length] = TypeofRound.EventYuuka;
+					E[E.length] = TypeofRound.EventMegaKeine;
 				}
 				if (level > 50 || GameFlags.get(Main.EventRoundsOnly))
 				{
@@ -7547,6 +7635,7 @@ class GameView extends Sprite
 		//RoundType = TypeofRound.EventElly;
 		//RoundType = TypeofRound.EventSoccer;
 		//RoundType = TypeofRound.EventBalloon;
+		//RoundType = TypeofRound.EventMegaKeine;
 		
 		var Ev:Array<TypeofRound> = new Array<TypeofRound>();
 		

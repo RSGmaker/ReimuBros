@@ -48,6 +48,12 @@ class OptionView extends Sprite
 	
 	public var selected:MenuButton;
 	public var frames:Int;
+	
+	public var controls:Options_ControlsView;
+	public var dimmer:Sprite;
+	
+	public var backbutton:MenuButton;
+	public var controlbutton:MenuButton;
 	public function new() 
 	{
 		super();
@@ -81,28 +87,6 @@ class OptionView extends Sprite
 		var XX = 120;
 		var YY = 20;
 		sndmeter = new Sprite();
-		/*sndmeter.graphics.beginFill(0x333333);
-		sndmeter.graphics.drawRect(XX, YY, 200, 50);
-		sndmeter.graphics.endFill();
-		
-		sndmeter.graphics.beginFill(0x00aa22);
-		sndmeter.graphics.drawRect(XX, YY, Main._this.savedata.data.soundvolume * 200, 50);
-		sndmeter.graphics.endFill();
-		
-		var fillType:flash.display.GradientType = flash.display.GradientType.LINEAR;
-		//var colors:Array<UInt> = [0x777777, 0xffffff];
-		//var colors:Array<UInt> = [0, 0xffffff];
-		var colors:Array<UInt> = [0x11CC55, 0xffffff];
-		var alphas = [0.06, 0.6];
-		var ratios = [0x00, 0xFF];
-		var matr:flash.geom.Matrix = new flash.geom.Matrix();
-		//matr.createGradientBox(50, 9, 1.57079632679, 0, -4.5);
-		matr.createGradientBox(Main._this.savedata.data.soundvolume * 200, 50, 1.57079632679, 0, 0);
-		var spreadMethod:flash.display.SpreadMethod = flash.display.SpreadMethod.REFLECT;
-		sndmeter.graphics.beginGradientFill(fillType, colors, alphas, ratios, matr, spreadMethod);  
-	 
-		sndmeter.graphics.drawRect(XX, YY, Main._this.savedata.data.soundvolume * 200, 50);
-		sndmeter.graphics.endFill();*/
 		sndmeter.x = XX;
 		sndmeter.y = YY;
 		drawbar(sndmeter.graphics, 0, 0, 200, 50, Main._this.savedata.data.soundvolume);
@@ -111,23 +95,15 @@ class OptionView extends Sprite
 		var Y1 = YY;
 		sndmeter.buttonMode = true;
 		sndmeter.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				//var X:Float = ((sndmeter.mouseX - X1) / 200.0);
 				var X:Float = ((sndmeter.mouseX) / 200.0);
 				SoundManager._this.SetSoundVolume(X);
 				X = SoundManager._this.GetSoundVolume();
 				sndmeter.graphics.clear();
 				Main._this.savedata.data.soundvolume = X;
-				/*sndmeter.graphics.beginFill(0x333333);
-				sndmeter.graphics.drawRect(X1, Y1, 200, 50);
-				sndmeter.graphics.endFill();
-		
-				sndmeter.graphics.beginFill(0x00aa22);
-				sndmeter.graphics.drawRect(X1, Y1, X * 200, 50);
-				sndmeter.graphics.endFill();*/
 				drawbar(sndmeter.graphics, 0, 0, 200, 50, Main._this.savedata.data.soundvolume);
 				 } 
 				);
-				T = new TextField();
+		T = new TextField();
 		T.x = 0;
 		//T.y = 100+30;
 		T.y = 70+30;
@@ -140,39 +116,69 @@ class OptionView extends Sprite
 				XX = 120;
 		YY = 70+20;
 		musicmeter = new Sprite();
-		/*musicmeter.graphics.beginFill(0x333333);
-		musicmeter.graphics.drawRect(XX, YY, 200, 50);
-		musicmeter.graphics.endFill();
-		
-		musicmeter.graphics.beginFill(0x00aa22);
-		musicmeter.graphics.drawRect(XX, YY, Main._this.savedata.data.musicvolume * 200, 50);
-		musicmeter.graphics.endFill();*/
 		musicmeter.x = XX;
 		musicmeter.y = YY;
 		drawbar(musicmeter.graphics, 0, 0, 200, 50, Main._this.savedata.data.musicvolume);
 		musicmeter.buttonMode = true;
 		addChild(musicmeter);
 		musicmeter.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
-				//var X:Float = ((musicmeter.mouseX - XX) / 200.0);
 				var X:Float = ((musicmeter.mouseX) / 200.0);
 				SoundManager._this.SetMusicVolume(X);
 				X = SoundManager._this.GetMusicVolume();
 				musicmeter.graphics.clear();
 				Main._this.savedata.data.musicvolume = X;
 				drawbar(musicmeter.graphics, 0, 0, 200, 50, Main._this.savedata.data.musicvolume);
-				/*musicmeter.graphics.beginFill(0x333333);
-				musicmeter.graphics.drawRect(XX, YY, 200, 50);
-				musicmeter.graphics.endFill();
-		
-				musicmeter.graphics.beginFill(0x00aa22);
-				musicmeter.graphics.drawRect(XX, YY, X * 200, 50);
-				musicmeter.graphics.endFill();*/
 				 } 
 				);
+		T = new TextField();
+		T.x = 0;
+		//T.y = 100+30;
+		T.y = 70+70+30;
+		T.text = "Show tutorial:";
+		T.scaleX = 1.5;
+		T.scaleY = 1.5;
+		T.textColor = 0xFFFFFF;
+		T.mouseEnabled = false;
+		addChild(T);
+		var tmp = " ";
+		if (Main._this.savedata.data.tutorial)
+		{
+			tmp = " X";
+		}
+		var B = AddButton(tmp);
+		B.outlinecolor = 0xFFFFFF;
+		B.innercolor = 0x000000;
+		B.manualwidth = 44;
+		B.manualheight = B.manualwidth;
+		B.textfield.textColor = 0xFFFFFF;
+		B.update();
+		//B.x = 120;
+		B.x = T.textWidth + 50;
+		B.y = T.y-5;
+		
+		var BTT = B;
+		B.addclick( function( ev ) {
+				//select(B0, 0);
+				tmp = " ";
+				Main._this.savedata.data.tutorial = (Main._this.savedata.data.tutorial == false);
+				if (Main._this.savedata.data.tutorial)
+				{
+					tmp = " X";
+				}
+				BTT.settext(tmp);
+				 } 
+				);	
+				
 		var V = 550;
 		var VB = 70;
 		V -= (VB * 3);
-		T = new TextField();
+		
+		
+		/*controls = new Options_ControlsView();
+		controls.y = V;
+		addChild(controls);*/
+		
+		/*T = new TextField();
 		T.x = 0;
 		T.y = V;
 		T.text = "Jump:";
@@ -286,7 +292,7 @@ class OptionView extends Sprite
 		B.addclick( function( ev ) {
 				select(B4, 4);
 				 } 
-				);
+				);*/
 		status = "";
 		BackButton = AddButton("Back");
 		BackButton.sound = "cancel";
@@ -300,14 +306,20 @@ class OptionView extends Sprite
 		var delete:MenuButton = new MenuButton("   Erase\nSave Data", 28, "Arial", 5, 0xCC5511, 0xAA0033);
 		delete.x = 650;
 		delete.y = 8;
-		
+		addChild(delete);
 		var deletedimmer = new Sprite();
+		dimmer = deletedimmer;
 		var G = deletedimmer.graphics;
-		G.beginFill(0, 0.3);
+		//G.beginFill(0, 0.3);
+		G.beginFill(0, 0.4);
 		G.drawRect(0, 0, 800, 600);
 		G.endFill();
 		deletedimmer.visible = false;
 		addChild(deletedimmer);
+		deletedimmer = new Sprite();
+		deletedimmer.visible = false;
+		addChild(deletedimmer);
+		
 		var erase = new MenuButton("I'm sure.\n(cannot be undone)", 44, "Arial", 5, 0xCC5511, 0xAA0033);
 		var cancel = new MenuButton("Cancel");
 		cancel.sound = "cancel";
@@ -330,14 +342,58 @@ class OptionView extends Sprite
 		cancel.y =  400;
 		cancel.addclick( function( ev ) {
 			deletedimmer.visible = false;
+			dimmer.visible = deletedimmer.visible;
+			controlbutton.visible = true;
 		});
+		
 		deletedimmer.addChild(cancel);
-		addChild(delete);
+		//addChild(delete);
+		
 		delete.addclick( function( ev ) {
 			deletedimmer.visible = true;
+			dimmer.visible = deletedimmer.visible;
+			controlbutton.visible = false;
 			}
 				);
+				
+		var B = AddButton("Controls");
+		controlbutton = B;
+		B.sound = "";
+		B.x = 0;
+		B.y = 550;
+		B.addclick( function( ev ) {
+				//select(B0, 0);
+				togglecontrols();
+				if (controls != null)
+				{
+					B.settext("Done");
+				}
+				else
+				{
+					B.settext("Controls");
+				}
+				B.x = 0;
 		
+		}
+				);
+		
+	}
+	public function togglecontrols()
+	{
+		if (controls == null)
+		{
+			controls = new Options_ControlsView(this);
+			controls.x = 400 - (controls.width / 2);
+			controls.y = 300 - (controls.height / 2);
+			dimmer.visible = true;
+			addChild(controls);
+		}
+		else
+		{
+			removeChild(controls);
+			controls = null;
+			dimmer.visible = false;
+		}
 	}
 	public function drawbar(G:Graphics,x:Float, y:Float, W:Float,H:Float,percent:Float)
 	{
@@ -386,12 +442,16 @@ class OptionView extends Sprite
 		BG.update();
 	}
 	public function stage_onKeyUp (event:KeyboardEvent):Void {
-		if (selection > -1)
+		/*if (selection > -1)
 		{
 			Main._this.savedata.data.controlscheme[selection] = event.keyCode;
 			var X = selected.x;
 			selected.settext(stringfromcode(event.keyCode)+" ");
 			selected.x = X;
+		}*/
+		if (controls != null)
+		{
+			controls.stage_onKeyUp(event);
 		}
 	}
 	public function select(button:MenuButton,ind:Int)

@@ -253,10 +253,11 @@ class SoccerBall extends Entity
 				}
 			}
 		}
-		var G = game.CollisionDetectPoint(x, y + 23 + 1);
+		var W = (Std.int(image.width) >> 1);
+		var G = game.CollisionDetectPoint(x+W, y + 23 + 1);
 		if (G == null && Vspeed<0)
 		{
-			G = game.CollisionDetectPoint(x, y - 1);
+			G = game.CollisionDetectPoint(x+W, y - 1);
 		}
 		if (G != null)
 		{
@@ -285,6 +286,28 @@ class SoccerBall extends Entity
 			if (y < G.y && Vspeed>=0)
 			{
 				y = Math.min(y, G.y - (23));
+			}
+			
+			if (G.bonked > 0 && G.bonkedby == game.myplayer)
+			{
+				var P = game.myplayer;
+				var D:Dynamic = { };
+				D.type = "Kick";
+				D.x = x;
+				D.y = y;
+				D.user = "Player";
+				D.UID = P.UID;
+				/*var H = Math.abs(P.Hspeed) + 2;
+				if (P.Ldir != 0)
+				{
+					H *= P.Ldir;
+				}
+				H *= 0.8;
+				D.Hspeed = ((H*3)+Math.abs(P.Vspeed));
+				D.Vspeed = -Math.abs(Math.abs(H)+Math.abs(P.Vspeed*2));*/
+				D.Hspeed = -6 + (Math.random() * 12);
+				D.Vspeed = -4 - (Math.random() * 8);
+				SendCustomEvent(D);
 			}
 			
 			Hspeed *= 0.98;

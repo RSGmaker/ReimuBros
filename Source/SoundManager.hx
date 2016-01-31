@@ -316,7 +316,7 @@ class SoundManager
 		while (i < activeaudio.length)
 		{
 			var D = activeaudio[i];
-			if (D.channel != music && D.channel != jingle)
+			if (D.channel != music && D.channel != jingle && D.channel != intro)
 			{
 				D.channel.soundTransform = new SoundTransform(volume, 0);
 			}

@@ -296,7 +296,7 @@ class LevelLogic
 		//setup obstacles.
 		
 		//--basic obstacles--
-		if ([GameView.TypeofRound.EventNormal,GameView.TypeofRound.EventRumia,GameView.TypeofRound.EventTable,GameView.TypeofRound.EventBalloon,GameView.TypeofRound.EventCharacters,GameView.TypeofRound.EventNoWrap,GameView.TypeofRound.EventScrolling,GameView.TypeofRound.EventDescending,GameView.TypeofRound.EventTruck,GameView.TypeofRound.EventSuwako,GameView.TypeofRound.EventPointCollecting,GameView.TypeofRound.EventSoccer].indexOf(RoundType)>-1)
+		if ([GameView.TypeofRound.EventNormal,GameView.TypeofRound.EventRumia,GameView.TypeofRound.EventTable,GameView.TypeofRound.EventBalloon,GameView.TypeofRound.EventCharacters,GameView.TypeofRound.EventNoWrap,GameView.TypeofRound.EventScrolling,GameView.TypeofRound.EventDescending,GameView.TypeofRound.EventTruck,GameView.TypeofRound.EventSuwako,GameView.TypeofRound.EventPointCollecting,GameView.TypeofRound.EventSoccer,GameView.TypeofRound.EventMegaKeine].indexOf(RoundType)>-1)
 		{
 			if (stage>0)
 			{
@@ -450,9 +450,11 @@ class LevelLogic
 		//AddToArrayMultiple(enemytypes, new Yoshika(), 500);
 		//AddToArrayMultiple(enemytypes, new Wriggle(), 500);
 		//AddToArrayMultiple(enemytypes, new Mamizou(), 500);
+		//AddToArrayMultiple(enemytypes, new Momiji(), 500);
+		//AddToArrayMultiple(enemytypes, new Daiyousei(), 500);
 		//if (RoundType == GameView.TypeofRound.EventNormal || RoundType == GameView.TypeofRound.EventRumia || RoundType == GameView.TypeofRound.EventSeija || RoundType == GameView.TypeofRound.EventNue || RoundType == GameView.TypeofRound.EventTable || RoundType == GameView.TypeofRound.EventFireCirno || RoundType == GameView.TypeofRound.EventBalloon || RoundType == GameView.TypeofRound.EventElectricCirno || RoundType == GameView.TypeofRound.EventNoWrap || RoundType == GameView.TypeofRound.EventSanaeBoss || RoundType == GameView.TypeofRound.EventParseeBoss || RoundType == GameView.TypeofRound.EventMurasaBoss || RoundType == GameView.TypeofRound.EventScrolling || RoundType == GameView.TypeofRound.EventDescending || RoundType == GameView.TypeofRound.EventYuuka || RoundType == GameView.TypeofRound.EventExplosive || RoundType == GameView.TypeofRound.EventTruck)
 		//if (["EventNormal","EventRumia","EventSeija","EventNue","EventTable","EventFireCirno","EventBalloon","EventElectricCirno","EventNoWrap","EventSanaeBoss","EventParseeBoss","EventMurasaBoss","EventScrolling","EventDescending","EventYuuka","EventExplosive","EventTruck"].indexOf(RoundType.getName())>-1)
-		if ([GameView.TypeofRound.EventNormal,GameView.TypeofRound.EventRumia,GameView.TypeofRound.EventSeija,GameView.TypeofRound.EventNue,GameView.TypeofRound.EventTable,GameView.TypeofRound.EventFireCirno,GameView.TypeofRound.EventBalloon,GameView.TypeofRound.EventElectricCirno,GameView.TypeofRound.EventNoWrap,GameView.TypeofRound.EventSanaeBoss,GameView.TypeofRound.EventParseeBoss,GameView.TypeofRound.EventMurasaBoss,GameView.TypeofRound.EventScrolling,GameView.TypeofRound.EventDescending,GameView.TypeofRound.EventYuuka,GameView.TypeofRound.EventExplosive,GameView.TypeofRound.EventTruck,GameView.TypeofRound.EventSuwako,GameView.TypeofRound.EventPointCollecting,GameView.TypeofRound.EventMagiFairy,GameView.TypeofRound.EventPatchouli,GameView.TypeofRound.EventElly,GameView.TypeofRound.EventSoccer].indexOf(RoundType)>-1)
+		if ([GameView.TypeofRound.EventNormal,GameView.TypeofRound.EventRumia,GameView.TypeofRound.EventSeija,GameView.TypeofRound.EventNue,GameView.TypeofRound.EventTable,GameView.TypeofRound.EventFireCirno,GameView.TypeofRound.EventBalloon,GameView.TypeofRound.EventElectricCirno,GameView.TypeofRound.EventNoWrap,GameView.TypeofRound.EventSanaeBoss,GameView.TypeofRound.EventParseeBoss,GameView.TypeofRound.EventMurasaBoss,GameView.TypeofRound.EventScrolling,GameView.TypeofRound.EventDescending,GameView.TypeofRound.EventYuuka,GameView.TypeofRound.EventExplosive,GameView.TypeofRound.EventTruck,GameView.TypeofRound.EventSuwako,GameView.TypeofRound.EventPointCollecting,GameView.TypeofRound.EventMagiFairy,GameView.TypeofRound.EventPatchouli,GameView.TypeofRound.EventElly,GameView.TypeofRound.EventSoccer,GameView.TypeofRound.EventMegaKeine].indexOf(RoundType)>-1)
 		{
 			var types = new Array<Array<Dynamic>>();
 			//types[types.length] = CreateArrayOfMultiple(new Yuyuko(), 400);
@@ -474,9 +476,11 @@ class LevelLogic
 			{
 				types[types.length] = CreateArrayOfMultiple(new Mystia(), 34);
 			}
-			if (level > 3)
+			if (level > 2)
 			{
-				if (generalstage != 1)
+				types[types.length] = CreateArrayOfMultiple(new Tenshi(), 5);
+				AddToArrayMultiple(enemytypes, new Daiyousei(), 2);
+				if (generalstage != 1 && level > 3)
 				{
 					types[types.length] = CreateArrayOfMultiple(new Keine(), 20);
 				}
@@ -486,7 +490,7 @@ class LevelLogic
 					{
 						types[types.length] = CreateArrayOfMultiple(new Meiling(), 6);
 					}
-					if (level > 8)
+					if (level >= 9)
 					{
 						types[types.length] = CreateArrayOfMultiple(new Letty(), 1);
 					}
@@ -494,7 +498,7 @@ class LevelLogic
 					types[types.length] = CreateArrayOfMultiple(new Sakuya(), 4);
 					if (level > 10)
 					{
-						types[types.length] = CreateArrayOfMultiple(new Tenshi(), 5);
+						//types[types.length] = CreateArrayOfMultiple(new Tenshi(), 5);
 						types[types.length] = CreateArrayOfMultiple(new Youmu(), 2);
 						types[types.length] = CreateArrayOfMultiple(new Wriggle(), 2);
 						if (level > 15)
@@ -534,6 +538,7 @@ class LevelLogic
 													{
 														types[types.length] = CreateArrayOfMultiple(new Satori(), 3);
 													}
+													types[types.length] = CreateArrayOfMultiple(new Momiji(), 8);
 													if (level > 50)
 													{
 														types[types.length] = CreateArrayOfMultiple(new Kogasa(), 1);
@@ -561,8 +566,15 @@ class LevelLogic
 			limit += Std.int((rank+1) / 2);
 			while (i < limit)
 			{
-				var T = types[Std.int(Math.random() * types.length)];
-				AddToArrayMultiple(enemytypes, T[0], T.length);
+				if (types.length > 1)
+				{
+				//add themeing
+				//var T = types[Std.int(Math.random() * types.length)];
+				var T = types[1+Std.int(Math.random() * (types.length-1))];
+				//AddToArrayMultiple(enemytypes, T[0], T.length);
+				//AddToArrayMultiple(enemytypes, T[0], Std.int(T.length*1.5));
+				AddToArrayMultiple(enemytypes, T[0], Std.int(T.length * 2.0));
+				}
 				i++;
 			}
 			i = 0;
@@ -577,6 +589,10 @@ class LevelLogic
 		{
 			AddToArrayMultiple(enemytypes, new Letty(), 3);
 			AddToArrayMultiple(enemytypes, new Imposter(), 4);
+		}
+		if (RoundType == GameView.TypeofRound.EventMegaKeine)
+		{
+			AddToArrayMultiple(enemytypes, new Keine(), 100);
 		}
 		if (RoundType == GameView.TypeofRound.EventMagiFairy)
 		{
@@ -956,6 +972,10 @@ class LevelLogic
 		{
 			//if blank enemy(made in spawnlist) then populate id info
 			data.UID = Math.random();
+			while (game.EntityFromUID(data.UID) != null)
+			{
+				data.UID = Math.random();
+			}
 		}
 		SetSpawnPosition(data);
 		/*if (Math.random() > 0.5)

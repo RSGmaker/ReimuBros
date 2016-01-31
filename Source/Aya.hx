@@ -17,7 +17,7 @@ class Aya extends Enemy
 		super("aya");
 		accel = 0.5;
 		deccel = 0.1;
-		mxspd = 5;
+		mxspd = 5.5;
 		Ldir = 1;
 		killed = false;
 		flipped = -1;
