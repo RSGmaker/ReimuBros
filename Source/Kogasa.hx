@@ -44,7 +44,10 @@ class Kogasa extends Enemy
 		{
 			started = true;
 		}
-		if (surprisetime > 0)
+		
+		if (!killed)
+		{
+			if (surprisetime > 0 && flipped <= 0)
 		{
 			surprisetime--;
 			if (shottime > 0 && game.Hoster)
@@ -63,8 +66,8 @@ class Kogasa extends Enemy
 				mxspd -= 4;
 			}
 		}
-		if (!killed)
-		{
+		
+		
 		var dir = Ldir;
 		if (flipped > 0)
 		{
