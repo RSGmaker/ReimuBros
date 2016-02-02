@@ -3151,11 +3151,15 @@ class GameView extends Sprite
 					D.Time = - 1000;
 					ok = false;
 				}
-				if (E.type == "Enemy" && (activeEnemies.indexOf(D) < 0 || !D.needtokill) && ok)
+				if (E.type == "Enemy" && (activeEnemies.indexOf(D) < 0 || !D.needtokill) && ok && Std.is(E,Enemy))
 				{
-					D.reward = false;
-					E.killed = true;
-					E.alive = false;
+					var EE:Enemy = cast(E);
+					if (EE.invincibility <= 0)
+					{
+						D.reward = false;
+						E.killed = true;
+						E.alive = false;
+					}
 				}
 				i++;
 			}
@@ -4774,10 +4778,15 @@ class GameView extends Sprite
 			var E = entities[i];
 			if (E.type == "Enemy")
 			{
-				if (boss != E && E.subtype != "boss" && E.subtype!="yuyuko")
+				
+				if (boss != E && E.subtype != "boss" && E.subtype!="yuyuko" && Std.is(E, Enemy))
 				{
-					E.alive = false;
-					E.killed = true;
+					var EE:Enemy = cast(E);
+					if (EE.invincibility<=0)
+					{
+						E.alive = false;
+						E.killed = true;
+					}
 				}
 			}
 			i++;
@@ -5353,7 +5362,7 @@ class GameView extends Sprite
 			while (i < activeEnemies.length)
 			{
 				var E = activeEnemies[i];
-				if (E.alive && !E.killed && E.subtype != "boss")
+				if (E.alive && !E.killed && E.subtype != "boss" && E.invincibility<=0)
 				{
 					SendEvent("Kill", E.UID);
 				}

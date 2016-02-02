@@ -51,7 +51,7 @@ class Lightning extends Entity
 			while (i <T.activeEnemies.length)
 			{
 				var E = T.activeEnemies[i];
-				if (B.containsPoint(new Point(E.x, E.y)))
+				if (E.invincibility<=0 && B.containsPoint(new Point(E.x, E.y)))
 				{
 					game.SendEvent("Destroy", E.UID);
 				}
