@@ -108,12 +108,12 @@ class TrophyItem extends CarryItem
 				{
 					game.unlockcharacter("mokou");
 					game.unlockcharacter("kaguya");
-					if (!Main._this.savedata.data.challenges[2])
+					/*if (!Main._this.savedata.data.challenges[2])
 					{
 						game.ShowMessage("Truck Hoarder challenge");
 						game.ShowMessage("is now available!");
 						Main._this.savedata.data.challenges[2] = true;
-					}
+					}*/
 				}
 			}
 		}
