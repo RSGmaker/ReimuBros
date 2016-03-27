@@ -3,12 +3,14 @@ import abilities.AbsorbDamage;
 import openfl.display.Bitmap;
 import openfl.display.Sprite;
 import openfl.events.Event;
+import openfl.events.FocusEvent;
 import openfl.events.MouseEvent;
 import openfl.geom.Rectangle;
 import openfl.text.Font;
 import openfl.text.TextField;
 import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
+import openfl.Assets;
 
 /**
  * ...
@@ -52,7 +54,8 @@ class AvatarEditor extends Sprite
 	public var generateindex:Int;
 	public var generateX:Float;
 	public var generateY:Float;
-	public var generatedone:Bool=true;
+	public var generatedone:Bool = true;
+	public static inline var blankDNA = "3.39:PlayerName:100:0:-1:-1:-1:-1:0:0:0:0:0:321A00";
 	//public var parent:ShopView;
 	public function new() 
 	{
@@ -247,10 +250,15 @@ class AvatarEditor extends Sprite
 	}
 	public static function getpart(type:String):Dynamic
 	{
+		var index = partlist.indexOf(type);
+		return getpartbyindex(index);
+	}
+	public static function getpartbyindex(index:Int):Dynamic
+	{
 		var DAT:Array<Dynamic> = null;
 		var U:Array<Bool> = null;
 		
-		var index = partlist.indexOf(type);
+		/*var index = partlist.indexOf(type);*/
 		var type = "Part";
 		if (index == 3)
 		{
@@ -415,7 +423,7 @@ class AvatarEditor extends Sprite
 			var ind = getdnapart(DNA, index);
 		while (i < total && limit>=0)
 		{
-			if (U == null || U[i])
+			if (U == null || U[i] || Main.SAAE)
 			{
 			var M = new MenuButton("", 8, "Arial", 3);
 			M.sound = "";
@@ -472,7 +480,7 @@ class AvatarEditor extends Sprite
 				spectrum.x = 25;
 				spectrum.y = 60;
 				piececontainer.addChild(spectrum);
-				var B = new Bitmap(AL.GetAnimation("spectrum")[0]);
+				var B = new Bitmap(Assets.getBitmapData ("assets/Images/spectrum.png"));
 				spectrum.addChild(B);
 				spectrum.buttonMode = true;
 				spectrum.addEventListener( MouseEvent.MOUSE_UP, function( ev ) {
@@ -530,28 +538,85 @@ class AvatarEditor extends Sprite
 		//avatarpreview.setbitmapdata(AL.getBitmapData("dna-" + changednascale(avatardna, 200))[0]);
 		lselectedpiece = selectedpiece;
 	}
+	private function makednavalid(dna:String)
+	{
+		//if (!Main.SAAE)
+		{
+			var i = 3;
+			var max = dna.split(":").length;
+			while (i < 13 && i<max)
+			{
+				var D:Dynamic = getpartbyindex(i);
+				
+				var ind:Int = Std.parseInt(getdnapart(dna, i));
+				var def = getdnapart(blankDNA, i);
+				if (ind>=0 && D.data != null && ind<D.data.length && D.data[ind][0].toLowerCase()!="none" && ((""+ind)!=def) && !(D.unlock == null || D.unlock[ind] || Main.SAAE))
+				{
+					var none:String = D.data[0][0].toLowerCase();
+					trace("i:" + i + "("+getdnapart(dna, i)+") is not unlocked.");
+					//we don't have this part.
+					//return;
+					///ok = false;
+					var n = "0";
+					
+					if (none != "none")
+					{
+						n = "-1";
+					}
+					//dna = changednapart(dna, i, "0");
+					dna = changednapart(dna, i, def);
+					//i = 1000;
+				}
+				i++;
+			}
+		}
+		return dna;
+	}
 	private function setavatardna(dna:String)
 	{
-		avatardna = dna;
+		var ok = true;
+		dna = makednavalid(dna);
+		if (ok)
+		{
+			avatardna = dna;
+			avatarpreview.setbitmapdata(AL.getBitmapData("dna-" + changednascale(avatardna, 200))[0]);
+		}
 		dnadisplay.text = dna;
+		
+		
 		/*Main._this.stage.quality = flash.display.StageQuality.BEST;
 		avatarpreview.setbitmapdata(CharHelper.makeCharImage(data,false));
 		Main._this.stage.quality = flash.display.StageQuality.LOW;*/
-		avatarpreview.setbitmapdata(AL.getBitmapData("dna-" + changednascale(avatardna, 200))[0]);
+		
+		var nm = getdnapart(dna, 1);
+		if (Nameinput.text != nm && nm !="")
+		{
+			var TF = Nameinput.getTextFormat();
+			Nameinput.text = getdnapart(dna, 1);
+			Nameinput.setTextFormat(TF);
+		}
+		if (Main.SAAE)
+		{
+			/*Main._this.savedata.data.avatar = dna;
+			Main._this.savedata.flush();*/
+		}
 	}
 	public function start()
 	{
 		var bg = new Bitmap(AL.GetAnimation("background-" + CharHelper.GetBG("Empty Room"))[0]);
 		addChild(bg);
-		var mirror = new Bitmap(AL.GetAnimation("mirror")[0]);
+		//var mirror = new Bitmap(AL.GetAnimation("mirror")[0]);
+		var mirror = new Bitmap(Assets.getBitmapData ("assets/Images/mirror.png"));
 		mirror.y = 170;
 		mirror.x = 160;
 		addChild(mirror);
-		var dresser = new Bitmap(AL.GetAnimation("dresser")[0]);
+		//var dresser = new Bitmap(AL.GetAnimation("dresser")[0]);
+		var dresser = new Bitmap(Assets.getBitmapData ("assets/Images/dresser.png"));
 		dresser.y = 280;
 		dresser.x = 410;
 		addChild(dresser);
-		var chest = new Bitmap(AL.GetAnimation("chest")[0]);
+		//var chest = new Bitmap(AL.GetAnimation("chest")[0]);
+		var chest = new Bitmap(Assets.getBitmapData ("assets/Images/chest.png"));
 		chest.y = 260;
 		chest.x = 650;
 		addChild(chest);
@@ -612,7 +677,15 @@ class AvatarEditor extends Sprite
 		Nameinput.backgroundColor = 0xFFFFFF;
 		Nameinput.addEventListener( Event.CHANGE, function( ev ) {
 				//selectcustomization("Eyes");
-				setavatardna(changednapart(avatardna, 1, Nameinput.text));
+				if (Nameinput.text.indexOf(":") >= 0)
+				{
+					Nameinput.backgroundColor = 0xFFAAAA;
+				}
+				else
+				{
+					Nameinput.backgroundColor = 0xFFFFFF;
+					setavatardna(changednapart(avatardna, 1, Nameinput.text));
+				}
 				 } 
 				);
 		addChild(Nameinput);
@@ -625,19 +698,80 @@ class AvatarEditor extends Sprite
 		Description.scaleX = 2;
 		Description.scaleY = 2;
 		Description.filters = filterArr;
-		
-		addChild(Description);
+		if (!Main.SAAE)
+		{
+			addChild(Description);
+		}
 		dnadisplay = new TextField();
 		dnadisplay.x = Nameinput.x;
 		dnadisplay.y = Nameinput.y + 32;
-		dnadisplay.text = "Ability:" + Player.getname(soul);
+		//dnadisplay.text = "Ability:" + Player.getname(soul);
+		dnadisplay.text = " ";
 		//dnadisplay.mouseEnabled = false;
 		dnadisplay.textColor = 0xFFFFFF;
 		dnadisplay.scaleX = 2;
 		dnadisplay.scaleY = 2;
 		dnadisplay.filters = filterArr;
-		dnadisplay.height = 32;
+		//dnadisplay.height = 32;
+		dnadisplay.height = 18;
 		dnadisplay.width = 100;
+		var dnaInputEnabled = true;
+		
+		if (Main.SAAE)
+		{
+			dnaInputEnabled = true;
+			
+			dnadisplay.y = 555;
+			dnadisplay.x = 10;
+			dnadisplay.width = 390;
+			
+				//doesn't work, the selection gets reset afterwards.
+				/*dnadisplay.addEventListener( FocusEvent.FOCUS_IN, function( ev ) {
+					dnadisplay.setSelection(0, dnadisplay.text.length);
+				}
+				);*/
+		}
+		if (dnaInputEnabled)
+		{
+			dnadisplay.border = true;
+			dnadisplay.background = true;
+			dnadisplay.type = TextFieldType.INPUT;
+			dnadisplay.borderColor = 0x0000FF;
+			dnadisplay.backgroundColor = 0xFFFFFF;
+			dnadisplay.textColor = 0;
+			dnadisplay.filters = null;
+			dnadisplay.addEventListener( Event.CHANGE, function( ev ) {
+				//selectcustomization("Eyes");
+				var dsp = dnadisplay.text.split(":");
+				var ok = true;
+				if (dsp.length <= 13)
+				{
+					ok = false;
+				}
+				else
+				{
+					var i = 0;
+					while (i < dsp.length)
+					{
+						if (dsp[i].length < 1)
+						{
+							ok = false;
+						}
+						i++;
+					}
+				}
+				if (ok)
+				{
+					dnadisplay.backgroundColor = 0xFFFFFF;
+					setavatardna(dnadisplay.text);
+				}
+				else
+				{
+					dnadisplay.backgroundColor = 0xFFAAAA;
+				}
+				 } 
+				);
+		}
 		addChild(dnadisplay);
 		custompages = new Array<Sprite>();
 		var P:Sprite = new Sprite();
@@ -793,7 +927,10 @@ class AvatarEditor extends Sprite
 		B = new MenuButton("Ability",size,"Arial",5,innercolor,outercolor);
 		B.x += X;
 		B.y = Y;
-		P.addChild(B);
+		if (!Main.SAAE)
+		{
+			P.addChild(B);
+		}
 		B.update();
 		Y += B.textfield.textHeight + H;
 		B.sound = "";

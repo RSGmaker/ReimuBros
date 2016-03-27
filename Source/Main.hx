@@ -36,6 +36,9 @@ import openfl.media.SoundTransform;
 //import flash.text.Font;
 
 class Main extends Sprite {
+	//Stand Alone Avatar Editor
+	public static inline var SAAE:Bool = false;
+	
 	public var frameskip:Bool;
 	public var frameskipenabled:Bool = true;
 	
@@ -93,6 +96,7 @@ class Main extends Sprite {
 	public var hosttime:Int = 0;
 	//time spent as client.
 	public var clienttime:Int = 0;
+	
 	
 	/*public var level:Int=1;
 	public var levelselect:Bool;
@@ -218,6 +222,8 @@ class Main extends Sprite {
 		stage.quality = flash.display.StageQuality.LOW;
 		//stage.quality = flash.display.StageQuality.LOW;
 		//stage.quality = flash.display.StageQuality.MEDIUM;
+		this.stage.scaleMode = StageScaleMode.SHOW_ALL;
+		this.stage.align = StageAlign.TOP;
 		
 		_this = this;
 		optionscreen = null;
@@ -225,7 +231,17 @@ class Main extends Sprite {
 		online = false;
 		
 		playerspick = "";
-		savedata = openfl.net.SharedObject.getLocal("ReimuBrosData", "/", false);
+		if (SAAE)
+		{
+			savedata = openfl.net.SharedObject.getLocal("ReimuBrosSAAEData", "/", false);
+			/*savedata.clear();
+			savedata.flush();
+			savedata = openfl.net.SharedObject.getLocal("ReimuBrosSAAEData", "/", false);*/
+		}
+		else
+		{
+			savedata = openfl.net.SharedObject.getLocal("ReimuBrosData", "/", false);
+		}
 		flash.system.Security.allowDomain('*');
 		GameMode.init();
 		gamemode = GameMode.GetModeByName("Classic");
@@ -236,6 +252,10 @@ class Main extends Sprite {
 		if (playername == null)
 		{
 			playername = "PlayerName";
+			if (Main.SAAE)
+			{
+				playername = "Meiling";
+			}
 		}
 		if (savedata.data.soundvolume == null)
 		{
@@ -244,6 +264,11 @@ class Main extends Sprite {
 		if (savedata.data.musicvolume == null)
 		{
 			savedata.data.musicvolume = 0.7;
+		}
+		if (SAAE)
+		{
+			savedata.data.soundvolume = 0;
+			savedata.data.musicvolume = 0;
 		}
 		if (savedata.data.maxlevel == null)
 		{
@@ -260,7 +285,12 @@ class Main extends Sprite {
 		if (savedata.data.avatar == null)
 		{
 			//savedata.data.avatar = "";
-			savedata.data.avatar = "3.39:PlayerName:100:0:-1:-1:-1:-1:0:0:0:0:0:321A00";
+			//savedata.data.avatar = "3.39:PlayerName:100:0:-1:-1:-1:-1:0:0:0:0:0:321A00";
+			savedata.data.avatar = AvatarEditor.blankDNA;
+			if (Main.SAAE)
+			{
+				savedata.data.avatar = "3.39:Meiling:100:1:0:1:1:1:0:0:0:0:0:EB585A";
+			}
 		}
 		if (savedata.data.avatarabilities == null)
 		{
@@ -287,6 +317,10 @@ class Main extends Sprite {
 		if (savedata.data.unlockables_haircolor == null)
 		{
 			savedata.data.unlockables_haircolor = false;
+			if (Main.SAAE)
+			{
+				savedata.data.unlockables_haircolor = true;
+			}
 		}
 		if (savedata.data.unlockables_hat == null)
 		{
@@ -427,7 +461,14 @@ class Main extends Sprite {
 			savedata.data.highscore = 0;
 		}
 		Room = "public1";
-		showtitlescreen();
+		if (!SAAE)
+		{
+			showtitlescreen();
+		}
+		else
+		{
+			showshopscreen();
+		}
 	}
 	private function create_unlockedarray(length:Int = 1000, value:Bool=true)
 	{
@@ -1137,6 +1178,10 @@ class Main extends Sprite {
 		if (savedata.data.playername == null)
 		{
 			P = "PlayerName";
+			if (Main.SAAE)
+			{
+				P = "Meiling";
+			}
 		}
 		S[1] = "" + P;
 		D = S.join(":");

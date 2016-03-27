@@ -104,7 +104,10 @@ class ShopView extends Sprite
 				 } 
 				);
 		buttons.addChild(exitbutton);
-		addChild(buttons);
+		if (!Main.SAAE)
+		{
+			addChild(buttons);
+		}
 		
 		customizetab.setcolors(0xFF0000, 0xFFFFFF, 1);
 		

@@ -5,8 +5,8 @@
 -D lime=2.5.1
 -cp C:/HaxeToolkit/haxe/lib/swf/1,9,1
 -D swf=1.9.1
--cp C:/HaxeToolkit/haxe/lib/format/3,1,2
--D format=3.1.2
+-cp C:/HaxeToolkit/haxe/lib/format/3,2,1
+-D format=3.2.1
 -cp Source
 -D native-trace
 -D openfl-next
